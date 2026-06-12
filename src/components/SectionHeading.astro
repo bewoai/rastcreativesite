@@ -1,0 +1,70 @@
+---
+import Eyebrow from "./Eyebrow.astro";
+
+interface Props {
+  /** Timecode eyebrow, e.g. "SAHNE 02 · HİZMETLER". */
+  eyebrow?: string;
+  as?: "h1" | "h2";
+  align?: "left" | "center";
+  eyebrowTone?: "amber" | "soft" | "paper";
+  class?: string;
+}
+
+const {
+  eyebrow,
+  as: Tag = "h2",
+  align = "left",
+  eyebrowTone = "amber",
+  class: className,
+} = Astro.props;
+
+const hasIntro = Astro.slots.has("intro");
+---
+
+<header class:list={["sh", `sh--${align}`, className]}>
+  {eyebrow && <Eyebrow tone={eyebrowTone}>{eyebrow}</Eyebrow>}
+  <Tag class="sh__title"><slot /></Tag>
+  {
+    hasIntro && (
+      <div class="sh__intro">
+        <slot name="intro" />
+      </div>
+    )
+  }
+</header>
+
+<style>
+  .sh {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+  .sh--left {
+    align-items: flex-start;
+    text-align: left;
+  }
+  .sh--center {
+    align-items: center;
+    text-align: center;
+  }
+  .sh__title {
+    margin: 0;
+    max-width: 20ch;
+  }
+  .sh--center .sh__title {
+    max-width: 24ch;
+  }
+  /* Slotted intro inherits color/leading from this wrapper. */
+  .sh__intro {
+    color: var(--ink-soft);
+    font-size: var(--text-body);
+    line-height: var(--leading-body);
+    max-width: 56ch;
+  }
+  .sh__intro :global(p) {
+    margin: 0;
+  }
+  .sh__intro :global(p + p) {
+    margin-top: 0.75rem;
+  }
+</style>

@@ -1,0 +1,174 @@
+---
+import Logo from "./Logo.astro";
+import Icon from "./Icon.astro";
+import Eyebrow from "./Eyebrow.astro";
+import { NAV, SOCIAL, CONTACT, SITE } from "../consts";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="footer__grid">
+    <div class="footer__brand">
+      <Logo tone="paper" />
+      <p class="footer__tagline">
+        Sakarya merkezli sinematik video prodüksiyon ve kreatif ajans.
+      </p>
+      {
+        SOCIAL.length > 0 && (
+          <ul class="footer__social">
+            {SOCIAL.map((s) => (
+              <li>
+                <a
+                  href={s.href}
+                  class="footer__social-link"
+                  target="_blank"
+                  rel="me noopener noreferrer"
+                  aria-label={s.label}
+                >
+                  <Icon name={s.icon} size={22} />
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+
+    <nav class="footer__col" aria-label="Alt gezinme">
+      <Eyebrow tone="paper">Site</Eyebrow>
+      <ul class="footer__links">
+        {
+          NAV.map((item) => (
+            <li>
+              <a href={item.href} class="footer__link">
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="footer__col">
+      <Eyebrow tone="paper">İletişim</Eyebrow>
+      <ul class="footer__links">
+        <li>{CONTACT.city}</li>
+        <li>
+          {
+            CONTACT.phone ? (
+              <a href={`tel:${CONTACT.phone.replace(/\s/g, "")}`} class="footer__link">
+                {CONTACT.phone}
+              </a>
+            ) : (
+              <span class="footer__pending">Telefon yakında</span>
+            )
+          }
+        </li>
+        <li>
+          {
+            CONTACT.email ? (
+              <a href={`mailto:${CONTACT.email}`} class="footer__link">
+                {CONTACT.email}
+              </a>
+            ) : (
+              <span class="footer__pending">E-posta yakında</span>
+            )
+          }
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer__base">
+    <p>© {year} {SITE.name}. Tüm hakları saklıdır.</p>
+    <p class="footer__credit">Sakarya'da tasarlandı ve kuruldu.</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--ink);
+    color: color-mix(in srgb, var(--paper) 78%, transparent);
+    padding: clamp(3rem, 7vw, 5rem) var(--container-pad) 2rem;
+  }
+  .footer__grid {
+    max-width: var(--container-max);
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .footer__tagline {
+    margin: 1rem 0 1.25rem;
+    max-width: 32ch;
+    font-size: 0.98rem;
+    line-height: 1.55;
+  }
+  .footer__social {
+    display: flex;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .footer__social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--tap-min);
+    height: var(--tap-min);
+    border-radius: var(--radius-pill);
+    color: var(--paper);
+    border: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+    transition:
+      color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out),
+      background-color var(--dur-fast) var(--ease-out);
+  }
+  .footer__social-link:hover {
+    color: var(--amber);
+    border-color: color-mix(in srgb, var(--amber) 60%, transparent);
+  }
+  .footer__links {
+    list-style: none;
+    margin: 0.9rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .footer__link {
+    color: color-mix(in srgb, var(--paper) 82%, transparent);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .footer__link:hover {
+    color: var(--amber);
+  }
+  .footer__pending {
+    color: color-mix(in srgb, var(--paper) 45%, transparent);
+    font-style: italic;
+  }
+  .footer__base {
+    max-width: var(--container-max);
+    margin: clamp(2.5rem, 5vw, 3.5rem) auto 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid color-mix(in srgb, var(--paper) 14%, transparent);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: color-mix(in srgb, var(--paper) 55%, transparent);
+  }
+  .footer__base p {
+    margin: 0;
+  }
+
+  @media (min-width: 640px) {
+    .footer__grid {
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 3rem;
+    }
+  }
+</style>

@@ -1,0 +1,189 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import GlassNav from "../components/GlassNav.astro";
+import Footer from "../components/Footer.astro";
+import Button from "../components/Button.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import VimeoFacade from "../components/VimeoFacade.astro";
+import Icon from "../components/Icon.astro";
+import Logo from "../components/Logo.astro";
+import type { IconName } from "../consts";
+
+const icons: IconName[] = [
+  "home",
+  "projects",
+  "services",
+  "about",
+  "contact",
+  "instagram",
+  "youtube",
+  "tiktok",
+  "linkedin",
+  "arrow-right",
+  "arrow-up-right",
+  "play",
+  "whatsapp",
+];
+
+const projects = [
+  {
+    title: "Medikal Marka Tanıtım Filmi",
+    category: "Medikal",
+    poster: "/placeholders/poster-1.svg",
+    client: "Özel Klinik",
+    year: 2025,
+    timecode: "02:14",
+  },
+  {
+    title: "Ürün Lansman Reklamı",
+    category: "Reklam",
+    poster: "/placeholders/poster-2.svg",
+    client: "KOBİ Markası",
+    year: 2025,
+    timecode: "00:38",
+  },
+  {
+    title: "Kurumsal Hikâye",
+    category: "Kurumsal",
+    poster: "/placeholders/poster-3.svg",
+    client: "Sanayi A.Ş.",
+    year: 2024,
+    timecode: "03:05",
+  },
+];
+---
+
+<BaseLayout title="Bileşen Galerisi" noindex>
+  <GlassNav />
+
+  <div class="mx-auto w-full max-w-[var(--container-max)] px-[var(--container-pad)] py-12">
+    <header class="mb-14 flex flex-col gap-3">
+      <Eyebrow>Geçici · Faz 2</Eyebrow>
+      <h1 class="max-w-[20ch]">Bileşen Galerisi</h1>
+      <p class="max-w-[60ch] text-ink-soft">
+        Tüm çekirdek bileşenler burada sergilenir; mobil (390px) ve masaüstünde
+        gözden geçirmek için. Bu sayfa yayında <strong>indekslenmez</strong> ve
+        Faz sonunda kaldırılabilir.
+      </p>
+    </header>
+
+    <div class="flex flex-col gap-16">
+      <!-- Buttons -->
+      <section class="flex flex-col gap-5">
+        <Eyebrow tone="soft">Butonlar</Eyebrow>
+        <div class="flex flex-wrap items-center gap-3">
+          <Button href="/iletisim">Ücretsiz Ön Görüşme</Button>
+          <Button href="/iletisim" arrow size="lg">Ön Görüşme Al</Button>
+          <Button href="/projeler" variant="secondary">Projeleri İzle</Button>
+          <Button href="/projeler" variant="secondary" arrow>Tümünü Gör</Button>
+        </div>
+        <div class="max-w-[22rem]">
+          <Button href="/iletisim" block arrow>Tam Genişlik (mobil CTA)</Button>
+        </div>
+      </section>
+
+      <!-- Eyebrows -->
+      <section class="flex flex-col gap-5">
+        <Eyebrow tone="soft">Etiketler (timecode)</Eyebrow>
+        <div class="flex flex-col gap-2">
+          <Eyebrow>Sahne 01 · Portfolyo</Eyebrow>
+          <Eyebrow tone="soft">Sahne 02 · Hizmetler</Eyebrow>
+        </div>
+        <div class="rounded-[var(--radius-card)] bg-ink p-6">
+          <Eyebrow tone="paper">Sahne 03 · Koyu Zemin</Eyebrow>
+        </div>
+      </section>
+
+      <!-- Section heading -->
+      <section class="flex flex-col gap-8">
+        <Eyebrow tone="soft">Bölüm Başlığı</Eyebrow>
+        <SectionHeading eyebrow="Sahne 04 · Neden Rast">
+          Doğru kareyi yakalayan ekip
+          <Fragment slot="intro">
+            <p>
+              35 yaş üstü karar vericiler için net, somut güven sinyalleri:
+              yerinde hizmet, sinema standardı ekipman, 2–4 hafta teslim.
+            </p>
+          </Fragment>
+        </SectionHeading>
+        <SectionHeading eyebrow="Sahne 05 · Ortalı" align="center">
+          Ortalanmış başlık örneği
+        </SectionHeading>
+      </section>
+
+      <!-- Project cards -->
+      <section class="flex flex-col gap-6">
+        <Eyebrow tone="soft">Proje Kartları</Eyebrow>
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {
+            projects.map((p) => (
+              <ProjectCard
+                href="/projeler"
+                title={p.title}
+                category={p.category}
+                poster={p.poster}
+                client={p.client}
+                year={p.year}
+                timecode={p.timecode}
+              />
+            ))
+          }
+        </div>
+        <p class="text-sm text-ink-soft">
+          (Üzerine gelince poster yakınlaşır + amber timecode görünür.)
+        </p>
+      </section>
+
+      <!-- Vimeo facade -->
+      <section class="flex flex-col gap-6">
+        <Eyebrow tone="soft">Vimeo Facade (tıkla-oynat, önceden yüklenmez)</Eyebrow>
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <VimeoFacade
+            vimeoId="76979871"
+            title="Örnek Proje Videosu"
+            poster="/placeholders/poster-2.svg"
+          />
+          <div class="flex items-center">
+            <p class="max-w-[40ch] text-ink-soft">
+              iframe yalnızca tıklayınca yüklenir; sayfa açılışında Vimeo'ya hiç
+              istek gitmez. Otomatik oynatma yok, <code>dnt=1</code> (izleme yok).
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Icons -->
+      <section class="flex flex-col gap-6">
+        <Eyebrow tone="soft">İkonlar (özel çizgi seti, emoji yok)</Eyebrow>
+        <ul class="grid grid-cols-3 gap-4 sm:grid-cols-5 lg:grid-cols-7">
+          {
+            icons.map((name) => (
+              <li class="flex flex-col items-center gap-2 rounded-[var(--radius-sm)] border border-line p-3 text-ink">
+                <Icon name={name} size={26} />
+                <span class="font-utility text-[0.6rem] uppercase tracking-wide text-ink-soft">
+                  {name}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <!-- Logo -->
+      <section class="flex flex-col gap-6">
+        <Eyebrow tone="soft">Logo</Eyebrow>
+        <div class="flex flex-wrap items-center gap-8">
+          <Logo />
+          <Logo wordmark={false} />
+        </div>
+        <div class="rounded-[var(--radius-card)] bg-ink p-8">
+          <Logo tone="paper" />
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <Footer />
+</BaseLayout>

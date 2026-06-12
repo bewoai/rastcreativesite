@@ -1,0 +1,37 @@
+---
+// Timecode / "slate" label (roadmap 1.4 #2): e.g. "SAHNE 01 · PORTFOLYO".
+// Space Grotesk, uppercase, tracked — a real film-set cue, not decoration.
+interface Props {
+  tone?: "amber" | "soft" | "paper";
+  as?: "p" | "span" | "div";
+  class?: string;
+}
+
+const { tone = "amber", as: Tag = "p", class: className } = Astro.props;
+---
+
+<Tag class:list={["eyebrow", `eyebrow--${tone}`, className]}>
+  <slot />
+</Tag>
+
+<style>
+  .eyebrow {
+    font-family: var(--font-utility);
+    font-size: var(--text-eyebrow);
+    font-weight: 500;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-eyebrow);
+    font-variant-numeric: tabular-nums; /* timecodes don't shift */
+    margin: 0;
+  }
+  .eyebrow--amber {
+    color: var(--amber-text); /* AA-contrast amber for small text on light */
+  }
+  .eyebrow--soft {
+    color: var(--ink-soft);
+  }
+  .eyebrow--paper {
+    color: color-mix(in srgb, var(--paper) 70%, transparent);
+  }
+</style>

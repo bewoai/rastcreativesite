@@ -1,0 +1,218 @@
+---
+import Logo from "./Logo.astro";
+import Button from "./Button.astro";
+import Icon from "./Icon.astro";
+import { NAV, PRIMARY_CTA } from "../consts";
+
+// Active-route detection (ignore trailing slash).
+const path = Astro.url.pathname.replace(/\/+$/, "") || "/";
+const isActive = (href: string) =>
+  href === "/" ? path === "/" : path === href || path.startsWith(href + "/");
+
+// Mobile tab-bar mirrors the full nav + Home for thumb-reach parity.
+const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
+---
+
+{/* Desktop: floating glass pill */}
+<header class="nav" data-nav>
+  <nav class="nav__pill" aria-label="Ana gezinme">
+    <Logo class="nav__logo" />
+    <ul class="nav__links">
+      {
+        NAV.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="nav__link"
+              aria-current={isActive(item.href) ? "page" : undefined}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <Button href={PRIMARY_CTA.href} class="nav__cta">{PRIMARY_CTA.label}</Button>
+  </nav>
+</header>
+
+{/* Mobile: bottom glass tab-bar */}
+<nav class="tabbar" aria-label="Ana gezinme">
+  <ul class="tabbar__inner">
+    {
+      tabs.map((item) => (
+        <li>
+          <a
+            href={item.href}
+            class="tab"
+            aria-current={isActive(item.href) ? "page" : undefined}
+          >
+            <Icon name={item.icon} size={22} class="tab__icon" />
+            <span class="tab__label">{item.label}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  /* ---- Desktop pill (hidden on mobile) --------------------------------- */
+  .nav {
+    display: none;
+  }
+  .nav__pill {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: clamp(0.5rem, 1.5vw, 1.25rem);
+    max-width: calc(100% - 2rem);
+    padding: 0.4rem 0.5rem 0.4rem 1.1rem;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-pill);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    box-shadow: 0 6px 24px -14px rgba(17, 17, 16, 0.25);
+    transition:
+      padding var(--dur) var(--ease-out),
+      background-color var(--dur) var(--ease-out),
+      box-shadow var(--dur) var(--ease-out);
+  }
+  .nav__links {
+    display: flex;
+    gap: 0.15rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nav__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+    padding: 0 0.9rem;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-utility);
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--ink);
+    touch-action: manipulation;
+    transition: background-color var(--dur-fast) var(--ease-out);
+  }
+  .nav__link:hover {
+    background: color-mix(in srgb, var(--ink) 7%, transparent);
+  }
+  .nav__link[aria-current="page"] {
+    color: var(--amber-text);
+  }
+  .nav__cta {
+    margin-left: 0.25rem;
+  }
+
+  .nav.is-scrolled .nav__pill {
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+    background: color-mix(in srgb, var(--paper) 84%, transparent);
+    box-shadow: 0 10px 30px -16px rgba(17, 17, 16, 0.34);
+  }
+
+  @media (min-width: 768px) {
+    .nav {
+      display: flex;
+      justify-content: center;
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 50;
+      padding: clamp(0.6rem, 2vw, 1rem);
+      pointer-events: none; /* let clicks pass through the transparent track */
+    }
+    .tabbar {
+      display: none;
+    }
+  }
+
+  /* ---- Mobile bottom tab-bar ------------------------------------------- */
+  .tabbar {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 50;
+    padding: 0.45rem 0.6rem calc(0.45rem + env(safe-area-inset-bottom, 0px));
+    pointer-events: none;
+  }
+  .tabbar__inner {
+    pointer-events: auto;
+    display: flex;
+    justify-content: space-between;
+    gap: 0.15rem;
+    list-style: none;
+    margin: 0;
+    padding: 0.3rem;
+    background: color-mix(in srgb, var(--paper) 80%, transparent);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-pill);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    box-shadow: 0 -8px 28px -18px rgba(17, 17, 16, 0.3);
+  }
+  .tabbar__inner li {
+    flex: 1 1 0;
+  }
+  .tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.18rem;
+    min-height: var(--tap-min);
+    padding: 0.35rem 0.15rem;
+    border-radius: 1.1rem;
+    color: var(--ink-soft);
+    text-align: center;
+    touch-action: manipulation;
+  }
+  .tab__label {
+    font-family: var(--font-utility);
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .tab[aria-current="page"] {
+    color: var(--amber-text);
+  }
+</style>
+
+<script>
+  // Subtle scroll-shrink for the desktop pill (rAF-throttled).
+  const nav = document.querySelector<HTMLElement>("[data-nav]");
+  if (nav) {
+    let ticking = false;
+    const update = () => {
+      nav.classList.toggle("is-scrolled", window.scrollY > 8);
+      ticking = false;
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+  }
+</script>
+
+<style is:global>
+  /* Reserve space for the fixed nav so content never hides behind it. */
+  @media (max-width: 767.98px) {
+    body {
+      padding-bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));
+    }
+  }
+  @media (min-width: 768px) {
+    body {
+      padding-top: 5.5rem;
+    }
+  }
+</style>

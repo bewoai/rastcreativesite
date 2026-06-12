@@ -17,8 +17,12 @@
   --ink: #111110; /* headings + body text                     */
   --ink-soft: #4a4845; /* secondary text                           */
   --line: #e5e2dc; /* hairlines, card borders                  */
-  --amber: #e25303; /* "Rast Amber" — signature accent          */
+  --amber: #e25303; /* "Rast Amber" — signature accent (fills/CTA bg) */
   --amber-deep: #b84203; /* amber hover / active                     */
+  /* Amber used AS TEXT/icon on light surfaces. #E25303 on --paper is only
+     3.64:1 (fails WCAG AA); --amber-deep is 5.22:1. Use this for eyebrows,
+     timecodes, active nav — anywhere amber is the foreground on light. */
+  --amber-text: var(--amber-deep);
 
   /* ---- Type families (1.3) ---------------------------------------- */
   --font-display: "Fraunces Variable", Georgia, "Times New Roman", serif;

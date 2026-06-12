@@ -1,0 +1,141 @@
+---
+import Icon from "./Icon.astro";
+
+interface Props {
+  /** Vimeo video ID (digits). */
+  vimeoId: string;
+  /** Used for the iframe title + play button label. */
+  title: string;
+  /** Poster image src (16:9). */
+  poster: string;
+  posterAlt?: string;
+  class?: string;
+}
+
+const { vimeoId, title, poster, posterAlt, class: className } = Astro.props;
+---
+
+<div
+  class:list={["facade", className]}
+  data-vimeo-facade
+  data-vimeo-id={vimeoId}
+  data-title={title}
+>
+  <img
+    class="facade__poster"
+    src={poster}
+    alt={posterAlt ?? `${title} — video önizleme görseli`}
+    loading="lazy"
+    decoding="async"
+    width="1600"
+    height="900"
+  />
+  <button type="button" class="facade__play" aria-label={`Videoyu oynat: ${title}`}>
+    <span class="facade__circle">
+      <Icon name="play" size={28} />
+    </span>
+  </button>
+</div>
+
+<style>
+  .facade {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: var(--radius-card);
+    background: var(--ink);
+    border: 1px solid var(--line);
+  }
+  .facade__poster {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--dur) var(--ease-out);
+  }
+  .facade__play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+  .facade__circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 4.25rem;
+    height: 4.25rem;
+    padding-left: 0.25rem; /* optically centre the triangle */
+    border-radius: 50%;
+    color: var(--amber);
+    background: color-mix(in srgb, var(--paper) 86%, transparent);
+    -webkit-backdrop-filter: blur(8px) saturate(var(--glass-saturate));
+    backdrop-filter: blur(8px) saturate(var(--glass-saturate));
+    box-shadow: 0 8px 24px -12px rgba(17, 17, 16, 0.5);
+    transition:
+      background-color var(--dur) var(--ease-out),
+      color var(--dur) var(--ease-out),
+      transform var(--dur) var(--ease-out);
+  }
+  .facade:hover .facade__poster {
+    transform: scale(1.03);
+  }
+  .facade:hover .facade__circle,
+  .facade__play:focus-visible .facade__circle {
+    background: var(--amber);
+    color: var(--paper);
+    transform: scale(1.06);
+  }
+
+  /* Once activated, the injected iframe fills the box. */
+  .facade :global(.facade__iframe) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+</style>
+
+<script>
+  function buildIframe(id: string, title: string) {
+    const iframe = document.createElement("iframe");
+    const params = new URLSearchParams({
+      autoplay: "1",
+      title: "0",
+      byline: "0",
+      portrait: "0",
+      dnt: "1", // do-not-track (privacy / KVKK)
+    });
+    iframe.src = `https://player.vimeo.com/video/${id}?${params}`;
+    iframe.title = title;
+    iframe.className = "facade__iframe";
+    iframe.allow = "autoplay; fullscreen; picture-in-picture";
+    iframe.setAttribute("allowfullscreen", "");
+    return iframe;
+  }
+
+  document.querySelectorAll<HTMLElement>("[data-vimeo-facade]").forEach((facade) => {
+    const button = facade.querySelector<HTMLButtonElement>(".facade__play");
+    button?.addEventListener(
+      "click",
+      () => {
+        const id = facade.dataset.vimeoId;
+        if (!id) return;
+        const iframe = buildIframe(id, facade.dataset.title ?? "");
+        facade.replaceChildren(iframe);
+        facade.classList.add("is-active");
+        iframe.focus();
+      },
+      { once: true },
+    );
+  });
+</script>

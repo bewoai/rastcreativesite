@@ -1,0 +1,53 @@
+---
+interface Props {
+  /** ink = on light surfaces (default), paper = on the dark footer band. */
+  tone?: "ink" | "paper";
+  /** Show the "Rast Creative" wordmark next to the mark. */
+  wordmark?: boolean;
+  href?: string;
+  class?: string;
+}
+
+const { tone = "ink", wordmark = true, href = "/", class: className } = Astro.props;
+const color = tone === "paper" ? "var(--paper)" : "var(--ink)";
+---
+
+<a
+  href={href}
+  class:list={["logo", className]}
+  style={`--logo-color:${color}`}
+  aria-label="Rast Creative Studio — ana sayfa"
+>
+  <svg class="logo__mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+    <g stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 11.5V7h4.5"></path>
+      <path d="M20.5 7H25v4.5"></path>
+      <path d="M25 20.5V25h-4.5"></path>
+      <path d="M11.5 25H7v-4.5"></path>
+    </g>
+    <circle cx="16" cy="16" r="3" fill="var(--amber)"></circle>
+  </svg>
+  {wordmark && <span class="logo__word">Rast Creative</span>}
+</a>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--logo-color);
+    line-height: 1;
+  }
+  .logo__mark {
+    width: 1.65rem;
+    height: 1.65rem;
+    flex: none;
+  }
+  .logo__word {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.1rem;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+</style>
