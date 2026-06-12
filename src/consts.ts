@@ -78,3 +78,16 @@ export const CONTACT = {
   email: "",
   whatsapp: "",
 } as const;
+
+/**
+ * Migrated marketing copy (roadmap §2 + old site rastcreative.com).
+ * `heroTitle` is the slogan the roadmap says to keep; `heroSubtitle`/`aboutIntro`
+ * come from the old site (aboutIntro lightly cleaned — confirm wording with client).
+ */
+export const COPY = {
+  heroTitle: "Markanızın Sinematik Yüzüyle Tanışın",
+  heroSubtitle: "Sektörel disiplin, teknolojik üstünlük ve kreatif kurgu.",
+  heroSecondaryCta: "Projelerimizi İzleyin",
+  aboutIntro:
+    "Yolculuğumuz boyunca farklı sektörlerden markaların dijital hikâyelerini yönettik. Ekibimizin geçmişindeki bu deneyim, bugün Rast Creative Studio çatısı altında sunduğumuz vizyonun temelini oluşturuyor.",
+} as const;

@@ -1,4 +1,5 @@
 ---
+import { getCollection, render } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import GlassNav from "../components/GlassNav.astro";
 import Footer from "../components/Footer.astro";
@@ -11,47 +12,26 @@ import Icon from "../components/Icon.astro";
 import Logo from "../components/Logo.astro";
 import type { IconName } from "../consts";
 
-const icons: IconName[] = [
-  "home",
-  "projects",
-  "services",
-  "about",
-  "contact",
-  "instagram",
-  "youtube",
-  "tiktok",
-  "linkedin",
-  "arrow-right",
-  "arrow-up-right",
-  "play",
-  "whatsapp",
-];
+// --- Live content collections (Faz 3) ---------------------------------
+const byOrder = (a: { data: { order: number } }, b: { data: { order: number } }) =>
+  a.data.order - b.data.order;
 
-const projects = [
-  {
-    title: "Medikal Marka Tanıtım Filmi",
-    category: "Medikal",
-    poster: "/placeholders/poster-1.svg",
-    client: "Özel Klinik",
-    year: 2025,
-    timecode: "02:14",
-  },
-  {
-    title: "Ürün Lansman Reklamı",
-    category: "Reklam",
-    poster: "/placeholders/poster-2.svg",
-    client: "KOBİ Markası",
-    year: 2025,
-    timecode: "00:38",
-  },
-  {
-    title: "Kurumsal Hikâye",
-    category: "Kurumsal",
-    poster: "/placeholders/poster-3.svg",
-    client: "Sanayi A.Ş.",
-    year: 2024,
-    timecode: "03:05",
-  },
+const projectEntries = (await getCollection("projects"))
+  .filter((p) => !p.data.draft)
+  .sort(byOrder);
+const serviceEntries = (await getCollection("services")).sort(byOrder);
+const faqEntries = (await getCollection("faq")).sort(byOrder);
+// Pre-render FAQ answer bodies (markdown → component).
+const faqRendered = await Promise.all(
+  faqEntries.map(async (entry) => ({
+    data: entry.data,
+    Content: (await render(entry)).Content,
+  })),
+);
+
+const icons: IconName[] = [
+  "home", "projects", "services", "about", "contact", "instagram",
+  "youtube", "tiktok", "linkedin", "arrow-right", "arrow-up-right", "play", "whatsapp",
 ];
 ---
 
@@ -60,12 +40,12 @@ const projects = [
 
   <div class="mx-auto w-full max-w-[var(--container-max)] px-[var(--container-pad)] py-12">
     <header class="mb-14 flex flex-col gap-3">
-      <Eyebrow>Geçici · Faz 2</Eyebrow>
+      <Eyebrow>Geçici · Faz 2–3</Eyebrow>
       <h1 class="max-w-[20ch]">Bileşen Galerisi</h1>
       <p class="max-w-[60ch] text-ink-soft">
-        Tüm çekirdek bileşenler burada sergilenir; mobil (390px) ve masaüstünde
-        gözden geçirmek için. Bu sayfa yayında <strong>indekslenmez</strong> ve
-        Faz sonunda kaldırılabilir.
+        Tüm çekirdek bileşenler ve içerik koleksiyonları burada sergilenir; mobil
+        (390px) ve masaüstünde gözden geçirmek için. Bu sayfa yayında
+        <strong>indekslenmez</strong> ve Faz sonunda kaldırılabilir.
       </p>
     </header>
 
@@ -108,32 +88,74 @@ const projects = [
             </p>
           </Fragment>
         </SectionHeading>
-        <SectionHeading eyebrow="Sahne 05 · Ortalı" align="center">
-          Ortalanmış başlık örneği
-        </SectionHeading>
       </section>
 
-      <!-- Project cards -->
+      <!-- Projects (live from collection) -->
       <section class="flex flex-col gap-6">
-        <Eyebrow tone="soft">Proje Kartları</Eyebrow>
+        <Eyebrow tone="soft">Projeler · koleksiyondan ({projectEntries.length})</Eyebrow>
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {
-            projects.map((p) => (
+            projectEntries.map((p) => (
               <ProjectCard
-                href="/projeler"
-                title={p.title}
-                category={p.category}
-                poster={p.poster}
-                client={p.client}
-                year={p.year}
-                timecode={p.timecode}
+                href={`/projeler/${p.id}`}
+                title={p.data.title}
+                category={p.data.category}
+                poster={p.data.poster}
+                posterAlt={p.data.posterAlt}
+                client={p.data.client}
+                year={p.data.year}
+                timecode={p.data.duration}
               />
             ))
           }
         </div>
         <p class="text-sm text-ink-soft">
-          (Üzerine gelince poster yakınlaşır + amber timecode görünür.)
+          Bu kartlar <code>src/content/projects/*.md</code> dosyalarından üretilir —
+          dosya eklemek yeni kart oluşturur.
         </p>
+      </section>
+
+      <!-- Services (live from collection) -->
+      <section class="flex flex-col gap-6">
+        <Eyebrow tone="soft">Hizmetler · koleksiyondan ({serviceEntries.length})</Eyebrow>
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {
+            serviceEntries.map((s) => (
+              <article class="flex flex-col gap-3 rounded-[var(--radius-card)] border border-line p-6">
+                <h3 class="text-[1.15rem] font-semibold">{s.data.title}</h3>
+                <p class="text-ink-soft">{s.data.summary}</p>
+                <ul class="mt-1 flex flex-col gap-1.5">
+                  {s.data.features.map((f) => (
+                    <li class="flex items-start gap-2 text-sm">
+                      <Icon name="arrow-right" size={16} class="mt-0.5 shrink-0 text-amber-deep" />
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- FAQ (live from collection, rendered markdown answers) -->
+      <section class="flex flex-col gap-6">
+        <Eyebrow tone="soft">SSS · koleksiyondan ({faqRendered.length})</Eyebrow>
+        <div class="flex flex-col divide-y divide-line border-y border-line">
+          {
+            faqRendered.map((f) => {
+              const Answer = f.Content;
+              return (
+                <div class="flex flex-col gap-2 py-5">
+                  <h3 class="text-[1.05rem] font-semibold">{f.data.question}</h3>
+                  <div class="faq-answer max-w-[60ch] text-ink-soft">
+                    <Answer />
+                  </div>
+                </div>
+              );
+            })
+          }
+        </div>
       </section>
 
       <!-- Vimeo facade -->
@@ -187,3 +209,13 @@ const projects = [
 
   <Footer />
 </BaseLayout>
+
+<style>
+  .faq-answer :global(p) {
+    margin: 0;
+    line-height: var(--leading-body);
+  }
+  .faq-answer :global(strong) {
+    color: var(--ink);
+  }
+</style>
