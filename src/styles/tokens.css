@@ -1,0 +1,67 @@
+/*
+  Design tokens — Rast Creative Studio  ("Doğru Kare")
+  ------------------------------------------------------------------
+  Single source of truth for the system described in the roadmap
+  (sections 1.2–1.3). Plain CSS custom properties so they work in
+  hand-written CSS; global.css re-exports the relevant ones into
+  Tailwind's @theme so utilities (bg-paper, text-amber, font-display…)
+  are generated from the SAME values.
+
+  Concept: light, airy, daylight gallery — never a dark studio.
+  Amber is for ACCENT only (CTA, hover, timecode), never large fills.
+*/
+
+:root {
+  /* ---- Color (1.2) ------------------------------------------------- */
+  --paper: #faf9f6; /* warm white — primary surface            */
+  --ink: #111110; /* headings + body text                     */
+  --ink-soft: #4a4845; /* secondary text                           */
+  --line: #e5e2dc; /* hairlines, card borders                  */
+  --amber: #e25303; /* "Rast Amber" — signature accent          */
+  --amber-deep: #b84203; /* amber hover / active                     */
+
+  /* ---- Type families (1.3) ---------------------------------------- */
+  --font-display: "Fraunces Variable", Georgia, "Times New Roman", serif;
+  --font-body: "Inter Variable", system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-utility: "Space Grotesk Variable", system-ui, sans-serif;
+
+  /* ---- Type scale -------------------------------------------------- */
+  /* Body min 18px for the 35+ audience, generous line-height.         */
+  --text-body: 1.125rem; /* 18px */
+  --leading-body: 1.6;
+  --leading-tight: 1.08; /* display headings */
+  --tracking-eyebrow: 0.18em; /* Space Grotesk eyebrow labels */
+
+  /* Fluid headings — mobile 390px → desktop. h1 ≈ 2.4rem → 4.5rem.    */
+  --text-h1: clamp(2.4rem, 7vw + 1rem, 4.5rem);
+  --text-h2: clamp(1.85rem, 4vw + 0.75rem, 3rem);
+  --text-h3: clamp(1.35rem, 1.5vw + 0.85rem, 1.75rem);
+  --text-eyebrow: 0.8125rem; /* 13px */
+
+  /* ---- Spacing & layout ------------------------------------------- */
+  --container-max: 75rem; /* 1200px content cap */
+  --container-pad: clamp(1.25rem, 5vw, 3rem); /* gutter, mobile-first */
+  --section-gap: clamp(4rem, 9vw, 7.5rem); /* vertical rhythm between sections */
+  --tap-min: 48px; /* min touch target (1.4: 35+ thumb reach) */
+
+  /* ---- Radius ------------------------------------------------------ */
+  --radius-pill: 999px; /* glass nav, buttons */
+  --radius-card: 1rem; /* glass cards */
+  --radius-sm: 0.5rem;
+
+  /* ---- Glass (1.4 imza unsur) ------------------------------------- */
+  --glass-blur: 16px;
+  --glass-saturate: 1.4;
+  --glass-bg: color-mix(in srgb, var(--paper) 70%, transparent);
+  --glass-border: color-mix(in srgb, #ffffff 55%, transparent);
+
+  /* ---- Motion (1.4: disiplinli; prefers-reduced-motion saygısı) ---- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 160ms;
+  --dur: 280ms;
+  --reveal-shift: 8px; /* scroll-reveal fade + rise distance */
+
+  /* ---- Focus ------------------------------------------------------- */
+  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--amber) 45%, transparent);
+}

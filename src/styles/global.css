@@ -1,0 +1,103 @@
+/* Rast Creative Studio — global stylesheet (entry) */
+@import "tailwindcss";
+@import "./tokens.css";
+@import "./fonts.css";
+
+/*
+  Expose the design tokens to Tailwind so utilities are generated from the
+  SAME values as hand-written CSS. `inline` makes utilities reference the
+  token vars directly (e.g. bg-paper -> background-color: var(--paper)).
+*/
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-line: var(--line);
+  --color-amber: var(--amber);
+  --color-amber-deep: var(--amber-deep);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-utility: var(--font-utility);
+  --font-sans: var(--font-body); /* default sans -> Inter */
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    line-height: var(--leading-body);
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Display face is reserved for h1–h2 (roadmap 1.3). */
+  h1,
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 480;
+    line-height: var(--leading-tight);
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  h1 {
+    font-size: var(--text-h1);
+  }
+  h2 {
+    font-size: var(--text-h2);
+  }
+
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-body);
+    font-weight: 600;
+    line-height: 1.25;
+    text-wrap: balance;
+  }
+  h3 {
+    font-size: var(--text-h3);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* Visible keyboard focus (accessibility, roadmap 0.1 #7). */
+  :focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    border-radius: var(--radius-sm);
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--amber) 22%, transparent);
+    color: var(--ink);
+  }
+}
+
+/* Respect reduced-motion globally (roadmap 0.1 #7 / 1.4). */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

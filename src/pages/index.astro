@@ -1,0 +1,55 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+// Palette check — these bg-* utilities are generated from the @theme tokens,
+// so if they render in the right colors the token pipeline is wired correctly.
+const swatches = [
+  { name: "paper", cls: "bg-paper" },
+  { name: "ink", cls: "bg-ink" },
+  { name: "ink-soft", cls: "bg-ink-soft" },
+  { name: "line", cls: "bg-line" },
+  { name: "amber", cls: "bg-amber" },
+  { name: "amber-deep", cls: "bg-amber-deep" },
+];
+---
+
+<BaseLayout>
+  <section
+    class="mx-auto flex min-h-svh w-full max-w-[var(--container-max)] flex-col justify-center gap-6 px-[var(--container-pad)] py-[var(--section-gap)]"
+  >
+    <p
+      class="font-utility uppercase text-amber"
+      style="font-size: var(--text-eyebrow); letter-spacing: var(--tracking-eyebrow);"
+    >
+      Sahne 00 · Temel
+    </p>
+
+    <h1 class="max-w-[18ch]">Doğru kareyi yakalayan stüdyo.</h1>
+
+    <p class="max-w-[54ch] text-ink-soft">
+      Rast Creative Studio'nun yeni web sitesi yeniden inşa ediliyor. Bu sayfa
+      yalnızca tasarım sistemi iskeletini doğrular: <strong>Fraunces</strong> başlık,
+      <strong>Inter</strong> gövde, <strong>Space&nbsp;Grotesk</strong> etiket; ışıklı
+      kâğıt zemin ve <span class="text-amber">Rast Amber</span> vurgu.
+    </p>
+
+    <!-- Token / utility verification -->
+    <ul class="flex flex-wrap gap-4 pt-2">
+      {
+        swatches.map((s) => (
+          <li class="flex flex-col items-start gap-1.5">
+            <span class={`h-12 w-12 rounded-[var(--radius-sm)] border border-line ${s.cls}`} />
+            <span class="font-utility text-[0.7rem] uppercase tracking-wide text-ink-soft">
+              {s.name}
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <!-- latin + latin-ext glyph check (Turkish must render in every face) -->
+    <p class="font-utility text-ink-soft" style="font-size: var(--text-eyebrow);">
+      Türkçe glifler: çÇ ğĞ ıI iİ öÖ şŞ üÜ
+    </p>
+  </section>
+</BaseLayout>
