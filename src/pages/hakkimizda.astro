@@ -1,0 +1,152 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/Section.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import Button from "../components/Button.astro";
+import { COPY, PRIMARY_CTA } from "../consts";
+
+const approach = [
+  {
+    t: "Doğru kare",
+    d: "İsabetli ve gösterişsiz. Her karede markanın özünü yakalamayı hedefleriz — gürültü değil, netlik.",
+  },
+  {
+    t: "Yerinde, Sakarya'da",
+    d: "Çekim ekibiyle sahadayız; ön görüşmeden teslime kadar süreci yüz yüze yönetiriz.",
+  },
+  {
+    t: "Sinema standardı",
+    d: "Sony Cinema Line kamera ve optik parkıyla, her bütçede sinematik bir görüntü dili kurarız.",
+  },
+];
+---
+
+<BaseLayout
+  title="Hakkımızda"
+  description="Rast Creative Studio — Sakarya merkezli, sinema standardı ekipmanla çalışan video prodüksiyon ekibi."
+>
+  <Section width="narrow">
+    <SectionHeading eyebrow="Sahne 01 · Stüdyo">
+      Doğru kareyi yakalayan stüdyo
+      <Fragment slot="intro">
+        <p>{COPY.aboutIntro}</p>
+      </Fragment>
+    </SectionHeading>
+  </Section>
+
+  <Section tone="ink" space="tight">
+    <Eyebrow tone="paper">Yaklaşımımız</Eyebrow>
+    <ul class="approach">
+      {
+        approach.map((a) => (
+          <li class="approach__item">
+            <h2 class="approach__t">{a.t}</h2>
+            <p class="approach__d">{a.d}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section width="narrow">
+    <div class="equip">
+      <Eyebrow>Ekipman</Eyebrow>
+      <h2 class="equip__title">Sony Cinema Line</h2>
+      <p class="equip__text">
+        Görüntü kalitesinden ödün vermiyoruz. Reklamdan medikale her projede,
+        sinema dünyasının kullandığı Sony Cinema Line gövde ve optiklerle
+        çekim yapıyor; renk ve detayı en üst standartta tutuyoruz.
+      </p>
+    </div>
+  </Section>
+
+  <Section width="narrow" space="tight">
+    <div class="team">
+      <Eyebrow tone="soft">Ekip</Eyebrow>
+      <p class="team__text">
+        Farklı sektörlerden markaların dijital hikâyelerini yönetmiş bir ekibiz.
+        Stratejiden çekime, kurgudan teslime kadar aynı disiplinle çalışırız.
+      </p>
+      <p class="team__note">
+        (Ekip üyeleri, görseller ve detaylı özgeçmişler eklendiğinde bu bölüm
+        güncellenecek.)
+      </p>
+    </div>
+  </Section>
+
+  <Section tone="ink" space="tight">
+    <div class="cta">
+      <Eyebrow tone="paper">Tanışalım</Eyebrow>
+      <h2 class="cta__title">Sakarya'da bir kahve, bir ön görüşme.</h2>
+      <Button href={PRIMARY_CTA.href} size="lg" arrow>{PRIMARY_CTA.label}</Button>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .approach {
+    list-style: none;
+    margin: 2rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .approach__item {
+    padding-top: 1.3rem;
+    border-top: 2px solid color-mix(in srgb, var(--amber) 70%, transparent);
+  }
+  .approach__t {
+    margin: 0 0 0.5rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--paper);
+  }
+  .approach__d {
+    margin: 0;
+    color: color-mix(in srgb, var(--paper) 75%, transparent);
+    line-height: var(--leading-body);
+  }
+  .equip__title {
+    margin: 0.6rem 0 0.8rem;
+  }
+  .equip__text {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+    max-width: 60ch;
+  }
+  .team__text {
+    margin: 0.9rem 0 0;
+    font-size: 1.1rem;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+    max-width: 60ch;
+  }
+  .team__note {
+    margin: 1rem 0 0;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: color-mix(in srgb, var(--ink-soft) 80%, transparent);
+  }
+  .cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+  }
+  .cta__title {
+    margin: 0;
+    max-width: 20ch;
+    color: var(--paper);
+  }
+  @media (min-width: 768px) {
+    .approach {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.5rem;
+    }
+  }
+</style>

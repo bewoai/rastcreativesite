@@ -1,0 +1,150 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/Section.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import Button from "../components/Button.astro";
+import Icon from "../components/Icon.astro";
+import { PRIMARY_CTA } from "../consts";
+
+const services = (await getCollection("services")).sort((a, b) => a.data.order - b.data.order);
+const rendered = await Promise.all(
+  services.map(async (s) => ({ id: s.id, data: s.data, Content: (await render(s)).Content })),
+);
+---
+
+<BaseLayout
+  title="Hizmetler"
+  description="Video prodüksiyon, kreatif strateji ve post-prodüksiyon — Rast Creative Studio'nun uçtan uca üç ana hizmeti."
+>
+  <Section>
+    <SectionHeading eyebrow="Sahne 01 · Hizmetler">
+      Uçtan uca üç ana hizmet
+      <Fragment slot="intro">
+        <p>
+          Fikirden teslime kadar tek elden: stratejiyi kurar, sinematik
+          standartta çeker, post-prodüksiyonda son rötuşu yaparız.
+        </p>
+      </Fragment>
+    </SectionHeading>
+
+    <ul class="services">
+      {
+        rendered.map((s, i) => (
+          <li id={s.id} class="svc">
+            <div class="svc__aside">
+              <span class="svc__num">{String(i + 1).padStart(2, "0")}</span>
+            </div>
+            <div class="svc__main">
+              <h2 class="svc__title">{s.data.title}</h2>
+              <div class="svc__prose">
+                <s.Content />
+              </div>
+              {s.data.features.length > 0 && (
+                <ul class="svc__features">
+                  {s.data.features.map((f) => (
+                    <li>
+                      <Icon name="arrow-right" size={16} class="svc__ic" />
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section tone="ink" space="tight">
+    <div class="cta">
+      <Eyebrow tone="paper">Projeniz mi var?</Eyebrow>
+      <h2 class="cta__title">Hangi hizmete ihtiyacınız olduğundan emin değil misiniz?</h2>
+      <p class="cta__text">Ücretsiz ön görüşmede birlikte netleştirelim.</p>
+      <Button href={PRIMARY_CTA.href} size="lg" arrow>{PRIMARY_CTA.label}</Button>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .services {
+    list-style: none;
+    margin: 3rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .svc {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding-block: clamp(2rem, 4vw, 3rem);
+    border-top: 1px solid var(--line);
+    scroll-margin-top: 7rem; /* clear the fixed nav on anchor jump */
+  }
+  .svc:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  .svc__num {
+    font-family: var(--font-utility);
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--amber-text);
+  }
+  .svc__title {
+    margin: 0 0 1rem;
+  }
+  .svc__prose {
+    font-size: 1.1rem;
+    line-height: var(--leading-body);
+    color: var(--ink-soft);
+    max-width: 60ch;
+  }
+  .svc__prose :global(p) {
+    margin: 0;
+  }
+  .svc__features {
+    list-style: none;
+    margin: 1.4rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.6rem;
+  }
+  .svc__features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.98rem;
+  }
+  .svc__ic {
+    margin-top: 0.2rem;
+    flex: none;
+    color: var(--amber-text);
+  }
+  .cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+  }
+  .cta__title {
+    margin: 0;
+    max-width: 24ch;
+    color: var(--paper);
+  }
+  .cta__text {
+    margin: 0;
+    color: color-mix(in srgb, var(--paper) 75%, transparent);
+  }
+  @media (min-width: 820px) {
+    .svc {
+      grid-template-columns: 6rem 1fr;
+      gap: 2rem;
+    }
+  }
+</style>

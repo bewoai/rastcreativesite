@@ -1,0 +1,208 @@
+---
+import Button from "./Button.astro";
+import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
+---
+
+<form class="cform" action="https://api.web3forms.com/submit" method="POST" data-cform>
+  <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
+  <input type="hidden" name="subject" value="Yeni ön görüşme talebi — rastcreative.com" />
+  <input type="hidden" name="from_name" value={SITE.name} />
+  {/* honeypot — bots fill this; humans never see it */}
+  <input type="checkbox" name="botcheck" class="cform__hp" tabindex="-1" autocomplete="off" />
+
+  <div class="cform__row">
+    <div class="field">
+      <label for="cf-name">Ad Soyad <span class="req" aria-hidden="true">*</span></label>
+      <input id="cf-name" name="name" type="text" autocomplete="name" required />
+    </div>
+    <div class="field">
+      <label for="cf-company">Firma</label>
+      <input id="cf-company" name="company" type="text" autocomplete="organization" />
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="cf-phone">Telefon <span class="req" aria-hidden="true">*</span></label>
+    <input
+      id="cf-phone"
+      name="phone"
+      type="tel"
+      inputmode="tel"
+      autocomplete="tel"
+      required
+      aria-describedby="cf-phone-hint"
+    />
+    <span id="cf-phone-hint" class="hint">Size en hızlı telefonla dönüş yaparız.</span>
+  </div>
+
+  <div class="field">
+    <label for="cf-message">Mesajınız <span class="req" aria-hidden="true">*</span></label>
+    <textarea id="cf-message" name="message" rows="5" required></textarea>
+  </div>
+
+  <label class="consent">
+    <input type="checkbox" name="kvkk" value="onaylandi" required />
+    <span>
+      Kişisel verilerimin bu form aracılığıyla iletişim amacıyla işlenmesine onay
+      veriyorum. <span class="req" aria-hidden="true">*</span>
+    </span>
+  </label>
+
+  <div class="cform__status" data-status role="status" aria-live="polite"></div>
+
+  <Button type="submit" size="lg" arrow class="cform__submit">Gönder</Button>
+</form>
+
+<style>
+  .cform {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .cform__hp {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .cform__row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  label {
+    font-family: var(--font-utility);
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .req {
+    color: var(--amber-text);
+  }
+  .hint {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+  }
+  input[type="text"],
+  input[type="tel"],
+  textarea {
+    font: inherit;
+    font-size: 1rem;
+    min-height: var(--tap-min);
+    padding: 0.75rem 1rem;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      box-shadow var(--dur-fast) var(--ease-out);
+  }
+  textarea {
+    min-height: 8rem;
+    resize: vertical;
+    line-height: var(--leading-body);
+  }
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: none;
+    border-color: var(--amber);
+    box-shadow: var(--focus-ring);
+  }
+  input:user-invalid,
+  textarea:user-invalid {
+    border-color: #b42318;
+  }
+  .consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    cursor: pointer;
+  }
+  .consent input {
+    margin-top: 0.2rem;
+    width: 1.15rem;
+    height: 1.15rem;
+    flex: none;
+    accent-color: var(--amber);
+  }
+  .cform__status {
+    font-size: 0.95rem;
+  }
+  .cform__status.is-pending {
+    color: var(--ink-soft);
+  }
+  .cform__status.is-ok {
+    color: #1a7f37;
+    font-weight: 600;
+  }
+  .cform__status.is-err {
+    color: #b42318;
+    font-weight: 600;
+  }
+  .cform__submit {
+    align-self: flex-start;
+  }
+  @media (min-width: 560px) {
+    .cform__row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("[data-cform]");
+  if (form) {
+    const status = form.querySelector<HTMLElement>("[data-status]");
+    const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const setStatus = (text: string, state: "pending" | "ok" | "err") => {
+      if (status) {
+        status.textContent = text;
+        status.className = `cform__status is-${state}`;
+      }
+    };
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      if (submit) submit.disabled = true;
+      setStatus("Gönderiliyor…", "pending");
+      try {
+        const res = await fetch(form.action, {
+          method: "POST",
+          headers: { Accept: "application/json" },
+          body: new FormData(form),
+        });
+        const json = await res.json().catch(() => ({}));
+        if (res.ok && json.success) {
+          form.reset();
+          setStatus("Teşekkürler! Mesajınız ulaştı, en kısa sürede dönüş yapacağız.", "ok");
+        } else {
+          setStatus(
+            json.message ?? "Gönderilemedi. Lütfen tekrar deneyin ya da WhatsApp’tan yazın.",
+            "err",
+          );
+        }
+      } catch {
+        setStatus("Bağlantı hatası. Lütfen tekrar deneyin ya da WhatsApp’tan yazın.", "err");
+      } finally {
+        if (submit) submit.disabled = false;
+      }
+    });
+  }
+</script>

@@ -1,0 +1,48 @@
+---
+interface Props {
+  id?: string;
+  /** "ink" renders a dark band (allowed for accent sections — roadmap 1.5). */
+  tone?: "paper" | "ink";
+  width?: "default" | "narrow" | "wide";
+  /** Vertical padding scale. */
+  space?: "default" | "tight";
+  class?: string;
+}
+
+const { id, tone = "paper", width = "default", space = "default", class: className } =
+  Astro.props;
+---
+
+<section
+  id={id}
+  class:list={["section", `section--${tone}`, `section--${space}`, className]}
+>
+  <div class:list={["section__inner", `is-${width}`]}>
+    <slot />
+  </div>
+</section>
+
+<style>
+  .section {
+    padding-block: var(--section-gap);
+  }
+  .section--tight {
+    padding-block: clamp(2.5rem, 5vw, 4rem);
+  }
+  .section--ink {
+    background: var(--ink);
+    color: color-mix(in srgb, var(--paper) 88%, transparent);
+  }
+  .section__inner {
+    margin-inline: auto;
+    padding-inline: var(--container-pad);
+    width: 100%;
+    max-width: var(--container-max);
+  }
+  .section__inner.is-narrow {
+    max-width: 58rem;
+  }
+  .section__inner.is-wide {
+    max-width: 84rem;
+  }
+</style>

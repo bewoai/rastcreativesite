@@ -1,0 +1,236 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Section from "../../components/Section.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import Eyebrow from "../../components/Eyebrow.astro";
+import Icon from "../../components/Icon.astro";
+import VimeoFacade from "../../components/VimeoFacade.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+
+export async function getStaticPaths() {
+  const all = (await getCollection("projects")).filter((p) => !p.data.draft);
+  const byOrder = (a: (typeof all)[number], b: (typeof all)[number]) =>
+    a.data.order - b.data.order;
+  return all.map((p) => ({
+    params: { slug: p.id },
+    props: {
+      entry: p,
+      related: all
+        .filter((r) => r.data.category === p.data.category && r.id !== p.id)
+        .sort(byOrder)
+        .slice(0, 3),
+    },
+  }));
+}
+
+const { entry, related } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+
+const credits = [
+  ["Müşteri", d.client],
+  ["Yıl", d.year?.toString()],
+  ["Kategori", d.category],
+  ["Süre", d.duration],
+].filter(([, v]) => v) as [string, string][];
+---
+
+<BaseLayout
+  title={d.title}
+  description={d.summary ?? `${d.title} — Rast Creative Studio ${d.category} projesi.`}
+  image={d.poster}
+  ogType="article"
+>
+  <Section>
+    <a href="/projeler" class="back">
+      <Icon name="arrow-right" size={18} class="back__ic" />
+      Tüm projeler
+    </a>
+
+    <header class="ph">
+      <Eyebrow>{d.category}</Eyebrow>
+      <h1 class="ph__title">{d.title}</h1>
+    </header>
+
+    <div class="media">
+      {
+        d.vimeoId ? (
+          <VimeoFacade
+            vimeoId={d.vimeoId}
+            title={d.title}
+            poster={d.poster}
+            posterAlt={d.posterAlt}
+          />
+        ) : (
+          <div class="poster">
+            <img
+              src={d.poster}
+              alt={d.posterAlt ?? `${d.title} — proje görseli`}
+              width="1600"
+              height="900"
+              class="poster__img"
+            />
+            <span class="poster__note">Video yakında eklenecek</span>
+          </div>
+        )
+      }
+    </div>
+
+    <div class="detail">
+      <div class="detail__desc">
+        <Content />
+      </div>
+      {
+        credits.length > 0 && (
+          <aside class="kunye" aria-label="Künye">
+            <Eyebrow tone="soft" as="div">
+              Künye
+            </Eyebrow>
+            <dl class="kunye__list">
+              {credits.map(([k, v]) => (
+                <div class="kunye__row">
+                  <dt>{k}</dt>
+                  <dd>{v}</dd>
+                </div>
+              ))}
+            </dl>
+          </aside>
+        )
+      }
+    </div>
+  </Section>
+
+  {
+    related.length > 0 && (
+      <Section tone="ink" space="tight">
+        <SectionHeading eyebrow="Sahne 06 · Devamı" eyebrowTone="paper">
+          Benzer işler
+        </SectionHeading>
+        <div class="related">
+          {related.map((p) => (
+            <ProjectCard
+              href={`/projeler/${p.id}`}
+              title={p.data.title}
+              category={p.data.category}
+              poster={p.data.poster}
+              posterAlt={p.data.posterAlt}
+              client={p.data.client}
+              year={p.data.year}
+              timecode={p.data.duration}
+            />
+          ))}
+        </div>
+      </Section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 1.5rem;
+    font-family: var(--font-utility);
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .back:hover {
+    color: var(--amber-text);
+  }
+  .back__ic {
+    transform: rotate(180deg);
+  }
+  .ph {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    margin-bottom: 1.8rem;
+  }
+  .ph__title {
+    margin: 0;
+    max-width: 22ch;
+  }
+  .media {
+    margin-bottom: 2.5rem;
+  }
+  .poster {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: var(--radius-card);
+    border: 1px solid var(--line);
+  }
+  .poster__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .poster__note {
+    position: absolute;
+    left: 0.9rem;
+    bottom: 0.9rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-utility);
+    font-size: 0.75rem;
+    color: var(--paper);
+    background: color-mix(in srgb, var(--ink) 70%, transparent);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+  .detail {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .detail__desc {
+    font-size: 1.1rem;
+    line-height: var(--leading-body);
+    color: var(--ink-soft);
+    max-width: 62ch;
+  }
+  .detail__desc :global(p) {
+    margin: 0 0 1rem;
+  }
+  .kunye__list {
+    margin: 0.9rem 0 0;
+    display: grid;
+    gap: 0.7rem;
+  }
+  .kunye__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .kunye__row dt {
+    color: var(--ink-soft);
+  }
+  .kunye__row dd {
+    margin: 0;
+    font-weight: 600;
+    text-align: right;
+  }
+  .related {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+  @media (min-width: 768px) {
+    .detail {
+      grid-template-columns: 1fr 18rem;
+      gap: 3rem;
+    }
+  }
+  @media (min-width: 640px) {
+    .related {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

@@ -1,8 +1,6 @@
 ---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import GlassNav from "../components/GlassNav.astro";
-import Footer from "../components/Footer.astro";
 import Button from "../components/Button.astro";
 import Eyebrow from "../components/Eyebrow.astro";
 import SectionHeading from "../components/SectionHeading.astro";
@@ -36,8 +34,6 @@ const icons: IconName[] = [
 ---
 
 <BaseLayout title="Bileşen Galerisi" noindex>
-  <GlassNav />
-
   <div class="mx-auto w-full max-w-[var(--container-max)] px-[var(--container-pad)] py-12">
     <header class="mb-14 flex flex-col gap-3">
       <Eyebrow>Geçici · Faz 2–3</Eyebrow>
@@ -206,8 +202,6 @@ const icons: IconName[] = [
       </section>
     </div>
   </div>
-
-  <Footer />
 </BaseLayout>
 
 <style>

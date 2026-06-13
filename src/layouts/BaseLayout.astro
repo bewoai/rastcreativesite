@@ -1,6 +1,8 @@
 ---
 import "../styles/global.css";
 import { SITE } from "../consts";
+import GlassNav from "../components/GlassNav.astro";
+import Footer from "../components/Footer.astro";
 
 interface Props {
   /** Page title; omit on the home page to use the full default title. */
@@ -8,11 +10,22 @@ interface Props {
   description?: string;
   /** OG/Twitter image (root-relative). Defaults to the site card. */
   image?: string;
+  /** og:type — "website" (default) or "article" for project detail pages. */
+  ogType?: "website" | "article";
   /** Set true to keep a page out of search indexes (e.g. /dev, 404). */
   noindex?: boolean;
+  /** Render without nav + footer chrome. */
+  bare?: boolean;
 }
 
-const { title, description, image, noindex = false } = Astro.props;
+const {
+  title,
+  description,
+  image,
+  ogType = "website",
+  noindex = false,
+  bare = false,
+} = Astro.props;
 
 const pageTitle = title ? SITE.titleTemplate.replace("%s", title) : SITE.defaultTitle;
 const pageDescription = description ?? SITE.description;
@@ -44,7 +57,7 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
     <link rel="preload" href="/fonts/inter-latin-ext-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
 
     <!-- Open Graph -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:locale" content={SITE.locale} />
     <meta property="og:url" content={canonical} />
@@ -66,8 +79,10 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
     >
       İçeriğe geç
     </a>
+    {!bare && <GlassNav />}
     <main id="main">
       <slot />
     </main>
+    {!bare && <Footer />}
   </body>
 </html>

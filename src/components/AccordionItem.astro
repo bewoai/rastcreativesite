@@ -1,0 +1,81 @@
+---
+// JS-free, accessible accordion item built on native <details>/<summary>.
+interface Props {
+  question: string;
+  open?: boolean;
+  class?: string;
+}
+const { question, open = false, class: className } = Astro.props;
+---
+
+<details class:list={["acc", className]} open={open}>
+  <summary class="acc__summary">
+    <span class="acc__q">{question}</span>
+    <svg class="acc__chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M6 9l6 6 6-6"
+        stroke="currentColor"
+        stroke-width="1.75"
+        stroke-linecap="round"
+        stroke-linejoin="round"></path>
+    </svg>
+  </summary>
+  <div class="acc__answer">
+    <slot />
+  </div>
+</details>
+
+<style>
+  .acc {
+    border-bottom: 1px solid var(--line);
+  }
+  .acc__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.15rem 0;
+    min-height: var(--tap-min);
+    cursor: pointer;
+    list-style: none;
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  /* hide default disclosure marker */
+  .acc__summary::-webkit-details-marker {
+    display: none;
+  }
+  .acc__q {
+    text-wrap: balance;
+  }
+  .acc__chevron {
+    width: 1.4rem;
+    height: 1.4rem;
+    flex: none;
+    color: var(--amber-text);
+    transition: transform var(--dur) var(--ease-out);
+  }
+  .acc[open] .acc__chevron {
+    transform: rotate(180deg);
+  }
+  .acc__summary:hover .acc__q {
+    color: var(--amber-text);
+  }
+  .acc__answer {
+    padding: 0 0 1.3rem;
+    max-width: 65ch;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .acc__answer :global(p) {
+    margin: 0;
+  }
+  .acc__answer :global(p + p) {
+    margin-top: 0.75rem;
+  }
+  .acc__answer :global(strong) {
+    color: var(--ink);
+  }
+</style>

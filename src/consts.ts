@@ -91,3 +91,23 @@ export const COPY = {
   aboutIntro:
     "Yolculuğumuz boyunca farklı sektörlerden markaların dijital hikâyelerini yönettik. Ekibimizin geçmişindeki bu deneyim, bugün Rast Creative Studio çatısı altında sunduğumuz vizyonun temelini oluşturuyor.",
 } as const;
+
+/**
+ * Portfolio categories. `label` must match the `category` enum in
+ * content.config.ts; `slug` is the URL-safe form for /projeler/kategori/[slug].
+ */
+export const PROJECT_CATEGORIES = [
+  { label: "Reklam", slug: "reklam" },
+  { label: "Marka Hikayesi", slug: "marka-hikayesi" },
+  { label: "Ürün", slug: "urun" },
+  { label: "Kurumsal", slug: "kurumsal" },
+  { label: "Medikal", slug: "medikal" },
+] as const;
+
+/**
+ * Web3Forms public access key (web3forms.com — free, static-friendly).
+ * The key is meant to live in client HTML, so committing it is fine. Provide it
+ * via a PUBLIC_WEB3FORMS_KEY env var, or replace the empty fallback. Until set,
+ * the contact form renders but submissions will fail.
+ */
+export const WEB3FORMS_ACCESS_KEY: string = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? "";

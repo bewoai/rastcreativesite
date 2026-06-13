@@ -1,0 +1,178 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/Section.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import Button from "../components/Button.astro";
+import Icon from "../components/Icon.astro";
+import ContactForm from "../components/ContactForm.astro";
+import { CONTACT } from "../consts";
+
+const mapsQuery = encodeURIComponent(`Rast Creative Studio ${CONTACT.city}`);
+const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
+---
+
+<BaseLayout
+  title="İletişim"
+  description="Rast Creative Studio ile iletişime geçin: ücretsiz ön görüşme talebi, WhatsApp ve telefon. Sakarya."
+>
+  <Section>
+    <SectionHeading eyebrow="Sahne 01 · İletişim">
+      Ücretsiz ön görüşme
+      <Fragment slot="intro">
+        <p>
+          Projenizi anlatın; size uygun formatı, kapsamı ve takvimi birlikte
+          belirleyelim. Telefonla hızlı dönüş yaparız.
+        </p>
+      </Fragment>
+    </SectionHeading>
+
+    <div class="contact">
+      <div class="contact__form">
+        <ContactForm />
+      </div>
+
+      <aside class="contact__aside">
+        <Eyebrow tone="soft">Kanallar</Eyebrow>
+
+        {
+          CONTACT.whatsapp ? (
+            <Button href={`https://wa.me/${CONTACT.whatsapp}`} class="wa" block>
+              <Icon name="whatsapp" size={20} /> WhatsApp'tan yazın
+            </Button>
+          ) : (
+            <p class="pending">WhatsApp numarası yakında eklenecek.</p>
+          )
+        }
+
+        <dl class="channels">
+          <div class="channels__row">
+            <dt>Telefon</dt>
+            <dd>
+              {
+                CONTACT.phone ? (
+                  <a href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}>{CONTACT.phone}</a>
+                ) : (
+                  <span class="pending">Yakında</span>
+                )
+              }
+            </dd>
+          </div>
+          <div class="channels__row">
+            <dt>E-posta</dt>
+            <dd>
+              {
+                CONTACT.email ? (
+                  <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+                ) : (
+                  <span class="pending">Yakında</span>
+                )
+              }
+            </dd>
+          </div>
+          <div class="channels__row">
+            <dt>Konum</dt>
+            <dd>{CONTACT.city}</dd>
+          </div>
+        </dl>
+
+        <a href={mapsUrl} target="_blank" rel="noopener noreferrer" class="map">
+          <span class="map__pin"><Icon name="home" size={20} /></span>
+          <span class="map__text">
+            <strong>Haritada aç</strong>
+            <span>{CONTACT.city}</span>
+          </span>
+          <Icon name="arrow-up-right" size={18} class="map__ext" />
+        </a>
+      </aside>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .contact {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  .contact__aside {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    align-content: start;
+  }
+  .wa :global(svg) {
+    margin-right: 0.1rem;
+  }
+  .channels {
+    margin: 0;
+    display: grid;
+    gap: 0.8rem;
+  }
+  .channels__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .channels__row dt {
+    color: var(--ink-soft);
+    font-family: var(--font-utility);
+    font-size: 0.85rem;
+  }
+  .channels__row dd {
+    margin: 0;
+    font-weight: 600;
+  }
+  .channels__row a:hover {
+    color: var(--amber-text);
+  }
+  .pending {
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+  .map {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    color: var(--ink);
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+  .map:hover {
+    border-color: var(--ink);
+  }
+  .map__pin {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    flex: none;
+    border-radius: 50%;
+    color: var(--amber-text);
+    background: color-mix(in srgb, var(--amber) 12%, transparent);
+  }
+  .map__text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+  }
+  .map__text span {
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+  }
+  .map__ext {
+    margin-left: auto;
+    color: var(--ink-soft);
+  }
+  @media (min-width: 880px) {
+    .contact {
+      grid-template-columns: 1.6fr 1fr;
+      gap: 4rem;
+    }
+  }
+</style>

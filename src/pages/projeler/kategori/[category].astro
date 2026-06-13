@@ -1,0 +1,39 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Section from "../../../components/Section.astro";
+import SectionHeading from "../../../components/SectionHeading.astro";
+import ProjectGallery from "../../../components/ProjectGallery.astro";
+import { PROJECT_CATEGORIES } from "../../../consts";
+
+export async function getStaticPaths() {
+  const all = (await getCollection("projects")).filter((p) => !p.data.draft);
+  return PROJECT_CATEGORIES.map((c) => ({
+    params: { category: c.slug },
+    props: {
+      label: c.label,
+      slug: c.slug,
+      projects: all
+        .filter((p) => p.data.category === c.label)
+        .sort((a, b) => a.data.order - b.data.order),
+    },
+  }));
+}
+
+const { label, slug, projects } = Astro.props;
+---
+
+<BaseLayout
+  title={`${label} Projeleri`}
+  description={`Rast Creative Studio ${label.toLocaleLowerCase("tr")} kategorisindeki video prodüksiyon projeleri.`}
+>
+  <Section>
+    <SectionHeading eyebrow="Sahne 01 · Portfolyo">
+      {label}
+      <Fragment slot="intro">
+        <p>{label} kategorisindeki işlerimiz.</p>
+      </Fragment>
+    </SectionHeading>
+    <ProjectGallery projects={projects} activeSlug={slug} />
+  </Section>
+</BaseLayout>

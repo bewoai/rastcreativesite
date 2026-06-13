@@ -1,55 +1,404 @@
 ---
+import { getCollection, render } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/Section.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import Button from "../components/Button.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import ServiceCard from "../components/ServiceCard.astro";
+import AccordionItem from "../components/AccordionItem.astro";
+import { COPY, PRIMARY_CTA } from "../consts";
 
-// Palette check — these bg-* utilities are generated from the @theme tokens,
-// so if they render in the right colors the token pipeline is wired correctly.
-const swatches = [
-  { name: "paper", cls: "bg-paper" },
-  { name: "ink", cls: "bg-ink" },
-  { name: "ink-soft", cls: "bg-ink-soft" },
-  { name: "line", cls: "bg-line" },
-  { name: "amber", cls: "bg-amber" },
-  { name: "amber-deep", cls: "bg-amber-deep" },
+const byOrder = (a: { data: { order: number } }, b: { data: { order: number } }) =>
+  a.data.order - b.data.order;
+
+const projects = (await getCollection("projects")).filter((p) => !p.data.draft);
+const featured = projects.filter((p) => p.data.featured).sort(byOrder).slice(0, 6);
+const services = (await getCollection("services")).sort(byOrder);
+const faqEntries = (await getCollection("faq")).sort(byOrder);
+const faqRendered = await Promise.all(
+  faqEntries.map(async (e) => ({ data: e.data, Content: (await render(e)).Content })),
+);
+
+// "Neden Rast" — concrete trust signals for the 35+ audience (roadmap §2.5).
+const whyRast = [
+  {
+    k: "Yerinde",
+    t: "Sakarya'da yerinde hizmet",
+    d: "Ön görüşmeden çekime kadar sahadayız; uzaktan koordinasyon derdi olmadan, yüz yüze çalışırız.",
+  },
+  {
+    k: "Ekipman",
+    t: "Sinema standardı ekipman",
+    d: "Sony Cinema Line kamera ve optik parkıyla, reklamdan medikale her projede sinematik kalite.",
+  },
+  {
+    k: "2–4 hafta",
+    t: "Net teslim süresi",
+    d: "Projeler kapsamına göre genellikle 2–4 hafta içinde teslim edilir; takvimi baştan netleştiririz.",
+  },
+];
+
+// Quiet grayscale placeholder logo strip — real client logos arrive in §5.
+const placeholderMarks = [
+  `<circle cx="20" cy="20" r="11"/><circle cx="20" cy="20" r="3" fill="currentColor" stroke="none"/>`,
+  `<rect x="9" y="11" width="22" height="18" rx="3"/><path d="M9 20h22"/>`,
+  `<path d="M20 9 31 30H9z"/>`,
+  `<path d="M20 8l10.4 6v12L20 32 9.6 26V14z"/>`,
+  `<path d="M11 25c4-12 14-12 18 0" /><circle cx="20" cy="14" r="3"/>`,
 ];
 ---
 
 <BaseLayout>
-  <section
-    class="mx-auto flex min-h-svh w-full max-w-[var(--container-max)] flex-col justify-center gap-6 px-[var(--container-pad)] py-[var(--section-gap)]"
-  >
-    <p
-      class="font-utility uppercase text-amber"
-      style="font-size: var(--text-eyebrow); letter-spacing: var(--tracking-eyebrow);"
-    >
-      Sahne 00 · Temel
-    </p>
+  {/* 1 — Hero */}
+  <section class="hero">
+    <div class="hero__inner">
+      <div class="hero__text">
+        <Eyebrow>Sakarya · Sinematik Video Prodüksiyon</Eyebrow>
+        <h1 class="hero__title">{COPY.heroTitle}</h1>
+        <p class="hero__subtitle">{COPY.heroSubtitle}</p>
+        <div class="hero__cta">
+          <Button href={PRIMARY_CTA.href} size="lg" arrow>{PRIMARY_CTA.label}</Button>
+          <Button href="/projeler" variant="secondary" size="lg">
+            {COPY.heroSecondaryCta}
+          </Button>
+        </div>
+      </div>
+      <div class="hero__visual">
+        <img
+          src="/placeholders/hero.svg"
+          alt="Rast Creative tanıtım görseli (yer tutucu)"
+          width="1200"
+          height="1500"
+          fetchpriority="high"
+          class="hero__img"
+        />
+        <div class="hero__chip">
+          <span class="hero__chip-dot"></span>
+          Sony Cinema Line
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <h1 class="max-w-[18ch]">Doğru kareyi yakalayan stüdyo.</h1>
-
-    <p class="max-w-[54ch] text-ink-soft">
-      Rast Creative Studio'nun yeni web sitesi yeniden inşa ediliyor. Bu sayfa
-      yalnızca tasarım sistemi iskeletini doğrular: <strong>Fraunces</strong> başlık,
-      <strong>Inter</strong> gövde, <strong>Space&nbsp;Grotesk</strong> etiket; ışıklı
-      kâğıt zemin ve <span class="text-amber">Rast Amber</span> vurgu.
-    </p>
-
-    <!-- Token / utility verification -->
-    <ul class="flex flex-wrap gap-4 pt-2">
+  {/* 2 — Seçili işler */}
+  <Section id="secili-isler">
+    <div class="head-row">
+      <SectionHeading eyebrow="Sahne 02 · Seçili İşler">Son işlerimizden seçmeler</SectionHeading>
+      <Button href="/projeler" variant="secondary" arrow class="head-row__cta">Tümünü gör</Button>
+    </div>
+    <div class="grid-cards">
       {
-        swatches.map((s) => (
-          <li class="flex flex-col items-start gap-1.5">
-            <span class={`h-12 w-12 rounded-[var(--radius-sm)] border border-line ${s.cls}`} />
-            <span class="font-utility text-[0.7rem] uppercase tracking-wide text-ink-soft">
-              {s.name}
-            </span>
+        featured.map((p) => (
+          <ProjectCard
+            href={`/projeler/${p.id}`}
+            title={p.data.title}
+            category={p.data.category}
+            poster={p.data.poster}
+            posterAlt={p.data.posterAlt}
+            client={p.data.client}
+            year={p.data.year}
+            timecode={p.data.duration}
+          />
+        ))
+      }
+    </div>
+  </Section>
+
+  {/* 3 — Referans logoları (placeholder) */}
+  <Section space="tight">
+    <div class="refs">
+      <Eyebrow tone="soft">Bize güvenen markalardan bazıları</Eyebrow>
+      <ul class="refs__row" aria-label="Referans markalar (yer tutucu)">
+        {
+          placeholderMarks.map((m) => (
+            <li class="refs__cell">
+              <svg
+                viewBox="0 0 40 40"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+                set:html={m}
+              />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </Section>
+
+  {/* 4 — Hizmetler özeti */}
+  <Section id="hizmetler-ozet">
+    <SectionHeading eyebrow="Sahne 03 · Hizmetler">
+      Uçtan uca üç ana hizmet
+      <Fragment slot="intro">
+        <p>Fikirden teslime; strateji, prodüksiyon ve post-prodüksiyonu tek elden yürütürüz.</p>
+      </Fragment>
+    </SectionHeading>
+    <div class="grid-services">
+      {
+        services.map((s, i) => (
+          <ServiceCard
+            href={`/hizmetler#${s.id}`}
+            index={i + 1}
+            title={s.data.title}
+            summary={s.data.summary}
+            features={s.data.features.slice(0, 3)}
+          />
+        ))
+      }
+    </div>
+  </Section>
+
+  {/* 5 — Neden Rast */}
+  <Section id="neden-rast" tone="ink">
+    <SectionHeading eyebrow="Sahne 04 · Neden Rast" eyebrowTone="paper">Somut güven sinyalleri</SectionHeading>
+    <ul class="why">
+      {
+        whyRast.map((w) => (
+          <li class="why__item">
+            <span class="why__k">{w.k}</span>
+            <h3 class="why__t">{w.t}</h3>
+            <p class="why__d">{w.d}</p>
           </li>
         ))
       }
     </ul>
+  </Section>
 
-    <!-- latin + latin-ext glyph check (Turkish must render in every face) -->
-    <p class="font-utility text-ink-soft" style="font-size: var(--text-eyebrow);">
-      Türkçe glifler: çÇ ğĞ ıI iİ öÖ şŞ üÜ
-    </p>
-  </section>
+  {/* 6 — SSS */}
+  <Section id="sss" width="narrow">
+    <SectionHeading eyebrow="Sahne 05 · SSS">Sık sorulan sorular</SectionHeading>
+    <div class="faq">
+      {
+        faqRendered.map((f, i) => {
+          const Answer = f.Content;
+          return (
+            <AccordionItem question={f.data.question} open={i === 0}>
+              <Answer />
+            </AccordionItem>
+          );
+        })
+      }
+    </div>
+  </Section>
+
+  {/* 7 — Son CTA bandı */}
+  <Section tone="ink" space="tight">
+    <div class="cta-band">
+      <Eyebrow tone="paper">Hazır mısınız?</Eyebrow>
+      <h2 class="cta-band__title">Markanızın sinematik yüzünü birlikte çekelim.</h2>
+      <Button href={PRIMARY_CTA.href} size="lg" arrow>{PRIMARY_CTA.label}</Button>
+    </div>
+  </Section>
 </BaseLayout>
+
+<style>
+  /* 1 — Hero */
+  .hero {
+    padding-block: clamp(1rem, 4vw, 2.5rem) var(--section-gap);
+  }
+  .hero__inner {
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-pad);
+    display: grid;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+  .hero__text {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+  }
+  .hero__title {
+    margin: 0;
+    max-width: 16ch;
+  }
+  .hero__subtitle {
+    margin: 0;
+    max-width: 46ch;
+    font-size: 1.2rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-top: 0.5rem;
+  }
+  .hero__visual {
+    position: relative;
+    justify-self: center;
+    width: 100%;
+    max-width: 30rem;
+  }
+  .hero__img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: var(--radius-card);
+    border: 1px solid var(--line);
+  }
+  .hero__chip {
+    position: absolute;
+    left: 1rem;
+    bottom: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.9rem;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-utility);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--ink);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  }
+  .hero__chip-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: var(--amber);
+  }
+  @media (min-width: 860px) {
+    .hero__inner {
+      grid-template-columns: 1.05fr 0.95fr;
+    }
+  }
+
+  /* 2 — section head row with side CTA */
+  .head-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .head-row__cta {
+    flex: none;
+  }
+  .grid-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  @media (min-width: 640px) {
+    .grid-cards {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1000px) {
+    .grid-cards {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* 3 — references */
+  .refs {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    align-items: center;
+    text-align: center;
+  }
+  .refs__row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: clamp(1.5rem, 5vw, 3.5rem);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    color: var(--ink-soft);
+    opacity: 0.55;
+  }
+  .refs__cell svg {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+
+  /* 4 — services grid */
+  .grid-services {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+  @media (min-width: 768px) {
+    .grid-services {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* 5 — why rast */
+  .why {
+    list-style: none;
+    margin: 2.5rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .why__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding-top: 1.4rem;
+    border-top: 2px solid color-mix(in srgb, var(--amber) 70%, transparent);
+  }
+  .why__k {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    font-weight: 500;
+    color: var(--paper);
+    line-height: 1;
+  }
+  .why__t {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--paper);
+  }
+  .why__d {
+    margin: 0;
+    color: color-mix(in srgb, var(--paper) 72%, transparent);
+    line-height: var(--leading-body);
+  }
+  @media (min-width: 768px) {
+    .why {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.5rem;
+    }
+  }
+
+  /* 6 — faq */
+  .faq {
+    margin-top: 2.5rem;
+    border-top: 1px solid var(--line);
+  }
+
+  /* 7 — final CTA band */
+  .cta-band {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.25rem;
+  }
+  .cta-band__title {
+    margin: 0;
+    max-width: 18ch;
+    color: var(--paper);
+  }
+</style>

@@ -1,0 +1,33 @@
+<svg viewBox="0 0 1200 1500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Rast Creative tanıtım görseli (yer tutucu)">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FBF7F0"/>
+      <stop offset="1" stop-color="#EDE6DA"/>
+    </linearGradient>
+    <radialGradient id="bloom" cx="72%" cy="26%" r="62%">
+      <stop offset="0" stop-color="#E25303" stop-opacity="0.20"/>
+      <stop offset="60%" stop-color="#E25303" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#E25303" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="sun" cx="72%" cy="26%" r="16%">
+      <stop offset="0" stop-color="#FFF6EC" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#FFF6EC" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="1500" fill="url(#bg)"/>
+  <rect width="1200" height="1500" fill="url(#bloom)"/>
+  <circle cx="864" cy="390" r="130" fill="url(#sun)"/>
+  <g opacity="0.55">
+    <path d="M0 1080 Q 300 1010 600 1060 T 1200 1040 V1500 H0 Z" fill="#E7DECF"/>
+    <path d="M0 1200 Q 350 1140 700 1185 T 1200 1170 V1500 H0 Z" fill="#DCCFBA"/>
+  </g>
+  <g stroke="#4A4845" stroke-opacity="0.42" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M90 170 v-50 h50"/>
+    <path d="M1060 120 h50 v50"/>
+    <path d="M1110 1330 v50 h-50"/>
+    <path d="M140 1380 h-50 v-50"/>
+  </g>
+  <circle cx="600" cy="750" r="5" fill="#E25303"/>
+  <text x="96" y="1408" fill="#4A4845" fill-opacity="0.7" font-family="monospace" font-size="26" letter-spacing="5">RAST CREATIVE · SHOWREEL</text>
+  <text x="1104" y="1408" text-anchor="end" fill="#E25303" font-family="monospace" font-size="24" letter-spacing="4">SONY CINEMA LINE</text>
+</svg>

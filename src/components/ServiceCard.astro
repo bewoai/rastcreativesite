@@ -1,0 +1,101 @@
+---
+import Icon from "./Icon.astro";
+
+interface Props {
+  title: string;
+  summary: string;
+  features?: string[];
+  /** Shows a "01" style index in the timecode motif. */
+  index?: number;
+  href?: string;
+  class?: string;
+}
+
+const { title, summary, features = [], index, href, class: className } = Astro.props;
+const Tag = href ? "a" : "div";
+---
+
+<Tag href={href} class:list={["scard", { "scard--link": href }, className]}>
+  {index != null && <span class="scard__num">{String(index).padStart(2, "0")}</span>}
+  <h3 class="scard__title">{title}</h3>
+  <p class="scard__summary">{summary}</p>
+  {
+    features.length > 0 && (
+      <ul class="scard__features">
+        {features.map((f) => (
+          <li>
+            <Icon name="arrow-right" size={16} class="scard__ic" />
+            <span>{f}</span>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</Tag>
+
+<style>
+  .scard {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    height: 100%;
+    padding: 1.6rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, #ffffff 60%, transparent);
+    color: var(--ink);
+    transition:
+      transform var(--dur) var(--ease-out),
+      border-color var(--dur) var(--ease-out);
+  }
+  .scard--link {
+    touch-action: manipulation;
+  }
+  .scard--link:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--amber) 35%, var(--line));
+  }
+  .scard--link:focus-visible {
+    box-shadow: none;
+    outline: 2px solid var(--amber);
+    outline-offset: 3px;
+  }
+  .scard__num {
+    font-family: var(--font-utility);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--amber-text);
+  }
+  .scard__title {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 1.35rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .scard__summary {
+    margin: 0;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .scard__features {
+    list-style: none;
+    margin: 0.4rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .scard__features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    font-size: 0.95rem;
+  }
+  .scard__ic {
+    margin-top: 0.2rem;
+    flex: none;
+    color: var(--amber-text);
+  }
+</style>
