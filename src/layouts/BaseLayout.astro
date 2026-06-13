@@ -16,6 +16,10 @@ interface Props {
   noindex?: boolean;
   /** Render without nav + footer chrome. */
   bare?: boolean;
+  /** schema.org JSON-LD object(s) emitted into <head>. */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  /** Preload an above-the-fold LCP image (e.g. the hero). */
+  preloadImage?: string;
 }
 
 const {
@@ -25,7 +29,11 @@ const {
   ogType = "website",
   noindex = false,
   bare = false,
+  jsonLd,
+  preloadImage,
 } = Astro.props;
+
+const jsonLdItems = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 
 const pageTitle = title ? SITE.titleTemplate.replace("%s", title) : SITE.defaultTitle;
 const pageDescription = description ?? SITE.description;
@@ -52,9 +60,9 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <!-- Preload the body face (used everywhere). Faz 5 tunes this. -->
-    <link rel="preload" href="/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/inter-latin-ext-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    {/* Preload only the LCP image so it gets the connection first; fonts rely
+        on font-display:swap (CLS is 0, so the swap costs no layout shift). */}
+    {preloadImage && <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />}
 
     <!-- Open Graph -->
     <meta property="og:type" content={ogType} />
@@ -70,6 +78,8 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={pageDescription} />
     <meta name="twitter:image" content={ogImage} />
+
+    {jsonLdItems.map((obj) => <script type="application/ld+json" set:html={JSON.stringify(obj)} />)}
   </head>
 
   <body>

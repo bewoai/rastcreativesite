@@ -7,6 +7,7 @@ import Eyebrow from "../../components/Eyebrow.astro";
 import Icon from "../../components/Icon.astro";
 import VimeoFacade from "../../components/VimeoFacade.astro";
 import ProjectCard from "../../components/ProjectCard.astro";
+import { SITE } from "../../consts";
 
 export async function getStaticPaths() {
   const all = (await getCollection("projects")).filter((p) => !p.data.draft);
@@ -34,6 +35,20 @@ const credits = [
   ["Kategori", d.category],
   ["Süre", d.duration],
 ].filter(([, v]) => v) as [string, string][];
+
+// VideoObject only once a real Vimeo ID exists (placeholders emit nothing).
+const videoObject = d.vimeoId
+  ? {
+      "@context": "https://schema.org",
+      "@type": "VideoObject",
+      name: d.title,
+      description: d.summary ?? `${d.title} — ${d.category}`,
+      thumbnailUrl: new URL(d.poster, SITE.url).href,
+      uploadDate: d.year ? `${d.year}-01-01` : undefined,
+      embedUrl: `https://player.vimeo.com/video/${d.vimeoId}`,
+      contentUrl: `https://vimeo.com/${d.vimeoId}`,
+    }
+  : undefined;
 ---
 
 <BaseLayout
@@ -41,6 +56,7 @@ const credits = [
   description={d.summary ?? `${d.title} — Rast Creative Studio ${d.category} projesi.`}
   image={d.poster}
   ogType="article"
+  jsonLd={videoObject}
 >
   <Section>
     <a href="/projeler" class="back">

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rastcreative.com/sitemap-index.xml

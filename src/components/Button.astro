@@ -77,13 +77,15 @@ const Tag = href ? "a" : "button";
     width: 100%;
   }
 
-  /* Primary — Rast Amber fill */
+  /* Primary fill — uses --amber-deep so the white label meets WCAG AA
+     (white on #E25303 is only 3.64:1; on #B84203 it is 5.22:1). Bright
+     --amber stays as the decorative accent (dots, rings, borders). */
   .btn--primary {
-    background-color: var(--amber);
+    background-color: var(--amber-deep);
     color: var(--paper);
   }
   .btn--primary:hover {
-    background-color: var(--amber-deep);
+    background-color: color-mix(in srgb, var(--amber-deep) 85%, #000000);
   }
 
   /* Secondary — ink outline */
