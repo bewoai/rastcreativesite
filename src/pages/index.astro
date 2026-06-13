@@ -203,13 +203,18 @@ const localBusiness = {
     </div>
   </Section>
 
-  {/* 7 — Son CTA bandı — clapperboard overlays this when closed */}
+  {/* 7 — Son CTA bandı — clapperboard sits on the right */}
   <div data-cta-final>
-    <Section tone="ink" space="tight" id="son-cta">
+    <Section tone="ink" id="son-cta">
       <div class="cta-band">
-        <Eyebrow tone="paper">Hazır mısınız?</Eyebrow>
-        <h2 class="cta-band__title">Markanızın sinematik yüzünü birlikte çekelim.</h2>
-        <Button href={PRIMARY_CTA.href} size="lg" arrow>{PRIMARY_CTA.label}</Button>
+        <div class="cta-band__text">
+          <Eyebrow tone="paper">Hazır mısınız?</Eyebrow>
+          <h2 class="cta-band__title">Markanızın sinematik yüzünü birlikte çekelim.</h2>
+          <Button href={PRIMARY_CTA.href} size="lg" arrow>{PRIMARY_CTA.label}</Button>
+        </div>
+        <div class="cta-band__visual" aria-hidden="true">
+          {/* Clapperboard lands here */}
+        </div>
       </div>
     </Section>
   </div>
@@ -385,17 +390,36 @@ const localBusiness = {
     border-top: 1px solid var(--line);
   }
 
-  /* 7 — final CTA band */
+  /* 7 — final CTA band (two-column: text left, clapperboard right) */
   .cta-band {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: center;
+    min-height: 24rem;
+  }
+  .cta-band__text {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
     gap: 1.25rem;
   }
   .cta-band__title {
     margin: 0;
     max-width: 18ch;
     color: var(--paper);
+  }
+  .cta-band__visual {
+    /* Reserve space for the clapperboard to land here visually */
+    display: none;
+  }
+  @media (min-width: 768px) {
+    .cta-band {
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+    .cta-band__visual {
+      display: block;
+      min-height: 20rem;
+    }
   }
 </style>
