@@ -73,7 +73,9 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
     border-radius: var(--radius-pill);
     -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
     backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-    box-shadow: 0 6px 24px -14px rgba(17, 17, 16, 0.25);
+    box-shadow:
+      0 6px 28px -14px rgba(17, 17, 16, 0.22),
+      0 0 0 0.5px color-mix(in srgb, #ffffff 20%, transparent) inset;
     transition:
       padding var(--dur) var(--ease-out),
       background-color var(--dur) var(--ease-out),
@@ -112,8 +114,10 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
   .nav.is-scrolled .nav__pill {
     padding-top: 0.3rem;
     padding-bottom: 0.3rem;
-    background: color-mix(in srgb, var(--paper) 84%, transparent);
-    box-shadow: 0 10px 30px -16px rgba(17, 17, 16, 0.34);
+    background: color-mix(in srgb, var(--paper) 80%, transparent);
+    box-shadow:
+      0 10px 36px -16px rgba(17, 17, 16, 0.3),
+      0 0 0 0.5px color-mix(in srgb, #ffffff 15%, transparent) inset;
   }
 
   @media (min-width: 768px) {

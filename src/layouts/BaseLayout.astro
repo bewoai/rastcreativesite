@@ -3,6 +3,7 @@ import "../styles/global.css";
 import { SITE } from "../consts";
 import GlassNav from "../components/GlassNav.astro";
 import Footer from "../components/Footer.astro";
+import Clapperboard from "../components/Clapperboard.astro";
 
 interface Props {
   /** Page title; omit on the home page to use the full default title. */
@@ -89,6 +90,7 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
     >
       İçeriğe geç
     </a>
+    {!bare && <Clapperboard />}
     {!bare && <GlassNav />}
     <main id="main">
       <slot />

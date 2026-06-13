@@ -40,24 +40,29 @@ const meta = [client, year].filter(Boolean).join(" · ");
 </a>
 
 <style>
-  /* Glass card: translucent surface + 1px line; frosts whatever sits behind. */
+  /* Glass card: translucent surface + blur + bloom glow on hover. */
   .card {
     display: flex;
     flex-direction: column;
-    border: 1px solid var(--line);
+    border: 1px solid var(--glass-border);
     border-radius: var(--radius-card);
-    background: color-mix(in srgb, #ffffff 72%, transparent);
-    -webkit-backdrop-filter: blur(10px) saturate(1.1);
-    backdrop-filter: blur(10px) saturate(1.1);
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
     overflow: hidden;
     touch-action: manipulation;
+    box-shadow: 0 4px 20px -8px color-mix(in srgb, var(--ink) 8%, transparent);
     transition:
       transform var(--dur) var(--ease-out),
-      border-color var(--dur) var(--ease-out);
+      border-color var(--dur) var(--ease-out),
+      box-shadow var(--dur) var(--ease-out);
   }
   .card:hover {
-    transform: translateY(-3px);
-    border-color: color-mix(in srgb, var(--amber) 35%, var(--line));
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--amber) 40%, var(--glass-border));
+    box-shadow:
+      var(--bloom-amber),
+      0 12px 32px -8px color-mix(in srgb, var(--ink) 12%, transparent);
   }
   .card:focus-visible {
     box-shadow: none;

@@ -1,14 +1,12 @@
 ---
 title: "Video Prodüksiyon"
-summary: "Fikirden sete: Sony Cinema Line ile sinematik prodüksiyon."
+summary: "Fikirden sete: sinema standardı ekipmanla profesyonel prodüksiyon."
 order: 1
 features:
   - "Reklam ve marka filmi"
   - "Ürün ve kurumsal çekim"
   - "Medikal tanıtım prodüksiyonu"
-  - "Sony Cinema Line kamera ekipmanı"
+  - "Profesyonel sinema kamera ekipmanı"
 ---
 
-Fikirden sete, **Sony Cinema Line** teknolojisiyle markanızın görsel kimliğini
-en üst standartlarda inşa ediyoruz. Ön hazırlık, çekim ve set yönetiminin tamamı
-tek bir ekip disipliniyle yürür; sonuç, ekranda fark edilen sinematik bir dil olur.
+Fikirden sete, **sinema standardı profesyonel ekipmanla** markanızın görsel kimliğini en üst standartlarda inşa ediyoruz. Ön hazırlık, çekim ve set yönetiminin tamamı tek bir ekip disipliniyle yürür; sonuç, ekranda fark edilen sinematik bir dil olur.

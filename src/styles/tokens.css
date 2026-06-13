@@ -54,11 +54,16 @@
   --radius-card: 1rem; /* glass cards */
   --radius-sm: 0.5rem;
 
-  /* ---- Glass (1.4 imza unsur) ------------------------------------- */
-  --glass-blur: 16px;
-  --glass-saturate: 1.4;
-  --glass-bg: color-mix(in srgb, var(--paper) 70%, transparent);
-  --glass-border: color-mix(in srgb, #ffffff 55%, transparent);
+  /* ---- Glass / Liquid Glass (bloomy, lush) ------------------------ */
+  --glass-blur: 20px;
+  --glass-saturate: 1.6;
+  --glass-bg: color-mix(in srgb, var(--paper) 65%, transparent);
+  --glass-border: color-mix(in srgb, #ffffff 45%, transparent);
+  --glass-glow: 0 8px 32px -8px color-mix(in srgb, var(--amber) 12%, transparent);
+
+  /* ---- Bloom / Glow ----------------------------------------------- */
+  --bloom-amber: 0 0 40px -8px color-mix(in srgb, var(--amber) 30%, transparent);
+  --bloom-ink: 0 0 30px -8px color-mix(in srgb, var(--ink) 15%, transparent);
 
   /* ---- Motion (1.4: disiplinli; prefers-reduced-motion saygısı) ---- */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
