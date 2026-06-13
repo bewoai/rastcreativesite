@@ -5,7 +5,7 @@ import Button from "../components/Button.astro";
 import Eyebrow from "../components/Eyebrow.astro";
 import SectionHeading from "../components/SectionHeading.astro";
 import ProjectCard from "../components/ProjectCard.astro";
-import VimeoFacade from "../components/VimeoFacade.astro";
+import VideoFacade from "../components/VideoFacade.astro";
 import Icon from "../components/Icon.astro";
 import Logo from "../components/Logo.astro";
 import type { IconName } from "../consts";
@@ -156,10 +156,11 @@ const icons: IconName[] = [
 
       <!-- Vimeo facade -->
       <section class="flex flex-col gap-6">
-        <Eyebrow tone="soft">Vimeo Facade (tıkla-oynat, önceden yüklenmez)</Eyebrow>
+        <Eyebrow tone="soft">Video Facade (Vimeo/YouTube, tıkla-oynat, önceden yüklenmez)</Eyebrow>
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <VimeoFacade
-            vimeoId="76979871"
+          <VideoFacade
+            provider="vimeo"
+            videoId="76979871"
             title="Örnek Proje Videosu"
             poster="/placeholders/poster-2.svg"
           />

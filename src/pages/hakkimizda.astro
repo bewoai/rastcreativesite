@@ -1,10 +1,19 @@
 ---
+import { Picture } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Section from "../components/Section.astro";
 import SectionHeading from "../components/SectionHeading.astro";
 import Eyebrow from "../components/Eyebrow.astro";
 import Button from "../components/Button.astro";
 import { COPY, PRIMARY_CTA } from "../consts";
+import { breadcrumb } from "../lib/schema";
+import equipPhoto from "../assets/photos/studio-lighting.jpg";
+import teamPhoto from "../assets/photos/crew-onset.jpg";
+
+const crumbs = breadcrumb([
+  { name: "Ana Sayfa", path: "/" },
+  { name: "Hakkımızda", path: "/hakkimizda" },
+]);
 
 const approach = [
   {
@@ -25,6 +34,7 @@ const approach = [
 <BaseLayout
   title="Hakkımızda"
   description="Rast Creative Studio — Sakarya merkezli, sinema standardı ekipmanla çalışan video prodüksiyon ekibi."
+  jsonLd={crumbs}
 >
   <Section width="narrow">
     <SectionHeading eyebrow="Sahne 01 · Stüdyo">
@@ -58,6 +68,15 @@ const approach = [
         sinema dünyasının standartlarında profesyonel kamera gövdeleri ve optiklerle
         çekim yapıyor; renk ve detayı en üst standartta tutuyoruz.
       </p>
+      <Picture
+        src={equipPhoto}
+        formats={["avif", "webp"]}
+        alt="Sinema standardı aydınlatma ve yönetmen monitörüyle profesyonel video prodüksiyon seti"
+        widths={[600, 900, 1200]}
+        sizes="(min-width: 768px) 680px, 92vw"
+        loading="lazy"
+        class="about-photo"
+      />
     </div>
   </Section>
 
@@ -68,10 +87,15 @@ const approach = [
         Farklı sektörlerden markaların dijital hikâyelerini yönetmiş bir ekibiz.
         Stratejiden çekime, kurgudan teslime kadar aynı disiplinle çalışırız.
       </p>
-      <p class="team__note">
-        (Ekip üyeleri, görseller ve detaylı özgeçmişler eklendiğinde bu bölüm
-        güncellenecek.)
-      </p>
+      <Picture
+        src={teamPhoto}
+        formats={["avif", "webp"]}
+        alt="Yönetmen, görüntü yönetmeni ve ses ekibiyle birlikte bir çekim setinde Rast Creative ekibi"
+        widths={[600, 900, 1200]}
+        sizes="(min-width: 768px) 680px, 92vw"
+        loading="lazy"
+        class="about-photo"
+      />
     </div>
   </Section>
 
@@ -125,11 +149,19 @@ const approach = [
     line-height: var(--leading-body);
     max-width: 60ch;
   }
-  .team__note {
-    margin: 1rem 0 0;
-    font-size: 0.9rem;
-    font-style: italic;
-    color: color-mix(in srgb, var(--ink-soft) 80%, transparent);
+  .about-photo {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: var(--radius-card);
+    border: 1px solid var(--line);
+    margin: 1.6rem 0 0;
+  }
+  .equip :global(picture),
+  .team :global(picture) {
+    display: block;
   }
   .cta {
     display: flex;

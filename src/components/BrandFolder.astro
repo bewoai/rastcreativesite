@@ -1,0 +1,156 @@
+---
+/**
+ * Compact brand "folder" card for the projects page. Multi-video brands get a
+ * stacked-card hint + a count badge; single-video brands link straight to the
+ * video.
+ */
+import Eyebrow from "./Eyebrow.astro";
+
+interface Props {
+  href: string;
+  name: string;
+  category: string;
+  cover: string;
+  count: number;
+  vertical?: boolean;
+}
+
+const { href, name, category, cover, count, vertical = false } = Astro.props;
+const external = href.startsWith("http");
+const isFolder = count > 1 && !external;
+---
+
+<a
+  href={href}
+  class:list={["folder", { "folder--stack": isFolder }]}
+  target={external ? "_blank" : undefined}
+  rel={external ? "noopener noreferrer" : undefined}
+>
+  <div class:list={["folder__media", { "folder__media--vertical": vertical }]}>
+    <img
+      class="folder__cover"
+      src={cover}
+      alt={`${name} — içerik kapağı`}
+      loading="lazy"
+      decoding="async"
+      width="640"
+      height="360"
+    />
+    {external && <span class="folder__count folder__count--ext">Instagram ↗</span>}
+    {!external && isFolder && <span class="folder__count">{count} içerik</span>}
+    {!external && !isFolder && <span class="folder__play" aria-hidden="true">▶</span>}
+  </div>
+  <div class="folder__body">
+    <Eyebrow tone="amber">{category}</Eyebrow>
+    <h3 class="folder__name">{name}</h3>
+  </div>
+</a>
+
+<style>
+  .folder {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-card);
+    background: var(--glass-bg);
+    overflow: hidden;
+    touch-action: manipulation;
+    transition:
+      transform var(--dur) var(--ease-out),
+      border-color var(--dur) var(--ease-out),
+      box-shadow var(--dur) var(--ease-out);
+  }
+  /* Stacked-paper hint behind multi-video folders. */
+  .folder--stack::before {
+    content: "";
+    position: absolute;
+    inset: -6px 6px auto 6px;
+    height: 14px;
+    border-radius: var(--radius-card) var(--radius-card) 0 0;
+    background: color-mix(in srgb, var(--ink) 8%, var(--paper));
+    border: 1px solid var(--glass-border);
+    border-bottom: none;
+    z-index: -1;
+  }
+  .folder:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--amber) 40%, var(--glass-border));
+    box-shadow:
+      var(--bloom-amber),
+      0 10px 26px -10px color-mix(in srgb, var(--ink) 14%, transparent);
+  }
+  .folder:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 3px;
+  }
+
+  .folder__media {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--ink);
+  }
+  .folder__media--vertical {
+    aspect-ratio: 4 / 3; /* keep folders uniform even for vertical covers */
+  }
+  .folder__cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--dur) var(--ease-out);
+  }
+  .folder:hover .folder__cover {
+    transform: scale(1.04);
+  }
+  .folder__count,
+  .folder__play {
+    position: absolute;
+    font-family: var(--font-utility);
+    font-weight: 500;
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+  .folder__count {
+    top: 0.55rem;
+    right: 0.55rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    color: var(--paper);
+    background: color-mix(in srgb, var(--ink) 72%, transparent);
+    padding: 0.26rem 0.55rem;
+    border-radius: var(--radius-pill);
+  }
+  .folder__count--ext {
+    color: #fff;
+    background: linear-gradient(135deg, var(--amber), var(--amber-deep, #b84203));
+  }
+  .folder__play {
+    left: 0.55rem;
+    bottom: 0.55rem;
+    display: grid;
+    place-items: center;
+    width: 1.85rem;
+    height: 1.85rem;
+    font-size: 0.7rem;
+    color: var(--amber);
+    background: color-mix(in srgb, var(--paper) 84%, transparent);
+    border-radius: 50%;
+  }
+
+  .folder__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 0.7rem 0.8rem 0.85rem;
+  }
+  .folder__name {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 0.98rem;
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--ink);
+  }
+</style>

@@ -1,0 +1,125 @@
+/**
+ * schema.org JSON-LD builders for local SEO.
+ * Target: "Sakarya video prodüksiyon ajansı" and related local queries.
+ * Only facts we actually have are emitted — no invented address/hours/geo.
+ */
+import { SITE, CONTACT, SOCIAL } from "../consts";
+
+const abs = (path: string) => new URL(path, SITE.url).href;
+
+/** Stable @id so other nodes can reference the business. */
+export const BUSINESS_ID = `${SITE.url}#business`;
+
+/** Service area — "Sakarya geneli" per client (2026-06). */
+const AREA_SERVED = ["Sakarya", "Serdivan", "Adapazarı", "Sakarya ili"].map(
+  (name) => ({ "@type": "City", name }),
+);
+
+const CORE_SERVICES = [
+  {
+    name: "Video Prodüksiyon",
+    description:
+      "Sakarya'da sinema standardı ekipmanla reklam, marka filmi, ürün ve kurumsal video prodüksiyonu.",
+  },
+  {
+    name: "Kreatif Strateji & Yönetim",
+    description:
+      "Marka hikâyesi, senaryo, içerik stratejisi ve sosyal medya yönetimi.",
+  },
+  {
+    name: "Post-Prodüksiyon & Kurgu",
+    description: "Kurgu, renk düzenleme (color grading) ve motion graphics.",
+  },
+];
+
+/**
+ * Primary LocalBusiness / ProfessionalService node for the studio.
+ * Emitted on the home and contact pages.
+ */
+export const localBusiness = {
+  "@context": "https://schema.org",
+  "@type": ["LocalBusiness", "ProfessionalService"],
+  "@id": BUSINESS_ID,
+  name: SITE.name,
+  alternateName: SITE.shortName,
+  description: SITE.description,
+  slogan: "Doğru kareyi yakalayan stüdyo",
+  url: SITE.url,
+  image: abs(SITE.ogImage),
+  logo: abs("/logo-black.svg"),
+  telephone: CONTACT.phoneIntl,
+  email: CONTACT.email,
+  inLanguage: "tr",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: CONTACT.addressLocality,
+    addressRegion: CONTACT.addressRegion,
+    addressCountry: CONTACT.addressCountry,
+  },
+  areaServed: AREA_SERVED,
+  knowsAbout: [
+    "video prodüksiyon",
+    "reklam filmi",
+    "tanıtım filmi",
+    "marka hikâyesi filmi",
+    "kurumsal video",
+    "medikal tanıtım filmi",
+    "ürün tanıtım çekimi",
+    "post prodüksiyon",
+    "kreatif strateji",
+    "Sakarya video prodüksiyon",
+  ],
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Hizmetler",
+    itemListElement: CORE_SERVICES.map((s) => ({
+      "@type": "Offer",
+      itemOffered: {
+        "@type": "Service",
+        name: s.name,
+        description: s.description,
+        areaServed: AREA_SERVED,
+        provider: { "@id": BUSINESS_ID },
+      },
+    })),
+  },
+  sameAs: SOCIAL.map((s) => s.href),
+};
+
+/** FAQPage node built from the FAQ collection (question + plain-text answer). */
+export function faqPage(items: { question: string; answer: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((it) => ({
+      "@type": "Question",
+      name: it.question,
+      acceptedAnswer: { "@type": "Answer", text: it.answer },
+    })),
+  };
+}
+
+/** BreadcrumbList for inner pages. Pass [{name, path}] from home → current. */
+export function breadcrumb(items: { name: string; path: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((it, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: it.name,
+      item: abs(it.path),
+    })),
+  };
+}
+
+/** Strip light markdown to plain text for schema answer fields. */
+export function toPlainText(md: string): string {
+  return md
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/\*(.*?)\*/g, "$1")
+    .replace(/\[(.*?)\]\(.*?\)/g, "$1")
+    .replace(/[#>`]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}

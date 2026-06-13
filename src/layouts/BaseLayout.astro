@@ -4,6 +4,7 @@ import { SITE } from "../consts";
 import GlassNav from "../components/GlassNav.astro";
 import Footer from "../components/Footer.astro";
 import Clapperboard from "../components/Clapperboard.astro";
+import Preloader from "../components/Preloader.astro";
 
 interface Props {
   /** Page title; omit on the home page to use the full default title. */
@@ -48,6 +49,26 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light" />
+
+    {/* Show the preloader once per session, never for reduced-motion. Runs
+        synchronously before first paint so it never flashes on later pages. */}
+    {!bare && (
+      <script is:inline>
+        try {
+          if (
+            !sessionStorage.getItem("rc_preloaded") &&
+            !matchMedia("(prefers-reduced-motion: reduce)").matches
+          ) {
+            document.documentElement.classList.add("rc-preload");
+            sessionStorage.setItem("rc_preloaded", "1");
+          }
+        } catch (e) {}
+      </script>
+      <style is:global>
+        #preloader { display: none; }
+        html.rc-preload #preloader { display: grid; }
+      </style>
+    )}
     <meta name="theme-color" content={SITE.themeColor} />
     <meta name="generator" content={Astro.generator} />
 
@@ -55,6 +76,10 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
     <meta name="description" content={pageDescription} />
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    {/* Local SEO geo hints (Sakarya / TR-54). No invented coordinates. */}
+    <meta name="geo.region" content="TR-54" />
+    <meta name="geo.placename" content="Sakarya" />
 
     <!-- Icons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -90,6 +115,7 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
     >
       İçeriğe geç
     </a>
+    {!bare && <Preloader />}
     {!bare && <Clapperboard />}
     {!bare && <GlassNav />}
     <main id="main">

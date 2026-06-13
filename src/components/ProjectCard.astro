@@ -11,16 +11,28 @@ interface Props {
   year?: string | number;
   /** Amber timecode revealed on hover (e.g. "01:24"). */
   timecode?: string;
+  /** 9:16 reel/short instead of the default 16:9. */
+  vertical?: boolean;
   class?: string;
 }
 
-const { href, title, category, poster, posterAlt, client, year, timecode, class: className } =
-  Astro.props;
+const {
+  href,
+  title,
+  category,
+  poster,
+  posterAlt,
+  client,
+  year,
+  timecode,
+  vertical = false,
+  class: className,
+} = Astro.props;
 const meta = [client, year].filter(Boolean).join(" · ");
 ---
 
 <a href={href} class:list={["card", className]}>
-  <div class="card__media">
+  <div class:list={["card__media", { "card__media--vertical": vertical }]}>
     <img
       class="card__poster"
       src={poster}
@@ -74,6 +86,9 @@ const meta = [client, year].filter(Boolean).join(" · ");
     position: relative;
     aspect-ratio: 16 / 9;
     overflow: hidden;
+  }
+  .card__media--vertical {
+    aspect-ratio: 9 / 16;
   }
   .card__poster {
     width: 100%;

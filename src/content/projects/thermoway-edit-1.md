@@ -1,0 +1,14 @@
+---
+title: "ThermoWay — Sosyal İçerik #1"
+category: "Sosyal Medya"
+youtubeId: "JnIajHHQ9rM"
+vertical: true
+poster: "https://i.ytimg.com/vi/JnIajHHQ9rM/maxresdefault.jpg"
+summary: "ThermoWay için dikey sosyal medya kurgusu."
+client: "ThermoWay"
+year: 2025
+featured: false
+order: 14
+---
+
+ThermoWay markası için üretilen dikey sosyal medya kurgusu.

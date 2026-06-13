@@ -3,27 +3,131 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Section from "../../components/Section.astro";
 import SectionHeading from "../../components/SectionHeading.astro";
-import ProjectGallery from "../../components/ProjectGallery.astro";
+import BrandFolder from "../../components/BrandFolder.astro";
+import { breadcrumb } from "../../lib/schema";
+import { groupByBrand, brandHref } from "../../lib/brands";
+import { PROJECT_CATEGORIES } from "../../consts";
 
 const projects = (await getCollection("projects"))
   .filter((p) => !p.data.draft)
   .sort((a, b) => a.data.order - b.data.order);
+
+const brands = groupByBrand(projects);
+
+// Only categories that actually have brands, in canonical order.
+const sections = PROJECT_CATEGORIES.map((c) => ({
+  ...c,
+  brands: brands.filter((b) => b.category === c.label),
+})).filter((s) => s.brands.length > 0);
+
+const crumbs = breadcrumb([
+  { name: "Ana Sayfa", path: "/" },
+  { name: "Projeler", path: "/projeler" },
+]);
 ---
 
 <BaseLayout
   title="Projeler"
-  description="Rast Creative Studio portfolyosu: reklam, marka hikâyesi, ürün, kurumsal ve medikal video prodüksiyon projeleri."
+  description="Rast Creative Studio portfolyosu: Sakarya'da kurumsal, ürün, medikal ve sosyal medya video prodüksiyon işleri — markalara göre düzenli."
+  jsonLd={crumbs}
 >
   <Section>
     <SectionHeading eyebrow="Sahne 01 · Portfolyo">
       Projeler
       <Fragment slot="intro">
-        <p>
-          Reklamdan medikale, hikâyeyi merkeze alan sinematik işlerimiz.
-          Kategoriye göre filtreleyin.
-        </p>
+        <p>Markalar için ürettiğimiz işler — kategori ve markaya göre düzenli.</p>
       </Fragment>
     </SectionHeading>
-    <ProjectGallery projects={projects} activeSlug="" />
+
+    {/* Quick jump to a category section */}
+    <nav class="catnav" aria-label="Kategoriler">
+      {
+        sections.map((s) => (
+          <a href={`#${s.slug}`} class="catnav__chip">
+            {s.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    {
+      sections.map((s) => (
+        <section id={s.slug} class="catsec">
+          <h2 class="catsec__title">{s.label}</h2>
+          <div class="folder-grid">
+            {s.brands.map((b) => (
+              <BrandFolder
+                href={brandHref(b)}
+                name={b.name}
+                category={b.category}
+                cover={b.cover}
+                count={b.count}
+                vertical={b.vertical}
+              />
+            ))}
+          </div>
+        </section>
+      ))
+    }
   </Section>
 </BaseLayout>
+
+<style>
+  .catnav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1.5rem 0 0.5rem;
+  }
+  .catnav__chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+    padding: 0 1rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--line);
+    font-family: var(--font-utility);
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--ink);
+    touch-action: manipulation;
+    transition:
+      background-color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+  .catnav__chip:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+
+  .catsec {
+    margin-top: 2.5rem;
+    scroll-margin-top: 6rem;
+  }
+  .catsec__title {
+    margin: 0 0 1.2rem;
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .folder-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    align-items: start;
+  }
+  @media (min-width: 640px) {
+    .folder-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (min-width: 1000px) {
+    .folder-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+    }
+  }
+</style>

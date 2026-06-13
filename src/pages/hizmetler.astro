@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from "astro:content";
+import { Picture } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Section from "../components/Section.astro";
 import SectionHeading from "../components/SectionHeading.astro";
@@ -7,16 +8,36 @@ import Eyebrow from "../components/Eyebrow.astro";
 import Button from "../components/Button.astro";
 import Icon from "../components/Icon.astro";
 import { PRIMARY_CTA } from "../consts";
+import { breadcrumb, BUSINESS_ID } from "../lib/schema";
+import bannerPhoto from "../assets/photos/director-clapper.jpg";
 
 const services = (await getCollection("services")).sort((a, b) => a.data.order - b.data.order);
 const rendered = await Promise.all(
   services.map(async (s) => ({ id: s.id, data: s.data, Content: (await render(s)).Content })),
 );
+
+// Breadcrumb + a Service node per offering (local SEO).
+const pageJsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Hizmetler", path: "/hizmetler" },
+  ]),
+  ...services.map((s) => ({
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: s.data.title,
+    description: s.data.summary,
+    serviceType: s.data.title,
+    areaServed: { "@type": "City", name: "Sakarya" },
+    provider: { "@id": BUSINESS_ID },
+  })),
+];
 ---
 
 <BaseLayout
   title="Hizmetler"
-  description="Video prodüksiyon, kreatif strateji ve post-prodüksiyon — Rast Creative Studio'nun uçtan uca üç ana hizmeti."
+  description="Sakarya video prodüksiyon hizmetleri: reklam ve tanıtım filmi, kreatif strateji, post-prodüksiyon ve kurgu — Rast Creative Studio."
+  jsonLd={pageJsonLd}
 >
   <Section>
     <SectionHeading eyebrow="Sahne 01 · Hizmetler">
@@ -28,6 +49,16 @@ const rendered = await Promise.all(
         </p>
       </Fragment>
     </SectionHeading>
+
+    <Picture
+      src={bannerPhoto}
+      formats={["avif", "webp"]}
+      alt="Klaketle sahne başlatan ekip ve sinema kamerasıyla Sakarya'da video prodüksiyon çekimi"
+      widths={[600, 900, 1200, 1600]}
+      sizes="(min-width: 1100px) 1040px, 92vw"
+      loading="lazy"
+      class="svc-banner"
+    />
 
     <ul class="services">
       {
@@ -69,6 +100,19 @@ const rendered = await Promise.all(
 </BaseLayout>
 
 <style>
+  .svc-banner {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 7;
+    object-fit: cover;
+    border-radius: var(--radius-card);
+    border: 1px solid var(--line);
+    margin: 2.5rem 0 0;
+  }
+  :global(picture):has(.svc-banner) {
+    display: block;
+  }
   .services {
     list-style: none;
     margin: 3rem 0 0;

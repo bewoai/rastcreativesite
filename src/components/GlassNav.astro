@@ -36,6 +36,14 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
   </nav>
 </header>
 
+{/* Mobile: top brand bar (logo + CTA) */}
+<header class="topbar" data-topbar>
+  <div class="topbar__inner">
+    <Logo class="topbar__logo" />
+    <Button href={PRIMARY_CTA.href} class="topbar__cta">Ön Görüşme</Button>
+  </div>
+</header>
+
 {/* Mobile: bottom glass tab-bar */}
 <nav class="tabbar" aria-label="Ana gezinme">
   <ul class="tabbar__inner">
@@ -130,9 +138,41 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
       padding: clamp(0.6rem, 2vw, 1rem);
       pointer-events: none; /* let clicks pass through the transparent track */
     }
-    .tabbar {
+    .tabbar,
+    .topbar {
       display: none;
     }
+  }
+
+  /* ---- Mobile top brand bar ------------------------------------------- */
+  .topbar {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 50;
+    padding: calc(0.5rem + env(safe-area-inset-top, 0px)) 0.6rem 0.5rem;
+    pointer-events: none;
+  }
+  .topbar__inner {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.35rem 0.45rem 0.35rem 0.9rem;
+    background: color-mix(in srgb, var(--paper) 82%, transparent);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-pill);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    box-shadow: 0 8px 28px -18px rgba(17, 17, 16, 0.3);
+  }
+  .topbar__logo :global(.logo__svg) {
+    height: 1.9rem;
+  }
+  .topbar :global(.topbar__cta) {
+    min-height: 40px;
+    padding: 0.45rem 1rem;
+    font-size: 0.82rem;
   }
 
   /* ---- Mobile bottom tab-bar ------------------------------------------- */
@@ -211,6 +251,7 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
   /* Reserve space for the fixed nav so content never hides behind it. */
   @media (max-width: 767.98px) {
     body {
+      padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));
       padding-bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));
     }
   }

@@ -7,14 +7,25 @@ import Button from "../components/Button.astro";
 import Icon from "../components/Icon.astro";
 import ContactForm from "../components/ContactForm.astro";
 import { CONTACT } from "../consts";
+import { localBusiness, breadcrumb } from "../lib/schema";
 
 const mapsQuery = encodeURIComponent(`Rast Creative Studio ${CONTACT.city}`);
 const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
+
+// Contact is the strongest local-SEO page: full LocalBusiness + breadcrumb.
+const pageJsonLd = [
+  localBusiness,
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "İletişim", path: "/iletisim" },
+  ]),
+];
 ---
 
 <BaseLayout
   title="İletişim"
-  description="Rast Creative Studio ile iletişime geçin: ücretsiz ön görüşme talebi, WhatsApp ve telefon. Sakarya."
+  description="Sakarya'da video prodüksiyon için iletişime geçin: ücretsiz ön görüşme, WhatsApp ve telefon. Serdivan, Sakarya."
+  jsonLd={pageJsonLd}
 >
   <Section>
     <SectionHeading eyebrow="Sahne 01 · İletişim">

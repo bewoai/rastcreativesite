@@ -2,23 +2,29 @@
 import Icon from "./Icon.astro";
 
 interface Props {
-  /** Vimeo video ID (digits). */
-  vimeoId: string;
+  /** Which player to load on click. */
+  provider: "vimeo" | "youtube";
+  /** Vimeo numeric ID or YouTube video ID. */
+  videoId: string;
   /** Used for the iframe title + play button label. */
   title: string;
-  /** Poster image src (16:9). */
+  /** Poster image src (16:9, or 9:16 when vertical). */
   poster: string;
   posterAlt?: string;
+  /** 9:16 reel/short instead of the default 16:9. */
+  vertical?: boolean;
   class?: string;
 }
 
-const { vimeoId, title, poster, posterAlt, class: className } = Astro.props;
+const { provider, videoId, title, poster, posterAlt, vertical = false, class: className } =
+  Astro.props;
 ---
 
 <div
-  class:list={["facade", className]}
-  data-vimeo-facade
-  data-vimeo-id={vimeoId}
+  class:list={["facade", { "facade--vertical": vertical }, className]}
+  data-video-facade
+  data-provider={provider}
+  data-video-id={videoId}
   data-title={title}
 >
   <img
@@ -46,6 +52,11 @@ const { vimeoId, title, poster, posterAlt, class: className } = Astro.props;
     border-radius: var(--radius-card);
     background: var(--ink);
     border: 1px solid var(--line);
+  }
+  .facade--vertical {
+    aspect-ratio: 9 / 16;
+    max-width: min(360px, 100%);
+    margin-inline: auto;
   }
   .facade__poster {
     position: absolute;
@@ -106,31 +117,44 @@ const { vimeoId, title, poster, posterAlt, class: className } = Astro.props;
 </style>
 
 <script>
-  function buildIframe(id: string, title: string) {
+  function buildIframe(provider: string, id: string, title: string) {
     const iframe = document.createElement("iframe");
-    const params = new URLSearchParams({
-      autoplay: "1",
-      title: "0",
-      byline: "0",
-      portrait: "0",
-      dnt: "1", // do-not-track (privacy / KVKK)
-    });
-    iframe.src = `https://player.vimeo.com/video/${id}?${params}`;
+    if (provider === "youtube") {
+      const params = new URLSearchParams({
+        autoplay: "1",
+        rel: "0", // limit related videos to the same channel
+        modestbranding: "1",
+      });
+      // -nocookie host = no tracking cookies until play (privacy / KVKK).
+      iframe.src = `https://www.youtube-nocookie.com/embed/${id}?${params}`;
+      iframe.allow =
+        "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+    } else {
+      const params = new URLSearchParams({
+        autoplay: "1",
+        title: "0",
+        byline: "0",
+        portrait: "0",
+        dnt: "1", // do-not-track (privacy / KVKK)
+      });
+      iframe.src = `https://player.vimeo.com/video/${id}?${params}`;
+      iframe.allow = "autoplay; fullscreen; picture-in-picture";
+    }
     iframe.title = title;
     iframe.className = "facade__iframe";
-    iframe.allow = "autoplay; fullscreen; picture-in-picture";
     iframe.setAttribute("allowfullscreen", "");
     return iframe;
   }
 
-  document.querySelectorAll<HTMLElement>("[data-vimeo-facade]").forEach((facade) => {
+  document.querySelectorAll<HTMLElement>("[data-video-facade]").forEach((facade) => {
     const button = facade.querySelector<HTMLButtonElement>(".facade__play");
     button?.addEventListener(
       "click",
       () => {
-        const id = facade.dataset.vimeoId;
+        const id = facade.dataset.videoId;
+        const provider = facade.dataset.provider ?? "vimeo";
         if (!id) return;
-        const iframe = buildIframe(id, facade.dataset.title ?? "");
+        const iframe = buildIframe(provider, id, facade.dataset.title ?? "");
         facade.replaceChildren(iframe);
         facade.classList.add("is-active");
         iframe.focus();

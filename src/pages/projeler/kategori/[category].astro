@@ -3,37 +3,100 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import Section from "../../../components/Section.astro";
 import SectionHeading from "../../../components/SectionHeading.astro";
-import ProjectGallery from "../../../components/ProjectGallery.astro";
+import BrandFolder from "../../../components/BrandFolder.astro";
+import { breadcrumb } from "../../../lib/schema";
+import { groupByBrand, brandHref } from "../../../lib/brands";
 import { PROJECT_CATEGORIES } from "../../../consts";
 
 export async function getStaticPaths() {
   const all = (await getCollection("projects")).filter((p) => !p.data.draft);
+  const brands = groupByBrand(all);
   return PROJECT_CATEGORIES.map((c) => ({
     params: { category: c.slug },
     props: {
       label: c.label,
-      slug: c.slug,
-      projects: all
-        .filter((p) => p.data.category === c.label)
-        .sort((a, b) => a.data.order - b.data.order),
+      brands: brands.filter((b) => b.category === c.label),
     },
   }));
 }
 
-const { label, slug, projects } = Astro.props;
+const { label, brands } = Astro.props;
+
+const crumbs = breadcrumb([
+  { name: "Ana Sayfa", path: "/" },
+  { name: "Projeler", path: "/projeler" },
+  { name: label, path: `/projeler/kategori/${Astro.params.category}` },
+]);
 ---
 
 <BaseLayout
   title={`${label} Projeleri`}
-  description={`Rast Creative Studio ${label.toLocaleLowerCase("tr")} kategorisindeki video prodüksiyon projeleri.`}
+  description={`Rast Creative Studio ${label.toLocaleLowerCase("tr")} kategorisindeki video prodüksiyon işleri.`}
+  jsonLd={crumbs}
 >
   <Section>
+    <a href="/projeler" class="back">← Tüm projeler</a>
     <SectionHeading eyebrow="Sahne 01 · Portfolyo">
       {label}
       <Fragment slot="intro">
-        <p>{label} kategorisindeki işlerimiz.</p>
+        <p>{label} kategorisinde markalar için ürettiğimiz işler.</p>
       </Fragment>
     </SectionHeading>
-    <ProjectGallery projects={projects} activeSlug={slug} />
+
+    {
+      brands.length > 0 ? (
+        <div class="folder-grid">
+          {brands.map((b) => (
+            <BrandFolder
+              href={brandHref(b)}
+              name={b.name}
+              category={b.category}
+              cover={b.cover}
+              count={b.count}
+              vertical={b.vertical}
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="empty">Bu kategoride henüz içerik eklenmedi.</p>
+      )
+    }
   </Section>
 </BaseLayout>
+
+<style>
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 1.2rem;
+    font-family: var(--font-utility);
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .back:hover {
+    color: var(--amber-text);
+  }
+  .empty {
+    color: var(--ink-soft);
+  }
+  .folder-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 2rem;
+    align-items: start;
+  }
+  @media (min-width: 640px) {
+    .folder-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (min-width: 1000px) {
+    .folder-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+    }
+  }
+</style>

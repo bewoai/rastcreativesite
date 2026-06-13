@@ -1,0 +1,89 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Section from "../../../components/Section.astro";
+import SectionHeading from "../../../components/SectionHeading.astro";
+import ProjectCard from "../../../components/ProjectCard.astro";
+import { breadcrumb } from "../../../lib/schema";
+import { groupByBrand } from "../../../lib/brands";
+
+export async function getStaticPaths() {
+  const projects = (await getCollection("projects")).filter((p) => !p.data.draft);
+  // Only brands with more than one video need their own folder page.
+  return groupByBrand(projects)
+    .filter((b) => b.count > 1)
+    .map((b) => ({ params: { brand: b.slug }, props: { brand: b } }));
+}
+
+const { brand } = Astro.props;
+
+const crumbs = breadcrumb([
+  { name: "Ana Sayfa", path: "/" },
+  { name: "Projeler", path: "/projeler" },
+  { name: brand.name, path: `/projeler/marka/${brand.slug}` },
+]);
+---
+
+<BaseLayout
+  title={brand.name}
+  description={`${brand.name} için Rast Creative Studio'nun ürettiği ${brand.count} video içeriği — ${brand.category}.`}
+  jsonLd={crumbs}
+>
+  <Section>
+    <a href="/projeler" class="back">← Tüm projeler</a>
+    <SectionHeading eyebrow={`${brand.category} · ${brand.count} içerik`}>
+      {brand.name}
+    </SectionHeading>
+
+    <div class="grid-cards">
+      {
+        brand.projects.map((p) => (
+          <ProjectCard
+            href={`/projeler/${p.id}`}
+            title={p.data.title}
+            category={p.data.category}
+            poster={p.data.poster}
+            posterAlt={p.data.posterAlt}
+            client={p.data.client}
+            year={p.data.year}
+            timecode={p.data.duration}
+            vertical={p.data.vertical}
+          />
+        ))
+      }
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 1.2rem;
+    font-family: var(--font-utility);
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .back:hover {
+    color: var(--amber-text);
+  }
+  .grid-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    align-items: start;
+  }
+  @media (min-width: 640px) {
+    .grid-cards {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1000px) {
+    .grid-cards {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

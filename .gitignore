@@ -28,6 +28,9 @@ pnpm-debug.log*
 
 # source logo files (originals + Illustrator) — optimised versions are in public/
 RastLogo/
+# client brand logo sources (originals + zips) — used copies live in src/assets/logos/
+calistigimiz_markalarin_logolari/
 
 # temporary notes
 faz4not.txt
+projelinkler.txt

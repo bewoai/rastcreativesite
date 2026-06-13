@@ -1,0 +1,134 @@
+---
+/**
+ * Client logo wall ("trusted by"). Real logos sit in uniform chips so mixed
+ * backgrounds (transparent / white / coloured) read consistently. Altoteks
+ * ships only a white-on-transparent mark, so its chip is dark.
+ * Quiet by default (grayscale), full colour on hover — roadmap §2.3.
+ */
+import { Image } from "astro:assets";
+import adatip from "../assets/logos/adatip.png";
+import altoteks from "../assets/logos/altoteks.png";
+import aytashome from "../assets/logos/aytashome.png";
+import basak from "../assets/logos/basak.png";
+import buyapi from "../assets/logos/buyapi.png";
+import canex from "../assets/logos/canex.jpg";
+import chint from "../assets/logos/chint.webp";
+import estada from "../assets/logos/estada.png";
+import isitan from "../assets/logos/isitan.webp";
+import meteors from "../assets/logos/meteors.png";
+import newlife from "../assets/logos/newlife.png";
+import oyka from "../assets/logos/oyka.png";
+import serdivan from "../assets/logos/serdivan.jpg";
+import thermoway from "../assets/logos/thermoway.png";
+import zeminkoleji from "../assets/logos/zeminkoleji.avif";
+
+const logos = [
+  { src: adatip, name: "Adatıp Hastanesi", dark: false },
+  { src: serdivan, name: "Serdivan AVM", dark: false },
+  { src: aytashome, name: "Aytaş Home", dark: false },
+  { src: meteors, name: "Meteors Shipping", dark: false },
+  { src: oyka, name: "Oyka Kağıt Ambalaj", dark: false },
+  { src: thermoway, name: "ThermoWay", dark: false },
+  { src: estada, name: "Estada Hair Transplant", dark: false },
+  { src: isitan, name: "Isıtan Isı Kontrol Sistemleri", dark: false },
+  { src: zeminkoleji, name: "Zemin Koleji", dark: false },
+  { src: buyapi, name: "Buyapı", dark: false },
+  { src: basak, name: "Başak Traktör", dark: false },
+  { src: canex, name: "Canex", dark: false },
+  { src: chint, name: "Chint Power", dark: false },
+  { src: newlife, name: "New Life", dark: true },
+  { src: altoteks, name: "Altoteks", dark: true },
+];
+---
+
+<ul class="logo-wall" aria-label="Çalıştığımız markalar">
+  {
+    logos.map((l) => (
+      <li class:list={["logo-chip", { "logo-chip--dark": l.dark }]}>
+        <Image
+          src={l.src}
+          alt={`${l.name} logosu`}
+          height={44}
+          densities={[1.5, 2]}
+          loading="lazy"
+          class="logo-chip__img"
+        />
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .logo-wall {
+    list-style: none;
+    margin: 1.6rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.9rem;
+    width: 100%;
+  }
+  .logo-chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 1.25rem;
+    min-height: 5rem;
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    transition:
+      transform var(--dur-fast, 0.2s) var(--ease-out, ease),
+      box-shadow var(--dur-fast, 0.2s) var(--ease-out, ease),
+      border-color var(--dur-fast, 0.2s) var(--ease-out, ease);
+  }
+  .logo-chip--dark {
+    background: var(--ink);
+    border-color: color-mix(in srgb, #ffffff 12%, transparent);
+  }
+  .logo-chip__img {
+    width: auto;
+    height: auto;
+    max-height: 2.6rem;
+    max-width: 100%;
+    object-fit: contain;
+    /* Quiet "trusted by" treatment; colour on hover. */
+    filter: grayscale(1);
+    opacity: 0.85;
+    transition:
+      filter var(--dur-fast, 0.2s) var(--ease-out, ease),
+      opacity var(--dur-fast, 0.2s) var(--ease-out, ease);
+  }
+  .logo-chip:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--amber) 35%, var(--line));
+    box-shadow: 0 6px 20px -8px color-mix(in srgb, var(--ink) 18%, transparent);
+  }
+  .logo-chip:hover .logo-chip__img {
+    filter: grayscale(0);
+    opacity: 1;
+  }
+
+  @media (min-width: 560px) {
+    .logo-wall {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (min-width: 900px) {
+    .logo-wall {
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.75rem;
+    }
+    .logo-chip {
+      padding: 0.85rem;
+      min-height: 4.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .logo-chip,
+    .logo-chip__img {
+      transition: none;
+    }
+  }
+</style>

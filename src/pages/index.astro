@@ -1,5 +1,8 @@
 ---
 import { getCollection, render } from "astro:content";
+import { Picture } from "astro:assets";
+import heroPhoto from "../assets/photos/camera-closeup.jpg";
+import whyPhoto from "../assets/photos/hero-cinema.jpg";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Section from "../components/Section.astro";
 import SectionHeading from "../components/SectionHeading.astro";
@@ -8,13 +11,15 @@ import Button from "../components/Button.astro";
 import ProjectCard from "../components/ProjectCard.astro";
 import ServiceCard from "../components/ServiceCard.astro";
 import AccordionItem from "../components/AccordionItem.astro";
-import { COPY, PRIMARY_CTA, SITE, CONTACT, SOCIAL } from "../consts";
+import LogoWall from "../components/LogoWall.astro";
+import { COPY, PRIMARY_CTA } from "../consts";
+import { localBusiness, faqPage, toPlainText } from "../lib/schema";
 
 const byOrder = (a: { data: { order: number } }, b: { data: { order: number } }) =>
   a.data.order - b.data.order;
 
 const projects = (await getCollection("projects")).filter((p) => !p.data.draft);
-const featured = projects.filter((p) => p.data.featured).sort(byOrder).slice(0, 6);
+const featured = projects.filter((p) => p.data.featured).sort(byOrder).slice(0, 4);
 const services = (await getCollection("services")).sort(byOrder);
 const faqEntries = (await getCollection("faq")).sort(byOrder);
 const faqRendered = await Promise.all(
@@ -40,36 +45,19 @@ const whyRast = [
   },
 ];
 
-// Quiet grayscale placeholder logo strip — real client logos arrive in §5.
-const placeholderMarks = [
-  `<circle cx="20" cy="20" r="11"/><circle cx="20" cy="20" r="3" fill="currentColor" stroke="none"/>`,
-  `<rect x="9" y="11" width="22" height="18" rx="3"/><path d="M9 20h22"/>`,
-  `<path d="M20 9 31 30H9z"/>`,
-  `<path d="M20 8l10.4 6v12L20 32 9.6 26V14z"/>`,
-  `<path d="M11 25c4-12 14-12 18 0" /><circle cx="20" cy="14" r="3"/>`,
+// Home-page structured data: enriched LocalBusiness + FAQPage (rich results).
+const pageJsonLd = [
+  localBusiness,
+  faqPage(
+    faqEntries.map((e) => ({
+      question: e.data.question,
+      answer: toPlainText(e.body ?? ""),
+    })),
+  ),
 ];
-
-const localBusiness = {
-  "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  name: SITE.name,
-  description: SITE.description,
-  url: SITE.url,
-  image: new URL(SITE.ogImage, SITE.url).href,
-  telephone: CONTACT.phoneIntl,
-  email: CONTACT.email,
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: CONTACT.addressLocality,
-    addressRegion: CONTACT.addressRegion,
-    addressCountry: CONTACT.addressCountry,
-  },
-  areaServed: "TR",
-  sameAs: SOCIAL.map((s) => s.href),
-};
 ---
 
-<BaseLayout jsonLd={localBusiness} preloadImage="/placeholders/hero.svg">
+<BaseLayout jsonLd={pageJsonLd}>
   {/* 1 — Hero */}
   <section class="hero">
     <div class="hero__inner">
@@ -85,15 +73,16 @@ const localBusiness = {
         </div>
       </div>
       <div class="hero__visual">
-        <img
-          src="/placeholders/hero.svg"
-          alt="Rast Creative tanıtım görseli (yer tutucu)"
-          width="1200"
-          height="1500"
+        <Picture
+          src={heroPhoto}
+          formats={["avif", "webp"]}
+          alt="Sakarya'da sinematik video prodüksiyon: profesyonel sinema kamerası ve timecode'lu monitör"
+          widths={[420, 640, 900]}
+          sizes="(min-width: 860px) 45vw, 92vw"
+          loading="eager"
           fetchpriority="high"
           class="hero__img"
         />
-
       </div>
     </div>
   </section>
@@ -116,34 +105,18 @@ const localBusiness = {
             client={p.data.client}
             year={p.data.year}
             timecode={p.data.duration}
+            vertical={p.data.vertical}
           />
         ))
       }
     </div>
   </Section>
 
-  {/* 3 — Referans logoları (placeholder) */}
+  {/* 3 — Referans logoları */}
   <Section space="tight">
     <div class="refs">
-      <Eyebrow tone="soft">Bize güvenen markalardan bazıları</Eyebrow>
-      <ul class="refs__row" aria-label="Referans markalar (yer tutucu)">
-        {
-          placeholderMarks.map((m) => (
-            <li class="refs__cell">
-              <svg
-                viewBox="0 0 40 40"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-                set:html={m}
-              />
-            </li>
-          ))
-        }
-      </ul>
+      <Eyebrow tone="soft">Çalıştığımız markalardan bazıları</Eyebrow>
+      <LogoWall />
     </div>
   </Section>
 
@@ -173,6 +146,15 @@ const localBusiness = {
   {/* 5 — Neden Rast */}
   <Section id="neden-rast" tone="ink">
     <SectionHeading eyebrow="Sahne 04 · Neden Rast" eyebrowTone="paper">Somut güven sinyalleri</SectionHeading>
+    <Picture
+      src={whyPhoto}
+      formats={["avif", "webp"]}
+      alt="Sakarya'da video prodüksiyon setinde çekim ekibi, monitör ve sinema ışığı"
+      widths={[600, 900, 1200, 1600]}
+      sizes="(min-width: 1100px) 1040px, 92vw"
+      loading="lazy"
+      class="why__photo"
+    />
     <ul class="why">
       {
         whyRast.map((w) => (
@@ -203,21 +185,14 @@ const localBusiness = {
     </div>
   </Section>
 
-  {/* 7 — Son CTA bandı — clapperboard sits on the right */}
-  <div data-cta-final>
-    <Section tone="ink" id="son-cta">
-      <div class="cta-band">
-        <div class="cta-band__text">
-          <Eyebrow tone="paper">Hazır mısınız?</Eyebrow>
-          <h2 class="cta-band__title">Markanızın sinematik yüzünü birlikte çekelim.</h2>
-          <Button href={PRIMARY_CTA.href} size="lg" arrow>{PRIMARY_CTA.label}</Button>
-        </div>
-        <div class="cta-band__visual" aria-hidden="true">
-          {/* Clapperboard lands here */}
-        </div>
-      </div>
-    </Section>
-  </div>
+  {/* 7 — Son CTA bandı */}
+  <Section tone="ink" space="tight">
+    <div class="cta-band">
+      <Eyebrow tone="paper">Hazır mısınız?</Eyebrow>
+      <h2 class="cta-band__title">Markanızın sinematik yüzünü birlikte çekelim.</h2>
+      <Button href={PRIMARY_CTA.href} size="lg" arrow>{PRIMARY_CTA.label}</Button>
+    </div>
+  </Section>
 </BaseLayout>
 
 <style>
@@ -261,6 +236,9 @@ const localBusiness = {
     width: 100%;
     max-width: 30rem;
   }
+  .hero__visual :global(picture) {
+    display: block;
+  }
   .hero__img {
     width: 100%;
     height: auto;
@@ -302,7 +280,7 @@ const localBusiness = {
   }
   @media (min-width: 1000px) {
     .grid-cards {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
     }
   }
 
@@ -313,21 +291,6 @@ const localBusiness = {
     gap: 1.4rem;
     align-items: center;
     text-align: center;
-  }
-  .refs__row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: clamp(1.5rem, 5vw, 3.5rem);
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    color: var(--ink-soft);
-    opacity: 0.55;
-  }
-  .refs__cell svg {
-    width: 2.4rem;
-    height: 2.4rem;
   }
 
   /* 4 — services grid */
@@ -344,6 +307,19 @@ const localBusiness = {
   }
 
   /* 5 — why rast */
+  .why__photo {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 7;
+    object-fit: cover;
+    border-radius: var(--radius-card);
+    margin: 2.5rem 0 0;
+    border: 1px solid color-mix(in srgb, #ffffff 12%, transparent);
+  }
+  :global(picture):has(.why__photo) {
+    display: block;
+  }
   .why {
     list-style: none;
     margin: 2.5rem 0 0;
@@ -390,36 +366,17 @@ const localBusiness = {
     border-top: 1px solid var(--line);
   }
 
-  /* 7 — final CTA band (two-column: text left, clapperboard right) */
+  /* 7 — final CTA band */
   .cta-band {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    align-items: center;
-    min-height: 24rem;
-  }
-  .cta-band__text {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    text-align: center;
     gap: 1.25rem;
   }
   .cta-band__title {
     margin: 0;
     max-width: 18ch;
     color: var(--paper);
-  }
-  .cta-band__visual {
-    /* Reserve space for the clapperboard to land here visually */
-    display: none;
-  }
-  @media (min-width: 768px) {
-    .cta-band {
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
-    }
-    .cta-band__visual {
-      display: block;
-      min-height: 20rem;
-    }
   }
 </style>

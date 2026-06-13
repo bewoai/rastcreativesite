@@ -105,6 +105,7 @@ export const PROJECT_CATEGORIES = [
   { label: "Ürün", slug: "urun" },
   { label: "Kurumsal", slug: "kurumsal" },
   { label: "Medikal", slug: "medikal" },
+  { label: "Sosyal Medya", slug: "sosyal-medya" },
 ] as const;
 
 /**

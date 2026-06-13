@@ -1,15 +1,26 @@
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
 
-// Portfolio projects. Vimeo IDs/posters are filled in by the client later
-// (roadmap §5) — keep `vimeoId` optional so a project can exist poster-only.
+// Portfolio projects. Vimeo/YouTube IDs and posters are filled in by the
+// client later (roadmap §5) — keep them optional so a project can exist
+// poster-only. If both IDs are set, Vimeo takes precedence.
 const projects = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/projects" }),
   schema: z.object({
     title: z.string(),
-    category: z.enum(["Reklam", "Marka Hikayesi", "Ürün", "Kurumsal", "Medikal"]),
+    category: z.enum([
+      "Reklam",
+      "Marka Hikayesi",
+      "Ürün",
+      "Kurumsal",
+      "Medikal",
+      "Sosyal Medya",
+    ]),
     vimeoId: z.string().optional(),
-    poster: z.string(), // root-relative image path
+    youtubeId: z.string().optional(), // YouTube video ID (e.g. "dQw4w9WgXcQ")
+    externalUrl: z.string().optional(), // links out instead of playing (e.g. Instagram)
+    vertical: z.boolean().default(false), // 9:16 reels/shorts (YouTube Shorts)
+    poster: z.string(), // root-relative path or full URL (e.g. YouTube thumbnail)
     posterAlt: z.string().optional(),
     summary: z.string().optional(),
     client: z.string().optional(),

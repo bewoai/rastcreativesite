@@ -5,12 +5,17 @@ import Section from "../../components/Section.astro";
 import SectionHeading from "../../components/SectionHeading.astro";
 import Eyebrow from "../../components/Eyebrow.astro";
 import Icon from "../../components/Icon.astro";
-import VimeoFacade from "../../components/VimeoFacade.astro";
+import VideoFacade from "../../components/VideoFacade.astro";
 import ProjectCard from "../../components/ProjectCard.astro";
 import { SITE } from "../../consts";
+import { breadcrumb } from "../../lib/schema";
 
 export async function getStaticPaths() {
-  const all = (await getCollection("projects")).filter((p) => !p.data.draft);
+  // External-only entries (e.g. Instagram link-outs) have no detail page;
+  // their folder links straight out. Exclude them from paths AND related.
+  const all = (await getCollection("projects")).filter(
+    (p) => !p.data.draft && !p.data.externalUrl,
+  );
   const byOrder = (a: (typeof all)[number], b: (typeof all)[number]) =>
     a.data.order - b.data.order;
   return all.map((p) => ({
@@ -36,19 +41,39 @@ const credits = [
   ["Süre", d.duration],
 ].filter(([, v]) => v) as [string, string][];
 
-// VideoObject only once a real Vimeo ID exists (placeholders emit nothing).
-const videoObject = d.vimeoId
-  ? {
-      "@context": "https://schema.org",
-      "@type": "VideoObject",
-      name: d.title,
-      description: d.summary ?? `${d.title} — ${d.category}`,
-      thumbnailUrl: new URL(d.poster, SITE.url).href,
-      uploadDate: d.year ? `${d.year}-01-01` : undefined,
-      embedUrl: `https://player.vimeo.com/video/${d.vimeoId}`,
-      contentUrl: `https://vimeo.com/${d.vimeoId}`,
-    }
-  : undefined;
+// Pick a video provider (Vimeo wins if both are set). Poster-only otherwise.
+const provider = d.vimeoId ? "vimeo" : d.youtubeId ? "youtube" : null;
+const videoId = d.vimeoId ?? d.youtubeId;
+
+// VideoObject only once a real video exists (placeholders emit nothing).
+const videoObject =
+  provider && videoId
+    ? {
+        "@context": "https://schema.org",
+        "@type": "VideoObject",
+        name: d.title,
+        description: d.summary ?? `${d.title} — ${d.category}`,
+        thumbnailUrl: new URL(d.poster, SITE.url).href,
+        uploadDate: d.year ? `${d.year}-01-01` : undefined,
+        embedUrl:
+          provider === "vimeo"
+            ? `https://player.vimeo.com/video/${videoId}`
+            : `https://www.youtube.com/embed/${videoId}`,
+        contentUrl:
+          provider === "vimeo"
+            ? `https://vimeo.com/${videoId}`
+            : `https://www.youtube.com/watch?v=${videoId}`,
+      }
+    : undefined;
+
+const pageJsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Projeler", path: "/projeler" },
+    { name: d.title, path: `/projeler/${entry.id}` },
+  ]),
+  ...(videoObject ? [videoObject] : []),
+];
 ---
 
 <BaseLayout
@@ -56,7 +81,7 @@ const videoObject = d.vimeoId
   description={d.summary ?? `${d.title} — Rast Creative Studio ${d.category} projesi.`}
   image={d.poster}
   ogType="article"
-  jsonLd={videoObject}
+  jsonLd={pageJsonLd}
 >
   <Section>
     <a href="/projeler" class="back">
@@ -71,12 +96,14 @@ const videoObject = d.vimeoId
 
     <div class="media">
       {
-        d.vimeoId ? (
-          <VimeoFacade
-            vimeoId={d.vimeoId}
+        provider && videoId ? (
+          <VideoFacade
+            provider={provider}
+            videoId={videoId}
             title={d.title}
             poster={d.poster}
             posterAlt={d.posterAlt}
+            vertical={d.vertical}
           />
         ) : (
           <div class="poster">
