@@ -43,8 +43,10 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
   <label class="consent">
     <input type="checkbox" name="kvkk" value="onaylandi" required />
     <span>
-      Kişisel verilerimin bu form aracılığıyla iletişim amacıyla işlenmesine onay
-      veriyorum. <span class="req" aria-hidden="true">*</span>
+      <a href="/kvkk" target="_blank" rel="noopener">KVKK Aydınlatma Metni</a>'ni
+      okudum; kişisel verilerimin iletişim amacıyla işlenmesine ve belirtilen
+      kapsamda aktarılmasına açık rıza veriyorum.
+      <span class="req" aria-hidden="true">*</span>
     </span>
   </label>
 
@@ -137,6 +139,11 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
     height: 1.15rem;
     flex: none;
     accent-color: var(--amber);
+  }
+  .consent a {
+    color: var(--amber-text);
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
   .cform__status {
     font-size: 0.95rem;

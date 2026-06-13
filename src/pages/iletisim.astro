@@ -51,7 +51,7 @@ const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
             <dd>
               {
                 CONTACT.phone ? (
-                  <a href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}>{CONTACT.phone}</a>
+                  <a href={`tel:${CONTACT.phoneIntl}`}>{CONTACT.phone}</a>
                 ) : (
                   <span class="pending">Yakında</span>
                 )

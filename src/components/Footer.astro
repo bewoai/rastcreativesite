@@ -57,7 +57,7 @@ const year = new Date().getFullYear();
         <li>
           {
             CONTACT.phone ? (
-              <a href={`tel:${CONTACT.phone.replace(/\s/g, "")}`} class="footer__link">
+              <a href={`tel:${CONTACT.phoneIntl}`} class="footer__link">
                 {CONTACT.phone}
               </a>
             ) : (
@@ -82,7 +82,9 @@ const year = new Date().getFullYear();
 
   <div class="footer__base">
     <p>© {year} {SITE.name}. Tüm hakları saklıdır.</p>
-    <p class="footer__credit">Sakarya'da tasarlandı ve kuruldu.</p>
+    <nav class="footer__legal" aria-label="Yasal">
+      <a href="/kvkk" class="footer__link">KVKK Aydınlatma Metni</a>
+    </nav>
   </div>
 </footer>
 

@@ -1,0 +1,149 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/Section.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import { SITE, CONTACT } from "../consts";
+
+const updated = "13 Haziran 2026";
+---
+
+<BaseLayout
+  title="KVKK Aydınlatma Metni"
+  description="Rast Creative Studio iletişim formu kişisel verilerin korunması ve işlenmesi aydınlatma metni."
+>
+  <Section width="narrow">
+    <SectionHeading eyebrow="Yasal">
+      KVKK Aydınlatma Metni
+      <Fragment slot="intro">
+        <p>Son güncelleme: {updated}</p>
+      </Fragment>
+    </SectionHeading>
+
+    <div class="legal">
+      <p>
+        İşbu aydınlatma metni, 6698 sayılı Kişisel Verilerin Korunması Kanunu
+        (“KVKK”) md. 10 kapsamında, veri sorumlusu sıfatıyla {SITE.name}
+        tarafından, web sitemizdeki iletişim formunu dolduran ilgili kişileri
+        bilgilendirmek amacıyla hazırlanmıştır.
+      </p>
+
+      <h2>1. Veri Sorumlusu</h2>
+      <p>
+        Kişisel verileriniz, veri sorumlusu {SITE.name} tarafından aşağıda
+        açıklanan kapsamda işlenmektedir.
+      </p>
+      <ul>
+        <li>Adres: {CONTACT.city}</li>
+        <li>E-posta: {CONTACT.email}</li>
+        <li>Telefon: {CONTACT.phone}</li>
+      </ul>
+
+      <h2>2. İşlenen Kişisel Veriler</h2>
+      <p>İletişim formu aracılığıyla şu kişisel verileriniz işlenir:</p>
+      <ul>
+        <li>Kimlik bilgisi: ad ve soyad</li>
+        <li>İletişim bilgisi: telefon numarası</li>
+        <li>Müşteri/şirket bilgisi: firma adı (isteğe bağlı)</li>
+        <li>Mesaj içeriğinde tarafımıza ilettiğiniz diğer bilgiler</li>
+      </ul>
+
+      <h2>3. Kişisel Verilerin İşlenme Amaçları</h2>
+      <ul>
+        <li>İletişim talebinize yanıt vermek,</li>
+        <li>Ücretsiz ön görüşme planlamak ve yürütmek,</li>
+        <li>Hizmetlerimize ilişkin bilgilendirme ve teklif sunmak,</li>
+        <li>Sizinle iletişimin sürdürülmesini sağlamak.</li>
+      </ul>
+
+      <h2>4. İşlemenin Hukuki Sebebi</h2>
+      <p>
+        Kişisel verileriniz; KVKK md. 5/2-(f) uyarınca temel hak ve
+        özgürlüklerinize zarar vermemek kaydıyla veri sorumlusunun meşru
+        menfaatleri için veri işlemenin zorunlu olması hukuki sebebine ve formda
+        yer alan onay kutusu ile verdiğiniz <strong>açık rızanıza</strong>
+        (md. 5/1) dayanılarak işlenir.
+      </p>
+
+      <h2>5. Kişisel Verilerin Aktarılması</h2>
+      <p>
+        İletişim formu gönderimleri, teknik altyapı hizmeti aldığımız form
+        sağlayıcısı (Web3Forms) üzerinden işlenir ve e-posta yoluyla tarafımıza
+        iletilir. Bu hizmet sağlayıcının sunucuları yurt dışında bulunabileceğinden,
+        verileriniz yurt dışına aktarılabilir. Söz konusu aktarım, formdaki onay
+        kutusu ile verdiğiniz açık rıza kapsamında gerçekleştirilir.
+      </p>
+
+      <h2>6. Toplama Yöntemi</h2>
+      <p>
+        Kişisel verileriniz, web sitemizdeki iletişim formu aracılığıyla
+        elektronik ortamda toplanır.
+      </p>
+
+      <h2>7. Saklama Süresi</h2>
+      <p>
+        Kişisel verileriniz, işleme amaçlarının gerektirdiği süre boyunca ve
+        ilgili mevzuatta öngörülen süreler saklanır; amaç ortadan kalktığında
+        silinir, yok edilir veya anonim hâle getirilir.
+      </p>
+
+      <h2>8. İlgili Kişi Olarak Haklarınız (KVKK md. 11)</h2>
+      <p>Veri sorumlusuna başvurarak şu haklara sahipsiniz:</p>
+      <ul>
+        <li>Kişisel verinizin işlenip işlenmediğini öğrenme,</li>
+        <li>İşlenmişse buna ilişkin bilgi talep etme,</li>
+        <li>İşlenme amacını ve amacına uygun kullanılıp kullanılmadığını öğrenme,</li>
+        <li>Yurt içinde/yurt dışında aktarıldığı üçüncü kişileri bilme,</li>
+        <li>Eksik veya yanlış işlenmişse düzeltilmesini isteme,</li>
+        <li>Şartları oluştuğunda silinmesini veya yok edilmesini isteme,</li>
+        <li>Düzeltme/silme işlemlerinin aktarılan üçüncü kişilere bildirilmesini isteme,</li>
+        <li>
+          Münhasıran otomatik sistemlerle analiz sonucu aleyhinize bir sonuç
+          çıkmasına itiraz etme,
+        </li>
+        <li>Kanuna aykırı işleme nedeniyle zarara uğramanız hâlinde zararın giderilmesini talep etme.</li>
+      </ul>
+
+      <h2>9. Başvuru</h2>
+      <p>
+        Haklarınızı kullanmak için taleplerinizi
+        <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a> adresine
+        iletebilirsiniz. Başvurunuz, KVKK ve ilgili mevzuatta öngörülen süreler
+        içinde sonuçlandırılır.
+      </p>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .legal {
+    margin-top: 2.5rem;
+    max-width: 68ch;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .legal h2 {
+    margin: 2rem 0 0.6rem;
+    font-family: var(--font-body);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .legal p {
+    margin: 0 0 1rem;
+  }
+  .legal ul {
+    margin: 0 0 1rem;
+    padding-left: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .legal a {
+    color: var(--amber-text);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .legal strong {
+    color: var(--ink);
+  }
+</style>

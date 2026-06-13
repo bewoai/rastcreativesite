@@ -68,15 +68,18 @@ export const SOCIAL: readonly NavItem[] = [
 ];
 
 /**
- * Contact details. Real values come from the client (roadmap §5) — do NOT
- * invent them. Empty strings render as a muted placeholder for now.
- * `whatsapp` is digits only in international format (e.g. "905551234567").
+ * Contact details (provided by the client, 2026-06-13).
+ * `whatsapp` is digits only, international format (TR +90, no leading 0).
  */
 export const CONTACT = {
-  city: "Sakarya, Türkiye",
-  phone: "",
-  email: "",
-  whatsapp: "",
+  city: "Serdivan, Sakarya",
+  addressLocality: "Serdivan",
+  addressRegion: "Sakarya",
+  addressCountry: "TR",
+  phone: "0543 838 2404",
+  phoneIntl: "+905438382404", // for tel: links
+  email: "studio@rastcreative.com",
+  whatsapp: "905438382404", // for wa.me links
 } as const;
 
 /**
@@ -110,4 +113,5 @@ export const PROJECT_CATEGORIES = [
  * via a PUBLIC_WEB3FORMS_KEY env var, or replace the empty fallback. Until set,
  * the contact form renders but submissions will fail.
  */
-export const WEB3FORMS_ACCESS_KEY: string = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? "";
+export const WEB3FORMS_ACCESS_KEY: string =
+  import.meta.env.PUBLIC_WEB3FORMS_KEY ?? "be5b4c14-429d-48c7-a686-6e4e1322f40f";
