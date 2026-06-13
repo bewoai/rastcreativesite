@@ -25,3 +25,9 @@ pnpm-debug.log*
 
 # local agent/editor settings (keep launch.json shared, ignore local prefs)
 .claude/settings.local.json
+
+# source logo files (originals + Illustrator) — optimised versions are in public/
+RastLogo/
+
+# temporary notes
+faz4not.txt
