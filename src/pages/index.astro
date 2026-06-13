@@ -203,14 +203,16 @@ const localBusiness = {
     </div>
   </Section>
 
-  {/* 7 — Son CTA bandı */}
-  <Section tone="ink" space="tight">
-    <div class="cta-band">
-      <Eyebrow tone="paper">Hazır mısınız?</Eyebrow>
-      <h2 class="cta-band__title">Markanızın sinematik yüzünü birlikte çekelim.</h2>
-      <Button href={PRIMARY_CTA.href} size="lg" arrow>{PRIMARY_CTA.label}</Button>
-    </div>
-  </Section>
+  {/* 7 — Son CTA bandı — clapperboard overlays this when closed */}
+  <div data-cta-final>
+    <Section tone="ink" space="tight" id="son-cta">
+      <div class="cta-band">
+        <Eyebrow tone="paper">Hazır mısınız?</Eyebrow>
+        <h2 class="cta-band__title">Markanızın sinematik yüzünü birlikte çekelim.</h2>
+        <Button href={PRIMARY_CTA.href} size="lg" arrow>{PRIMARY_CTA.label}</Button>
+      </div>
+    </Section>
+  </div>
 </BaseLayout>
 
 <style>

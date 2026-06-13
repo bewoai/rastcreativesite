@@ -1,30 +1,31 @@
 ---
 /**
- * Clapperboard — true 3D scroll-driven background decoration.
- * Built with CSS 3D transforms (preserve-3d) for real depth.
- * Starts open, rotates in 3D space as user scrolls, closes at the
- * contact section where a CTA button appears on the board surface.
+ * Clapperboard — true 3D scroll-driven element.
+ *
+ * ▸ Starts OPEN (arm swung up) as a subtle background decoration.
+ * ▸ As user scrolls, the arm gradually CLOSES (swings down).
+ * ▸ Gentle 3D perspective shift throughout (NOT wild spinning).
+ * ▸ When reaching the final CTA section, the clapperboard moves to
+ *   the FOREGROUND, overlaying the section, and the CTA button on
+ *   the board becomes clickable.
  */
 import { PRIMARY_CTA } from "../consts";
 ---
 
-<div class="clapper-scene" aria-hidden="true" data-clapper-scene>
+<div class="clapper-scene" data-clapper-scene>
   <div class="clapper" data-clapper>
-    {/* ── Hinged top bar (arm) ─────────────────────────────── */}
+    {/* ── Hinged top bar (arm) — swings from open to closed ── */}
     <div class="clapper__arm" data-clapper-arm>
       <div class="clapper__arm-face clapper__arm-front">
-        <div class="arm-stripes">
-          <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-        </div>
+        <div class="arm-stripes"></div>
       </div>
-      <div class="clapper__arm-face clapper__arm-top"></div>
-      <div class="clapper__arm-face clapper__arm-bottom"></div>
+      <div class="clapper__arm-face clapper__arm-edge"></div>
     </div>
 
     {/* ── Board body ──────────────────────────────────────── */}
     <div class="clapper__body">
+      {/* Front face */}
       <div class="clapper__body-face clapper__body-front">
-        {/* Brand info on the board */}
         <div class="board-fields">
           <div class="board-row">
             <span class="board-label">PRODUCTION</span>
@@ -38,7 +39,7 @@ import { PRIMARY_CTA } from "../consts";
             <span class="board-label">PROJECT</span>
             <span class="board-value">Markanızın Hikâyesi</span>
           </div>
-          <div class="board-row board-row--half">
+          <div class="board-row board-row--cols">
             <div>
               <span class="board-label">SCENE</span>
               <span class="board-value">01</span>
@@ -54,14 +55,15 @@ import { PRIMARY_CTA } from "../consts";
           </div>
         </div>
 
-        {/* CTA appears when clapperboard is closed */}
+        {/* CTA — appears when clapperboard is closed & in foreground */}
         <div class="board-cta" data-clapper-cta>
-          <a href={PRIMARY_CTA.href} class="board-cta__btn" aria-hidden="true" tabindex="-1">
+          <a href={PRIMARY_CTA.href} class="board-cta__btn">
             {PRIMARY_CTA.label}
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
           </a>
         </div>
       </div>
+      {/* Thickness faces */}
       <div class="clapper__body-face clapper__body-top"></div>
       <div class="clapper__body-face clapper__body-right"></div>
       <div class="clapper__body-face clapper__body-left"></div>
@@ -71,220 +73,192 @@ import { PRIMARY_CTA } from "../consts";
 </div>
 
 <style>
-  /* ── Scene: full-viewport container with perspective ────────────── */
+  /* ── Scene container ────────────────────────────────────────────── */
   .clapper-scene {
     position: fixed;
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    perspective: 1200px;
-    perspective-origin: 50% 45%;
-    overflow: hidden;
+    perspective: 1100px;
+    perspective-origin: 50% 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: z-index 0s;
   }
 
-  /* ── Main 3D object ─────────────────────────────────────────────── */
+  /* When in foreground mode — overlays the CTA section */
+  .clapper-scene.is-foreground {
+    z-index: 60;
+    pointer-events: auto;
+  }
+
+  /* ── 3D Clapperboard ────────────────────────────────────────────── */
   .clapper {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: clamp(260px, 42vw, 440px);
+    width: clamp(280px, 44vw, 480px);
     transform-style: preserve-3d;
-    /* Initial: centered, slight tilt, open */
-    transform:
-      translate(-50%, -50%)
-      rotateX(-12deg)
-      rotateY(18deg)
-      rotateZ(2deg);
+    filter: drop-shadow(0 20px 60px rgba(0,0,0,0.35));
   }
 
-  /* ── Arm (hinged top bar) ───────────────────────────────────────── */
+  /* ── ARM (hinged top bar) ───────────────────────────────────────── */
   .clapper__arm {
     position: relative;
     width: 100%;
-    height: clamp(36px, 5.5vw, 52px);
+    height: clamp(40px, 6vw, 56px);
     transform-style: preserve-3d;
-    transform-origin: 0% 100%;
-    /* Start open */
-    transform: rotateX(-50deg);
+    /* Hinge at the BOTTOM of the arm (where it meets the board) */
+    transform-origin: 50% 100%;
+    /* Start OPEN: arm swung upward/backward */
+    transform: rotateX(-55deg);
   }
 
-  .clapper__arm-face {
-    position: absolute;
-    backface-visibility: hidden;
-  }
+  .clapper__arm-face { position: absolute; }
 
   .clapper__arm-front {
     width: 100%;
     height: 100%;
     background: #0a0a0a;
-    border-radius: 6px 6px 0 0;
+    border-radius: 8px 8px 0 0;
     overflow: hidden;
   }
 
-  /* Diagonal stripes */
+  /* Classic diagonal stripes */
   .arm-stripes {
-    display: flex;
     width: 100%;
     height: 100%;
-  }
-  .arm-stripes span {
-    flex: 1;
     background: repeating-linear-gradient(
-      -65deg,
+      -55deg,
       #0a0a0a 0px,
-      #0a0a0a 12px,
-      #f5f4f0 12px,
-      #f5f4f0 24px
+      #0a0a0a 14px,
+      #f0efeb 14px,
+      #f0efeb 28px
     );
   }
 
-  /* Top edge — gives thickness */
-  .clapper__arm-top {
+  /* Top thickness edge of the arm */
+  .clapper__arm-edge {
     width: 100%;
-    height: 8px;
-    background: #1a1a1a;
-    transform-origin: bottom;
-    transform: rotateX(90deg) translateZ(0px);
-    top: -8px;
-    border-radius: 6px 6px 0 0;
+    height: 10px;
+    background: linear-gradient(180deg, #222 0%, #111 100%);
+    transform-origin: 50% 100%;
+    transform: rotateX(90deg);
+    top: -10px;
+    left: 0;
+    border-radius: 8px 8px 0 0;
   }
 
-  /* Bottom edge — gives thickness */
-  .clapper__arm-bottom {
-    width: 100%;
-    height: 8px;
-    background: #050505;
-    transform-origin: top;
-    transform: rotateX(-90deg);
-    bottom: -8px;
-  }
-
-  /* ── Board body ─────────────────────────────────────────────────── */
+  /* ── BOARD BODY ─────────────────────────────────────────────────── */
   .clapper__body {
     position: relative;
     width: 100%;
-    aspect-ratio: 1.45 / 1;
+    aspect-ratio: 1.42 / 1;
     transform-style: preserve-3d;
   }
 
-  .clapper__body-face {
-    position: absolute;
-    backface-visibility: hidden;
-  }
+  .clapper__body-face { position: absolute; }
 
   .clapper__body-front {
     width: 100%;
     height: 100%;
-    background: linear-gradient(170deg, #141414 0%, #0a0a0a 100%);
+    background: linear-gradient(175deg, #151515 0%, #0a0a0a 100%);
     border-radius: 0 0 8px 8px;
-    padding: clamp(14px, 3vw, 24px);
+    padding: clamp(16px, 3.5vw, 28px);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
   }
 
-  /* Top thickness */
   .clapper__body-top {
     width: 100%;
-    height: 10px;
-    background: #1a1a1a;
-    transform-origin: bottom;
+    height: 12px;
+    background: #1c1c1c;
+    transform-origin: 50% 100%;
     transform: rotateX(90deg);
-    top: 0;
+    top: 0; left: 0;
   }
-
-  /* Right side */
   .clapper__body-right {
-    width: 10px;
+    width: 12px;
     height: 100%;
-    background: #0d0d0d;
-    transform-origin: left;
+    background: #0f0f0f;
+    transform-origin: 0% 50%;
     transform: rotateY(90deg);
-    right: -10px;
-    top: 0;
-    border-radius: 0 4px 4px 0;
+    top: 0; right: -12px;
+    border-radius: 0 6px 6px 0;
   }
-
-  /* Left side */
   .clapper__body-left {
-    width: 10px;
+    width: 12px;
     height: 100%;
-    background: #181818;
-    transform-origin: right;
+    background: #1a1a1a;
+    transform-origin: 100% 50%;
     transform: rotateY(-90deg);
-    left: -10px;
-    top: 0;
-    border-radius: 4px 0 0 4px;
+    top: 0; left: -12px;
+    border-radius: 6px 0 0 6px;
   }
-
-  /* Bottom edge */
   .clapper__body-bottom {
     width: 100%;
-    height: 10px;
+    height: 12px;
     background: #080808;
-    transform-origin: top;
+    transform-origin: 50% 0%;
     transform: rotateX(-90deg);
-    bottom: -10px;
+    bottom: -12px; left: 0;
     border-radius: 0 0 8px 8px;
   }
 
-  /* ── Board text fields ──────────────────────────────────────────── */
+  /* ── Board text ─────────────────────────────────────────────────── */
   .board-fields {
     display: flex;
     flex-direction: column;
-    gap: clamp(6px, 1.5vw, 12px);
+    gap: clamp(8px, 1.8vw, 14px);
+    flex: 1;
   }
-
   .board-row {
     display: flex;
     flex-direction: column;
-    gap: 2px;
-    padding-bottom: clamp(6px, 1.2vw, 10px);
+    gap: 3px;
+    padding-bottom: clamp(8px, 1.5vw, 12px);
     border-bottom: 1px solid rgba(255,255,255,0.1);
   }
-
-  .board-row--half {
+  .board-row--cols {
     flex-direction: row;
-    gap: clamp(12px, 3vw, 24px);
+    gap: clamp(16px, 4vw, 32px);
     border-bottom: none;
+    padding-bottom: 0;
   }
-  .board-row--half > div {
+  .board-row--cols > div {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
   }
-
   .board-label {
     font-family: var(--font-utility, monospace);
-    font-size: clamp(0.5rem, 1.1vw, 0.7rem);
-    font-weight: 600;
-    letter-spacing: 0.18em;
+    font-size: clamp(0.5rem, 1.1vw, 0.68rem);
+    font-weight: 700;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.35);
+    color: rgba(255,255,255,0.3);
   }
-
   .board-value {
     font-family: var(--font-utility, monospace);
-    font-size: clamp(0.7rem, 1.6vw, 1rem);
+    font-size: clamp(0.72rem, 1.6vw, 1rem);
     font-weight: 500;
-    color: rgba(255,255,255,0.7);
+    color: rgba(255,255,255,0.72);
     letter-spacing: 0.02em;
   }
 
-  /* ── CTA Button (hidden until closed) ───────────────────────────── */
+  /* ── CTA Button on the board ────────────────────────────────────── */
   .board-cta {
     display: flex;
     justify-content: center;
+    align-items: center;
     margin-top: auto;
+    padding-top: clamp(12px, 2vw, 20px);
     opacity: 0;
-    transform: translateY(8px) scale(0.95);
+    transform: translateY(10px) scale(0.92);
     transition:
-      opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
     pointer-events: none;
   }
-
   .board-cta.is-visible {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -294,35 +268,36 @@ import { PRIMARY_CTA } from "../consts";
   .board-cta__btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.7rem 1.4rem;
-    background: linear-gradient(135deg, var(--amber, #E25303), var(--amber-deep, #B84203));
+    gap: 0.55rem;
+    padding: 0.75rem 1.6rem;
+    background: linear-gradient(135deg, var(--amber, #E25303) 0%, var(--amber-deep, #B84203) 100%);
     color: #fff;
     border-radius: 999px;
     font-family: var(--font-utility, system-ui);
-    font-size: clamp(0.8rem, 1.4vw, 0.95rem);
+    font-size: clamp(0.82rem, 1.5vw, 1rem);
     font-weight: 600;
     letter-spacing: 0.02em;
     text-decoration: none;
-    pointer-events: auto;
+    cursor: pointer;
     box-shadow:
-      0 0 24px -4px rgba(226, 83, 3, 0.5),
-      0 4px 12px -2px rgba(0,0,0,0.3);
+      0 0 28px -4px rgba(226, 83, 3, 0.55),
+      0 4px 16px -4px rgba(0,0,0,0.4);
     transition:
       box-shadow 0.3s ease,
-      transform 0.2s ease;
+      transform 0.25s ease;
   }
   .board-cta__btn:hover {
     box-shadow:
-      0 0 36px -4px rgba(226, 83, 3, 0.65),
-      0 6px 20px -4px rgba(0,0,0,0.35);
-    transform: scale(1.04);
+      0 0 44px -4px rgba(226, 83, 3, 0.7),
+      0 8px 24px -4px rgba(0,0,0,0.4);
+    transform: scale(1.05);
+  }
+  .board-cta__btn:active {
+    transform: scale(0.97);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .clapper-scene {
-      display: none;
-    }
+    .clapper-scene { display: none; }
   }
 </style>
 
@@ -331,54 +306,93 @@ import { PRIMARY_CTA } from "../consts";
   const clapper = document.querySelector<HTMLElement>('[data-clapper]');
   const arm = document.querySelector<HTMLElement>('[data-clapper-arm]');
   const cta = document.querySelector<HTMLElement>('[data-clapper-cta]');
+  const ctaSection = document.querySelector<HTMLElement>('[data-cta-final]');
 
   if (scene && clapper && arm) {
     let ticking = false;
 
-    // Smooth ease-in-out cubic
-    const easeInOut = (t: number): number =>
+    // Cubic ease-in-out
+    const ease = (t: number): number =>
       t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
     const update = () => {
       const scrollY = window.scrollY;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       const raw = Math.min(1, Math.max(0, scrollY / Math.max(docHeight, 1)));
-      const p = easeInOut(raw);
+      const p = ease(raw);
 
-      // ── 3D Rotation: cinematic orbit around the clapperboard ──
-      // X-axis: starts tilted back (-12°), tilts forward to face viewer
-      const rx = -12 + p * 24;
-      // Y-axis: gentle orbital sweep (18° → -15° → back)
-      const ry = 18 - p * 33;
-      // Z-axis: subtle wobble
-      const rz = 2 + Math.sin(p * Math.PI * 2) * 4;
-
-      // ── Scale: slightly grows as it comes toward viewer ──
-      const scale = 1 + p * 0.08;
-
-      clapper.style.transform = `
-        translate(-50%, -50%)
-        rotateX(${rx}deg)
-        rotateY(${ry}deg)
-        rotateZ(${rz}deg)
-        scale3d(${scale}, ${scale}, ${scale})
-      `;
-
-      // ── Arm: open (rotated up -50°) → closed (0°) ──
-      const armAngle = -50 * (1 - p);
+      // ── ARM: open (-55°) → closed (0°) ──
+      const armAngle = -55 * (1 - p);
       arm.style.transform = `rotateX(${armAngle}deg)`;
 
-      // ── Opacity: subtle at start, slightly more visible mid-scroll ──
-      const opacity = 0.13 + Math.sin(p * Math.PI) * 0.07;
-      scene.style.opacity = String(opacity);
+      // ── Check if CTA section is in view ──
+      let isAtCta = false;
+      if (ctaSection) {
+        const rect = ctaSection.getBoundingClientRect();
+        // CTA section is substantially in view
+        isAtCta = rect.top < window.innerHeight * 0.6;
+      }
 
-      // ── CTA: show when nearly closed (>90%) ──
-      if (cta) {
-        const isClosed = p > 0.88;
-        cta.classList.toggle('is-visible', isClosed);
-        // Make clapperboard more visible when CTA is showing
-        if (isClosed) {
-          scene.style.opacity = String(0.28);
+      if (isAtCta && ctaSection) {
+        // ── FOREGROUND MODE: overlay the CTA section ──
+        scene.classList.add('is-foreground');
+        scene.style.pointerEvents = 'auto';
+
+        // Position clapperboard to align with the CTA section
+        const rect = ctaSection.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+
+        clapper.style.transform = `
+          rotateX(6deg)
+          rotateY(0deg)
+          rotateZ(0deg)
+          scale3d(1.05, 1.05, 1.05)
+        `;
+        clapper.style.position = 'fixed';
+        clapper.style.left = `${centerX}px`;
+        clapper.style.top = `${centerY}px`;
+        clapper.style.translate = '-50% -50%';
+
+        scene.style.opacity = '1';
+
+        // Show CTA button
+        if (cta) {
+          cta.classList.add('is-visible');
+          cta.querySelector('a')?.removeAttribute('tabindex');
+          cta.querySelector('a')?.setAttribute('aria-hidden', 'false');
+        }
+      } else {
+        // ── BACKGROUND MODE: subtle decoration ──
+        scene.classList.remove('is-foreground');
+        scene.style.pointerEvents = 'none';
+
+        // Gentle 3D perspective — the main star is the arm opening/closing
+        const rx = -8 + p * 14;               // tilt forward gently
+        const ry = 12 - p * 8;                // slight orbital
+        const rz = Math.sin(p * Math.PI) * 3; // subtle wobble
+        const s = 1 + p * 0.04;
+
+        clapper.style.position = 'relative';
+        clapper.style.left = 'auto';
+        clapper.style.top = 'auto';
+        clapper.style.translate = 'none';
+        clapper.style.transform = `
+          rotateX(${rx}deg)
+          rotateY(${ry}deg)
+          rotateZ(${rz}deg)
+          scale3d(${s}, ${s}, ${s})
+        `;
+
+        // Opacity: subtle presence
+        const opacity = 0.12 + Math.sin(p * Math.PI) * 0.06;
+        scene.style.opacity = String(opacity);
+
+        // Hide CTA
+        if (cta) {
+          cta.classList.remove('is-visible');
+          cta.querySelector('a')?.setAttribute('tabindex', '-1');
+          cta.querySelector('a')?.setAttribute('aria-hidden', 'true');
         }
       }
 
@@ -394,5 +408,6 @@ import { PRIMARY_CTA } from "../consts";
 
     update();
     window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
   }
 </script>
