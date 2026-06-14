@@ -92,12 +92,9 @@ const logos = [
     max-height: 2.6rem;
     max-width: 100%;
     object-fit: contain;
-    /* Quiet "trusted by" treatment; colour on hover. */
-    filter: grayscale(1);
-    opacity: 0.85;
-    transition:
-      filter var(--dur-fast, 0.2s) var(--ease-out, ease),
-      opacity var(--dur-fast, 0.2s) var(--ease-out, ease);
+    /* Full colour so every brand logo reads clearly; lift handled by the chip. */
+    opacity: 0.95;
+    transition: opacity var(--dur-fast, 0.2s) var(--ease-out, ease);
   }
   .logo-chip:hover {
     transform: translateY(-2px);
@@ -105,7 +102,6 @@ const logos = [
     box-shadow: 0 6px 20px -8px color-mix(in srgb, var(--ink) 18%, transparent);
   }
   .logo-chip:hover .logo-chip__img {
-    filter: grayscale(0);
     opacity: 1;
   }
 

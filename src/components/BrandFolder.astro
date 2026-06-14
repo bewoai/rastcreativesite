@@ -25,6 +25,7 @@ const isFolder = count > 1 && !external;
   class:list={["folder", { "folder--stack": isFolder }]}
   target={external ? "_blank" : undefined}
   rel={external ? "noopener noreferrer" : undefined}
+  data-reveal
 >
   <div class:list={["folder__media", { "folder__media--vertical": vertical }]}>
     <img

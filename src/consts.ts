@@ -34,7 +34,10 @@ export type IconName =
   | "arrow-right"
   | "arrow-up-right"
   | "play"
-  | "whatsapp";
+  | "whatsapp"
+  | "video"
+  | "strategy"
+  | "edit";
 
 export interface NavItem {
   label: string;

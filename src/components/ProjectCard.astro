@@ -31,7 +31,7 @@ const {
 const meta = [client, year].filter(Boolean).join(" · ");
 ---
 
-<a href={href} class:list={["card", className]}>
+<a href={href} class:list={["card", className]} data-reveal>
   <div class:list={["card__media", { "card__media--vertical": vertical }]}>
     <img
       class="card__poster"

@@ -15,7 +15,7 @@ const { title, summary, features = [], index, href, class: className } = Astro.p
 const Tag = href ? "a" : "div";
 ---
 
-<Tag href={href} class:list={["scard", { "scard--link": href }, className]}>
+<Tag href={href} class:list={["scard", { "scard--link": href }, className]} data-reveal>
   {index != null && <span class="scard__num">{String(index).padStart(2, "0")}</span>}
   <h3 class="scard__title">{title}</h3>
   <p class="scard__summary">{summary}</p>

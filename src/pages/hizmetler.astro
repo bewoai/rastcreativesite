@@ -16,6 +16,13 @@ const rendered = await Promise.all(
   services.map(async (s) => ({ id: s.id, data: s.data, Content: (await render(s)).Content })),
 );
 
+// Representative icon per service (falls back to a generic mark).
+const SERVICE_ICON: Record<string, "video" | "strategy" | "edit"> = {
+  "video-produksiyon": "video",
+  "kreatif-strateji": "strategy",
+  "post-produksiyon": "edit",
+};
+
 // Breadcrumb + a Service node per offering (local SEO).
 const pageJsonLd = [
   breadcrumb([
@@ -65,6 +72,9 @@ const pageJsonLd = [
         rendered.map((s, i) => (
           <li id={s.id} class="svc">
             <div class="svc__aside">
+              <span class="svc__icon">
+                <Icon name={SERVICE_ICON[s.id] ?? "play"} size={26} />
+              </span>
               <span class="svc__num">{String(i + 1).padStart(2, "0")}</span>
             </div>
             <div class="svc__main">
@@ -131,12 +141,35 @@ const pageJsonLd = [
   .svc:last-child {
     border-bottom: 1px solid var(--line);
   }
+  .svc__aside {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+  .svc__icon {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    flex: none;
+    border-radius: var(--radius-card);
+    color: var(--amber-text);
+    background: color-mix(in srgb, var(--amber) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--amber) 25%, transparent);
+  }
   .svc__num {
     font-family: var(--font-utility);
     font-size: 1rem;
     font-weight: 500;
     letter-spacing: 0.12em;
     color: var(--amber-text);
+  }
+  @media (min-width: 820px) {
+    .svc__aside {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.7rem;
+    }
   }
   .svc__title {
     margin: 0 0 1rem;

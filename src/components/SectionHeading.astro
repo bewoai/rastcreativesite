@@ -21,7 +21,7 @@ const {
 const hasIntro = Astro.slots.has("intro");
 ---
 
-<header class:list={["sh", `sh--${align}`, className]}>
+<header class:list={["sh", `sh--${align}`, className]} data-reveal>
   {eyebrow && <Eyebrow tone={eyebrowTone}>{eyebrow}</Eyebrow>}
   <Tag class="sh__title"><slot /></Tag>
   {
