@@ -7,6 +7,9 @@ RewriteEngine On
 RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+# ── Block VCS / hidden files (Hostinger's Git deploy leaves a .git here) ──
+RewriteRule (^|/)\.(git|github|vscode|gitignore|gitattributes) - [F,L]
+
 # ── Remove trailing slash (match Astro's trailingSlash: 'ignore' default) ─
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)/$ /$1 [L,R=301]

@@ -1,24 +1,48 @@
-name: Deploy to Hostinger FTP
+# Rast Creative Studio — Build & publish to the `deploy` branch.
+#
+# Why not FTP? GitHub Actions runners cannot reliably reach Hostinger's FTP
+# (port 21 control socket times out — Hostinger throttles/blocks CI IPs).
+# Instead we BUILD here and push the built site to a `deploy` branch; then
+# Hostinger PULLS that branch into public_html via its native "Deploy from
+# GitHub" feature. Hostinger -> GitHub always works, so there is nothing to
+# time out, and no FTP/SSH secrets are needed.
+#
+# One-time setup on Hostinger (hPanel):
+#   Web Sitesi -> Gelişmiş -> GIT (Deploy from GitHub)
+#     Repository : bewoai/rastcreativesite
+#     Branch     : deploy        <-- NOT main
+#     Path       : public_html
+#   (Enable auto-deploy / webhook so each push redeploys.)
+
+name: Deploy (build -> deploy branch)
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
 
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write # actions-gh-pages pushes to the deploy branch
+
 jobs:
-  deploy:
+  build-and-publish:
+    name: Build & publish
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    timeout-minutes: 10
+
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
@@ -31,25 +55,11 @@ jobs:
           ls -la dist
           test -f dist/index.html
 
-      - name: Verify FTP secrets
-        env:
-          FTP_SERVER: ${{ secrets.FTP_SERVER }}
-          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-        run: |
-          test -n "$FTP_SERVER" || (echo "FTP_SERVER is empty" && exit 1)
-          test -n "$FTP_USERNAME" || (echo "FTP_USERNAME is empty" && exit 1)
-          test -n "$FTP_PASSWORD" || (echo "FTP_PASSWORD is empty" && exit 1)
-
-      - name: Deploy dist to Hostinger
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Publish built site to `deploy` branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          port: 21
-          protocol: ftp
-          local-dir: ./dist/
-          server-dir: ./public_html/
-          dangerous-clean-slate: false
-          timeout: 300000
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: deploy
+          force_orphan: true # keep the deploy branch a clean snapshot of dist/
+          commit_message: "deploy: built site from ${{ github.sha }}"
