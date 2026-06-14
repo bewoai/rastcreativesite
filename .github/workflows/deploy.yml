@@ -1,38 +1,22 @@
-# Rast Creative Studio — Build & Deploy to Hostinger
-# Triggered on push to main. Builds the Astro site and deploys via FTP.
-#
-# Required GitHub Secrets (Settings → Secrets → Actions):
-#   FTP_SERVER    – Hostinger FTP sunucu adresi (ör. ftp.rastcreative.com)
-#   FTP_USERNAME  – Hostinger FTP kullanıcı adı
-#   FTP_PASSWORD  – Hostinger FTP şifresi
-
-name: Deploy to Hostinger
+name: Deploy to Hostinger FTP
 
 on:
   push:
-    branches: [main]
-  workflow_dispatch: # manual trigger from GitHub UI
-
-# Cancel in-progress runs for the same branch
-concurrency:
-  group: deploy-${{ github.ref }}
-  cancel-in-progress: true
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
-  build-and-deploy:
-    name: Build & FTP Deploy
+  deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: npm
+          node-version: 20
 
       - name: Install dependencies
         run: npm ci
@@ -40,18 +24,19 @@ jobs:
       - name: Build Astro site
         run: npm run build
 
-      - name: Deploy to Hostinger via FTP
+      - name: Verify build output
+        run: |
+          ls -la dist
+          test -f dist/index.html
+
+      - name: Deploy dist to Hostinger
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          protocol: ftp
           local-dir: ./dist/
-          server-dir: ./public_html/
-          dangerous-clean-slate: false
-          timeout: 120000 # slow/throttled FTP control socket — be patient
-          # Exclude source maps and dev files from deployment
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
+          server-dir: /public_html/
+          dangerous-clean-slate: true
