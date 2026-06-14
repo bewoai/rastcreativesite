@@ -12,10 +12,13 @@ import ServiceCard from "../components/ServiceCard.astro";
 import AccordionItem from "../components/AccordionItem.astro";
 import LogoWall from "../components/LogoWall.astro";
 import VideoHero from "../components/VideoHero.astro";
+import AreaIndex from "../components/AreaIndex.astro";
 import heroPosterImg from "../assets/photos/hero-cinema.jpg";
 import { COPY, PRIMARY_CTA } from "../consts";
 import { localBusiness, faqPage, toPlainText } from "../lib/schema";
 import { groupByBrand } from "../lib/brands";
+import { SEO_SERVICES } from "../data/seo-services";
+import { AREA_INDEX_LOCATION_SLUGS, SEO_LOCATIONS } from "../data/locations";
 
 const byOrder = (a: { data: { order: number } }, b: { data: { order: number } }) =>
   a.data.order - b.data.order;
@@ -74,6 +77,13 @@ const whyRast = [
     d: "Projeler kapsamına göre genellikle 2–4 hafta içinde teslim edilir; takvimi baştan netleştiririz.",
   },
 ];
+
+const prioritySeoServices = SEO_SERVICES.filter((s) =>
+  ["drone-cekimi", "tanitim-filmi", "reklam-filmi", "sosyal-medya-icerigi"].includes(s.slug),
+);
+const prioritySeoLocations = SEO_LOCATIONS.filter((l) =>
+  AREA_INDEX_LOCATION_SLUGS.includes(l.slug),
+);
 
 // Home-page structured data: enriched LocalBusiness + FAQPage (rich results).
 const pageJsonLd = [
@@ -171,6 +181,17 @@ const pageJsonLd = [
         ))
       }
     </div>
+  </Section>
+
+  {/* 4.25 — Bölgesel SEO hub */}
+  <Section space="tight">
+    <AreaIndex
+      eyebrow="Sakarya ve çevresi"
+      title="Bölgeye göre prodüksiyon hizmetleri"
+      text="Sakarya merkezli markalar için drone, tanıtım filmi, reklam filmi ve sosyal medya içeriklerini bölgeye göre planlıyoruz. Çekim yapılacak ilçeyi seçerek ilgili hizmet detaylarına geçebilirsiniz."
+      services={prioritySeoServices}
+      locations={prioritySeoLocations}
+    />
   </Section>
 
   {/* 4.5 — Ara CTA */}
@@ -353,6 +374,7 @@ const pageJsonLd = [
     background: color-mix(in srgb, var(--amber) 4%, var(--paper));
     text-align: center;
   }
+
   .services-cta__text {
     margin: 0;
     font-family: var(--font-display);

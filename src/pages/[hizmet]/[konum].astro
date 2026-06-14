@@ -1,0 +1,358 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Section from "../../components/Section.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import Button from "../../components/Button.astro";
+import Icon from "../../components/Icon.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+import { PRIMARY_CTA, CONTACT } from "../../consts";
+import { breadcrumb, faqPage, BUSINESS_ID } from "../../lib/schema";
+import { SEO_SERVICES, getService, type SeoService } from "../../data/seo-services";
+import { SEO_LOCATIONS, getLocation, type SeoLocation } from "../../data/locations";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  // Matrix: every service × every location.
+  return SEO_SERVICES.flatMap((service) =>
+    SEO_LOCATIONS.map((location) => ({
+      params: { hizmet: service.slug, konum: location.slug },
+      props: { service, location },
+    })),
+  );
+}
+
+interface Props {
+  service: SeoService;
+  location: SeoLocation;
+}
+const { service, location } = Astro.props as Props;
+
+const title = `${location.name} ${service.name}`;
+const pageHeading = `${location.name} ${service.name}`;
+const faqHeading = `${location.name} ${service.name} hakkında`;
+const path = `/${service.slug}/${location.slug}`;
+const description = `${location.name} ${service.name.toLowerCase()} — ${service.tagline}. Rast Creative Studio, ${location.loc} sinema standardında prodüksiyon sunar. Ücretsiz ön görüşme.`;
+
+// City/service-specific FAQ — distinct text per page (anti-doorway).
+const firstSentence = location.blurb.split(". ")[0] + ".";
+const faqs = [
+  {
+    question: `${location.name} ${service.name.toLowerCase()} fiyatı ne kadar?`,
+    answer: `${location.name} için ${service.name.toLowerCase()} ücreti; çekim süresine, ekip ve ekipmana, teslim edilecek video/foto sayısına göre belirlenir. ${location.loc} ihtiyacınızı ücretsiz ön görüşmede netleştirip net bir teklif sunuyoruz.`,
+  },
+  {
+    question: `${location.loc} çekime ne kadar sürede gelebiliyorsunuz?`,
+    answer: `Serdivan'daki stüdyomuzdan ${location.loc} planlama sonrası hızla ekip yönlendiriyoruz. ${firstSentence}`,
+  },
+  {
+    question: `${service.name} hizmetinde neler teslim ediyorsunuz?`,
+    answer: `${service.intro} Çekim sonrası kurgu, renk düzenleme ve teslim formatları dahildir.`,
+  },
+];
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: service.name, path: `/${service.slug}` },
+    { name: location.name, path },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: title,
+    serviceType: service.name,
+    description,
+    areaServed: { "@type": "City", name: location.name },
+    provider: { "@id": BUSINESS_ID },
+  },
+  faqPage(faqs),
+];
+
+// Internal links.
+const nearby = location.nearby
+  .map((slug) => getLocation(slug))
+  .filter((l): l is SeoLocation => Boolean(l));
+const otherServices = SEO_SERVICES.filter((s) => s.slug !== service.slug);
+
+const serviceProjectCategories: Record<string, string[]> = {
+  "drone-cekimi": ["Kurumsal", "Ürün", "Reklam"],
+  "tanitim-filmi": ["Kurumsal", "Marka Hikayesi"],
+  "reklam-filmi": ["Reklam", "Ürün", "Kurumsal"],
+  "sosyal-medya-icerigi": ["Sosyal Medya", "Medikal"],
+  "urun-mekan-cekimi": ["Ürün", "Kurumsal"],
+};
+
+const allProjects = (await getCollection("projects"))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => a.data.order - b.data.order);
+const relatedCategories = serviceProjectCategories[service.slug] ?? [];
+const relatedProjects = allProjects
+  .filter((p) => relatedCategories.includes(p.data.category))
+  .slice(0, 3);
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <Section width="narrow">
+    <a href={`/${service.slug}`} class="back">← Tüm {service.name} bölgeleri</a>
+    <SectionHeading as="h1" eyebrow={`${location.province} · ${service.name}`}>
+      {pageHeading}
+      <Fragment slot="intro">
+        <p>{service.tagline}.</p>
+      </Fragment>
+    </SectionHeading>
+
+    <div class="prose">
+      <p>{service.intro}</p>
+      <p>{location.blurb}</p>
+    </div>
+
+    <ul class="benefits">
+      {
+        service.benefits.map((b) => (
+          <li class="benefit" data-reveal>
+            <Icon name="arrow-right" size={18} class="benefit__ic" />
+            <div>
+              <h2 class="benefit__title">{b.title}</h2>
+              <p class="benefit__text">{b.text}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="cta-inline">
+      <Button href={PRIMARY_CTA.href} size="lg" arrow>
+        {location.name} için teklif al
+      </Button>
+      <a href={`tel:${CONTACT.phoneIntl}`} class="phone">
+        <Icon name="contact" size={18} /> {CONTACT.phone}
+      </a>
+    </div>
+  </Section>
+
+  {
+    relatedProjects.length > 0 && (
+      <Section width="narrow" space="tight">
+        <SectionHeading eyebrow="Gerçek işler">
+          {service.name} için referans projeler
+          <Fragment slot="intro">
+            <p>
+              Bölge sayfalarını sadece anahtar kelime için değil, gerçek üretim
+              tecrübemizi göstermek için kullanıyoruz. Aşağıdaki işler aynı hizmet
+              disiplinine yakın örneklerdir.
+            </p>
+          </Fragment>
+        </SectionHeading>
+        <div class="projects-grid">
+          {relatedProjects.map((p) => (
+            <ProjectCard
+              href={`/projeler/${p.id}`}
+              title={p.data.title}
+              category={p.data.category}
+              poster={p.data.poster}
+              posterAlt={p.data.posterAlt}
+              client={p.data.client}
+              year={p.data.year}
+              timecode={p.data.duration}
+              vertical={p.data.vertical}
+            />
+          ))}
+        </div>
+      </Section>
+    )
+  }
+
+  {/* City-specific FAQ */}
+  <Section width="narrow" space="tight">
+    <SectionHeading eyebrow="Sık sorulanlar">
+      {faqHeading}
+    </SectionHeading>
+    <dl class="faq">
+      {
+        faqs.map((f) => (
+          <div class="faq__item" data-reveal>
+            <dt class="faq__q">{f.question}</dt>
+            <dd class="faq__a">{f.answer}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Section>
+
+  {/* Hub-and-spoke internal links */}
+  <Section width="narrow" space="tight">
+    <div class="links">
+      <div class="links__col">
+        <h2 class="links__title">Yakın bölgelerde {service.name}</h2>
+        <ul class="links__list">
+          {
+            nearby.map((l) => (
+              <li>
+                <a href={`/${service.slug}/${l.slug}`}>
+                  {l.name} {service.name}
+                  <Icon name="arrow-up-right" size={14} />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="links__col">
+        <h2 class="links__title">{location.loc} diğer hizmetler</h2>
+        <ul class="links__list">
+          {
+            otherServices.map((s) => (
+              <li>
+                <a href={`/${s.slug}/${location.slug}`}>
+                  {location.name} {s.name}
+                  <Icon name="arrow-up-right" size={14} />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 1.2rem;
+    font-family: var(--font-utility);
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .back:hover {
+    color: var(--amber-text);
+  }
+  .prose {
+    margin-top: 1.8rem;
+    font-size: 1.1rem;
+    line-height: var(--leading-body);
+    color: var(--ink-soft);
+    max-width: 62ch;
+  }
+  .prose p + p {
+    margin-top: 1rem;
+  }
+  .benefits {
+    list-style: none;
+    margin: 2.5rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 1.2rem;
+  }
+  .benefit {
+    display: flex;
+    gap: 0.8rem;
+    padding: 1.2rem 1.3rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--amber) 3%, transparent);
+  }
+  .benefit__ic {
+    margin-top: 0.25rem;
+    flex: none;
+    color: var(--amber-text);
+  }
+  .benefit__title {
+    margin: 0 0 0.3rem;
+    font-size: 1.05rem;
+  }
+  .benefit__text {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+    line-height: var(--leading-body);
+  }
+  .cta-inline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.6rem;
+    margin-top: 2.5rem;
+  }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    margin-top: 2rem;
+  }
+  .phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-utility);
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .phone:hover {
+    color: var(--amber-text);
+  }
+  .faq {
+    margin: 2rem 0 0;
+    display: grid;
+    gap: 1.2rem;
+  }
+  .faq__item {
+    border-top: 1px solid var(--line);
+    padding-top: 1.2rem;
+  }
+  .faq__q {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  .faq__a {
+    margin: 0;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .links {
+    display: grid;
+    gap: 2rem;
+    margin-top: 1rem;
+  }
+  .links__title {
+    font-size: 1rem;
+    font-family: var(--font-utility);
+    letter-spacing: 0.02em;
+    margin: 0 0 1rem;
+    color: var(--ink);
+  }
+  .links__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .links__list a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.98rem;
+    color: var(--ink-soft);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .links__list a:hover {
+    color: var(--amber-text);
+  }
+  @media (min-width: 700px) {
+    .links {
+      grid-template-columns: 1fr 1fr;
+    }
+    .projects-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .benefits {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

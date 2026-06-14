@@ -7,9 +7,12 @@ import SectionHeading from "../components/SectionHeading.astro";
 import Eyebrow from "../components/Eyebrow.astro";
 import Button from "../components/Button.astro";
 import Icon from "../components/Icon.astro";
+import AreaIndex from "../components/AreaIndex.astro";
 import { PRIMARY_CTA } from "../consts";
 import { breadcrumb, BUSINESS_ID } from "../lib/schema";
 import bannerPhoto from "../assets/photos/director-clapper.jpg";
+import { SEO_SERVICES } from "../data/seo-services";
+import { AREA_INDEX_LOCATION_SLUGS, SEO_LOCATIONS } from "../data/locations";
 
 const services = (await getCollection("services")).sort((a, b) => a.data.order - b.data.order);
 const rendered = await Promise.all(
@@ -22,6 +25,13 @@ const SERVICE_ICON: Record<string, "video" | "strategy" | "edit"> = {
   "kreatif-strateji": "strategy",
   "post-produksiyon": "edit",
 };
+
+const seoServiceGroups = SEO_SERVICES.filter((service) =>
+  ["drone-cekimi", "tanitim-filmi", "reklam-filmi", "sosyal-medya-icerigi"].includes(service.slug),
+);
+const seoCoreLocations = SEO_LOCATIONS.filter((location) =>
+  AREA_INDEX_LOCATION_SLUGS.includes(location.slug),
+);
 
 // Breadcrumb + a Service node per offering (local SEO).
 const pageJsonLd = [
@@ -102,6 +112,15 @@ const pageJsonLd = [
         ))
       }
     </ul>
+  </Section>
+
+  <Section space="tight">
+    <AreaIndex
+      title="Sakarya ve çevresinde üretim"
+      text="Serdivan merkezli ekiple Sakarya ve yakın illerde çekime çıkıyoruz. İlçenize ve ihtiyacınıza göre drone, tanıtım filmi, reklam filmi ve sosyal medya içerik sayfalarına buradan ulaşabilirsiniz."
+      services={seoServiceGroups}
+      locations={seoCoreLocations}
+    />
   </Section>
 
   <Section tone="ink" space="tight">

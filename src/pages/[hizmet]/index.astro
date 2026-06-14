@@ -1,0 +1,200 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Section from "../../components/Section.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import Button from "../../components/Button.astro";
+import Icon from "../../components/Icon.astro";
+import { PRIMARY_CTA } from "../../consts";
+import { breadcrumb, BUSINESS_ID } from "../../lib/schema";
+import { SEO_SERVICES, type SeoService } from "../../data/seo-services";
+import { SEO_LOCATIONS } from "../../data/locations";
+
+export async function getStaticPaths() {
+  return SEO_SERVICES.map((service) => ({
+    params: { hizmet: service.slug },
+    props: { service },
+  }));
+}
+
+interface Props {
+  service: SeoService;
+}
+const { service } = Astro.props as Props;
+
+const title = `${service.name} Hizmeti`;
+const description = `${service.name} — ${service.tagline}. Sakarya ve çevre illerde Rast Creative Studio ile ${service.name.toLowerCase()}. Hizmet bölgelerini görün.`;
+
+const coreLocations = SEO_LOCATIONS.filter((l) => l.core);
+const nearbyLocations = SEO_LOCATIONS.filter((l) => !l.core);
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: service.name, path: `/${service.slug}` },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: service.name,
+    serviceType: service.name,
+    description: service.intro,
+    areaServed: SEO_LOCATIONS.map((l) => ({ "@type": "City", name: l.name })),
+    provider: { "@id": BUSINESS_ID },
+  },
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <Section width="narrow">
+    <SectionHeading as="h1" eyebrow="Hizmet bölgeleri">
+      {service.name}
+      <Fragment slot="intro">
+        <p>{service.tagline}.</p>
+      </Fragment>
+    </SectionHeading>
+
+    <div class="prose">
+      <p>{service.intro}</p>
+    </div>
+
+    <ul class="benefits">
+      {
+        service.benefits.map((b) => (
+          <li class="benefit">
+            <Icon name="arrow-right" size={18} class="benefit__ic" />
+            <div>
+              <h2 class="benefit__title">{b.title}</h2>
+              <p class="benefit__text">{b.text}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="cta-inline">
+      <Button href={PRIMARY_CTA.href} size="lg" arrow>{PRIMARY_CTA.label}</Button>
+    </div>
+  </Section>
+
+  <Section width="narrow" space="tight">
+    <h2 class="region-title">Sakarya'da {service.name}</h2>
+    <ul class="loc-grid">
+      {
+        coreLocations.map((l) => (
+          <li>
+            <a href={`/${service.slug}/${l.slug}`}>
+              {l.name} {service.name}
+              <Icon name="arrow-up-right" size={14} />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <h2 class="region-title">Çevre illerde {service.name}</h2>
+    <ul class="loc-grid">
+      {
+        nearbyLocations.map((l) => (
+          <li>
+            <a href={`/${service.slug}/${l.slug}`}>
+              {l.name} {service.name}
+              <Icon name="arrow-up-right" size={14} />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section width="narrow" space="tight">
+    <h2 class="region-title">Diğer hizmetler</h2>
+    <ul class="loc-grid">
+      {
+        SEO_SERVICES.filter((s) => s.slug !== service.slug).map((s) => (
+          <li>
+            <a href={`/${s.slug}`}>
+              {s.name}
+              <Icon name="arrow-up-right" size={14} />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+</BaseLayout>
+
+<style>
+  .prose {
+    margin-top: 1.8rem;
+    font-size: 1.1rem;
+    line-height: var(--leading-body);
+    color: var(--ink-soft);
+    max-width: 62ch;
+  }
+  .benefits {
+    list-style: none;
+    margin: 2.5rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 1.2rem;
+  }
+  .benefit {
+    display: flex;
+    gap: 0.8rem;
+    padding: 1.2rem 1.3rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--amber) 3%, transparent);
+  }
+  .benefit__ic {
+    margin-top: 0.25rem;
+    flex: none;
+    color: var(--amber-text);
+  }
+  .benefit__title {
+    margin: 0 0 0.3rem;
+    font-size: 1.05rem;
+  }
+  .benefit__text {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+    line-height: var(--leading-body);
+  }
+  .cta-inline {
+    margin-top: 2.5rem;
+  }
+  .region-title {
+    font-size: 1rem;
+    font-family: var(--font-utility);
+    letter-spacing: 0.02em;
+    margin: 2rem 0 1rem;
+    color: var(--ink);
+  }
+  .region-title:first-child {
+    margin-top: 0;
+  }
+  .loc-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem 1.5rem;
+  }
+  .loc-grid a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.98rem;
+    color: var(--ink-soft);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .loc-grid a:hover {
+    color: var(--amber-text);
+  }
+  @media (min-width: 640px) {
+    .loc-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

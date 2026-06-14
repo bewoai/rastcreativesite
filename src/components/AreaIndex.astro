@@ -1,0 +1,269 @@
+---
+import Eyebrow from "./Eyebrow.astro";
+import Icon from "./Icon.astro";
+import type { SeoService } from "../data/seo-services";
+import type { SeoLocation } from "../data/locations";
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  text: string;
+  services: readonly SeoService[];
+  locations: readonly SeoLocation[];
+}
+
+const {
+  eyebrow = "Hizmet bölgeleri",
+  title,
+  text,
+  services,
+  locations,
+} = Astro.props;
+
+const previewLocationNames = (items: readonly SeoLocation[]) =>
+  items
+    .slice(0, 5)
+    .map((location) => location.name)
+    .join(", ");
+---
+
+<div class="area-index">
+  <div class="area-index__head" data-reveal>
+    <Eyebrow tone="soft">{eyebrow}</Eyebrow>
+    <h2>{title}</h2>
+    <p>{text}</p>
+  </div>
+
+  <div class="area-links" aria-label="Bölgesel hizmet sayfaları">
+    {
+      services.map((service) => (
+        <details class="area-card">
+          <summary>
+            <span class="area-card__summary">
+              <span class="area-card__title">{service.name}</span>
+              <span class="area-card__preview">
+                {previewLocationNames(locations)}
+                {locations.length > 5 && ` +${locations.length - 5} bölge`}
+              </span>
+            </span>
+            <span class="area-card__meta">{locations.length} bölge</span>
+            <Icon name="arrow-right" size={16} class="area-card__chevron" />
+          </summary>
+
+          <div class="area-card__body">
+            <p>{service.tagline}</p>
+            <a class="area-card__hub" href={`/${service.slug}`}>
+              {service.name} ana sayfası
+              <Icon name="arrow-up-right" size={14} />
+            </a>
+            <ul>
+              {locations.map((location) => (
+                <li>
+                  <a href={`/${service.slug}/${location.slug}`}>
+                    <span>{location.name}</span>
+                    <small>{service.name}</small>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </details>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .area-index {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(1rem, 3vw, 1.6rem);
+    padding: clamp(1rem, 3vw, 1.35rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background:
+      linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--amber) 4%, transparent),
+        color-mix(in srgb, var(--paper) 94%, var(--amber))
+      );
+  }
+  .area-index__head {
+    display: grid;
+    gap: 0.65rem;
+    align-content: start;
+  }
+  .area-index__head h2 {
+    margin: 0;
+    max-width: 18ch;
+    font-size: clamp(1.35rem, 2.8vw, 1.85rem);
+    line-height: 1;
+  }
+  .area-index__head p {
+    margin: 0;
+    max-width: 50ch;
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+    line-height: var(--leading-body);
+  }
+  .area-links {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+  }
+  .area-card {
+    border: 1px solid var(--line);
+    border-radius: calc(var(--radius-card) * 0.75);
+    background: color-mix(in srgb, var(--paper) 84%, transparent);
+    box-shadow: 0 0.8rem 2rem color-mix(in srgb, var(--ink) 5%, transparent);
+  }
+  .area-card summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 3.65rem;
+    padding: 0.72rem 0.85rem;
+  }
+  .area-card summary::-webkit-details-marker {
+    display: none;
+  }
+  .area-card__summary {
+    min-width: 0;
+    flex: 1;
+    display: grid;
+    gap: 0.22rem;
+  }
+  .area-card__title {
+    color: var(--ink);
+    font-family: var(--font-utility);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+  .area-card__preview {
+    overflow: hidden;
+    color: var(--ink-soft);
+    font-family: var(--font-utility);
+    font-size: 0.72rem;
+    line-height: 1.25;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .area-card__meta {
+    flex: none;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid color-mix(in srgb, var(--amber) 20%, var(--line));
+    border-radius: var(--radius-pill);
+    color: var(--amber-text);
+    font-family: var(--font-utility);
+    font-size: 0.72rem;
+    font-weight: 650;
+  }
+  .area-card__chevron {
+    flex: none;
+    color: var(--amber-text);
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .area-card[open] .area-card__chevron {
+    transform: rotate(90deg);
+  }
+  .area-card__body {
+    padding: 0 0.85rem 0.85rem;
+  }
+  .area-card__body p {
+    margin: 0 0 0.7rem;
+    color: var(--ink-soft);
+    font-size: 0.84rem;
+    line-height: 1.45;
+  }
+  .area-card__hub {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.32rem;
+    margin-bottom: 0.75rem;
+    color: var(--amber-text);
+    font-family: var(--font-utility);
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+  .area-card__body ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .area-card__body a {
+    color: inherit;
+  }
+  .area-card__body li a {
+    display: inline-flex;
+    min-height: 1.9rem;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.32rem;
+    padding: 0.32rem 0.52rem;
+    border: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--paper) 72%, transparent);
+    transition:
+      background-color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out),
+      transform var(--dur-fast) var(--ease-out);
+  }
+  .area-card__body li a:hover {
+    border-color: color-mix(in srgb, var(--amber) 45%, var(--line));
+    background: color-mix(in srgb, var(--amber) 8%, var(--paper));
+    transform: translateY(-1px);
+  }
+  .area-card__body li span {
+    color: var(--ink);
+    font-family: var(--font-utility);
+    font-size: 0.78rem;
+    font-weight: 650;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+  .area-card__body li small {
+    color: var(--ink-soft);
+    font-family: var(--font-utility);
+    font-size: 0.62rem;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+  .area-card summary:focus,
+  .area-card a:focus {
+    outline: none;
+  }
+  .area-card summary:focus-visible,
+  .area-card a:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 3px;
+  }
+  .area-card a:hover {
+    color: var(--amber-text);
+  }
+  @media (min-width: 820px) {
+    .area-index {
+      grid-template-columns: minmax(13rem, 0.52fr) minmax(0, 1.48fr);
+      align-items: start;
+    }
+    .area-links {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1120px) {
+    .area-index {
+      grid-template-columns: minmax(14rem, 0.48fr) minmax(0, 1.52fr);
+    }
+  }
+  @media (max-width: 540px) {
+    .area-card__body li small,
+    .area-card__meta {
+      display: none;
+    }
+  }
+</style>
