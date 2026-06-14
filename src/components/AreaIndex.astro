@@ -62,7 +62,10 @@ const previewLocationNames = (items: readonly SeoLocation[]) =>
             <ul>
               {locations.map((location) => (
                 <li>
-                  <a href={`/${service.slug}/${location.slug}`}>
+                  <a
+                    href={`/${service.slug}/${location.slug}`}
+                    title={`${service.name} — ${location.name}`}
+                  >
                     {location.name}
                   </a>
                 </li>
