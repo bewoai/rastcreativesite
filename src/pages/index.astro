@@ -186,6 +186,14 @@ const pageJsonLd = [
     </div>
   </Section>
 
+  {/* 4.5 — Ara CTA */}
+  <Section space="tight">
+    <div class="services-cta" data-reveal>
+      <p class="services-cta__text">Projeniz için doğru kareyi birlikte yakalayalım.</p>
+      <Button href={PRIMARY_CTA.href} arrow>{PRIMARY_CTA.label}</Button>
+    </div>
+  </Section>
+
   {/* 5 — Neden Rast */}
   <Section id="neden-rast" tone="ink">
     <SectionHeading eyebrow="Sahne 04 · Neden Rast" eyebrowTone="paper">Somut güven sinyalleri</SectionHeading>
@@ -367,6 +375,35 @@ const pageJsonLd = [
   @media (min-width: 768px) {
     .grid-services {
       grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* 4.5 — services cta */
+  .services-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    padding: 2rem clamp(1.25rem, 4vw, 2.5rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--amber) 4%, var(--paper));
+    text-align: center;
+  }
+  .services-cta__text {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 3vw, 1.4rem);
+    font-weight: 500;
+    line-height: var(--leading-flat);
+    color: var(--ink);
+  }
+  @media (min-width: 640px) {
+    .services-cta {
+      flex-direction: row;
+      text-align: left;
+      gap: 2rem;
     }
   }
 

@@ -9,6 +9,8 @@ client: "Adatıp Hastanesi"
 year: 2025
 featured: false
 order: 15
+posterAlt: "Sakarya Adatıp Hastanesi için hazırlanan dikey sosyal medya Reels/Shorts video kapağı"
+duration: "00:45"
 ---
 
 Adatıp Hastanesi için üretilen dikey sosyal medya içeriği.

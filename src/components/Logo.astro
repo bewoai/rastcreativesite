@@ -42,6 +42,14 @@ const fill = tone === "paper" ? "var(--paper)" : "var(--ink)";
     display: inline-flex;
     align-items: center;
     line-height: 1;
+    border-radius: 6px;
+  }
+  .logo:focus {
+    outline: none;
+  }
+  .logo:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 4px;
   }
   .logo__svg {
     height: 2.4rem;

@@ -119,6 +119,13 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
   .nav__link:hover {
     background: color-mix(in srgb, var(--ink) 7%, transparent);
   }
+  .nav__link:focus {
+    outline: none;
+  }
+  .nav__link:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+  }
   .nav__link[aria-current="page"] {
     color: var(--amber-text);
   }
@@ -236,9 +243,16 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
     text-align: center;
     touch-action: manipulation;
   }
+  .tab:focus {
+    outline: none;
+  }
+  .tab:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: -2px;
+  }
   .tab__label {
     font-family: var(--font-utility);
-    font-size: 0.68rem;
+    font-size: 0.7rem;
     font-weight: 500;
     letter-spacing: 0.01em;
     text-transform: uppercase;

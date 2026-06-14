@@ -9,6 +9,8 @@ client: "ThermoWay"
 year: 2025
 featured: false
 order: 12
+posterAlt: "ThermoWay ısı değiştiriciler dikey sosyal medya Reels videosu kapağı"
+duration: "00:45"
 ---
 
 ThermoWay markası için üretilen dikey sosyal medya kurgusu.

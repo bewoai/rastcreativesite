@@ -9,6 +9,8 @@ client: "ThermoWay"
 year: 2025
 featured: false
 order: 14
+posterAlt: "ThermoWay endüstriyel soğutma cihazları dikey sosyal medya kurgusu video kapağı"
+duration: "00:50"
 ---
 
 ThermoWay markası için üretilen dikey sosyal medya kurgusu.

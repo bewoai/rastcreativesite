@@ -9,6 +9,8 @@ client: "Buyapı"
 year: 2025
 featured: false
 order: 13
+posterAlt: "Buyapı lüks konut ve mimari projeleri dikey sosyal medya video kapağı"
+duration: "00:35"
 ---
 
 Buyapı markası için üretilen dikey sosyal medya içeriği.

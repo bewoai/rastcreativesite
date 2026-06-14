@@ -9,6 +9,8 @@ client: "Isıtan"
 year: 2025
 featured: false
 order: 11
+posterAlt: "Isıtan mühendislik ve mekanik sistemler dikey sosyal medya Reels kurgusu kapağı"
+duration: "00:40"
 ---
 
 Isıtan markası için üretilen dikey sosyal medya kurgusu.

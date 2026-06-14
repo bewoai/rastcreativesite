@@ -8,6 +8,8 @@ client: "Mavi Vatan"
 year: 2024
 featured: true
 order: 5
+posterAlt: "Mavi Vatan Gemi İnşaat Atölyesi gemi transfer süreci kurumsal belgesel videosu kapağı"
+duration: "02:40"
 ---
 
 Mavi Vatan Gemi İnşa Atölyesi'nin transfer sürecini belgeleyen 4K tanıtım filmi. Sahanın ölçeğini ve mühendislik gücünü sinematik bir dille kaydettik.

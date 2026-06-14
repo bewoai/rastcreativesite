@@ -9,6 +9,8 @@ client: "Rosa Coffee"
 year: 2025
 featured: false
 order: 8
+posterAlt: "Rosa Coffee üçüncü nesil kahve dükkanı dikey Reels videosu kapağı"
+duration: "00:30"
 ---
 
 Rosa Coffee markası için üretilen dikey sosyal medya içeriği.

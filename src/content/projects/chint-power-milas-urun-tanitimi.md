@@ -8,6 +8,8 @@ client: "Chint Power"
 year: 2024
 featured: true
 order: 2
+posterAlt: "Chint Power solar enerji invertörü Milas GES projesi ürün tanıtım videosu kapağı"
+duration: "01:30"
 ---
 
 Chint Power Milas sahası için hazırlanan 4K ürün tanıtım videosu. Teknik detayları ve ölçeği vurgulayan bir görsel anlatım.

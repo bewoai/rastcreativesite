@@ -132,6 +132,13 @@ const year = new Date().getFullYear();
     color: var(--amber);
     border-color: color-mix(in srgb, var(--amber) 60%, transparent);
   }
+  .footer__social-link:focus {
+    outline: none;
+  }
+  .footer__social-link:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+  }
   .footer__links {
     list-style: none;
     margin: 0.9rem 0 0;
@@ -146,6 +153,13 @@ const year = new Date().getFullYear();
   }
   .footer__link:hover {
     color: var(--amber);
+  }
+  .footer__link:focus {
+    outline: none;
+  }
+  .footer__link:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
   }
   .footer__pending {
     color: color-mix(in srgb, var(--paper) 45%, transparent);

@@ -114,18 +114,22 @@
   }
   /* Gentle stagger for grid items revealing in the same row. */
   .grid-cards > [data-reveal]:nth-child(2),
+  .grid-services > [data-reveal]:nth-child(2),
   .folder-grid > [data-reveal]:nth-child(2) {
     transition-delay: 0.06s;
   }
   .grid-cards > [data-reveal]:nth-child(3),
+  .grid-services > [data-reveal]:nth-child(3),
   .folder-grid > [data-reveal]:nth-child(3) {
     transition-delay: 0.12s;
   }
   .grid-cards > [data-reveal]:nth-child(4),
+  .grid-services > [data-reveal]:nth-child(4),
   .folder-grid > [data-reveal]:nth-child(4) {
     transition-delay: 0.18s;
   }
   .grid-cards > [data-reveal]:nth-child(5),
+  .grid-services > [data-reveal]:nth-child(5),
   .folder-grid > [data-reveal]:nth-child(5) {
     transition-delay: 0.24s;
   }

@@ -8,6 +8,8 @@ client: "Meteors Shipping"
 year: 2024
 featured: true
 order: 3
+posterAlt: "Meteors Shipping deniz taşımacılığı ve lojistik kurumsal tanıtım filmi kapağı"
+duration: "02:10"
 ---
 
 Meteors Shipping için 4K kurumsal tanıtım filmi. Lojistik gücünü ve global vizyonu sinematik bir kurguyla anlattık.

@@ -8,6 +8,8 @@ client: "Op. Dr. Duygu Cebecik Özmüş"
 year: 2024
 featured: true
 order: 7
+posterAlt: "Op. Dr. Duygu Cebecik Özmüş ile hamilelikte mutfakta dikkat edilmesi gerekenler videosu kapağı"
+duration: "02:50"
 ---
 
 Medikal bilgilendirme serisinin ikinci bölümü. Sağlık iletişimini sade ve sinematik bir formatla buluşturduk.

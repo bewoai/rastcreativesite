@@ -16,8 +16,16 @@ import Button from "../components/Button.astro";
       </p>
       <div class="nf__cta">
         <Button href="/">Ana sayfa</Button>
-        <Button href="/projeler" variant="secondary" arrow>Projeleri izle</Button>
+        <Button href="/projeler" variant="secondary" arrow>Projelerimizi İzleyin</Button>
       </div>
+
+      <nav class="nf__nav" aria-label="Hızlı gezinme">
+        <a href="/hizmetler" class="nf__link">Hizmetlerimiz</a>
+        <span class="nf__sep" aria-hidden="true">·</span>
+        <a href="/hakkimizda" class="nf__link">Hakkımızda</a>
+        <span class="nf__sep" aria-hidden="true">·</span>
+        <a href="/iletisim" class="nf__link">İletişim</a>
+      </nav>
     </div>
   </Section>
 </BaseLayout>
@@ -27,9 +35,12 @@ import Button from "../components/Button.astro";
     display: flex;
     flex-direction: column;
     gap: 1.1rem;
-    align-items: flex-start;
-    min-height: 48vh;
+    align-items: center;
+    text-align: center;
+    min-height: 52vh;
     justify-content: center;
+    max-width: var(--container-max);
+    margin-inline: auto;
   }
   .nf__title {
     margin: 0;
@@ -44,7 +55,33 @@ import Button from "../components/Button.astro";
   .nf__cta {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 0.85rem;
     margin-top: 0.5rem;
+  }
+  .nf__nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+    font-family: var(--font-utility);
+    font-size: 0.95rem;
+  }
+  .nf__link {
+    color: var(--ink-soft);
+    transition: color var(--dur-fast) var(--ease-out);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .nf__link:hover {
+    color: var(--amber-text);
+  }
+  .nf__link:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+  }
+  .nf__sep {
+    color: var(--line);
   }
 </style>

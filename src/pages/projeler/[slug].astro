@@ -46,6 +46,20 @@ const credits = [
 const provider = d.vimeoId ? "vimeo" : d.youtubeId ? "youtube" : null;
 const videoId = d.vimeoId ?? d.youtubeId;
 
+function toISODuration(timecode?: string) {
+  if (!timecode) return undefined;
+  const parts = timecode.split(":").map(Number);
+  if (parts.some(isNaN)) return undefined;
+  if (parts.length === 2) {
+    const [m, s] = parts;
+    return `PT${m}M${s}S`;
+  } else if (parts.length === 3) {
+    const [h, m, s] = parts;
+    return `PT${h}H${m}M${s}S`;
+  }
+  return undefined;
+}
+
 // VideoObject only once a real video exists (placeholders emit nothing).
 const videoObject =
   provider && videoId
@@ -56,6 +70,7 @@ const videoObject =
         description: d.summary ?? `${d.title} — ${d.category}`,
         thumbnailUrl: new URL(d.poster, SITE.url).href,
         uploadDate: d.year ? `${d.year}-01-01` : undefined,
+        duration: toISODuration(d.duration),
         embedUrl:
           provider === "vimeo"
             ? `https://player.vimeo.com/video/${videoId}`
