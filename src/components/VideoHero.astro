@@ -1,0 +1,140 @@
+---
+/**
+ * Full-bleed background showreel for hero/header areas.
+ *
+ * Performance & a11y:
+ *  - The `poster` image is the LCP — it shows instantly; the video is
+ *    `preload="none"` and only starts after `window.load`, so it never blocks
+ *    first paint.
+ *  - Muted + loop + playsinline → autoplays on mobile and desktop.
+ *  - prefers-reduced-motion OR Save-Data → the loop never plays; the poster
+ *    stays. (roadmap §0.1: one short, silent, optimised hero loop.)
+ *
+ * Provide the encoded loop at the given public paths (see VIDEO specs the
+ * studio supplies). Until they exist the poster carries the hero on its own.
+ */
+interface Props {
+  /** Built URL of the poster image (e.g. `posterImg.src`). */
+  poster: string;
+  /** Public paths to the encoded loop; both recommended. */
+  webm?: string;
+  mp4?: string;
+  /** Section min-height (CSS length). */
+  height?: string;
+  /** Scrim strength 0–100 (higher = darker, more readable text). */
+  scrim?: number;
+  /** Pull up under the floating nav so the video reaches the top edge. */
+  flush?: boolean;
+  class?: string;
+}
+
+const {
+  poster,
+  webm = "/videos/showreel.webm",
+  mp4 = "/videos/showreel.mp4",
+  height = "min(84vh, 760px)",
+  scrim = 62,
+  flush = false,
+  class: className,
+} = Astro.props;
+---
+
+<section
+  class:list={["vhero", { "vhero--flush": flush }, className]}
+  style={`--vhero-h:${height}; --vhero-scrim:${scrim}%`}
+>
+  <video
+    class="vhero__media"
+    poster={poster}
+    muted
+    loop
+    playsinline
+    preload="none"
+    aria-hidden="true"
+    tabindex="-1"
+    data-showreel
+  >
+    {webm && <source src={webm} type="video/webm" />}
+    {mp4 && <source src={mp4} type="video/mp4" />}
+  </video>
+  <div class="vhero__scrim" aria-hidden="true"></div>
+  <div class="vhero__inner">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .vhero {
+    position: relative;
+    min-height: var(--vhero-h);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--ink); /* fallback before the poster paints */
+  }
+  .vhero__media,
+  .vhero__scrim {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+  }
+  .vhero__media {
+    object-fit: cover;
+    display: block;
+  }
+  .vhero__scrim {
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--ink) calc(var(--vhero-scrim) - 18%), transparent),
+        color-mix(in srgb, var(--ink) var(--vhero-scrim), transparent)
+      ),
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--ink) calc(var(--vhero-scrim) - 8%), transparent),
+        transparent 62%
+      );
+  }
+  .vhero__inner {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-pad);
+    padding-block: clamp(2.5rem, 7vw, 4.5rem);
+  }
+
+  /* Flush: cancel the body's nav padding so the video reaches the top edge,
+     and add it back as inner top padding so content clears the nav pill. */
+  .vhero--flush {
+    margin-top: calc(-1 * (3.5rem + env(safe-area-inset-top, 0px)));
+  }
+  .vhero--flush .vhero__inner {
+    padding-top: calc(3.5rem + env(safe-area-inset-top, 0px) + clamp(2.5rem, 7vw, 4.5rem));
+  }
+  @media (min-width: 768px) {
+    .vhero--flush {
+      margin-top: -5.5rem;
+    }
+    .vhero--flush .vhero__inner {
+      padding-top: calc(5.5rem + clamp(2.5rem, 7vw, 4.5rem));
+    }
+  }
+</style>
+
+<script>
+  // Start the muted loop only after load — never for reduced-motion / data-saver.
+  document.querySelectorAll<HTMLVideoElement>("[data-showreel]").forEach((v) => {
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } })
+      .connection?.saveData;
+    if (reduce || saveData) return;
+    const start = () => {
+      v.play().catch(() => {});
+    };
+    if (document.readyState === "complete") start();
+    else window.addEventListener("load", start, { once: true });
+  });
+</script>

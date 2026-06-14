@@ -2,8 +2,10 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Section from "../../components/Section.astro";
-import SectionHeading from "../../components/SectionHeading.astro";
 import BrandFolder from "../../components/BrandFolder.astro";
+import VideoHero from "../../components/VideoHero.astro";
+import Eyebrow from "../../components/Eyebrow.astro";
+import projHeroPoster from "../../assets/photos/director-clapper.jpg";
 import { breadcrumb } from "../../lib/schema";
 import { groupByBrand, brandHref } from "../../lib/brands";
 import { PROJECT_CATEGORIES } from "../../consts";
@@ -31,14 +33,17 @@ const crumbs = breadcrumb([
   description="Rast Creative Studio portfolyosu: Sakarya'da kurumsal, ürün, medikal ve sosyal medya video prodüksiyon işleri — markalara göre düzenli."
   jsonLd={crumbs}
 >
-  <Section>
-    <SectionHeading eyebrow="Sahne 01 · Portfolyo">
-      Projeler
-      <Fragment slot="intro">
-        <p>Markalar için ürettiğimiz işler — kategori ve markaya göre düzenli.</p>
-      </Fragment>
-    </SectionHeading>
+  <VideoHero poster={projHeroPoster.src} height="min(48vh, 440px)" scrim={66} flush class="proj-hero">
+    <div class="proj-hero__text">
+      <Eyebrow tone="paper">Sahne 01 · Portfolyo</Eyebrow>
+      <h1 class="proj-hero__title">Projeler</h1>
+      <p class="proj-hero__intro">
+        Markalar için ürettiğimiz işler — kategori ve markaya göre düzenli.
+      </p>
+    </div>
+  </VideoHero>
 
+  <Section>
     {/* Quick jump to a category section */}
     <nav class="catnav" aria-label="Kategoriler">
       {
@@ -73,11 +78,28 @@ const crumbs = breadcrumb([
 </BaseLayout>
 
 <style>
+  .proj-hero__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    max-width: 40rem;
+  }
+  .proj-hero__title {
+    margin: 0;
+    color: var(--paper);
+  }
+  .proj-hero__intro {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.5;
+    color: color-mix(in srgb, var(--paper) 82%, transparent);
+    max-width: 48ch;
+  }
   .catnav {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    margin: 1.5rem 0 0.5rem;
+    margin: 0 0 0.5rem;
   }
   .catnav__chip {
     display: inline-flex;

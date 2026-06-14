@@ -1,7 +1,6 @@
 ---
 import { getCollection, render } from "astro:content";
 import { Picture } from "astro:assets";
-import heroPhoto from "../assets/photos/camera-closeup.jpg";
 import whyPhoto from "../assets/photos/hero-cinema.jpg";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Section from "../components/Section.astro";
@@ -12,6 +11,8 @@ import ProjectCard from "../components/ProjectCard.astro";
 import ServiceCard from "../components/ServiceCard.astro";
 import AccordionItem from "../components/AccordionItem.astro";
 import LogoWall from "../components/LogoWall.astro";
+import VideoHero from "../components/VideoHero.astro";
+import heroPosterImg from "../assets/photos/hero-cinema.jpg";
 import { COPY, PRIMARY_CTA } from "../consts";
 import { localBusiness, faqPage, toPlainText } from "../lib/schema";
 import { groupByBrand } from "../lib/brands";
@@ -87,34 +88,20 @@ const pageJsonLd = [
 ---
 
 <BaseLayout jsonLd={pageJsonLd}>
-  {/* 1 — Hero */}
-  <section class="hero">
-    <div class="hero__inner">
-      <div class="hero__text">
-        <Eyebrow>Sakarya · Sinematik Video Prodüksiyon</Eyebrow>
-        <h1 class="hero__title">{COPY.heroTitle}</h1>
-        <p class="hero__subtitle">{COPY.heroSubtitle}</p>
-        <div class="hero__cta">
-          <Button href={PRIMARY_CTA.href} size="lg" arrow>{PRIMARY_CTA.label}</Button>
-          <Button href="/projeler" variant="secondary" size="lg">
-            {COPY.heroSecondaryCta}
-          </Button>
-        </div>
-      </div>
-      <div class="hero__visual">
-        <Picture
-          src={heroPhoto}
-          formats={["avif", "webp"]}
-          alt="Sakarya'da sinematik video prodüksiyon: profesyonel sinema kamerası ve timecode'lu monitör"
-          widths={[420, 640, 900]}
-          sizes="(min-width: 860px) 45vw, 92vw"
-          loading="eager"
-          fetchpriority="high"
-          class="hero__img"
-        />
+  {/* 1 — Hero (showreel background) */}
+  <VideoHero poster={heroPosterImg.src} flush class="hero">
+    <div class="hero__text">
+      <Eyebrow tone="paper">Sakarya · Sinematik Video Prodüksiyon</Eyebrow>
+      <h1 class="hero__title">{COPY.heroTitle}</h1>
+      <p class="hero__subtitle">{COPY.heroSubtitle}</p>
+      <div class="hero__cta">
+        <Button href={PRIMARY_CTA.href} size="lg" arrow>{PRIMARY_CTA.label}</Button>
+        <Button href="/projeler" variant="secondary" size="lg" class="hero__ghost">
+          {COPY.heroSecondaryCta}
+        </Button>
       </div>
     </div>
-  </section>
+  </VideoHero>
 
   {/* 2 — Seçili işler */}
   <Section id="secili-isler">
@@ -268,32 +255,23 @@ const pageJsonLd = [
 </BaseLayout>
 
 <style>
-  /* 1 — Hero */
-  .hero {
-    padding-block: clamp(1rem, 4vw, 2.5rem) var(--section-gap);
-  }
-  .hero__inner {
-    max-width: var(--container-max);
-    margin-inline: auto;
-    padding-inline: var(--container-pad);
-    display: grid;
-    gap: clamp(2rem, 5vw, 4rem);
-    align-items: center;
-  }
+  /* 1 — Hero (showreel background); content sits light over the video scrim */
   .hero__text {
     display: flex;
     flex-direction: column;
     gap: 1.4rem;
+    max-width: 42rem;
   }
   .hero__title {
     margin: 0;
-    max-width: 16ch;
+    max-width: 18ch;
+    color: var(--paper);
   }
   .hero__subtitle {
     margin: 0;
     max-width: 46ch;
     font-size: 1.2rem;
-    color: var(--ink-soft);
+    color: color-mix(in srgb, var(--paper) 82%, transparent);
     line-height: 1.5;
   }
   .hero__cta {
@@ -302,30 +280,14 @@ const pageJsonLd = [
     gap: 0.85rem;
     margin-top: 0.5rem;
   }
-  .hero__visual {
-    position: relative;
-    justify-self: center;
-    width: 100%;
-    max-width: 30rem;
+  /* Secondary CTA → light outline so it reads on the dark footage. */
+  :global(.hero__ghost) {
+    color: var(--paper) !important;
+    border-color: color-mix(in srgb, var(--paper) 50%, transparent) !important;
   }
-  .hero__visual :global(picture) {
-    display: block;
-  }
-  .hero__img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-    border-radius: var(--radius-card);
-    border: 1px solid var(--glass-border);
-    box-shadow:
-      0 8px 32px -8px color-mix(in srgb, var(--ink) 12%, transparent),
-      0 0 0 0.5px color-mix(in srgb, #ffffff 15%, transparent) inset;
-  }
-  @media (min-width: 860px) {
-    .hero__inner {
-      grid-template-columns: 1.05fr 0.95fr;
-    }
+  :global(.hero__ghost:hover) {
+    border-color: var(--paper) !important;
+    background: color-mix(in srgb, var(--paper) 14%, transparent) !important;
   }
 
   /* 2 — section head row with side CTA */
