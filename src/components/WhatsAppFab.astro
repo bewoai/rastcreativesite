@@ -21,11 +21,25 @@ const href = CONTACT.whatsapp
       target="_blank"
       rel="noopener noreferrer"
       aria-label="WhatsApp'tan yazın"
+      data-wafab
     >
       <span class="wafab__ring" aria-hidden="true" />
       <Icon name="whatsapp" size={28} class="wafab__icon" />
       <span class="wafab__label">WhatsApp</span>
     </a>
+    <script>
+      const wafab = document.querySelector<HTMLAnchorElement>("[data-wafab]");
+      if (wafab) {
+        wafab.addEventListener("click", () => {
+          if (typeof gtag === "function") {
+            gtag("event", "contact", {
+              event_category: "whatsapp",
+              event_label: "whatsapp_fab",
+            });
+          }
+        });
+      }
+    </script>
   )
 }
 

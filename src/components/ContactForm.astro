@@ -199,6 +199,13 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
         if (res.ok && json.success) {
           form.reset();
           setStatus("Teşekkürler! Mesajınız ulaştı, en kısa sürede dönüş yapacağız.", "ok");
+          // GA4 lead conversion event
+          if (typeof gtag === "function") {
+            gtag("event", "generate_lead", {
+              event_category: "contact",
+              event_label: "contact_form",
+            });
+          }
         } else {
           setStatus(
             json.message ?? "Gönderilemedi. Lütfen tekrar deneyin ya da WhatsApp’tan yazın.",

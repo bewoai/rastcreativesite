@@ -66,7 +66,7 @@ export const PRIMARY_CTA = {
  */
 export const SOCIAL: readonly NavItem[] = [
   { label: "Instagram", href: "https://instagram.com/rastcreative", icon: "instagram" },
-  // { label: "YouTube", href: "", icon: "youtube" },   // §5
+  { label: "YouTube", href: "https://www.youtube.com/@RastCreativeStudio", icon: "youtube" },
   // { label: "TikTok",  href: "", icon: "tiktok" },    // §5
 ];
 
@@ -119,3 +119,9 @@ export const PROJECT_CATEGORIES = [
  */
 export const WEB3FORMS_ACCESS_KEY: string =
   import.meta.env.PUBLIC_WEB3FORMS_KEY ?? "be5b4c14-429d-48c7-a686-6e4e1322f40f";
+
+/**
+ * Google Analytics 4 Measurement ID.
+ * Used in BaseLayout.astro for the gtag.js snippet.
+ */
+export const GA4_MEASUREMENT_ID = "G-9TBDM2LX3G";
