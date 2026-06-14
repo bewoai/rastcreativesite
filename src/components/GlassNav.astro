@@ -36,11 +36,10 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
   </nav>
 </header>
 
-{/* Mobile: top brand bar (logo + CTA) */}
+{/* Mobile: slim top brand bar (logo only — keeps the screen uncluttered) */}
 <header class="topbar" data-topbar>
   <div class="topbar__inner">
     <Logo class="topbar__logo" />
-    <Button href={PRIMARY_CTA.href} class="topbar__cta">Ön Görüşme</Button>
   </div>
 </header>
 
@@ -171,9 +170,9 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
     pointer-events: auto;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     gap: 0.75rem;
-    padding: 0.35rem 0.45rem 0.35rem 0.9rem;
+    padding: 0.4rem 1.1rem;
     background: linear-gradient(
       180deg,
       color-mix(in srgb, #ffffff 66%, transparent),
@@ -189,12 +188,7 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
       0 -10px 18px -16px color-mix(in srgb, var(--ink) 20%, transparent) inset;
   }
   .topbar__logo :global(.logo__svg) {
-    height: 1.9rem;
-  }
-  .topbar :global(.topbar__cta) {
-    min-height: 40px;
-    padding: 0.45rem 1rem;
-    font-size: 0.82rem;
+    height: 1.8rem;
   }
 
   /* ---- Mobile bottom tab-bar ------------------------------------------- */

@@ -94,16 +94,20 @@ const href = CONTACT.whatsapp
     }
   }
 
-  /* On mobile collapse to a round icon button, lifted above the tab-bar. */
+  /* On mobile collapse to a round icon button, lifted clear of the tab-bar.
+     Drop the pulse here so the (already busy) bottom area stays calm. */
   @media (max-width: 767.98px) {
     .wafab {
-      height: 3.25rem;
-      width: 3.25rem;
+      height: 3rem;
+      width: 3rem;
       padding: 0;
       justify-content: center;
-      bottom: calc(4.7rem + env(safe-area-inset-bottom, 0px));
+      bottom: calc(5.3rem + env(safe-area-inset-bottom, 0px));
     }
     .wafab__label {
+      display: none;
+    }
+    .wafab__ring {
       display: none;
     }
   }
