@@ -63,7 +63,8 @@ const pageJsonLd = [
       alt="Klaketle sahne başlatan ekip ve sinema kamerasıyla Sakarya'da video prodüksiyon çekimi"
       widths={[600, 900, 1200, 1600]}
       sizes="(min-width: 1100px) 1040px, 92vw"
-      loading="lazy"
+      loading="eager"
+      fetchpriority="high"
       class="svc-banner"
     />
 
@@ -92,6 +93,10 @@ const pageJsonLd = [
                   ))}
                 </ul>
               )}
+              <a href={PRIMARY_CTA.href} class="svc__cta">
+                Bu hizmet için teklif al
+                <Icon name="arrow-right" size={16} />
+              </a>
             </div>
           </li>
         ))
@@ -201,6 +206,29 @@ const pageJsonLd = [
     margin-top: 0.2rem;
     flex: none;
     color: var(--amber-text);
+  }
+  .svc__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1.4rem;
+    align-self: flex-start;
+    padding: 0.55rem 1.1rem;
+    border: 1px solid color-mix(in srgb, var(--amber) 40%, var(--line));
+    border-radius: var(--radius-pill);
+    font-family: var(--font-utility);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--amber-text);
+    transition:
+      background-color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out),
+      transform var(--dur-fast) var(--ease-out);
+  }
+  .svc__cta:hover {
+    background: color-mix(in srgb, var(--amber) 10%, transparent);
+    border-color: var(--amber);
+    transform: translateY(-1px);
   }
   .cta {
     display: flex;

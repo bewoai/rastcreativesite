@@ -75,11 +75,21 @@
     text-decoration: none;
   }
 
-  /* Visible keyboard focus (accessibility, roadmap 0.1 #7). */
+  /* Visible keyboard focus (accessibility, roadmap 0.1 #7). Outline (not just
+     box-shadow) so it is never clipped by overflow:hidden and reads on both
+     light and dark surfaces; offset places it clear of the element. */
   :focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
+    outline: 2px solid var(--amber-text);
+    outline-offset: 2px;
     border-radius: var(--radius-sm);
+  }
+
+  /* Body-copy links should look like links (the global reset strips them). */
+  :where(.acc__answer, .sh__intro, .svc__prose, .detail__desc, .kvkk-body) a {
+    color: var(--amber-text);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: 1px;
   }
 
   ::selection {
@@ -101,6 +111,23 @@
   [data-reveal].is-revealed {
     opacity: 1;
     transform: none;
+  }
+  /* Gentle stagger for grid items revealing in the same row. */
+  .grid-cards > [data-reveal]:nth-child(2),
+  .folder-grid > [data-reveal]:nth-child(2) {
+    transition-delay: 0.06s;
+  }
+  .grid-cards > [data-reveal]:nth-child(3),
+  .folder-grid > [data-reveal]:nth-child(3) {
+    transition-delay: 0.12s;
+  }
+  .grid-cards > [data-reveal]:nth-child(4),
+  .folder-grid > [data-reveal]:nth-child(4) {
+    transition-delay: 0.18s;
+  }
+  .grid-cards > [data-reveal]:nth-child(5),
+  .folder-grid > [data-reveal]:nth-child(5) {
+    transition-delay: 0.24s;
   }
 }
 

@@ -71,6 +71,12 @@ const Tag = href ? "a" : "button";
   .btn:active {
     transform: scale(0.97);
   }
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+  }
 
   /* Background layer — enables glow & shimmer without affecting text */
   .btn__bg {
