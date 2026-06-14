@@ -14,6 +14,7 @@ import AccordionItem from "../components/AccordionItem.astro";
 import LogoWall from "../components/LogoWall.astro";
 import { COPY, PRIMARY_CTA } from "../consts";
 import { localBusiness, faqPage, toPlainText } from "../lib/schema";
+import { groupByBrand } from "../lib/brands";
 
 const byOrder = (a: { data: { order: number } }, b: { data: { order: number } }) =>
   a.data.order - b.data.order;
@@ -25,6 +26,34 @@ const faqEntries = (await getCollection("faq")).sort(byOrder);
 const faqRendered = await Promise.all(
   faqEntries.map(async (e) => ({ data: e.data, Content: (await render(e)).Content })),
 );
+
+// Quick credibility numbers — derived from real content so they stay accurate.
+const brandCount = groupByBrand(projects).length;
+const stats = [
+  { n: `${brandCount}+`, l: "Marka" },
+  { n: `${projects.length}`, l: "İçerik" },
+  { n: "4K", l: "Sinema Standardı" },
+  { n: "Sakarya", l: "Merkezli Stüdyo" },
+];
+
+// "Nasıl çalışırız" — process clarity the 35+ audience wants (roadmap §2.5).
+const steps = [
+  {
+    n: "01",
+    t: "Ücretsiz ön görüşme",
+    d: "Projenizi dinler; formatı, kapsamı ve takvimi birlikte netleştiririz.",
+  },
+  {
+    n: "02",
+    t: "Çekim & prodüksiyon",
+    d: "Sinema standardı ekipmanla sahadayız; ön hazırlıktan sete tek ekip disiplini.",
+  },
+  {
+    n: "03",
+    t: "Kurgu & teslim",
+    d: "Post-prodüksiyon, renk ve son rötuş; genellikle 2–4 hafta içinde teslim.",
+  },
+];
 
 // "Neden Rast" — concrete trust signals for the 35+ audience (roadmap §2.5).
 const whyRast = [
@@ -120,6 +149,20 @@ const pageJsonLd = [
     </div>
   </Section>
 
+  {/* 3.5 — İstatistik barı */}
+  <Section space="tight">
+    <ul class="stats">
+      {
+        stats.map((s) => (
+          <li class="stats__item">
+            <span class="stats__n">{s.n}</span>
+            <span class="stats__l">{s.l}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
   {/* 4 — Hizmetler özeti */}
   <Section id="hizmetler-ozet">
     <SectionHeading eyebrow="Sahne 03 · Hizmetler">
@@ -168,9 +211,30 @@ const pageJsonLd = [
     </ul>
   </Section>
 
+  {/* 5.5 — Süreç */}
+  <Section id="surec">
+    <SectionHeading eyebrow="Sahne 05 · Süreç">
+      Üç adımda, baştan sona
+      <Fragment slot="intro">
+        <p>Net bir akış: ön görüşmeden teslime kadar her aşamada yanınızdayız.</p>
+      </Fragment>
+    </SectionHeading>
+    <ol class="steps">
+      {
+        steps.map((s) => (
+          <li class="steps__item">
+            <span class="steps__n">{s.n}</span>
+            <h3 class="steps__t">{s.t}</h3>
+            <p class="steps__d">{s.d}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
+
   {/* 6 — SSS */}
   <Section id="sss" width="narrow">
-    <SectionHeading eyebrow="Sahne 05 · SSS">Sık sorulan sorular</SectionHeading>
+    <SectionHeading eyebrow="Sahne 06 · SSS">Sık sorulan sorular</SectionHeading>
     <div class="faq">
       {
         faqRendered.map((f, i) => {
@@ -357,6 +421,82 @@ const pageJsonLd = [
     .why {
       grid-template-columns: repeat(3, 1fr);
       gap: 2.5rem;
+    }
+  }
+
+  /* 3.5 — stats bar */
+  .stats {
+    list-style: none;
+    margin: 0;
+    padding: 1.4rem clamp(1rem, 4vw, 2rem);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.4rem 1rem;
+    border-block: 1px solid var(--line);
+  }
+  .stats__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    text-align: center;
+  }
+  .stats__n {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    line-height: 1;
+    color: var(--amber-text);
+  }
+  .stats__l {
+    font-family: var(--font-utility);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  @media (min-width: 720px) {
+    .stats {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* 5.5 — process steps */
+  .steps {
+    list-style: none;
+    margin: 2.5rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.8rem;
+    counter-reset: step;
+  }
+  .steps__item {
+    position: relative;
+    padding-top: 1.3rem;
+    border-top: 2px solid color-mix(in srgb, var(--amber) 65%, transparent);
+  }
+  .steps__n {
+    font-family: var(--font-utility);
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--amber-text);
+  }
+  .steps__t {
+    margin: 0.5rem 0 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  .steps__d {
+    margin: 0;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+    max-width: 42ch;
+  }
+  @media (min-width: 768px) {
+    .steps {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
     }
   }
 

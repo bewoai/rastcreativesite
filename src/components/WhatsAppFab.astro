@@ -1,0 +1,118 @@
+---
+/**
+ * Floating WhatsApp button — the 35+ audience's primary channel (roadmap §2).
+ * Bottom-right, sits above the mobile tab-bar. Renders nothing until a real
+ * WhatsApp number exists in consts.
+ */
+import Icon from "./Icon.astro";
+import { CONTACT } from "../consts";
+
+const message = "Merhaba, ücretsiz ön görüşme talep etmek istiyorum.";
+const href = CONTACT.whatsapp
+  ? `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`
+  : null;
+---
+
+{
+  href && (
+    <a
+      class="wafab"
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="WhatsApp'tan yazın"
+    >
+      <span class="wafab__ring" aria-hidden="true" />
+      <Icon name="whatsapp" size={28} class="wafab__icon" />
+      <span class="wafab__label">WhatsApp</span>
+    </a>
+  )
+}
+
+<style>
+  .wafab {
+    position: fixed;
+    right: clamp(0.9rem, 3vw, 1.5rem);
+    bottom: clamp(0.9rem, 3vw, 1.5rem);
+    z-index: 49;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 3.5rem;
+    padding: 0 1.15rem;
+    border-radius: var(--radius-pill);
+    background: #25d366;
+    color: #fff;
+    box-shadow:
+      0 10px 28px -8px rgba(37, 211, 102, 0.55),
+      0 4px 12px -4px rgba(17, 17, 16, 0.3);
+    text-decoration: none;
+    touch-action: manipulation;
+    transition:
+      transform var(--dur) var(--ease-out),
+      box-shadow var(--dur) var(--ease-out);
+  }
+  .wafab__icon {
+    flex: none;
+  }
+  .wafab__label {
+    font-family: var(--font-utility);
+    font-size: 0.95rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .wafab:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 14px 34px -8px rgba(37, 211, 102, 0.65),
+      0 6px 16px -4px rgba(17, 17, 16, 0.35);
+  }
+  .wafab:active {
+    transform: scale(0.97);
+  }
+  .wafab:focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 3px;
+  }
+
+  /* Subtle attention pulse (once-settled, gentle). */
+  .wafab__ring {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5);
+    animation: wafab-pulse 2.6s ease-out infinite;
+    z-index: -1;
+  }
+  @keyframes wafab-pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.45);
+    }
+    70%,
+    100% {
+      box-shadow: 0 0 0 16px rgba(37, 211, 102, 0);
+    }
+  }
+
+  /* On mobile collapse to a round icon button, lifted above the tab-bar. */
+  @media (max-width: 767.98px) {
+    .wafab {
+      height: 3.25rem;
+      width: 3.25rem;
+      padding: 0;
+      justify-content: center;
+      bottom: calc(4.7rem + env(safe-area-inset-bottom, 0px));
+    }
+    .wafab__label {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wafab,
+    .wafab__ring {
+      transition: none;
+      animation: none;
+    }
+  }
+</style>
