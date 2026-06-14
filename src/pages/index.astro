@@ -24,7 +24,22 @@ const byOrder = (a: { data: { order: number } }, b: { data: { order: number } })
   a.data.order - b.data.order;
 
 const projects = (await getCollection("projects")).filter((p) => !p.data.draft);
-const featured = projects.filter((p) => p.data.featured).sort(byOrder).slice(0, 4);
+const featuredProjectSlugs = [
+  "buyapi-sosyal-icerik-1",
+  "altoteks-tanitim-filmi",
+  "gebelik-ilk-7-gun",
+];
+const isProject = (project: (typeof projects)[number] | undefined): project is (typeof projects)[number] =>
+  Boolean(project);
+const featured = featuredProjectSlugs
+  .map((slug) => projects.find((project) => project.id === slug))
+  .filter(isProject);
+const featuredProjectIds = new Set(featured.map((project) => project.id));
+const dailyProjectPool = [...projects].sort(byOrder);
+const dailyProjectPoolData = dailyProjectPool.map((project) => ({
+  id: project.id,
+  category: project.data.category,
+}));
 const services = (await getCollection("services")).sort(byOrder);
 const faqEntries = (await getCollection("faq")).sort(byOrder);
 const faqRendered = await Promise.all(
@@ -119,24 +134,108 @@ const pageJsonLd = [
       <SectionHeading eyebrow="Sahne 02 · Seçili İşler">Son işlerimizden seçmeler</SectionHeading>
       <Button href="/projeler" variant="secondary" arrow class="head-row__cta">Tümünü gör</Button>
     </div>
-    <div class="grid-cards">
+    <div class="grid-cards" data-daily-projects>
       {
-        featured.map((p) => (
-          <ProjectCard
-            href={`/projeler/${p.id}`}
-            title={p.data.title}
-            category={p.data.category}
-            poster={p.data.poster}
-            posterAlt={p.data.posterAlt}
-            client={p.data.client}
-            year={p.data.year}
-            timecode={p.data.duration}
-            vertical={p.data.vertical}
-          />
+        dailyProjectPool.map((p) => (
+          <div class="daily-project" data-daily-project={p.id} hidden={!featuredProjectIds.has(p.id)}>
+            <ProjectCard
+              href={`/projeler/${p.id}`}
+              title={p.data.title}
+              category={p.data.category}
+              poster={p.data.poster}
+              posterAlt={p.data.posterAlt}
+              client={p.data.client}
+              year={p.data.year}
+              timecode={p.data.duration}
+              vertical={p.data.vertical}
+            />
+          </div>
         ))
       }
     </div>
   </Section>
+
+  <script define:vars={{ dailyProjectPoolData }}>
+    const dailyProjects = dailyProjectPoolData;
+    const projectCount = 3;
+    let activeDateKey = "";
+
+    const getIstanbulDateKey = () => {
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Europe/Istanbul",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).formatToParts(new Date());
+      const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+      return `${values.year}-${values.month}-${values.day}`;
+    };
+
+    const hashString = (value) => {
+      let hash = 2166136261;
+      for (let i = 0; i < value.length; i += 1) {
+        hash ^= value.charCodeAt(i);
+        hash = Math.imul(hash, 16777619);
+      }
+      return hash >>> 0;
+    };
+
+    const shuffleWithSeed = (items, seed) => {
+      const shuffled = [...items];
+      let state = seed || 1;
+      const random = () => {
+        state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+        return state / 4294967296;
+      };
+      for (let i = shuffled.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    };
+
+    const pickDailyProjects = (dateKey) => {
+      const shuffled = shuffleWithSeed(dailyProjects, hashString(dateKey));
+      const selected = [];
+      const categories = new Set();
+
+      for (const project of shuffled) {
+        if (selected.length >= projectCount) break;
+        if (categories.has(project.category)) continue;
+        selected.push(project);
+        categories.add(project.category);
+      }
+
+      for (const project of shuffled) {
+        if (selected.length >= projectCount) break;
+        if (selected.some((item) => item.id === project.id)) continue;
+        selected.push(project);
+      }
+
+      return selected.map((project) => project.id);
+    };
+
+    const applyDailyProjects = () => {
+      const dateKey = getIstanbulDateKey();
+      const selectedIds = pickDailyProjects(dateKey);
+      const selected = new Set(selectedIds);
+      const cards = document.querySelectorAll("[data-daily-project]");
+
+      cards.forEach((card) => {
+        const projectId = card.getAttribute("data-daily-project");
+        const order = selectedIds.indexOf(projectId);
+        card.hidden = !selected.has(projectId);
+        card.style.order = order === -1 ? "" : String(order);
+      });
+
+      activeDateKey = dateKey;
+    };
+
+    applyDailyProjects();
+    window.setInterval(() => {
+      if (getIstanbulDateKey() !== activeDateKey) applyDailyProjects();
+    }, 60000);
+  </script>
 
   {/* 3 — Referans logoları */}
   <Section space="tight">
@@ -328,6 +427,9 @@ const pageJsonLd = [
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
+  .daily-project {
+    min-width: 0;
+  }
   @media (min-width: 640px) {
     .grid-cards {
       grid-template-columns: repeat(2, 1fr);
@@ -335,7 +437,7 @@ const pageJsonLd = [
   }
   @media (min-width: 1000px) {
     .grid-cards {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
     }
   }
 

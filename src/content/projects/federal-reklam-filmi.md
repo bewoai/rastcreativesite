@@ -1,15 +1,15 @@
 ---
-title: "Federal Reklam Filmi"
-category: "Reklam"
+title: "Federal Kurumsal Tanıtım Filmi"
+category: "Kurumsal"
 youtubeId: "96lsUMsBhy4"
-poster: "https://i.ytimg.com/vi/96lsUMsBhy4/maxresdefault.jpg"
-summary: "Federal markası için dinamik reklam filmi."
+poster: "/covers/federal-kurumsal.svg"
+summary: "Federal markası için hazırlanan kurumsal tanıtım filmi."
 client: "Federal"
 year: 2024
-featured: true
+featured: false
 order: 2
-posterAlt: "Federal marka reklam filmi kapağı, dinamik kurgu ve sinematik görüntü"
+posterAlt: "Federal kurumsal tanıtım filmi için kırmızı marka kapak görseli"
 duration: "01:10"
 ---
 
-Federal için hazırlanan reklam filmi. Markanın enerjisini ve gücünü yansıtan hızlı tempolu bir kurgu.
+Federal için hazırlanan kurumsal tanıtım filmi. Markanın enerjisini, üretim gücünü ve sahadaki dinamizmini sinematik bir kurgu ile anlattık.
