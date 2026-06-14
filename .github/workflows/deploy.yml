@@ -48,9 +48,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/
           server-dir: ./public_html/
-          # One-time clean wipe to clear leftover raw-repo files in public_html
-          # (Hostinger's native Git deploy had cloned the source there).
-          dangerous-clean-slate: true
+          dangerous-clean-slate: false
           # Exclude source maps and dev files from deployment
           exclude: |
             **/.git*
