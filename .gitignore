@@ -12,7 +12,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-
 # environment variables
 .env
 .env.production
@@ -23,14 +22,28 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
-# local agent/editor settings (keep launch.json shared, ignore local prefs)
-.claude/settings.local.json
+# AI agent tool directories (local only — not part of the project source)
+.claude/
+.agents/
+.codex/
+.gemini/
 
-# source logo files (originals + Illustrator) — optimised versions are in public/
+# CI/CD platform config files (Cloudflare Pages etc — not used)
+.pages.yml
+
+# source logo files (originals + Illustrator) — optimised versions are in src/assets/logos/
 RastLogo/
 # client brand logo sources (originals + zips) — used copies live in src/assets/logos/
 calistigimiz_markalarin_logolari/
 
-# temporary notes
+# temporary notes & scratch files
 faz4not.txt
 projelinkler.txt
+
+# session/deployment reports (stored locally, not part of repo)
+CODEX-MEMORY.md
+DEPLOY-RAPORU.md
+OTURUM-RAPORU-*.md
+RAPOR.md
+RAST-CREATIVE-YOL-HARITASI.md
+YAYIN-DEPLOY-DURUM-RAPORU-*.md
