@@ -24,19 +24,19 @@ import zeminkoleji from "../assets/logos/zeminkoleji.avif";
 
 const logos = [
   { src: adatip, name: "Adatıp Hastanesi", dark: false },
-  { src: serdivan, name: "Serdivan AVM", dark: false },
+  { src: serdivan, name: "Serdivan AVM", dark: false, big: true },
   { src: aytashome, name: "Aytaş Home", dark: false },
   { src: meteors, name: "Meteors Shipping", dark: false },
   { src: oyka, name: "Oyka Kağıt Ambalaj", dark: false },
   { src: thermoway, name: "ThermoWay", dark: false },
   { src: estada, name: "Estada Hair Transplant", dark: false },
   { src: isitan, name: "Isıtan Isı Kontrol Sistemleri", dark: false },
-  { src: zeminkoleji, name: "Zemin Koleji", dark: false },
+  { src: zeminkoleji, name: "Zemin Koleji", dark: false, big: true },
   { src: buyapi, name: "Buyapı", dark: false },
   { src: basak, name: "Başak Traktör", dark: false },
   { src: canex, name: "Canex", dark: false },
   { src: chint, name: "Chint Power", dark: false },
-  { src: newlife, name: "New Life", dark: true },
+  { src: newlife, name: "New Life", dark: true, big: true },
   { src: altoteks, name: "Altoteks", dark: true },
 ];
 ---
@@ -48,10 +48,10 @@ const logos = [
         <Image
           src={l.src}
           alt={`${l.name} logosu`}
-          height={44}
+          height={56}
           densities={[1.5, 2]}
           loading="lazy"
-          class="logo-chip__img"
+          class:list={["logo-chip__img", { "logo-chip__img--big": l.big }]}
         />
       </li>
     ))
@@ -72,8 +72,8 @@ const logos = [
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem 1.25rem;
-    min-height: 5rem;
+    padding: 0.9rem 1.1rem;
+    min-height: 5.6rem;
     background: #ffffff;
     border: 1px solid var(--line);
     border-radius: var(--radius-card);
@@ -89,12 +89,19 @@ const logos = [
   .logo-chip__img {
     width: auto;
     height: auto;
-    max-height: 2.6rem;
+    max-height: 3rem;
     max-width: 100%;
     object-fit: contain;
-    /* Full colour so every brand logo reads clearly; lift handled by the chip. */
-    opacity: 0.95;
-    transition: opacity var(--dur-fast, 0.2s) var(--ease-out, ease);
+    /* Quiet black & white by default; full colour on hover. */
+    filter: grayscale(1);
+    opacity: 0.82;
+    transition:
+      filter var(--dur-fast, 0.2s) var(--ease-out, ease),
+      opacity var(--dur-fast, 0.2s) var(--ease-out, ease);
+  }
+  /* Marks with lots of internal whitespace or a small footprint read bigger. */
+  .logo-chip__img--big {
+    max-height: 3.9rem;
   }
   .logo-chip:hover {
     transform: translateY(-2px);
@@ -102,6 +109,7 @@ const logos = [
     box-shadow: 0 6px 20px -8px color-mix(in srgb, var(--ink) 18%, transparent);
   }
   .logo-chip:hover .logo-chip__img {
+    filter: grayscale(0);
     opacity: 1;
   }
 
@@ -116,8 +124,8 @@ const logos = [
       gap: 0.75rem;
     }
     .logo-chip {
-      padding: 0.85rem;
-      min-height: 4.5rem;
+      padding: 0.8rem;
+      min-height: 5.6rem;
     }
   }
 
