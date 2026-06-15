@@ -1,0 +1,138 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Section from "../../components/Section.astro";
+import Eyebrow from "../../components/Eyebrow.astro";
+import Button from "../../components/Button.astro";
+import { SITE, PRIMARY_CTA } from "../../consts";
+import { breadcrumb } from "../../lib/schema";
+
+export async function getStaticPaths() {
+  const posts = (await getCollection("blog")).filter((p) => !p.data.draft);
+  return posts.map((p) => ({ params: { slug: p.id }, props: { entry: p } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+
+const fmt = (date: Date) =>
+  date.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" });
+
+const blogPosting = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: d.title,
+  description: d.description,
+  datePublished: d.pubDate.toISOString(),
+  ...(d.updatedDate ? { dateModified: d.updatedDate.toISOString() } : {}),
+  author: { "@type": "Organization", name: SITE.name },
+  publisher: { "@type": "Organization", name: SITE.name },
+  mainEntityOfPage: new URL(`/blog/${entry.id}`, SITE.url).href,
+};
+
+const pageJsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Blog", path: "/blog" },
+    { name: d.title, path: `/blog/${entry.id}` },
+  ]),
+  blogPosting,
+];
+---
+
+<BaseLayout title={d.title} description={d.description} ogType="article" jsonLd={pageJsonLd}>
+  <Section width="narrow">
+    <a href="/blog" class="back">← Tüm yazılar</a>
+
+    <article class="article">
+      <header class="article__head">
+        <Eyebrow tone="soft" as="div">Blog</Eyebrow>
+        <h1 class="article__title">{d.title}</h1>
+        <time class="article__date" datetime={d.pubDate.toISOString()}>{fmt(d.pubDate)}</time>
+      </header>
+      <div class="prose">
+        <Content />
+      </div>
+    </article>
+
+    <aside class="article-cta">
+      <div>
+        <Eyebrow>Projeniz mi var?</Eyebrow>
+        <p class="article-cta__title">Bir fikri konuşmak en güzeli.</p>
+      </div>
+      <Button href={PRIMARY_CTA.href} arrow>{PRIMARY_CTA.label}</Button>
+    </aside>
+  </Section>
+</BaseLayout>
+
+<style>
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 1.5rem;
+    font-family: var(--font-utility);
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .back:hover {
+    color: var(--amber-text);
+  }
+  .article__head {
+    margin-bottom: 2rem;
+  }
+  .article__title {
+    margin: 0.7rem 0 0.6rem;
+    max-width: 24ch;
+  }
+  .article__date {
+    font-family: var(--font-utility);
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+  }
+  .prose {
+    font-size: 1.1rem;
+    line-height: var(--leading-body);
+    color: var(--ink-soft);
+    max-width: 68ch;
+  }
+  .prose :global(h2) {
+    margin: 2.2rem 0 0.7rem;
+    font-family: var(--font-body);
+    font-size: clamp(1.3rem, 3vw, 1.6rem);
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .prose :global(p) {
+    margin: 0 0 1.1rem;
+  }
+  .prose :global(strong) {
+    color: var(--ink);
+  }
+  .prose :global(a) {
+    color: var(--amber-text);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .article-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    margin-top: 3rem;
+    padding: 1.5rem clamp(1.25rem, 4vw, 2rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--amber) 6%, var(--paper));
+  }
+  .article-cta__title {
+    margin: 0.3rem 0 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
+    max-width: 24ch;
+  }
+</style>

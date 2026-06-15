@@ -52,4 +52,17 @@ const faq = defineCollection({
   }),
 });
 
-export const collections = { projects, services, faq };
+// Blog — long-form SEO content (roadmap §6). Markdown body holds the article.
+const blog = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/blog" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
+    tags: z.array(z.string()).default([]),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { projects, services, faq, blog };
