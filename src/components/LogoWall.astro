@@ -1,9 +1,10 @@
 ---
 /**
- * Client logo wall ("trusted by"). Real logos sit in uniform chips so mixed
- * backgrounds (transparent / white / coloured) read consistently. Altoteks
- * ships only a white-on-transparent mark, so its chip is dark.
- * Quiet by default (grayscale), full colour on hover — roadmap §2.3.
+ * Client logo wall ("trusted by") as a seamless marquee. Chips keep the quiet
+ * grayscale → colour-on-hover treatment (roadmap §2.3); the track auto-scrolls,
+ * pauses on hover, fades at both edges, and falls back to a manual-scroll strip
+ * when the visitor prefers reduced motion. The set is duplicated for a seamless
+ * loop — the second copy is aria-hidden so screen readers read each brand once.
  */
 import { Image } from "astro:assets";
 import adatip from "../assets/logos/adatip.png";
@@ -43,34 +44,74 @@ const logos = [
 ];
 ---
 
-<ul class="logo-wall" aria-label="Çalıştığımız markalar">
-  {
-    logos.map((l) => (
-      <li class:list={["logo-chip", { "logo-chip--dark": l.dark }]}>
-        <Image
-          src={l.src}
-          alt={`${l.name} logosu`}
-          height={56}
-          densities={[1.5, 2]}
-          loading="lazy"
-          class:list={["logo-chip__img", { "logo-chip__img--big": l.big }]}
-        />
-      </li>
-    ))
-  }
-</ul>
+<div class="marquee" role="group" aria-label="Çalıştığımız markalar">
+  <ul class="marquee__track">
+    {
+      logos.map((l) => (
+        <li class:list={["logo-chip", { "logo-chip--dark": l.dark }]}>
+          <Image
+            src={l.src}
+            alt={`${l.name} logosu`}
+            height={56}
+            densities={[1.5, 2]}
+            loading="lazy"
+            class:list={["logo-chip__img", { "logo-chip__img--big": l.big }]}
+          />
+        </li>
+      ))
+    }
+    {
+      logos.map((l) => (
+        <li class:list={["logo-chip", { "logo-chip--dark": l.dark }]} aria-hidden="true">
+          <Image
+            src={l.src}
+            alt=""
+            height={56}
+            densities={[1.5, 2]}
+            loading="lazy"
+            class:list={["logo-chip__img", { "logo-chip__img--big": l.big }]}
+          />
+        </li>
+      ))
+    }
+  </ul>
+</div>
 
 <style>
-  .logo-wall {
+  .marquee {
+    width: 100%;
+    overflow: hidden;
+    /* Soft fade at both edges so chips slide in/out instead of cutting off. */
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  }
+  .marquee__track {
     list-style: none;
     margin: 1.6rem 0 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.9rem;
-    width: 100%;
+    padding: 0.5rem 0; /* room for the hover lift */
+    display: flex;
+    width: max-content;
+    /* Gap lives in each chip's margin-right so translateX(-50%) lands exactly
+       on the start of the duplicate set → no jump at the loop seam. */
+    animation: logo-marquee 42s linear infinite;
   }
+  .marquee:hover .marquee__track,
+  .marquee:focus-within .marquee__track {
+    animation-play-state: paused;
+  }
+  @keyframes logo-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
   .logo-chip {
+    flex: 0 0 auto;
+    width: clamp(8.5rem, 30vw, 10.5rem);
+    margin-right: 0.75rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -115,23 +156,14 @@ const logos = [
     opacity: 1;
   }
 
-  @media (min-width: 560px) {
-    .logo-wall {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-  @media (min-width: 900px) {
-    .logo-wall {
-      grid-template-columns: repeat(5, 1fr);
-      gap: 0.75rem;
-    }
-    .logo-chip {
-      padding: 0.8rem;
-      min-height: 5.6rem;
-    }
-  }
-
+  /* Reduced motion: stop the auto-scroll, let the visitor swipe through. */
   @media (prefers-reduced-motion: reduce) {
+    .marquee {
+      overflow-x: auto;
+    }
+    .marquee__track {
+      animation: none;
+    }
     .logo-chip,
     .logo-chip__img {
       transition: none;
