@@ -2,8 +2,12 @@
 # 301 redirects from old Framer URLs to new Astro routes.
 # Error document for clean 404 handling.
 
-# ── Force HTTPS ───────────────────────────────────────────────────────────
+# ── Canonical host + HTTPS ────────────────────────────────────────────────
 RewriteEngine On
+# www → non-www (also upgrades to HTTPS in the same hop)
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+# Force HTTPS for the bare domain
 RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
