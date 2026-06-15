@@ -3,7 +3,7 @@ title: "Adatıp Hastanesi — Sosyal İçerik"
 category: "Sosyal Medya"
 youtubeId: "gNi2I-iuw7g"
 vertical: true
-poster: "https://i.ytimg.com/vi/gNi2I-iuw7g/maxresdefault.jpg"
+poster: "https://i.ytimg.com/vi/gNi2I-iuw7g/oardefault.jpg"
 summary: "Adatıp Hastanesi için dikey sosyal medya içeriği."
 client: "Adatıp Hastanesi"
 year: 2025
