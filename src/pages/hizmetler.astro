@@ -8,7 +8,7 @@ import Eyebrow from "../components/Eyebrow.astro";
 import Button from "../components/Button.astro";
 import Icon from "../components/Icon.astro";
 import AreaIndex from "../components/AreaIndex.astro";
-import { PRIMARY_CTA } from "../consts";
+import { PRIMARY_CTA, waQuoteLink } from "../consts";
 import { breadcrumb, BUSINESS_ID } from "../lib/schema";
 import bannerPhoto from "../assets/photos/director-clapper.jpg";
 import { SEO_SERVICES } from "../data/seo-services";
@@ -103,7 +103,13 @@ const pageJsonLd = [
                   ))}
                 </ul>
               )}
-              <a href={PRIMARY_CTA.href} class="svc__cta">
+              <a
+                href={waQuoteLink(s.data.title)}
+                class="svc__cta"
+                target="_blank"
+                rel="noopener noreferrer"
+                data-wa={`whatsapp_service:${s.id}`}
+              >
                 Bu hizmet için teklif al
                 <Icon name="arrow-right" size={16} />
               </a>
@@ -131,6 +137,20 @@ const pageJsonLd = [
       <Button href={PRIMARY_CTA.href} size="lg" arrow>{PRIMARY_CTA.label}</Button>
     </div>
   </Section>
+
+  <script>
+    // GA4: which service drove the WhatsApp quote click (roadmap §2).
+    document.querySelectorAll<HTMLAnchorElement>(".svc__cta[data-wa]").forEach((cta) => {
+      cta.addEventListener("click", () => {
+        if (typeof gtag === "function") {
+          gtag("event", "contact", {
+            event_category: "whatsapp",
+            event_label: cta.dataset.wa || "whatsapp_service",
+          });
+        }
+      });
+    });
+  </script>
 </BaseLayout>
 
 <style>

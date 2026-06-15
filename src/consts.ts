@@ -86,6 +86,47 @@ export const CONTACT = {
 } as const;
 
 /**
+ * WhatsApp quick-quote deep links (roadmap §2 — primary channel for the 35+
+ * audience). Newlines survive URL-encoding as %0A and render in WhatsApp's
+ * compose box, so the visitor lands on a ready-to-fill quote request rather
+ * than an empty chat. Helpers return `null` when no number is set, so callers
+ * can fall back / hide the button.
+ */
+export const WHATSAPP_QUOTE_MESSAGE = [
+  "Merhaba Rast Creative 👋",
+  "",
+  "Bir proje için teklif almak istiyorum:",
+  "",
+  "• Proje türü: ",
+  "• Tahmini tarih: ",
+  "• Lokasyon: ",
+  "• Kısaca: ",
+].join("\n");
+
+/** Build a wa.me link with a prefilled message (defaults to the quote template). */
+export function waLink(message: string = WHATSAPP_QUOTE_MESSAGE): string | null {
+  return CONTACT.whatsapp
+    ? `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`
+    : null;
+}
+
+/** Quote link with a specific service name baked into the template. */
+export function waQuoteLink(service?: string): string | null {
+  if (!service) return waLink();
+  return waLink(
+    [
+      "Merhaba Rast Creative 👋",
+      "",
+      `"${service}" hizmeti için teklif almak istiyorum:`,
+      "",
+      "• Tahmini tarih: ",
+      "• Lokasyon: ",
+      "• Kısaca: ",
+    ].join("\n"),
+  );
+}
+
+/**
  * Migrated marketing copy (roadmap §2 + old site rastcreative.com).
  * `heroTitle` is the slogan the roadmap says to keep; `heroSubtitle`/`aboutIntro`
  * come from the old site (aboutIntro lightly cleaned — confirm wording with client).

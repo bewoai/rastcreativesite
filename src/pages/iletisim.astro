@@ -6,11 +6,12 @@ import Eyebrow from "../components/Eyebrow.astro";
 import Button from "../components/Button.astro";
 import Icon from "../components/Icon.astro";
 import ContactForm from "../components/ContactForm.astro";
-import { CONTACT } from "../consts";
+import { CONTACT, waLink } from "../consts";
 import { localBusiness, breadcrumb } from "../lib/schema";
 
 const mapsQuery = encodeURIComponent(`Rast Creative Studio ${CONTACT.city}`);
 const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
+const waHref = waLink();
 
 // Contact is the strongest local-SEO page: full LocalBusiness + breadcrumb.
 const pageJsonLd = [
@@ -47,8 +48,15 @@ const pageJsonLd = [
         <Eyebrow tone="soft">Kanallar</Eyebrow>
 
         {
-          CONTACT.whatsapp ? (
-            <Button href={`https://wa.me/${CONTACT.whatsapp}`} class="wa" block>
+          waHref ? (
+            <Button
+              href={waHref}
+              class="wa"
+              block
+              target="_blank"
+              rel="noopener noreferrer"
+              data-wa="whatsapp_contact"
+            >
               <Icon name="whatsapp" size={20} /> WhatsApp'tan yazın
             </Button>
           ) : (
@@ -98,6 +106,20 @@ const pageJsonLd = [
       </aside>
     </div>
   </Section>
+
+  <script>
+    // GA4: attribute WhatsApp quote clicks from the contact page (roadmap §2).
+    document
+      .querySelector<HTMLAnchorElement>('a[data-wa="whatsapp_contact"]')
+      ?.addEventListener("click", () => {
+        if (typeof gtag === "function") {
+          gtag("event", "contact", {
+            event_category: "whatsapp",
+            event_label: "whatsapp_contact",
+          });
+        }
+      });
+  </script>
 </BaseLayout>
 
 <style>

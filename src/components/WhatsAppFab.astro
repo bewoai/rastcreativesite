@@ -5,12 +5,9 @@
  * WhatsApp number exists in consts.
  */
 import Icon from "./Icon.astro";
-import { CONTACT } from "../consts";
+import { waLink } from "../consts";
 
-const message = "Merhaba, ücretsiz ön görüşme talep etmek istiyorum.";
-const href = CONTACT.whatsapp
-  ? `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`
-  : null;
+const href = waLink();
 ---
 
 {
