@@ -60,6 +60,7 @@ const blog = defineCollection({
     z.object({
       title: z.string(),
       description: z.string(),
+      author: z.string().default("Berat Değirmenci"),
       pubDate: z.coerce.date(),
       updatedDate: z.coerce.date().optional(),
       cover: image().optional(),

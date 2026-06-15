@@ -27,7 +27,7 @@ const blogPosting = {
   description: d.description,
   datePublished: d.pubDate.toISOString(),
   ...(d.updatedDate ? { dateModified: d.updatedDate.toISOString() } : {}),
-  author: { "@type": "Organization", name: SITE.name },
+  author: { "@type": "Person", name: d.author },
   publisher: { "@type": "Organization", name: SITE.name },
   mainEntityOfPage: new URL(`/blog/${entry.id}`, SITE.url).href,
 };
@@ -50,7 +50,11 @@ const pageJsonLd = [
       <header class="article__head">
         <Eyebrow tone="soft" as="div">Blog</Eyebrow>
         <h1 class="article__title">{d.title}</h1>
-        <time class="article__date" datetime={d.pubDate.toISOString()}>{fmt(d.pubDate)}</time>
+        <p class="article__meta">
+          <span class="article__author">{d.author}</span>
+          <span aria-hidden="true">·</span>
+          <time datetime={d.pubDate.toISOString()}>{fmt(d.pubDate)}</time>
+        </p>
       </header>
       {
         d.cover && (
@@ -100,11 +104,20 @@ const pageJsonLd = [
     margin: 0.7rem 0 0.6rem;
     max-width: 24ch;
   }
-  .article__date {
+  .article__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
     font-family: var(--font-utility);
     font-size: 0.85rem;
     letter-spacing: 0.04em;
     color: var(--ink-soft);
+  }
+  .article__author {
+    color: var(--ink);
+    font-weight: 600;
   }
   .article__cover {
     display: block;
