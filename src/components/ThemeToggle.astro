@@ -28,35 +28,36 @@ const { class: className } = Astro.props;
 
 <style>
   .theme-toggle {
-    /* Sizing tokens */
-    --tt-h: 1.75rem;          /* track height */
-    --tt-w: 3.25rem;          /* track width  */
-    --tt-pad: 0.2rem;         /* inner padding */
-    --tt-thumb: calc(var(--tt-h) - var(--tt-pad) * 2); /* perfect circle thumb */
+    /* Sizing — all derived from these two values */
+    --tt-w: 3.25rem;
+    --tt-h: 1.75rem;
+    --tt-pad: 3px;
 
-    /* Layout */
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: var(--tt-w);
-    min-width: var(--tt-w);
-    height: var(--tt-h);
-    min-height: var(--tt-h);
+    /* Reset browser button defaults */
+    appearance: none;
+    -webkit-appearance: none;
+    margin: 0;
     padding: 0;
+    line-height: 1;
 
-    /* Glass pill shell */
+    /* Fixed size */
+    display: block;
+    width: var(--tt-w);
+    height: var(--tt-h);
+    flex-shrink: 0;
+
+    /* Glass pill */
     border-radius: 99px;
-    border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+    border: 1.5px solid color-mix(in srgb, var(--ink) 14%, transparent);
     background: color-mix(in srgb, var(--paper) 70%, transparent);
     -webkit-backdrop-filter: blur(16px) saturate(1.4);
     backdrop-filter: blur(16px) saturate(1.4);
     box-shadow:
       0 1px 3px -1px rgba(0,0,0,0.14),
-      0 1px 0 color-mix(in srgb,#fff 40%,transparent) inset;
+      0 1px 0 color-mix(in srgb, #fff 40%, transparent) inset;
 
     cursor: pointer;
     touch-action: manipulation;
-
     transition:
       border-color 200ms ease,
       background 200ms ease,
@@ -68,45 +69,37 @@ const { class: className } = Astro.props;
     border-color: color-mix(in srgb, var(--amber) 50%, transparent);
     box-shadow:
       0 2px 8px -2px color-mix(in srgb, var(--amber) 20%, transparent),
-      0 1px 0 color-mix(in srgb,#fff 40%,transparent) inset;
+      0 1px 0 color-mix(in srgb, #fff 40%, transparent) inset;
   }
 
-  .theme-toggle:active {
-    transform: scale(0.95);
-  }
-
-  .theme-toggle:focus {
-    outline: none;
-  }
-
+  .theme-toggle:active  { transform: scale(0.95); }
+  .theme-toggle:focus   { outline: none; }
   .theme-toggle:focus-visible {
     outline: 2px solid var(--amber);
     outline-offset: 3px;
   }
 
-  /* ── Track ── */
+  /* ── Track: fills the full interior of the button ── */
   .theme-toggle__track {
+    display: block;
     position: relative;
-    width: calc(var(--tt-w) - 2px); /* account for border */
-    height: calc(var(--tt-h) - 2px);
+    width: 100%;
+    height: 100%;
     border-radius: 99px;
-    overflow: visible;
   }
 
-  /* ── Icons ── */
+  /* ── Icons: vertically centered with absolute positioning ── */
   .theme-toggle__icon {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 0;
+    bottom: 0;
     z-index: 2;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: calc(var(--tt-w) / 2 - 1px);
+    width: 50%;
     pointer-events: none;
-    transition:
-      opacity 200ms ease,
-      color 200ms ease;
+    transition: opacity 200ms ease, color 200ms ease;
   }
 
   .theme-toggle__icon--sun {
@@ -116,41 +109,44 @@ const { class: className } = Astro.props;
 
   .theme-toggle__icon--moon {
     right: 0;
+    left: auto;
     color: color-mix(in srgb, var(--ink) 50%, transparent);
   }
 
-  /* ── Thumb ── */
+  /* ── Thumb: perfect circle, padded from all edges ── */
   .theme-toggle__thumb {
     position: absolute;
     top: var(--tt-pad);
+    bottom: var(--tt-pad);
     left: var(--tt-pad);
+    /* Width auto-matches height for perfect circle */
+    aspect-ratio: 1;
     z-index: 3;
-    width: var(--tt-thumb);
-    height: var(--tt-thumb);
     border-radius: 50%;
     background: var(--amber);
     box-shadow:
-      0 2px 8px -2px color-mix(in srgb, var(--amber-deep) 60%, transparent),
-      0 1px 0 color-mix(in srgb,#fff 28%,transparent) inset;
+      0 2px 6px -1px color-mix(in srgb, var(--amber-deep) 55%, transparent),
+      0 1px 0 color-mix(in srgb, #fff 28%, transparent) inset;
     transition: transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
-  /* ── Dark mode states ── */
+  /* ── Dark: slide thumb to right side ── */
   html[data-theme="dark"] .theme-toggle__thumb {
-    transform: translateX(calc(var(--tt-w) / 2 - var(--tt-pad) - 1px));
-    background: var(--amber);
+    /* Move right by: (total width) - (thumb size) - (right pad) - (left pad) */
+    /* Since thumb uses left+top+bottom+aspect-ratio, offset = tt-w - tt-h + (2*pad) */
+    transform: translateX(calc(var(--tt-w) - var(--tt-h) + var(--tt-pad)));
   }
 
   html[data-theme="dark"] .theme-toggle {
     border-color: color-mix(in srgb, var(--on-ink) 16%, transparent);
     background: color-mix(in srgb, var(--ink-band) 68%, transparent);
     box-shadow:
-      0 1px 3px -1px rgba(0,0,0,0.3),
-      0 1px 0 color-mix(in srgb,#fff 8%,transparent) inset;
+      0 1px 4px -1px rgba(0,0,0,0.3),
+      0 1px 0 color-mix(in srgb, #fff 8%, transparent) inset;
   }
 
   html[data-theme="dark"] .theme-toggle__icon--sun {
-    color: color-mix(in srgb, var(--on-ink) 45%, transparent);
+    color: color-mix(in srgb, var(--on-ink) 40%, transparent);
   }
 
   html[data-theme="dark"] .theme-toggle__icon--moon {
@@ -182,9 +178,7 @@ const { class: className } = Astro.props;
 
     const setTheme = (theme: "light" | "dark") => {
       document.documentElement.dataset.theme = theme;
-      try {
-        localStorage.setItem(storageKey, theme);
-      } catch (e) {}
+      try { localStorage.setItem(storageKey, theme); } catch (e) {}
       syncToggles();
     };
 
