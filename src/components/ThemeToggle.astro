@@ -28,8 +28,8 @@ const { class: className } = Astro.props;
 
 <style>
   .theme-toggle {
-    /* Sizing — all derived from these two values */
-    --tt-w: 3.25rem;
+    /* Sizing tokens */
+    --tt-w: 3.5rem;
     --tt-h: 1.75rem;
     --tt-pad: 3px;
 
@@ -79,7 +79,7 @@ const { class: className } = Astro.props;
     outline-offset: 3px;
   }
 
-  /* ── Track: fills the full interior of the button ── */
+  /* ── Track ── */
   .theme-toggle__track {
     display: block;
     position: relative;
@@ -88,7 +88,7 @@ const { class: className } = Astro.props;
     border-radius: 99px;
   }
 
-  /* ── Icons: vertically centered with absolute positioning ── */
+  /* ── Icons: each owns exactly half the track ── */
   .theme-toggle__icon {
     position: absolute;
     top: 0;
@@ -113,14 +113,18 @@ const { class: className } = Astro.props;
     color: color-mix(in srgb, var(--ink) 50%, transparent);
   }
 
-  /* ── Thumb: perfect circle, padded from all edges ── */
+  /* ── Thumb ──
+     thumb-size = tt-h - 2*pad
+     light: left = tt-w/4 - thumb-size/2  → centered over left half
+     dark:  translateX(tt-w/2)            → centered over right half  */
   .theme-toggle__thumb {
+    --tt-thumb-size: calc(var(--tt-h) - 2 * var(--tt-pad));
     position: absolute;
     top: var(--tt-pad);
-    bottom: var(--tt-pad);
-    left: var(--tt-pad);
-    /* Width auto-matches height for perfect circle */
-    aspect-ratio: 1;
+    /* Center thumb over the left (sun) half */
+    left: calc(var(--tt-w) / 4 - var(--tt-thumb-size) / 2);
+    width: var(--tt-thumb-size);
+    height: var(--tt-thumb-size);
     z-index: 3;
     border-radius: 50%;
     background: var(--amber);
@@ -130,11 +134,9 @@ const { class: className } = Astro.props;
     transition: transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
-  /* ── Dark: slide thumb to right side ── */
+  /* Slide exactly one half-width right → centers over moon */
   html[data-theme="dark"] .theme-toggle__thumb {
-    /* Move right by: (total width) - (thumb size) - (right pad) - (left pad) */
-    /* Since thumb uses left+top+bottom+aspect-ratio, offset = tt-w - tt-h + (2*pad) */
-    transform: translateX(calc(var(--tt-w) - var(--tt-h) + var(--tt-pad)));
+    transform: translateX(calc(var(--tt-w) / 2));
   }
 
   html[data-theme="dark"] .theme-toggle {
