@@ -1,5 +1,6 @@
 ---
 import Button from "./Button.astro";
+import Icon from "./Icon.astro";
 import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
 ---
 
@@ -36,6 +37,22 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
   </div>
 
   <div class="field">
+    <label for="cf-project">Proje türü <span class="req" aria-hidden="true">*</span></label>
+    <select id="cf-project" name="project_type" required>
+      <option value="" disabled selected>Seçin…</option>
+      <option value="Kurumsal / Tanıtım Filmi">Kurumsal / Tanıtım Filmi</option>
+      <option value="Reklam Filmi">Reklam Filmi</option>
+      <option value="Drone Çekimi">Drone Çekimi</option>
+      <option value="Sosyal Medya / Reels">Sosyal Medya / Reels</option>
+      <option value="Ürün & Mekan Çekimi">Ürün & Mekan Çekimi</option>
+      <option value="Marka Hikayesi">Marka Hikayesi</option>
+      <option value="Medikal">Medikal</option>
+      <option value="Düğün & Organizasyon">Düğün & Organizasyon</option>
+      <option value="Diğer">Diğer</option>
+    </select>
+  </div>
+
+  <div class="field">
     <label for="cf-message">Mesajınız <span class="req" aria-hidden="true">*</span></label>
     <textarea id="cf-message" name="message" rows="5" required></textarea>
   </div>
@@ -52,7 +69,12 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
 
   <div class="cform__status" data-status role="status" aria-live="polite"></div>
 
-  <Button type="submit" size="lg" arrow class="cform__submit">Gönder</Button>
+  <div class="cform__actions">
+    <Button type="submit" size="lg" class="cform__submit">E-posta ile Gönder</Button>
+    <button type="button" class="cform__wa" data-wa-send>
+      <Icon name="whatsapp" size={20} /> WhatsApp'tan Gönder
+    </button>
+  </div>
 </form>
 
 <style>
@@ -94,6 +116,7 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
   }
   input[type="text"],
   input[type="tel"],
+  select,
   textarea {
     font: inherit;
     font-size: 1rem;
@@ -113,12 +136,14 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
     line-height: var(--leading-body);
   }
   input:focus-visible,
+  select:focus-visible,
   textarea:focus-visible {
     outline: none;
     border-color: var(--amber);
     box-shadow: var(--focus-ring);
   }
   input:user-invalid,
+  select:user-invalid,
   textarea:user-invalid {
     border-color: #b42318;
   }
@@ -159,8 +184,42 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
     color: #b42318;
     font-weight: 600;
   }
-  .cform__submit {
-    align-self: flex-start;
+  .cform__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    align-items: stretch;
+  }
+  .cform__wa {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 56px;
+    padding: 0.95rem 1.6rem;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: #25d366;
+    color: #fff;
+    font-family: var(--font-utility);
+    font-size: 1.05rem;
+    font-weight: 500;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition:
+      transform var(--dur-fast) var(--ease-out),
+      box-shadow var(--dur) var(--ease-out);
+  }
+  .cform__wa:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 26px -8px rgba(37, 211, 102, 0.5);
+  }
+  .cform__wa:active {
+    transform: scale(0.98);
+  }
+  .cform__wa:focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 3px;
   }
   @media (min-width: 560px) {
     .cform__row {
@@ -170,6 +229,8 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
 </style>
 
 <script>
+  import { waLink } from "../consts";
+
   const form = document.querySelector<HTMLFormElement>("[data-cform]");
   if (form) {
     const status = form.querySelector<HTMLElement>("[data-status]");
@@ -217,6 +278,34 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
       } finally {
         if (submit) submit.disabled = false;
       }
+    });
+
+    // "WhatsApp'tan Gönder" — build a structured message from the same fields
+    // and open WhatsApp with it prefilled (the visitor taps send in their app).
+    const waBtn = form.querySelector<HTMLButtonElement>("[data-wa-send]");
+    waBtn?.addEventListener("click", () => {
+      const get = (sel: string) =>
+        form.querySelector<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(sel);
+      for (const sel of ["#cf-name", "#cf-phone", "#cf-project", "#cf-message", 'input[name="kvkk"]']) {
+        const el = get(sel);
+        if (el && !el.checkValidity()) {
+          el.reportValidity();
+          return;
+        }
+      }
+      const val = (sel: string) => get(sel)?.value.trim() ?? "";
+      const lines = ["Yeni teklif talebi — rastcreative.com", "", `Ad: ${val("#cf-name")}`];
+      if (val("#cf-company")) lines.push(`Firma: ${val("#cf-company")}`);
+      lines.push(`Telefon: ${val("#cf-phone")}`);
+      lines.push(`Proje türü: ${val("#cf-project")}`);
+      lines.push(`Mesaj: ${val("#cf-message")}`);
+      const url = waLink(lines.join("\n"));
+      if (!url) return;
+      setStatus("WhatsApp açılıyor — mesajı göndermek için WhatsApp'ta 'Gönder'e basın.", "ok");
+      if (typeof gtag === "function") {
+        gtag("event", "generate_lead", { event_category: "contact", event_label: "whatsapp_form" });
+      }
+      window.open(url, "_blank", "noopener");
     });
   }
 </script>
