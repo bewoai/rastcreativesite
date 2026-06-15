@@ -1,29 +1,48 @@
 ---
 /**
- * Floating WhatsApp button — the 35+ audience's primary channel (roadmap §2).
+ * Floating contact dock — the 35+ audience's primary channel is WhatsApp
+ * (roadmap §2), with small Instagram / YouTube buttons stacked above it.
  * Bottom-right, sits above the mobile tab-bar. Renders nothing until a real
- * WhatsApp number exists in consts.
+ * WhatsApp number exists in consts; socials come from SOCIAL.
  */
 import Icon from "./Icon.astro";
-import { waLink } from "../consts";
+import { waLink, SOCIAL } from "../consts";
 
 const href = waLink();
+const socials = SOCIAL.filter((s) => s.icon === "instagram" || s.icon === "youtube");
 ---
 
 {
   href && (
-    <a
-      class="wafab"
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="WhatsApp'tan yazın"
-      data-wafab
-    >
-      <span class="wafab__ring" aria-hidden="true" />
-      <Icon name="whatsapp" size={28} class="wafab__icon" />
-      <span class="wafab__label">WhatsApp</span>
-    </a>
+    <div class="dock">
+      {socials.length > 0 && (
+        <div class="dock__socials">
+          {socials.map((s) => (
+            <a
+              class:list={["sfab", `sfab--${s.icon}`]}
+              href={s.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${s.label} sayfamız`}
+            >
+              <Icon name={s.icon} size={20} />
+            </a>
+          ))}
+        </div>
+      )}
+      <a
+        class="wafab"
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="WhatsApp'tan yazın"
+        data-wafab
+      >
+        <span class="wafab__ring" aria-hidden="true" />
+        <Icon name="whatsapp" size={28} class="wafab__icon" />
+        <span class="wafab__label">WhatsApp</span>
+      </a>
+    </div>
     <script>
       const wafab = document.querySelector<HTMLAnchorElement>("[data-wafab]");
       if (wafab) {
@@ -41,11 +60,69 @@ const href = waLink();
 }
 
 <style>
-  .wafab {
+  /* Fixed corner that holds the social mini-buttons above the WhatsApp pill. */
+  .dock {
     position: fixed;
     right: clamp(0.9rem, 3vw, 1.5rem);
     bottom: clamp(0.9rem, 3vw, 1.5rem);
     z-index: 51;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.6rem;
+  }
+  .dock__socials {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-end;
+  }
+
+  /* ── Social mini-button: quiet by default, brand colour on hover ───────── */
+  .sfab {
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    box-shadow: 0 6px 16px -8px rgba(17, 17, 16, 0.4);
+    text-decoration: none;
+    touch-action: manipulation;
+    transition:
+      transform var(--dur) var(--ease-out),
+      color var(--dur) var(--ease-out),
+      background-color var(--dur) var(--ease-out),
+      border-color var(--dur) var(--ease-out),
+      box-shadow var(--dur) var(--ease-out);
+  }
+  .sfab:hover {
+    transform: translateY(-2px);
+    color: #fff;
+    border-color: transparent;
+  }
+  .sfab:active {
+    transform: scale(0.95);
+  }
+  .sfab:focus-visible {
+    outline: 3px solid var(--amber);
+    outline-offset: 2px;
+  }
+  .sfab--instagram:hover {
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    box-shadow: 0 8px 20px -6px rgba(220, 39, 67, 0.5);
+  }
+  .sfab--youtube:hover {
+    background: #ff0000;
+    box-shadow: 0 8px 20px -6px rgba(255, 0, 0, 0.5);
+  }
+
+  /* ── WhatsApp pill (primary CTA) ───────────────────────────────────────── */
+  .wafab {
+    position: relative;
+    isolation: isolate;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -105,15 +182,17 @@ const href = waLink();
     }
   }
 
-  /* On mobile collapse to a round icon button, lifted clear of the tab-bar.
-     Drop the pulse here so the (already busy) bottom area stays calm. */
+  /* On mobile collapse WhatsApp to a round icon button, lift the whole dock
+     clear of the tab-bar. Drop the pulse so the busy bottom area stays calm. */
   @media (max-width: 767.98px) {
+    .dock {
+      bottom: calc(5.3rem + env(safe-area-inset-bottom, 0px));
+    }
     .wafab {
       height: 3rem;
       width: 3rem;
       padding: 0;
       justify-content: center;
-      bottom: calc(5.3rem + env(safe-area-inset-bottom, 0px));
     }
     .wafab__label {
       display: none;
@@ -121,9 +200,15 @@ const href = waLink();
     .wafab__ring {
       display: none;
     }
+    .sfab {
+      width: 2.4rem;
+      height: 2.4rem;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .dock,
+    .sfab,
     .wafab,
     .wafab__ring {
       transition: none;
