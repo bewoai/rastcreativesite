@@ -12,4 +12,4 @@ order: 16
 posterAlt: "Adatıp Hastanesi sağlıklı hafta sonu dileği dikey sosyal medya videosu kapağı"
 ---
 
-Adatıp Hastanesi için sağlıklı hafta sonu dileği temasıyla hazırlanan dikey sosyal medya içeriği.
+Takipçilere sağlıklı bir hafta sonu dileğini sıcak bir görsel dille ileten kısa formatlı içerik. Adatıp Hastanesi'nin sosyal medya hesapları için dikey (9:16) Reels/Shorts formatında hazırlandı; düzenli paylaşım akışında topluluk bağını güçlendirir.

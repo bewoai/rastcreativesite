@@ -12,4 +12,4 @@ order: 23
 posterAlt: "Adatıp Hastanesi 'gelecek bugünden başlıyor' vizyon temalı dikey sosyal medya videosu kapağı"
 ---
 
-Adatıp Hastanesi için "gelecek bugünden başlıyor" vizyonuyla hazırlanan dikey sosyal medya içeriği.
+"Gelecek bugünden başlıyor" vizyonunu öne çıkaran, hastanenin yenilikçi ve ileriye dönük duruşunu anlatan kısa formatlı marka içeriği. Adatıp Hastanesi'nin sosyal medya kanalları için dikey (9:16) formatta üretildi.

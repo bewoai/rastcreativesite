@@ -12,4 +12,4 @@ order: 18
 posterAlt: "Adatıp Hastanesi 18 Mart Çanakkale Zaferi ve Şehitleri Anma Günü dikey sosyal medya videosu kapağı"
 ---
 
-Adatıp Hastanesi için 18 Mart Çanakkale Zaferi ve Şehitleri Anma Günü'ne özel hazırlanan dikey sosyal medya içeriği.
+18 Mart Çanakkale Zaferi ve Şehitleri Anma Günü'ne özel hazırlanan anma içeriği. Adatıp Hastanesi'nin sosyal medya hesapları için dikey (9:16) Reels/Shorts formatında üretildi; önemli bir milli günü saygılı ve sade bir görsel dille aktarır.

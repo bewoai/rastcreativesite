@@ -12,4 +12,4 @@ order: 22
 posterAlt: "Adatıp Hastanesi 29 Ekim Cumhuriyet Bayramı kutlama dikey sosyal medya videosu kapağı"
 ---
 
-Adatıp Hastanesi için 29 Ekim Cumhuriyet Bayramı'na özel hazırlanan dikey sosyal medya içeriği.
+29 Ekim Cumhuriyet Bayramı'na özel hazırlanan kutlama içeriği. Adatıp Hastanesi'nin sosyal medya hesapları için dikey (9:16) Reels/Shorts formatında üretildi; milli coşkuyu sade ve etkili bir görsel dille yansıtır.

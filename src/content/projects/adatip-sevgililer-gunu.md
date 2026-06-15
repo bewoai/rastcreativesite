@@ -12,4 +12,4 @@ order: 20
 posterAlt: "Adatıp Hastanesi Sevgililer Günü kutlama dikey sosyal medya videosu kapağı"
 ---
 
-Adatıp Hastanesi için Sevgililer Günü'ne özel, sevgi ve sağlık temalı hazırlanan dikey sosyal medya içeriği.
+Sevgililer Günü'ne özel, sevgi ve sağlık temasını birleştiren kısa formatlı kutlama içeriği. Adatıp Hastanesi'nin sosyal medya kanalları için dikey (9:16) formatta üretildi.
