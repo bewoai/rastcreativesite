@@ -49,7 +49,24 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="light" />
+    <meta name="color-scheme" content="light dark" />
+
+    <script is:inline>
+      try {
+        document.documentElement.classList.add("js");
+        const savedTheme = localStorage.getItem("rc_theme");
+        const theme =
+          savedTheme === "light" || savedTheme === "dark"
+            ? savedTheme
+            : matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+        document.documentElement.dataset.theme = theme;
+      } catch (e) {
+        document.documentElement.classList.add("js");
+        document.documentElement.dataset.theme = "light";
+      }
+    </script>
 
     {/* Show the preloader once per session, never for reduced-motion. Runs
         synchronously before first paint so it never flashes on later pages. */}
@@ -70,7 +87,8 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
         html.rc-preload #preloader { display: grid; }
       </style>
     )}
-    <meta name="theme-color" content={SITE.themeColor} />
+    <meta name="theme-color" content={SITE.themeColor} media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#191612" media="(prefers-color-scheme: dark)" />
     <meta name="generator" content={Astro.generator} />
 
     <title>{pageTitle}</title>

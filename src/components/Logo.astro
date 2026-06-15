@@ -7,7 +7,7 @@ interface Props {
 }
 
 const { tone = "ink", href = "/", class: className } = Astro.props;
-const fill = tone === "paper" ? "var(--paper)" : "var(--ink)";
+const fill = tone === "paper" ? "var(--on-ink)" : "var(--ink)";
 ---
 
 <a

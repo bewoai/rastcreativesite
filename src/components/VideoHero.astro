@@ -71,7 +71,7 @@ const {
     align-items: center;
     overflow: hidden;
     isolation: isolate;
-    background: var(--ink); /* fallback before the poster paints */
+    background: var(--ink-band); /* fallback before the poster paints */
   }
   .vhero__media,
   .vhero__scrim {
@@ -89,12 +89,12 @@ const {
     background:
       linear-gradient(
         180deg,
-        color-mix(in srgb, var(--ink) calc(var(--vhero-scrim) - 18%), transparent),
-        color-mix(in srgb, var(--ink) var(--vhero-scrim), transparent)
+        color-mix(in srgb, var(--ink-band) calc(var(--vhero-scrim) - 18%), transparent),
+        color-mix(in srgb, var(--ink-band) var(--vhero-scrim), transparent)
       ),
       linear-gradient(
         90deg,
-        color-mix(in srgb, var(--ink) calc(var(--vhero-scrim) - 8%), transparent),
+        color-mix(in srgb, var(--ink-band) calc(var(--vhero-scrim) - 8%), transparent),
         transparent 62%
       );
   }

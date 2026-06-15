@@ -37,7 +37,9 @@ export type IconName =
   | "whatsapp"
   | "video"
   | "strategy"
-  | "edit";
+  | "edit"
+  | "sun"
+  | "moon";
 
 export interface NavItem {
   label: string;

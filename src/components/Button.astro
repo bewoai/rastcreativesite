@@ -185,14 +185,14 @@ const Tag = href ? "a" : "button";
     backdrop-filter: blur(12px) saturate(1.3);
   }
   .btn--secondary:hover {
-    color: var(--paper);
-    border-color: var(--ink);
+    color: var(--on-ink);
+    border-color: var(--ink-band);
     box-shadow:
-      0 0 20px -6px color-mix(in srgb, var(--ink) 25%, transparent);
+      0 0 20px -6px color-mix(in srgb, var(--ink-band) 25%, transparent);
     transform: translateY(-1px);
   }
   .btn--secondary:hover .btn__bg {
-    background: var(--ink);
+    background: var(--ink-band);
   }
 
   /* ── Arrow micro-interaction ────────────────────────────────────────── */

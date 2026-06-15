@@ -30,8 +30,13 @@ const { id, tone = "paper", width = "default", space = "default", class: classNa
     padding-block: clamp(2.5rem, 5vw, 4rem);
   }
   .section--ink {
-    background: var(--ink);
-    color: color-mix(in srgb, var(--paper) 88%, transparent);
+    background: var(--ink-band);
+    color: color-mix(in srgb, var(--on-ink) 88%, transparent);
+    --ink: var(--on-ink);
+    --ink-soft: color-mix(in srgb, var(--on-ink) 72%, transparent);
+    --line: color-mix(in srgb, var(--on-ink) 16%, transparent);
+    --glass-bg: color-mix(in srgb, var(--on-ink) 7%, transparent);
+    --glass-border: color-mix(in srgb, var(--on-ink) 14%, transparent);
   }
   .section__inner {
     margin-inline: auto;

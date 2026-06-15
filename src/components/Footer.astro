@@ -90,8 +90,8 @@ const year = new Date().getFullYear();
 
 <style>
   .footer {
-    background: var(--ink);
-    color: color-mix(in srgb, var(--paper) 78%, transparent);
+    background: var(--ink-band);
+    color: color-mix(in srgb, var(--on-ink) 78%, transparent);
     padding: clamp(3rem, 7vw, 5rem) var(--container-pad) 2rem;
   }
   .footer__grid {
@@ -121,8 +121,8 @@ const year = new Date().getFullYear();
     width: var(--tap-min);
     height: var(--tap-min);
     border-radius: var(--radius-pill);
-    color: var(--paper);
-    border: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+    color: var(--on-ink);
+    border: 1px solid color-mix(in srgb, var(--on-ink) 18%, transparent);
     transition:
       color var(--dur-fast) var(--ease-out),
       border-color var(--dur-fast) var(--ease-out),
@@ -148,7 +148,7 @@ const year = new Date().getFullYear();
     gap: 0.6rem;
   }
   .footer__link {
-    color: color-mix(in srgb, var(--paper) 82%, transparent);
+    color: color-mix(in srgb, var(--on-ink) 82%, transparent);
     transition: color var(--dur-fast) var(--ease-out);
   }
   .footer__link:hover {
@@ -162,20 +162,20 @@ const year = new Date().getFullYear();
     outline-offset: 2px;
   }
   .footer__pending {
-    color: color-mix(in srgb, var(--paper) 45%, transparent);
+    color: color-mix(in srgb, var(--on-ink) 45%, transparent);
     font-style: italic;
   }
   .footer__base {
     max-width: var(--container-max);
     margin: clamp(2.5rem, 5vw, 3.5rem) auto 0;
     padding-top: 1.5rem;
-    border-top: 1px solid color-mix(in srgb, var(--paper) 14%, transparent);
+    border-top: 1px solid color-mix(in srgb, var(--on-ink) 14%, transparent);
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 0.5rem;
     font-size: 0.85rem;
-    color: color-mix(in srgb, var(--paper) 55%, transparent);
+    color: color-mix(in srgb, var(--on-ink) 55%, transparent);
   }
   .footer__base p {
     margin: 0;

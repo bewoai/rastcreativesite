@@ -2,6 +2,7 @@
 import Logo from "./Logo.astro";
 import Button from "./Button.astro";
 import Icon from "./Icon.astro";
+import ThemeToggle from "./ThemeToggle.astro";
 import { NAV, PRIMARY_CTA } from "../consts";
 
 // Active-route detection (ignore trailing slash).
@@ -33,6 +34,7 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
       }
     </ul>
     <Button href={PRIMARY_CTA.href} class="nav__cta">{PRIMARY_CTA.label}</Button>
+    <ThemeToggle class="nav__theme" />
   </nav>
 </header>
 
@@ -40,6 +42,7 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
 <header class="topbar" data-topbar>
   <div class="topbar__inner">
     <Logo class="topbar__logo" />
+    <ThemeToggle class="topbar__theme" />
   </div>
 </header>
 
@@ -132,6 +135,9 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
   .nav__cta {
     margin-left: 0.25rem;
   }
+  :global(.nav__theme) {
+    margin-left: -0.15rem;
+  }
 
   .nav.is-scrolled .nav__pill {
     padding-top: 0.3rem;
@@ -147,6 +153,28 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
       0 2px 8px -4px rgba(17, 17, 16, 0.16),
       0 1px 0 0 color-mix(in srgb, #ffffff 85%, transparent) inset,
       0 -12px 20px -16px color-mix(in srgb, var(--ink) 24%, transparent) inset;
+  }
+
+  :global(html[data-theme="dark"]) .nav__pill,
+  :global(html[data-theme="dark"]) .topbar__inner,
+  :global(html[data-theme="dark"]) .tabbar__inner {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, #2a241e 78%, transparent),
+      color-mix(in srgb, var(--paper) 70%, transparent)
+    );
+    border-color: color-mix(in srgb, var(--on-ink) 14%, transparent);
+    box-shadow:
+      0 12px 34px -14px rgba(0, 0, 0, 0.5),
+      0 1px 0 0 color-mix(in srgb, var(--on-ink) 10%, transparent) inset;
+  }
+
+  :global(html[data-theme="dark"]) .nav.is-scrolled .nav__pill {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, #2a241e 86%, transparent),
+      color-mix(in srgb, var(--paper) 78%, transparent)
+    );
   }
 
   @media (min-width: 768px) {
@@ -174,6 +202,7 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
     pointer-events: none;
   }
   .topbar__inner {
+    position: relative;
     pointer-events: auto;
     display: flex;
     align-items: center;
@@ -193,6 +222,15 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
       0 10px 30px -14px rgba(17, 17, 16, 0.3),
       0 1px 0 0 color-mix(in srgb, #ffffff 80%, transparent) inset,
       0 -10px 18px -16px color-mix(in srgb, var(--ink) 20%, transparent) inset;
+  }
+  :global(.topbar__theme) {
+    position: absolute;
+    right: 0.35rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  :global(.topbar__theme:active) {
+    transform: translateY(-50%) scale(0.97);
   }
   .topbar__logo :global(.logo__svg) {
     height: 1.8rem;
