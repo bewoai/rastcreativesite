@@ -53,16 +53,20 @@ const faq = defineCollection({
 });
 
 // Blog — long-form SEO content (roadmap §6). Markdown body holds the article.
+// `cover` uses the image() helper so covers are optimised like any local asset.
 const blog = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/blog" }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    pubDate: z.coerce.date(),
-    updatedDate: z.coerce.date().optional(),
-    tags: z.array(z.string()).default([]),
-    draft: z.boolean().default(false),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      description: z.string(),
+      pubDate: z.coerce.date(),
+      updatedDate: z.coerce.date().optional(),
+      cover: image().optional(),
+      coverAlt: z.string().optional(),
+      tags: z.array(z.string()).default([]),
+      draft: z.boolean().default(false),
+    }),
 });
 
 export const collections = { projects, services, faq, blog };

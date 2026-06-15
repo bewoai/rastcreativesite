@@ -13,6 +13,7 @@ import AccordionItem from "../components/AccordionItem.astro";
 import LogoWall from "../components/LogoWall.astro";
 import VideoHero from "../components/VideoHero.astro";
 import AreaIndex from "../components/AreaIndex.astro";
+import BlogCard from "../components/BlogCard.astro";
 import heroPosterImg from "../assets/photos/hero-cinema.jpg";
 import { COPY, PRIMARY_CTA } from "../consts";
 import { localBusiness, faqPage, toPlainText } from "../lib/schema";
@@ -45,6 +46,14 @@ const faqEntries = (await getCollection("faq")).sort(byOrder);
 const faqRendered = await Promise.all(
   faqEntries.map(async (e) => ({ data: e.data, Content: (await render(e)).Content })),
 );
+
+// Latest blog posts for the homepage "Son yazılar" section.
+const blogPosts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .slice(0, 3);
+const fmtBlogDate = (d: Date) =>
+  d.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" });
 
 // Quick credibility numbers — derived from real content so they stay accurate.
 const brandCount = groupByBrand(projects).length;
@@ -363,6 +372,33 @@ const pageJsonLd = [
       }
     </div>
   </Section>
+
+  {/* 6.5 — Son yazılar (blog) */}
+  {
+    blogPosts.length > 0 && (
+      <Section id="blog" space="tight">
+        <div class="head-row">
+          <SectionHeading eyebrow="Sahne 07 · Günlük">Son yazılar</SectionHeading>
+          <Button href="/blog" variant="secondary" arrow class="head-row__cta">
+            Tüm yazılar
+          </Button>
+        </div>
+        <div class="grid-cards">
+          {blogPosts.map((p) => (
+            <BlogCard
+              href={`/blog/${p.id}`}
+              title={p.data.title}
+              description={p.data.description}
+              date={fmtBlogDate(p.data.pubDate)}
+              datetime={p.data.pubDate.toISOString()}
+              cover={p.data.cover}
+              coverAlt={p.data.coverAlt}
+            />
+          ))}
+        </div>
+      </Section>
+    )
+  }
 
   {/* 7 — Son CTA bandı */}
   <Section tone="ink" space="tight">
