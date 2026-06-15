@@ -2,8 +2,8 @@
 title: "Drone çekimi gerçekten gerekli mi? Dürüst bir cevap"
 description: "Drone etkileyici ama her projede şart değil. Havadan çekimin gerçekten değer kattığı yerleri ve sadece 'gösteriş' olduğu durumları Sakarya'daki deneyimimizle anlattık."
 pubDate: 2026-06-13
-cover: ../../assets/photos/hero-cinema.jpg
-coverAlt: "Sinematik geniş açı çekim — havadan ve sinema standardı görüntü"
+cover: ../../assets/photos/aerial-drone-landscape.jpg
+coverAlt: "Havadan drone ile çekilmiş kıvrımlı yol ve tarım arazileri"
 tags: ["drone", "havadan çekim", "Sakarya", "tanıtım filmi"]
 draft: false
 ---

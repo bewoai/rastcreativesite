@@ -2,8 +2,8 @@
 title: "Sosyal medya videosu neden 'dikey' çekiliyor? (Ve neden umursamalısınız)"
 description: "Reels, Shorts, TikTok — hepsi dikey. Bu bir moda değil, telefonu nasıl tuttuğumuzla ilgili. Dikey videonun yatay videodan farkını ve markanız için ne anlama geldiğini anlattık."
 pubDate: 2026-06-10
-cover: ../../assets/photos/crew-onset.jpg
-coverAlt: "Sette çalışan video prodüksiyon ekibi — sosyal medya içeriği çekimi"
+cover: ../../assets/photos/vertical-video-creator.jpg
+coverAlt: "Gimbal üzerinde telefonla dikey video çeken içerik üreticisi"
 tags: ["sosyal medya", "Reels", "dikey video", "içerik"]
 draft: false
 ---

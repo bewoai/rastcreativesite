@@ -2,8 +2,8 @@
 title: "Kurumsal film mi, reklam filmi mi, marka hikâyesi mi? Hangisi size göre"
 description: "Bu üç format sık karıştırılır ama amaçları farklıdır. Kurumsal tanıtım, reklam filmi ve marka hikâyesi arasındaki farkı ve markanız için hangisinin doğru olduğunu sade bir dille anlattık."
 pubDate: 2026-06-15
-cover: ../../assets/photos/studio-lighting.jpg
-coverAlt: "Stüdyo aydınlatması ve yönetmen monitörü — video prodüksiyon"
+cover: ../../assets/photos/creative-branding-team.jpg
+coverAlt: "Renk ve tasarım üzerine çalışan kreatif ekip — marka çalışması"
 tags: ["kurumsal film", "reklam filmi", "marka hikayesi", "video prodüksiyon"]
 draft: false
 ---

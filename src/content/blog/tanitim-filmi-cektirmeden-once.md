@@ -2,8 +2,8 @@
 title: "Tanıtım filmi çektirmeden önce bilmenizi istediğimiz birkaç şey"
 description: "Sakarya'da yıllardır tanıtım filmi çekiyoruz. Süreç nasıl işliyor, maliyeti gerçekte ne belirliyor, siz neyi hazırlamalısınız — sette öğrendiklerimizi dürüstçe anlattık."
 pubDate: 2026-06-06
-cover: ../../assets/photos/director-clapper.jpg
-coverAlt: "Çekim setinde klaket ve sinema kamerası — tanıtım filmi prodüksiyonu"
+cover: ../../assets/photos/film-crew-red-camera.jpg
+coverAlt: "Sokakta sinema kamerasıyla çalışan film ekibi — tanıtım filmi çekimi"
 tags: ["tanıtım filmi", "video prodüksiyon", "Sakarya", "süreç"]
 draft: false
 ---

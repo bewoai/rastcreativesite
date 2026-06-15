@@ -2,6 +2,9 @@
 # 301 redirects from old Framer URLs to new Astro routes.
 # Error document for clean 404 handling.
 
+# ── Default charset (send UTF-8 in the HTTP Content-Type header) ──────────
+AddDefaultCharset UTF-8
+
 # ── Canonical host + HTTPS ────────────────────────────────────────────────
 RewriteEngine On
 # www → non-www (also upgrades to HTTPS in the same hop)
