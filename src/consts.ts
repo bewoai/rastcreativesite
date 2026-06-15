@@ -7,11 +7,11 @@ export const SITE = {
   name: "Rast Creative Studio",
   shortName: "Rast Creative",
   /** Home-page <title>. Inner pages pass their own `title` to BaseLayout. */
-  defaultTitle: "Rast Creative Studio — Sakarya Video Prodüksiyon Ajansı",
+  defaultTitle: "Sakarya Video Çekimi ve Prodüksiyon Ajansı — Rast Creative Studio",
   /** `%s` is replaced by the page title on inner pages. */
   titleTemplate: "%s — Rast Creative Studio",
   description:
-    "Sakarya merkezli video prodüksiyon ve kreatif ajans. Markanızın sinematik yüzüyle tanışın: reklam, marka hikâyesi, kurumsal ve medikal video.",
+    "Sakarya video çekimi, tanıtım filmi, sosyal medya videosu, ürün çekimi, drone çekimi ve kurgu hizmetleri sunan yaratıcı prodüksiyon ajansı.",
   url: "https://rastcreative.com",
   locale: "tr_TR",
   lang: "tr",
@@ -134,8 +134,8 @@ export function waQuoteLink(service?: string): string | null {
  * come from the old site (aboutIntro lightly cleaned — confirm wording with client).
  */
 export const COPY = {
-  heroTitle: "Markanızın Sinematik Yüzüyle Tanışın",
-  heroSubtitle: "Sektörel disiplin, teknolojik üstünlük ve kreatif kurgu.",
+  heroTitle: "Sakarya Video Çekimi ve Prodüksiyon",
+  heroSubtitle: "Tanıtım filmi, sosyal medya videosu, ürün çekimi ve kurgu için sinematik ekip.",
   heroSecondaryCta: "Projelerimizi İzleyin",
   aboutIntro:
     "Yolculuğumuz boyunca farklı sektörlerden markaların dijital hikâyelerini yönettik. Ekibimizin geçmişindeki bu deneyim, bugün Rast Creative Studio çatısı altında sunduğumuz vizyonun temelini oluşturuyor.",

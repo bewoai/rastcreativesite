@@ -17,6 +17,11 @@ const AREA_SERVED = ["Sakarya", "Serdivan", "Adapazarı", "Sakarya ili"].map(
 
 const CORE_SERVICES = [
   {
+    name: "Video Çekimi",
+    description:
+      "Sakarya'da profesyonel kamera, ışık, ses, kurgu ve teslim süreçleriyle video çekimi.",
+  },
+  {
     name: "Video Prodüksiyon",
     description:
       "Sakarya'da sinema standardı ekipmanla reklam, marka filmi, ürün ve kurumsal video prodüksiyonu.",
@@ -58,6 +63,8 @@ export const localBusiness = {
   },
   areaServed: AREA_SERVED,
   knowsAbout: [
+    "video çekimi",
+    "profesyonel video çekimi",
     "video prodüksiyon",
     "reklam filmi",
     "tanıtım filmi",
@@ -67,6 +74,7 @@ export const localBusiness = {
     "ürün tanıtım çekimi",
     "post prodüksiyon",
     "kreatif strateji",
+    "Sakarya video çekimi",
     "Sakarya video prodüksiyon",
   ],
   hasOfferCatalog: {
@@ -84,6 +92,50 @@ export const localBusiness = {
     })),
   },
   sameAs: SOCIAL.map((s) => s.href),
+};
+
+/** Organization identity node for GEO / entity recognition. */
+export const organization = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": `${SITE.url}#organization`,
+  name: SITE.name,
+  alternateName: SITE.shortName,
+  url: SITE.url,
+  logo: abs("/logo-black.svg"),
+  image: abs(SITE.ogImage),
+  email: CONTACT.email,
+  telephone: CONTACT.phoneIntl,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: CONTACT.addressLocality,
+    addressRegion: CONTACT.addressRegion,
+    addressCountry: CONTACT.addressCountry,
+  },
+  sameAs: SOCIAL.map((s) => s.href),
+  knowsAbout: [
+    "Sakarya video çekimi",
+    "video prodüksiyon",
+    "tanıtım filmi",
+    "reklam filmi",
+    "sosyal medya videosu",
+    "ürün çekimi",
+    "drone çekimi",
+    "kurgu",
+  ],
+};
+
+/** Website node so assistants/search engines can connect the domain to the brand. */
+export const webSite = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${SITE.url}#website`,
+  name: SITE.name,
+  alternateName: SITE.shortName,
+  url: SITE.url,
+  inLanguage: SITE.lang,
+  publisher: { "@id": `${SITE.url}#organization` },
+  about: { "@id": BUSINESS_ID },
 };
 
 /** FAQPage node built from the FAQ collection (question + plain-text answer). */

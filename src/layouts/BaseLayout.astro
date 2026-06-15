@@ -131,13 +131,27 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
 
     {jsonLdItems.map((obj) => <script type="application/ld+json" set:html={JSON.stringify(obj)} />)}
 
-    {/* Google Analytics 4 */}
-    <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`}></script>
+    {/* Google Analytics 4: queue immediately, load the external script after first paint. */}
     <script is:inline define:vars={{ GA4_MEASUREMENT_ID }}>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', GA4_MEASUREMENT_ID);
+
+      const loadAnalytics = () => {
+        if (document.querySelector('script[data-ga4]')) return;
+        const s = document.createElement('script');
+        s.async = true;
+        s.src = `https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`;
+        s.dataset.ga4 = 'true';
+        document.head.appendChild(s);
+      };
+
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadAnalytics, { timeout: 2500 });
+      } else {
+        window.addEventListener('load', () => window.setTimeout(loadAnalytics, 800), { once: true });
+      }
     </script>
   </head>
 

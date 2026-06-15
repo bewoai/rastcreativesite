@@ -28,6 +28,34 @@ export interface SeoService {
 
 export const SEO_SERVICES: readonly SeoService[] = [
   {
+    slug: "video-cekimi",
+    name: "Video Çekimi",
+    tagline: "Markanız için profesyonel çekim, kurgu ve teslim",
+    intro:
+      "Video çekimi, bir işletmenin kendini dijitalde en hızlı anlatma yollarından biridir. Rast Creative Studio olarak tanıtım, sosyal medya, etkinlik, ürün ve kurumsal video ihtiyaçlarını tek çekim planında toplar; senaryo, kamera, ışık, ses, kurgu ve renk düzenleme süreçlerini birlikte yönetiriz.",
+    benefits: [
+      {
+        title: "İhtiyaca göre çekim planı",
+        text: "Tanıtım filmi, sosyal medya videosu, ürün videosu veya etkinlik kaydı için ayrı akış kurar; çekim gününü markanın hedefiyle eşleştiririz.",
+      },
+      {
+        title: "Profesyonel ekipman ve ekip",
+        text: "Sinema kamerası, ışık, ses, gimbal ve gerektiğinde drone desteğiyle temiz, güvenilir ve yayına hazır görüntüler üretiriz.",
+      },
+      {
+        title: "Sosyal medya ve web için teslim",
+        text: "Aynı çekimden yatay, dikey ve kısa format kurgular çıkararak web sitesi, Instagram, YouTube ve reklam kampanyalarına uygun dosyalar teslim ederiz.",
+      },
+    ],
+    keywords: [
+      "video çekimi",
+      "profesyonel video çekimi",
+      "kurumsal video çekimi",
+      "sosyal medya video çekimi",
+      "etkinlik video çekimi",
+    ],
+  },
+  {
     slug: "drone-cekimi",
     name: "Drone Çekimi",
     tagline: "Havadan sinematik görüntüler ve FPV hareketleri",

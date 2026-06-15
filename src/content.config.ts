@@ -22,6 +22,9 @@ const projects = defineCollection({
     vertical: z.boolean().default(false), // 9:16 reels/shorts (YouTube Shorts)
     poster: z.string(), // root-relative path or full URL (e.g. YouTube thumbnail)
     posterAlt: z.string().optional(),
+    // Optional short silent loop (e.g. "/previews/altoteks.mp4") played in-card
+    // on the homepage. Lazy + in-view only; falls back to the poster.
+    preview: z.string().optional(),
     summary: z.string().optional(),
     client: z.string().optional(),
     year: z.number().int().optional(),

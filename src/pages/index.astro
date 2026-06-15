@@ -16,7 +16,7 @@ import AreaIndex from "../components/AreaIndex.astro";
 import BlogCard from "../components/BlogCard.astro";
 import heroPosterImg from "../assets/photos/hero-cinema.jpg";
 import { COPY, PRIMARY_CTA } from "../consts";
-import { localBusiness, faqPage, toPlainText } from "../lib/schema";
+import { localBusiness, organization, webSite, faqPage, toPlainText } from "../lib/schema";
 import { groupByBrand } from "../lib/brands";
 import { SEO_SERVICES } from "../data/seo-services";
 import { AREA_INDEX_LOCATION_SLUGS, SEO_LOCATIONS } from "../data/locations";
@@ -103,7 +103,7 @@ const whyRast = [
 ];
 
 const prioritySeoServices = SEO_SERVICES.filter((s) =>
-  ["drone-cekimi", "tanitim-filmi", "reklam-filmi", "sosyal-medya-icerigi"].includes(s.slug),
+  ["video-cekimi", "drone-cekimi", "tanitim-filmi", "reklam-filmi", "sosyal-medya-icerigi"].includes(s.slug),
 );
 const prioritySeoLocations = SEO_LOCATIONS.filter((l) =>
   AREA_INDEX_LOCATION_SLUGS.includes(l.slug),
@@ -111,6 +111,8 @@ const prioritySeoLocations = SEO_LOCATIONS.filter((l) =>
 
 // Home-page structured data: enriched LocalBusiness + FAQPage (rich results).
 const pageJsonLd = [
+  organization,
+  webSite,
   localBusiness,
   faqPage(
     faqEntries.map((e) => ({
@@ -157,6 +159,7 @@ const pageJsonLd = [
               year={p.data.year}
               timecode={p.data.duration}
               vertical={p.data.vertical}
+              preview={p.data.preview}
             />
           </div>
         ))
@@ -296,10 +299,29 @@ const pageJsonLd = [
     <AreaIndex
       eyebrow="Sakarya ve çevresi"
       title="Bölgeye göre prodüksiyon hizmetleri"
-      text="Sakarya merkezli markalar için drone, tanıtım filmi, reklam filmi ve sosyal medya içeriklerini bölgeye göre planlıyoruz. Çekim yapılacak ilçeyi seçerek ilgili hizmet detaylarına geçebilirsiniz."
+      text="Sakarya merkezli markalar için video çekimi, drone, tanıtım filmi, reklam filmi ve sosyal medya içeriklerini bölgeye göre planlıyoruz. Çekim yapılacak ilçeyi seçerek ilgili hizmet detaylarına geçebilirsiniz."
       services={prioritySeoServices}
       locations={prioritySeoLocations}
     />
+  </Section>
+
+  <Section width="narrow" space="tight">
+    <div class="seo-copy" data-reveal>
+      <h2>Sakarya'da video çekimi nasıl planlanır?</h2>
+      <p>
+        Rast Creative Studio, Sakarya ve Serdivan merkezli işletmeler için video çekimi
+        sürecini hedef, mecra ve teslim formatına göre planlar. Tanıtım filmi,
+        sosyal medya videosu, ürün çekimi, etkinlik kaydı veya kurumsal prodüksiyon
+        ihtiyacında önce mesajı netleştirir; ardından sahne akışı, kamera, ışık,
+        ses, kurgu ve renk düzenleme adımlarını tek üretim planında toplarız.
+      </p>
+      <p>
+        Çekim günü sadece güzel görüntü almak için değil, markanın kullanabileceği
+        içerik havuzunu büyütmek için tasarlanır. Aynı prodüksiyondan web sitesi,
+        Instagram Reels, YouTube, reklam kampanyası ve satış sunumu için farklı
+        sürelerde yatay ve dikey videolar hazırlanabilir.
+      </p>
+    </div>
   </Section>
 
   {/* 4.5 — Ara CTA */}
@@ -520,6 +542,21 @@ const pageJsonLd = [
     font-weight: 500;
     line-height: var(--leading-flat);
     color: var(--ink);
+  }
+
+  .seo-copy {
+    display: grid;
+    gap: 1rem;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .seo-copy h2 {
+    margin: 0;
+    color: var(--ink);
+  }
+  .seo-copy p {
+    margin: 0;
+    max-width: 68ch;
   }
   @media (min-width: 640px) {
     .services-cta {

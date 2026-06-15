@@ -7,7 +7,7 @@ import Button from "../components/Button.astro";
 import Icon from "../components/Icon.astro";
 import ContactForm from "../components/ContactForm.astro";
 import { CONTACT, waLink } from "../consts";
-import { localBusiness, breadcrumb } from "../lib/schema";
+import { localBusiness, organization, webSite, breadcrumb } from "../lib/schema";
 
 const mapsQuery = encodeURIComponent(`Rast Creative Studio ${CONTACT.city}`);
 const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
@@ -15,6 +15,8 @@ const waHref = waLink();
 
 // Contact is the strongest local-SEO page: full LocalBusiness + breadcrumb.
 const pageJsonLd = [
+  organization,
+  webSite,
   localBusiness,
   breadcrumb([
     { name: "Ana Sayfa", path: "/" },
