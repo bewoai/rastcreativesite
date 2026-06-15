@@ -91,6 +91,9 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
     <meta name="theme-color" content="#191612" media="(prefers-color-scheme: dark)" />
     <meta name="generator" content={Astro.generator} />
 
+    {/* Google Search Console site ownership verification. */}
+    <meta name="google-site-verification" content="fyZS5UavT94a55wy-FnpHgdni_klAkPjiKyfS0WFtfw" />
+
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
     <link rel="canonical" href={canonical} />
