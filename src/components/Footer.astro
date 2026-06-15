@@ -84,6 +84,7 @@ const year = new Date().getFullYear();
     <p>© {year} {SITE.name}. Tüm hakları saklıdır.</p>
     <nav class="footer__legal" aria-label="Yasal">
       <a href="/kvkk" class="footer__link">KVKK Aydınlatma Metni</a>
+      <a href="/telif" class="footer__link">Telif &amp; Kullanım</a>
     </nav>
   </div>
 </footer>
@@ -179,6 +180,11 @@ const year = new Date().getFullYear();
   }
   .footer__base p {
     margin: 0;
+  }
+  .footer__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
   }
 
   @media (min-width: 640px) {

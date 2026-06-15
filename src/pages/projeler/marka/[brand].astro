@@ -4,6 +4,7 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 import Section from "../../../components/Section.astro";
 import SectionHeading from "../../../components/SectionHeading.astro";
 import ProjectCard from "../../../components/ProjectCard.astro";
+import ProjectsNote from "../../../components/ProjectsNote.astro";
 import { breadcrumb } from "../../../lib/schema";
 import { groupByBrand } from "../../../lib/brands";
 
@@ -52,6 +53,8 @@ const crumbs = breadcrumb([
         ))
       }
     </div>
+
+    <ProjectsNote />
   </Section>
 </BaseLayout>
 

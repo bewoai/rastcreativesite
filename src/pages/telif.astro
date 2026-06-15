@@ -1,0 +1,99 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/Section.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import Button from "../components/Button.astro";
+import { breadcrumb } from "../lib/schema";
+
+const updated = "15 Haziran 2026";
+
+const pageJsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Telif & Kullanım Notu", path: "/telif" },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Telif & Kullanım Notu"
+  description="Rast Creative Studio portfolyosundaki marka, proje ve videoların kullanımına ilişkin telif ve referans bilgilendirmesi."
+  jsonLd={pageJsonLd}
+>
+  <Section width="narrow">
+    <SectionHeading eyebrow="Yasal">
+      Telif &amp; Kullanım Notu
+      <Fragment slot="intro">
+        <p>Son güncelleme: {updated}</p>
+      </Fragment>
+    </SectionHeading>
+
+    <div class="legal">
+      <p>
+        Bu sitedeki <strong>Projeler</strong> ve <strong>markalar</strong> bölümünde
+        yer alan marka adları, projeler ve videolar yalnızca
+        <strong>referans ve tanıtım amacıyla</strong> sunulmaktadır.
+      </p>
+
+      <h2>1. Katkı ve Roller</h2>
+      <p>
+        Rast Creative Studio'nun her projedeki rolü farklılık gösterir. Bazı
+        projelerde prodüksiyonun tamamında; bazılarında yalnızca <strong>çekim</strong>
+        veya <strong>kurgu / post-prodüksiyon</strong> aşamasında; bazılarında ise
+        ilgili <strong>kurum veya ajans bünyesinde ekip üyesi</strong> olarak yer
+        alınmıştır. Bir işin bu sayfada yer alması; o eser üzerinde münhasır hak,
+        sahiplik ya da tek başına yapımcılık iddiası anlamına gelmez.
+      </p>
+
+      <h2>2. Telif ve Marka Hakları</h2>
+      <p>
+        Tüm marka adları, logoları ve videolar ilgili <strong>hak sahiplerine
+        aittir</strong>. Videolar, markaların <strong>resmî yayın kanallarından
+        gömülü (embed)</strong> olarak gösterilir; bu sitede barındırılmaz veya
+        yeniden yayınlanmaz. Marka adları ve logoları yalnızca tanıtım ve tanımlama
+        amacıyla kullanılmaktadır.
+      </p>
+
+      <h2>3. İçerik Kaldırma Talebi</h2>
+      <p>
+        Hak sahibi olduğunuz bir içeriğin bu sayfadan kaldırılmasını talep
+        ediyorsanız, <a href="/iletisim">iletişim</a> sayfamız üzerinden bize
+        ulaşmanız hâlinde ilgili içerik <strong>gecikmeksizin</strong> kaldırılır.
+      </p>
+
+      <div class="legal__actions">
+        <Button href="/projeler" variant="secondary" arrow>Projelere dön</Button>
+      </div>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .legal {
+    margin-top: 2.5rem;
+    max-width: 68ch;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .legal h2 {
+    margin: 2rem 0 0.6rem;
+    font-family: var(--font-body);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .legal p {
+    margin: 0 0 1rem;
+  }
+  .legal a {
+    color: var(--amber-text);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .legal strong {
+    color: var(--ink);
+  }
+  .legal__actions {
+    margin-top: 3rem;
+  }
+</style>

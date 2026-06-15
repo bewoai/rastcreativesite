@@ -1,0 +1,40 @@
+---
+/**
+ * Subtle portfolio/copyright note shown beneath project showcases.
+ * Short form here; full text lives on /telif (linked + in the footer).
+ */
+---
+
+<aside class="pnote">
+  <p>
+    İşler <strong>referans amaçlıdır</strong>; her projedeki katkımız (çekim, kurgu
+    veya ekip içi görev) değişebilir. Marka adları ve videolar ilgili hak sahiplerine
+    aittir; resmî kanallardan gömülü olarak gösterilir.
+    <a href="/telif">Telif &amp; kullanım notu →</a>
+  </p>
+</aside>
+
+<style>
+  .pnote {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+  }
+  .pnote p {
+    margin: 0;
+    max-width: 72ch;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+  .pnote strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .pnote a {
+    color: var(--amber-text);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    white-space: nowrap;
+  }
+</style>

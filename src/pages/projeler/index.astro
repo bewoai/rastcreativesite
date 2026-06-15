@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Section from "../../components/Section.astro";
 import BrandFolder from "../../components/BrandFolder.astro";
+import ProjectsNote from "../../components/ProjectsNote.astro";
 import VideoHero from "../../components/VideoHero.astro";
 import Eyebrow from "../../components/Eyebrow.astro";
 import projHeroPoster from "../../assets/photos/director-clapper.jpg";
@@ -74,6 +75,8 @@ const crumbs = breadcrumb([
         </section>
       ))
     }
+
+    <ProjectsNote />
   </Section>
 </BaseLayout>
 
