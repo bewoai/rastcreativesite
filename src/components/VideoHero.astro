@@ -122,6 +122,32 @@ const {
       padding-top: calc(5.5rem + clamp(2.5rem, 7vw, 4.5rem));
     }
   }
+  @media (max-width: 767.98px) {
+    .vhero {
+      min-height: min(78dvh, 44rem);
+      align-items: flex-start;
+    }
+    .vhero__inner {
+      padding-top: clamp(3.25rem, 13vw, 5rem);
+      padding-bottom: calc(9rem + env(safe-area-inset-bottom, 0px));
+    }
+    .vhero--flush .vhero__inner {
+      padding-top: calc(3.5rem + env(safe-area-inset-top, 0px) + clamp(2.25rem, 10vw, 4rem));
+    }
+    .vhero__scrim {
+      background:
+        linear-gradient(
+          180deg,
+          color-mix(in srgb, var(--ink-band) calc(var(--vhero-scrim) - 10%), transparent),
+          color-mix(in srgb, var(--ink-band) calc(var(--vhero-scrim) + 8%), transparent)
+        ),
+        linear-gradient(
+          90deg,
+          color-mix(in srgb, var(--ink-band) calc(var(--vhero-scrim) + 6%), transparent),
+          color-mix(in srgb, var(--ink-band) 18%, transparent)
+        );
+    }
+  }
 </style>
 
 <script>

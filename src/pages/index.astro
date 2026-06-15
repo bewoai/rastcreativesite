@@ -458,6 +458,32 @@ const pageJsonLd = [
     gap: 0.85rem;
     margin-top: 0.5rem;
   }
+  @media (max-width: 520px) {
+    .hero__text {
+      gap: 1rem;
+      max-width: 100%;
+    }
+    .hero__title {
+      max-width: 11ch;
+    }
+    .hero__subtitle {
+      max-width: 28ch;
+      font-size: 1.05rem;
+      line-height: 1.45;
+    }
+    .hero__cta {
+      width: min(100%, 20rem);
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .hero__cta :global(.btn) {
+      width: 100%;
+      min-height: 52px;
+      padding-inline: 1rem;
+      white-space: normal;
+      text-align: center;
+    }
+  }
   /* Secondary CTA → light outline so it reads on the dark footage. */
   :global(.hero__ghost) {
     color: var(--on-ink) !important;
