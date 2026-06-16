@@ -110,7 +110,7 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
 
     {jsonLdItems.map((obj) => <script type="application/ld+json" set:html={JSON.stringify(obj)} />)}
 
-    {/* Google Analytics 4: queue immediately, load the external script after first paint. */}
+    {/* Google Analytics 4: queue immediately, load the external script after the page settles. */}
     <script is:inline define:vars={{ GA4_MEASUREMENT_ID }}>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -119,6 +119,7 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
 
       const loadAnalytics = () => {
         if (document.querySelector('script[data-ga4]')) return;
+        cleanupAnalyticsTriggers();
         const s = document.createElement('script');
         s.async = true;
         s.src = `https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`;
@@ -126,11 +127,14 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
         document.head.appendChild(s);
       };
 
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(loadAnalytics, { timeout: 2500 });
-      } else {
-        window.addEventListener('load', () => window.setTimeout(loadAnalytics, 800), { once: true });
-      }
+      const analyticsEvents = ["pointerdown", "keydown", "scroll", "touchstart"];
+      const analyticsOpts = { once: true, passive: true };
+      const cleanupAnalyticsTriggers = () => {
+        analyticsEvents.forEach((event) => window.removeEventListener(event, loadAnalytics, analyticsOpts));
+      };
+
+      analyticsEvents.forEach((event) => window.addEventListener(event, loadAnalytics, analyticsOpts));
+      window.addEventListener("load", () => window.setTimeout(loadAnalytics, 10000), { once: true });
     </script>
   </head>
 

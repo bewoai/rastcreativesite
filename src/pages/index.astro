@@ -1,6 +1,6 @@
 ---
 import { getCollection, render } from "astro:content";
-import { Picture } from "astro:assets";
+import { Picture, getImage } from "astro:assets";
 import whyPhoto from "../assets/photos/hero-cinema.jpg";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Section from "../components/Section.astro";
@@ -35,12 +35,6 @@ const isProject = (project: (typeof projects)[number] | undefined): project is (
 const featured = featuredProjectSlugs
   .map((slug) => projects.find((project) => project.id === slug))
   .filter(isProject);
-const featuredProjectIds = new Set(featured.map((project) => project.id));
-const dailyProjectPool = [...projects].sort(byOrder);
-const dailyProjectPoolData = dailyProjectPool.map((project) => ({
-  id: project.id,
-  category: project.data.category,
-}));
 const services = (await getCollection("services")).sort(byOrder);
 const faqEntries = (await getCollection("faq")).sort(byOrder);
 const faqRendered = await Promise.all(
@@ -121,11 +115,18 @@ const pageJsonLd = [
     })),
   ),
 ];
+
+const heroPoster = await getImage({
+  src: heroPosterImg,
+  width: 900,
+  format: "webp",
+  quality: 72,
+});
 ---
 
-<BaseLayout jsonLd={pageJsonLd} preloadImage={heroPosterImg.src}>
+<BaseLayout jsonLd={pageJsonLd} preloadImage={heroPoster.src}>
   {/* 1 — Hero (showreel background) */}
-  <VideoHero poster={heroPosterImg.src} flush class="hero">
+  <VideoHero poster={heroPoster.src} flush class="hero">
     <div class="hero__text">
       <Eyebrow tone="paper">Sakarya · Sinematik Video Prodüksiyon</Eyebrow>
       <h1 class="hero__title">{COPY.heroTitle}</h1>
@@ -145,109 +146,25 @@ const pageJsonLd = [
       <SectionHeading eyebrow="Sahne 02 · Seçili İşler">Son işlerimizden seçmeler</SectionHeading>
       <Button href="/projeler" variant="secondary" arrow class="head-row__cta">Tümünü gör</Button>
     </div>
-    <div class="grid-cards" data-daily-projects>
+    <div class="grid-cards">
       {
-        dailyProjectPool.map((p) => (
-          <div class="daily-project" data-daily-project={p.id} hidden={!featuredProjectIds.has(p.id)}>
-            <ProjectCard
-              href={p.data.externalUrl ?? `/projeler/${p.id}`}
-              title={p.data.title}
-              category={p.data.category}
-              poster={p.data.poster}
-              posterAlt={p.data.posterAlt}
-              client={p.data.client}
-              year={p.data.year}
-              timecode={p.data.duration}
-              vertical={p.data.vertical}
-              preview={p.data.preview}
-            />
-          </div>
+        featured.map((p) => (
+          <ProjectCard
+            href={p.data.externalUrl ?? `/projeler/${p.id}`}
+            title={p.data.title}
+            category={p.data.category}
+            poster={p.data.poster}
+            posterAlt={p.data.posterAlt}
+            client={p.data.client}
+            year={p.data.year}
+            timecode={p.data.duration}
+            vertical={p.data.vertical}
+            preview={p.data.preview}
+          />
         ))
       }
     </div>
   </Section>
-
-  <script define:vars={{ dailyProjectPoolData }}>
-    const dailyProjects = dailyProjectPoolData;
-    const projectCount = 3;
-    let activeDateKey = "";
-
-    const getIstanbulDateKey = () => {
-      const parts = new Intl.DateTimeFormat("en-CA", {
-        timeZone: "Europe/Istanbul",
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      }).formatToParts(new Date());
-      const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
-      return `${values.year}-${values.month}-${values.day}`;
-    };
-
-    const hashString = (value) => {
-      let hash = 2166136261;
-      for (let i = 0; i < value.length; i += 1) {
-        hash ^= value.charCodeAt(i);
-        hash = Math.imul(hash, 16777619);
-      }
-      return hash >>> 0;
-    };
-
-    const shuffleWithSeed = (items, seed) => {
-      const shuffled = [...items];
-      let state = seed || 1;
-      const random = () => {
-        state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
-        return state / 4294967296;
-      };
-      for (let i = shuffled.length - 1; i > 0; i -= 1) {
-        const j = Math.floor(random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-      }
-      return shuffled;
-    };
-
-    const pickDailyProjects = (dateKey) => {
-      const shuffled = shuffleWithSeed(dailyProjects, hashString(dateKey));
-      const selected = [];
-      const categories = new Set();
-
-      for (const project of shuffled) {
-        if (selected.length >= projectCount) break;
-        if (categories.has(project.category)) continue;
-        selected.push(project);
-        categories.add(project.category);
-      }
-
-      for (const project of shuffled) {
-        if (selected.length >= projectCount) break;
-        if (selected.some((item) => item.id === project.id)) continue;
-        selected.push(project);
-      }
-
-      return selected.map((project) => project.id);
-    };
-
-    const applyDailyProjects = () => {
-      const dateKey = getIstanbulDateKey();
-      const selectedIds = pickDailyProjects(dateKey);
-      const selected = new Set(selectedIds);
-      const cards = document.querySelectorAll("[data-daily-project]");
-
-      cards.forEach((card) => {
-        const projectId = card.getAttribute("data-daily-project");
-        const order = selectedIds.indexOf(projectId);
-        card.hidden = !selected.has(projectId);
-        card.style.order = order === -1 ? "" : String(order);
-      });
-
-      activeDateKey = dateKey;
-    };
-
-    applyDailyProjects();
-    window.setInterval(() => {
-      if (getIstanbulDateKey() !== activeDateKey) applyDailyProjects();
-    }, 60000);
-  </script>
 
   {/* 3 — Referans logoları */}
   <Section space="tight">

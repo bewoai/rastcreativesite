@@ -33,6 +33,10 @@ const {
 } = Astro.props;
 const meta = [client].filter(Boolean).join(" · ");
 const isExternal = /^https?:\/\//.test(href);
+const cardPoster = poster.replace(
+  /^https:\/\/i\.ytimg\.com\/vi\/([^/]+)\/(?:maxresdefault|oardefault)\.jpg$/,
+  "https://i.ytimg.com/vi/$1/sddefault.jpg",
+);
 ---
 
 <a
@@ -49,7 +53,7 @@ const isExternal = /^https?:\/\//.test(href);
       vertical && (
         <img
           class="card__backdrop"
-          src={poster}
+          src={cardPoster}
           alt=""
           loading="lazy"
           decoding="async"
@@ -61,7 +65,7 @@ const isExternal = /^https?:\/\//.test(href);
     }
     <img
       class="card__poster"
-      src={poster}
+      src={cardPoster}
       alt={posterAlt ?? `${title} — proje görseli`}
       loading="lazy"
       decoding="async"
