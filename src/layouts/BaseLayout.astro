@@ -4,7 +4,6 @@ import { SITE, GA4_MEASUREMENT_ID } from "../consts";
 import GlassNav from "../components/GlassNav.astro";
 import Footer from "../components/Footer.astro";
 import Clapperboard from "../components/Clapperboard.astro";
-import Preloader from "../components/Preloader.astro";
 
 interface Props {
   /** Page title; omit on the home page to use the full default title. */
@@ -67,25 +66,6 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
       }
     </script>
 
-    {/* Show the preloader once per session, never for reduced-motion. Runs
-        synchronously before first paint so it never flashes on later pages. */}
-    {!bare && (
-      <script is:inline>
-        try {
-          if (
-            !sessionStorage.getItem("rc_preloaded") &&
-            !matchMedia("(prefers-reduced-motion: reduce)").matches
-          ) {
-            document.documentElement.classList.add("rc-preload");
-            sessionStorage.setItem("rc_preloaded", "1");
-          }
-        } catch (e) {}
-      </script>
-      <style is:global>
-        #preloader { display: none; }
-        html.rc-preload #preloader { display: grid; }
-      </style>
-    )}
     <meta name="theme-color" content={SITE.themeColor} media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#191612" media="(prefers-color-scheme: dark)" />
     <meta name="generator" content={Astro.generator} />
@@ -161,7 +141,6 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
     >
       İçeriğe geç
     </a>
-    {!bare && <Preloader />}
     {!bare && <Clapperboard />}
     {!bare && <GlassNav />}
     <main id="main">

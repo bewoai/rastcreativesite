@@ -7,7 +7,7 @@ export const SITE = {
   name: "Rast Creative Studio",
   shortName: "Rast Creative",
   /** Home-page <title>. Inner pages pass their own `title` to BaseLayout. */
-  defaultTitle: "Sakarya Video Çekimi ve Prodüksiyon Ajansı — Rast Creative Studio",
+  defaultTitle: "Sakarya Video Çekimi, Tanıtım Filmi ve Prodüksiyon Ajansı — Rast Creative Studio",
   /** `%s` is replaced by the page title on inner pages. */
   titleTemplate: "%s — Rast Creative Studio",
   description:
@@ -110,22 +110,6 @@ export function waLink(message: string = WHATSAPP_QUOTE_MESSAGE): string | null 
   return CONTACT.whatsapp
     ? `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`
     : null;
-}
-
-/** Quote link with a specific service name baked into the template. */
-export function waQuoteLink(service?: string): string | null {
-  if (!service) return waLink();
-  return waLink(
-    [
-      "Merhaba Rast Creative 👋",
-      "",
-      `"${service}" hizmeti için teklif almak istiyorum:`,
-      "",
-      "• Tahmini tarih: ",
-      "• Lokasyon: ",
-      "• Kısaca: ",
-    ].join("\n"),
-  );
 }
 
 /**

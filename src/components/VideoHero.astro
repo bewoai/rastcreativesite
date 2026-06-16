@@ -28,20 +28,28 @@ interface Props {
   class?: string;
 }
 
+const defaultHeight = "min(84vh, 760px)";
+const defaultScrim = 62;
+
 const {
   poster,
   webm,
   mp4,
-  height = "min(84vh, 760px)",
-  scrim = 62,
+  height = defaultHeight,
+  scrim = defaultScrim,
   flush = false,
   class: className,
 } = Astro.props;
+
+const styleVars =
+  height !== defaultHeight || scrim !== defaultScrim
+    ? `--vhero-h:${height}; --vhero-scrim:${scrim}%`
+    : undefined;
 ---
 
 <section
   class:list={["vhero", { "vhero--flush": flush }, className]}
-  style={`--vhero-h:${height}; --vhero-scrim:${scrim}%`}
+  style={styleVars}
 >
   <video
     class="vhero__media"
