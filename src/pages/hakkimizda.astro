@@ -5,10 +5,12 @@ import Section from "../components/Section.astro";
 import SectionHeading from "../components/SectionHeading.astro";
 import Eyebrow from "../components/Eyebrow.astro";
 import Button from "../components/Button.astro";
+import Icon from "../components/Icon.astro";
 import { COPY, PRIMARY_CTA } from "../consts";
 import { breadcrumb } from "../lib/schema";
 import equipPhoto from "../assets/photos/studio-lighting.jpg";
-import teamPhoto from "../assets/photos/crew-onset.jpg";
+import muhammedPhoto from "../assets/photos/muhammed-al-sheikhly.png";
+import beratPhoto from "../assets/photos/berat-degirmenci.png";
 
 const crumbs = breadcrumb([
   { name: "Ana Sayfa", path: "/" },
@@ -29,6 +31,27 @@ const approach = [
     d: "Profesyonel sinema kamera ve optik parkıyla, her bütçede sinematik bir görüntü dili kurarız.",
   },
 ];
+
+const teamMembers = [
+  {
+    name: "Muhammed Al Sheikhly",
+    role: "Kurucu Ortak / Video Director",
+    photo: muhammedPhoto,
+    linkedin: "https://www.linkedin.com/in/muhammed-al-sheikhly-2a6b01209/",
+    bio:
+      "Dumlupınar Üniversitesi Güzel Sanatlar ve Stüdyo Sanatları eğitimiyle desteklenen güçlü bir görsel anlatı temeline sahip. Adatıp Hastanesi'nde yaratıcı videografi, kısa video üretimi ve etkili görsel içerik süreçlerine katkı sağlıyor; 0011 ve Rodos Group deneyimleriyle farklı kitlelere uygun, akılda kalan görseller ve hikaye odaklı videolar üretiyor.",
+    highlights: ["Creative leadership", "Videografi", "Storyboard", "Storytelling", "Kurgu"],
+  },
+  {
+    name: "Berat Değirmenci",
+    role: "Kurucu Ortak / Teknoloji & Reklam Yöneticisi",
+    photo: beratPhoto,
+    linkedin: "https://www.linkedin.com/in/beratdegirmenci/",
+    bio:
+      "Yönetim Bilişim Sistemleri eğitimiyle analitik süreç yönetimini yaratıcı prodüksiyon akışlarına entegre ediyor. Adatıp Hastanesi'nde video operasyonları ve podcast prodüksiyonlarını yönetmenin yanı sıra, markaların dijital pazarlama ve reklam stratejilerini kurguluyor. Teknik altyapı yönetimi, web teknolojileri ve Meta reklam kampanyalarının (Facebook/Instagram Ads) optimizasyonu konularında derin uzmanlığa sahip.",
+    highlights: ["Meta Reklamları", "Teknik Yönetim", "Süreç Yönetimi", "Web Teknolojileri", "Podcast Prodüksiyonu"],
+  },
+];
 ---
 
 <BaseLayout
@@ -36,6 +59,7 @@ const approach = [
   description="Rast Creative Studio — Sakarya merkezli, sinema standardı ekipmanla çalışan video prodüksiyon ekibi."
   jsonLd={crumbs}
 >
+  {/* Sahne 01 · Stüdyo Giriş */}
   <Section width="narrow">
     <SectionHeading eyebrow="Sahne 01 · Stüdyo">
       Doğru kareyi yakalayan stüdyo
@@ -45,6 +69,61 @@ const approach = [
     </SectionHeading>
   </Section>
 
+  {/* Sahne 02 · Ekip (Öne çıkarılan konum ve premium tasarım) */}
+  <Section width="narrow" space="tight">
+    <div class="team">
+      <Eyebrow tone="soft">Ekip</Eyebrow>
+      <h2 class="team__title">Rast Creative'in Arkasındaki Kurucu Ekip</h2>
+      <p class="team__text">
+        Stratejiden sete, kurgudan teslime kadar süreci doğrudan kurucu ekip yönetir.
+        Her projede hızlı karar alan, sahada çalışan ve teslim kalitesini yakından takip eden
+        kompakt bir yapı sunuyoruz.
+      </p>
+      <div class="team-grid">
+        {
+          teamMembers.map((member) => (
+            <article class="member-card">
+              <div class="member-card__photo-container">
+                <Picture
+                  src={member.photo}
+                  formats={["avif", "webp"]}
+                  alt={`${member.name}, ${member.role}`}
+                  widths={[320, 520, 720]}
+                  sizes="(min-width: 768px) 380px, 92vw"
+                  loading="lazy"
+                  class="member-card__photo"
+                />
+              </div>
+              <div class="member-card__body">
+                <div>
+                  <p class="member-card__role">{member.role}</p>
+                  <h3 class="member-card__name">{member.name}</h3>
+                  <p class="member-card__bio">{member.bio}</p>
+                </div>
+                <div>
+                  <ul class="member-card__tags" aria-label={`${member.name} uzmanlık alanları`}>
+                    {member.highlights.map((highlight) => (
+                      <li>{highlight}</li>
+                    ))}
+                  </ul>
+                  {
+                    member.linkedin && (
+                      <a class="member-card__link" href={member.linkedin} target="_blank" rel="noreferrer" aria-label={`${member.name} LinkedIn profili`}>
+                        <Icon name="linkedin" size={16} />
+                        <span>Bağlantı Kur</span>
+                      </a>
+                    )
+                  }
+                </div>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </Section>
+
+  {/* Sahne 03 · Yaklaşımımız */}
   <Section tone="ink" space="tight">
     <Eyebrow tone="paper">Yaklaşımımız</Eyebrow>
     <ul class="approach">
@@ -59,6 +138,7 @@ const approach = [
     </ul>
   </Section>
 
+  {/* Sahne 04 · Ekipman */}
   <Section width="narrow">
     <div class="equip">
       <Eyebrow>Ekipman</Eyebrow>
@@ -74,32 +154,13 @@ const approach = [
         alt="Sinema standardı aydınlatma ve yönetmen monitörüyle profesyonel video prodüksiyon seti"
         widths={[600, 900, 1200]}
         sizes="(min-width: 768px) 680px, 92vw"
-        loading="eager"
-        fetchpriority="high"
-        class="about-photo"
-      />
-    </div>
-  </Section>
-
-  <Section width="narrow" space="tight">
-    <div class="team">
-      <Eyebrow tone="soft">Ekip</Eyebrow>
-      <p class="team__text">
-        Farklı sektörlerden markaların dijital hikâyelerini yönetmiş bir ekibiz.
-        Stratejiden çekime, kurgudan teslime kadar aynı disiplinle çalışırız.
-      </p>
-      <Picture
-        src={teamPhoto}
-        formats={["avif", "webp"]}
-        alt="Yönetmen, görüntü yönetmeni ve ses ekibiyle birlikte bir çekim setinde Rast Creative ekibi"
-        widths={[600, 900, 1200]}
-        sizes="(min-width: 768px) 680px, 92vw"
         loading="lazy"
         class="about-photo"
       />
     </div>
   </Section>
 
+  {/* Sahne 05 · Tanışalım */}
   <Section tone="ink" space="tight">
     <div class="cta">
       <Eyebrow tone="paper">Tanışalım</Eyebrow>
@@ -143,12 +204,143 @@ const approach = [
     line-height: var(--leading-body);
     max-width: 60ch;
   }
+  .team__title {
+    margin: 0.6rem 0 0;
+    max-width: 25ch;
+  }
   .team__text {
     margin: 0.9rem 0 0;
     font-size: 1.1rem;
     color: var(--ink-soft);
     line-height: var(--leading-body);
     max-width: 60ch;
+  }
+  .team-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-top: 2.5rem;
+  }
+  .member-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--paper) 92%, white);
+    transition: transform var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out);
+    position: relative;
+  }
+  .member-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 0;
+    background: var(--amber);
+    transition: height var(--dur) var(--ease-out);
+    z-index: 5;
+  }
+  .member-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.25);
+    border-color: color-mix(in srgb, var(--amber) 40%, var(--line));
+  }
+  .member-card:hover::before {
+    height: 100%;
+  }
+  .member-card__photo-container {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    position: relative;
+    background: var(--line);
+  }
+  .member-card__photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--dur) var(--ease-out), filter var(--dur) var(--ease-out);
+  }
+  .member-card:hover .member-card__photo {
+    transform: scale(1.04);
+  }
+  .member-card__body {
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+    gap: 1.5rem;
+  }
+  .member-card__role {
+    margin: 0 0 0.5rem;
+    color: var(--amber);
+    font-family: var(--font-utility);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .member-card__name {
+    margin: 0;
+    font-size: clamp(1.45rem, 3vw, 1.9rem);
+    font-weight: 700;
+    line-height: var(--leading-flat);
+    color: var(--ink);
+  }
+  .member-card__bio {
+    margin: 0.85rem 0 0;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    font-size: 0.95rem;
+  }
+  .member-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    list-style: none;
+    margin: 0 0 0.25rem 0;
+    padding: 0;
+  }
+  .member-card__tags li {
+    padding: 0.35rem 0.65rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--ink-soft);
+    font-family: var(--font-utility);
+    font-size: 0.75rem;
+    background: color-mix(in srgb, var(--paper) 40%, transparent);
+    transition: all var(--dur-fast) var(--ease-out);
+  }
+  .member-card:hover .member-card__tags li {
+    border-color: color-mix(in srgb, var(--ink) 15%, var(--line));
+    background: color-mix(in srgb, var(--ink) 3%, transparent);
+  }
+  .member-card__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    color: var(--ink);
+    font-family: var(--font-utility);
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all var(--dur-fast) var(--ease-out);
+    align-self: flex-start;
+  }
+  .member-card__link:hover {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+    transform: translateY(-2px);
+  }
+  .member-card__link:active {
+    transform: translateY(0);
   }
   .about-photo {
     display: block;
@@ -180,6 +372,10 @@ const approach = [
     .approach {
       grid-template-columns: repeat(3, 1fr);
       gap: 2.5rem;
+    }
+    .team-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
     }
   }
 </style>
