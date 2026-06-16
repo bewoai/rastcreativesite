@@ -134,7 +134,7 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
       };
 
       analyticsEvents.forEach((event) => window.addEventListener(event, loadAnalytics, analyticsOpts));
-      window.addEventListener("load", () => window.setTimeout(loadAnalytics, 10000), { once: true });
+      window.addEventListener("load", () => window.setTimeout(loadAnalytics, 30000), { once: true });
     </script>
   </head>
 

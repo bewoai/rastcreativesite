@@ -101,11 +101,10 @@
     }
   }
 
-  /* Hide on very small screens where it would be too cramped */
-  @media (max-width: 480px) {
+  /* Hide on mobile where it competes with the hero and bottom navigation. */
+  @media (max-width: 767.98px) {
     .clapper {
-      width: 220px;
-      opacity: 0.3;
+      display: none;
     }
   }
 </style>
@@ -114,7 +113,9 @@
   // Drive the clapperboard arm rotation based on scroll progress.
   // 0 = top of page (open, arm up), 1 = contact section (closed, arm down).
   const clapper = document.querySelector<HTMLElement>('[data-clapper]');
-  if (clapper) {
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const compactViewport = matchMedia('(max-width: 767.98px)').matches;
+  if (clapper && !reducedMotion && !compactViewport) {
     const top = clapper.querySelector<SVGElement>('.clapper__top');
     if (top) {
       let ticking = false;
