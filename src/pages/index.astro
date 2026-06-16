@@ -150,7 +150,7 @@ const pageJsonLd = [
         dailyProjectPool.map((p) => (
           <div class="daily-project" data-daily-project={p.id} hidden={!featuredProjectIds.has(p.id)}>
             <ProjectCard
-              href={`/projeler/${p.id}`}
+              href={p.data.externalUrl ?? `/projeler/${p.id}`}
               title={p.data.title}
               category={p.data.category}
               poster={p.data.poster}

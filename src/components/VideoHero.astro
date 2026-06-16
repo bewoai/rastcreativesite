@@ -10,8 +10,8 @@
  *  - prefers-reduced-motion OR Save-Data → the loop never plays; the poster
  *    stays. (roadmap §0.1: one short, silent, optimised hero loop.)
  *
- * Provide the encoded loop at the given public paths (see VIDEO specs the
- * studio supplies). Until they exist the poster carries the hero on its own.
+ * Pass encoded loop paths once the studio supplies them. Until they exist the
+ * poster carries the hero on its own.
  */
 interface Props {
   /** Built URL of the poster image (e.g. `posterImg.src`). */
@@ -30,8 +30,8 @@ interface Props {
 
 const {
   poster,
-  webm = "/videos/showreel.webm",
-  mp4 = "/videos/showreel.mp4",
+  webm,
+  mp4,
   height = "min(84vh, 760px)",
   scrim = 62,
   flush = false,

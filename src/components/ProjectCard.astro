@@ -32,9 +32,16 @@ const {
   class: className,
 } = Astro.props;
 const meta = [client].filter(Boolean).join(" · ");
+const isExternal = /^https?:\/\//.test(href);
 ---
 
-<a href={href} class:list={["card", className]} data-reveal>
+<a
+  href={href}
+  class:list={["card", className]}
+  target={isExternal ? "_blank" : undefined}
+  rel={isExternal ? "noopener noreferrer" : undefined}
+  data-reveal
+>
   <div
     class:list={["card__media", { "card__media--vertical": vertical }]}
     style={vertical ? `--poster-url: url("${poster}")` : undefined}
