@@ -269,12 +269,12 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
           }
         } else {
           setStatus(
-            json.message ?? "Gönderilemedi. Lütfen tekrar deneyin ya da WhatsApp’tan yazın.",
+            json.message ?? "Gönderilemedi. Lütfen tekrar deneyin ya da alttaki WhatsApp seçeneğini kullanın.",
             "err",
           );
         }
       } catch {
-        setStatus("Bağlantı hatası. Lütfen tekrar deneyin ya da WhatsApp’tan yazın.", "err");
+        setStatus("Bağlantı hatası. Lütfen tekrar deneyin ya da alttaki WhatsApp seçeneğini kullanın.", "err");
       } finally {
         if (submit) submit.disabled = false;
       }

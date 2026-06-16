@@ -2,9 +2,10 @@
 import Logo from "./Logo.astro";
 import Icon from "./Icon.astro";
 import Eyebrow from "./Eyebrow.astro";
-import { NAV, SOCIAL, CONTACT, SITE } from "../consts";
+import { NAV, SOCIAL, CONTACT, SITE, waLink } from "../consts";
 
 const year = new Date().getFullYear();
+const whatsappHref = waLink();
 ---
 
 <footer class="footer">
@@ -79,6 +80,20 @@ const year = new Date().getFullYear();
             )
           }
         </li>
+        {
+          whatsappHref && (
+            <li>
+              <a
+                href={whatsappHref}
+                class="footer__link footer__link--icon"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon name="whatsapp" size={18} /> WhatsApp
+              </a>
+            </li>
+          )
+        }
       </ul>
     </div>
   </div>
@@ -154,6 +169,11 @@ const year = new Date().getFullYear();
   .footer__link {
     color: color-mix(in srgb, var(--on-ink) 82%, transparent);
     transition: color var(--dur-fast) var(--ease-out);
+  }
+  .footer__link--icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
   }
   .footer__link:hover {
     color: var(--amber);
