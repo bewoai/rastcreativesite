@@ -328,7 +328,8 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
 <script>
   // Subtle scroll-shrink for the desktop pill (rAF-throttled).
   const nav = document.querySelector<HTMLElement>("[data-nav]");
-  if (nav) {
+  const desktopNav = matchMedia("(min-width: 768px)").matches;
+  if (nav && desktopNav) {
     let ticking = false;
     const update = () => {
       nav.classList.toggle("is-scrolled", window.scrollY > 8);

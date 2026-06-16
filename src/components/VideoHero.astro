@@ -167,7 +167,7 @@ const styleVars =
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } })
       .connection?.saveData;
-    if (reduce || saveData) return;
+    if (reduce || saveData || !v.querySelector("source")) return;
     const start = () => {
       v.play().catch(() => {});
     };
