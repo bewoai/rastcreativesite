@@ -6,7 +6,7 @@
  * WhatsApp number exists in consts; socials come from SOCIAL.
  */
 import Icon from "./Icon.astro";
-import { CONTACT, waLink, SOCIAL } from "../consts";
+import { waLink, SOCIAL } from "../consts";
 
 const href = waLink();
 const socials = SOCIAL.filter((s) => s.icon === "instagram" || s.icon === "youtube");
@@ -43,53 +43,12 @@ const socials = SOCIAL.filter((s) => s.icon === "instagram" || s.icon === "youtu
         <span class="wafab__label">WhatsApp</span>
       </a>
     </div>
-    <div class="mobile-actions" aria-label="Hızlı iletişim">
-      <a
-        class="mobile-actions__btn mobile-actions__btn--call"
-        href={`tel:${CONTACT.phoneIntl}`}
-        aria-label={`Telefonla arayın: ${CONTACT.phone}`}
-        data-callbar
-      >
-        <Icon name="contact" size={20} />
-        <span>Ara</span>
-      </a>
-      <a
-        class="mobile-actions__btn mobile-actions__btn--wa"
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="WhatsApp'tan yazın"
-        data-wabar
-      >
-        <Icon name="whatsapp" size={22} />
-        <span>WhatsApp</span>
-      </a>
-    </div>
     <script>
-      const wafab = document.querySelector<HTMLAnchorElement>("[data-wafab]");
-      if (wafab) {
-        wafab.addEventListener("click", () => {
-          if (typeof gtag === "function") {
-            gtag("event", "contact", {
-              event_category: "whatsapp",
-              event_label: "whatsapp_fab",
-            });
-          }
-        });
-      }
-      document.querySelector<HTMLAnchorElement>("[data-wabar]")?.addEventListener("click", () => {
+      document.querySelector<HTMLAnchorElement>("[data-wafab]")?.addEventListener("click", () => {
         if (typeof gtag === "function") {
           gtag("event", "contact", {
             event_category: "whatsapp",
-            event_label: "whatsapp_mobile_bar",
-          });
-        }
-      });
-      document.querySelector<HTMLAnchorElement>("[data-callbar]")?.addEventListener("click", () => {
-        if (typeof gtag === "function") {
-          gtag("event", "contact", {
-            event_category: "phone",
-            event_label: "phone_mobile_bar",
+            event_label: "whatsapp_fab",
           });
         }
       });
@@ -201,10 +160,6 @@ const socials = SOCIAL.filter((s) => s.icon === "instagram" || s.icon === "youtu
     outline-offset: 3px;
   }
 
-  .mobile-actions {
-    display: none;
-  }
-
   /* Subtle attention pulse (once-settled, gentle). */
   .wafab__ring {
     position: absolute;
@@ -224,74 +179,10 @@ const socials = SOCIAL.filter((s) => s.icon === "instagram" || s.icon === "youtu
     }
   }
 
-  /* On mobile, use one calm thumb-reachable action bar instead of floating
-     bubbles competing with the tab bar and hero CTA. */
+  /* Mobile: hide the floating dock entirely (kept desktop-only). */
   @media (max-width: 767.98px) {
     .dock {
       display: none;
-    }
-    .mobile-actions {
-      position: fixed;
-      left: 0.75rem;
-      right: 0.75rem;
-      bottom: calc(4.75rem + env(safe-area-inset-bottom, 0px));
-      z-index: 51;
-      display: grid;
-      grid-template-columns: 0.9fr 1.1fr;
-      gap: 0.55rem;
-      padding: 0.45rem;
-      border: 1px solid color-mix(in srgb, #ffffff 55%, transparent);
-      border-radius: 1.35rem;
-      background: linear-gradient(
-        180deg,
-        color-mix(in srgb, #ffffff 78%, transparent),
-        color-mix(in srgb, var(--paper) 68%, transparent)
-      );
-      -webkit-backdrop-filter: blur(24px) saturate(1.7);
-      backdrop-filter: blur(24px) saturate(1.7);
-      box-shadow:
-        0 -8px 28px -16px rgba(17, 17, 16, 0.35),
-        0 1px 0 0 color-mix(in srgb, #ffffff 80%, transparent) inset;
-    }
-    :global(html[data-theme="dark"]) .mobile-actions {
-      background: linear-gradient(
-        180deg,
-        color-mix(in srgb, #2a241e 84%, transparent),
-        color-mix(in srgb, var(--paper) 76%, transparent)
-      );
-      border-color: color-mix(in srgb, var(--on-ink) 14%, transparent);
-    }
-    .mobile-actions__btn {
-      min-height: 3rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.45rem;
-      border-radius: 1rem;
-      font-family: var(--font-utility);
-      font-size: 0.92rem;
-      font-weight: 700;
-      letter-spacing: 0;
-      touch-action: manipulation;
-      transition:
-        transform var(--dur-fast) var(--ease-out),
-        background-color var(--dur-fast) var(--ease-out);
-    }
-    .mobile-actions__btn:active {
-      transform: scale(0.97);
-    }
-    .mobile-actions__btn:focus-visible {
-      outline: 2px solid var(--amber);
-      outline-offset: 2px;
-    }
-    .mobile-actions__btn--call {
-      color: var(--ink);
-      background: color-mix(in srgb, var(--ink) 7%, transparent);
-    }
-    .mobile-actions__btn--wa {
-      color: #ffffff;
-      background: #25d366;
-      box-shadow: 0 8px 20px -10px rgba(37, 211, 102, 0.8);
     }
   }
 

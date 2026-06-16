@@ -38,14 +38,6 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
   </nav>
 </header>
 
-{/* Mobile: slim top brand bar (logo only — keeps the screen uncluttered) */}
-<header class="topbar" data-topbar>
-  <div class="topbar__inner">
-    <Logo class="topbar__logo" />
-    <ThemeToggle class="topbar__theme" />
-  </div>
-</header>
-
 {/* Mobile: bottom glass tab-bar */}
 <nav class="tabbar" aria-label="Ana gezinme">
   <ul class="tabbar__inner">
@@ -156,7 +148,6 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
   }
 
   :global(html[data-theme="dark"]) .nav__pill,
-  :global(html[data-theme="dark"]) .topbar__inner,
   :global(html[data-theme="dark"]) .tabbar__inner {
     background: linear-gradient(
       180deg,
@@ -187,53 +178,9 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
       padding: clamp(0.6rem, 2vw, 1rem);
       pointer-events: none; /* let clicks pass through the transparent track */
     }
-    .tabbar,
-    .topbar {
+    .tabbar {
       display: none;
     }
-  }
-
-  /* ---- Mobile top brand bar ------------------------------------------- */
-  .topbar {
-    position: fixed;
-    inset: 0 0 auto 0;
-    z-index: 50;
-    padding: calc(0.5rem + env(safe-area-inset-top, 0px)) 0.6rem 0.5rem;
-    pointer-events: none;
-  }
-  .topbar__inner {
-    position: relative;
-    pointer-events: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    padding: 0.4rem 1.1rem;
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, #ffffff 66%, transparent),
-      color-mix(in srgb, var(--paper) 48%, transparent)
-    );
-    border: 1px solid color-mix(in srgb, #ffffff 55%, transparent);
-    border-radius: var(--radius-pill);
-    -webkit-backdrop-filter: blur(24px) saturate(1.85) brightness(1.05);
-    backdrop-filter: blur(24px) saturate(1.85) brightness(1.05);
-    box-shadow:
-      0 10px 30px -14px rgba(17, 17, 16, 0.3),
-      0 1px 0 0 color-mix(in srgb, #ffffff 80%, transparent) inset,
-      0 -10px 18px -16px color-mix(in srgb, var(--ink) 20%, transparent) inset;
-  }
-  :global(.topbar__theme) {
-    position: absolute;
-    right: 0.35rem;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  :global(.topbar__theme:active) {
-    transform: translateY(-50%) scale(0.97);
-  }
-  .topbar__logo :global(.logo__svg) {
-    height: 1.8rem;
   }
 
   /* ---- Mobile bottom tab-bar ------------------------------------------- */
@@ -241,7 +188,7 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
     position: fixed;
     inset: auto 0 0 0;
     z-index: 50;
-    padding: 0.45rem 0.6rem calc(0.45rem + env(safe-area-inset-bottom, 0px));
+    padding: 0.35rem 0.65rem calc(0.35rem + env(safe-area-inset-bottom, 0px));
     pointer-events: none;
   }
   .tabbar__inner {
@@ -251,7 +198,7 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
     gap: 0.15rem;
     list-style: none;
     margin: 0;
-    padding: 0.3rem;
+    padding: 0.25rem;
     background: linear-gradient(
       180deg,
       color-mix(in srgb, #ffffff 64%, transparent),
@@ -275,8 +222,8 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
     justify-content: center;
     gap: 0.18rem;
     min-height: var(--tap-min);
-    padding: 0.35rem 0.15rem;
-    border-radius: 1.1rem;
+    padding: 0.28rem 0.12rem;
+    border-radius: 0.95rem;
     color: var(--ink-soft);
     text-align: center;
     touch-action: manipulation;
@@ -290,9 +237,9 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
   }
   .tab__label {
     font-family: var(--font-utility);
-    font-size: 0.7rem;
+    font-size: 0.64rem;
     font-weight: 500;
-    letter-spacing: 0.01em;
+    letter-spacing: 0;
     text-transform: uppercase;
     white-space: nowrap;
   }
@@ -325,8 +272,8 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
   /* Reserve space for the fixed nav so content never hides behind it. */
   @media (max-width: 767.98px) {
     body {
-      padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));
-      padding-bottom: calc(8.75rem + env(safe-area-inset-bottom, 0px));
+      padding-top: calc(0.5rem + env(safe-area-inset-top, 0px));
+      padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
     }
   }
   @media (min-width: 768px) {
