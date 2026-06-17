@@ -49,13 +49,14 @@ export function groupByBrand(projects: Project[]): Brand[] {
   for (const [name, list] of byClient) {
     const sorted = [...list].sort((a, b) => a.data.order - b.data.order);
     const first = sorted[0];
+    const coverProject = sorted.find((p) => p.data.youtubeId) ?? first;
     brands.push({
       slug: slugify(name),
       name,
       category: first.data.category,
       categorySlug: categorySlug(first.data.category),
-      cover: first.data.poster,
-      vertical: Boolean(first.data.vertical),
+      cover: coverProject.data.poster,
+      vertical: Boolean(coverProject.data.vertical),
       projects: sorted,
       count: sorted.length,
     });
