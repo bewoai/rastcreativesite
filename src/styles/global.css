@@ -27,6 +27,7 @@
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     scroll-behavior: smooth;
+    overflow-x: clip;
   }
 
   body {
@@ -42,6 +43,15 @@
     transition:
       background-color var(--dur) var(--ease-out),
       color var(--dur) var(--ease-out);
+    overflow-x: hidden;
+  }
+
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    max-width: 100%;
   }
 
   /* Display face is reserved for h1–h2 (roadmap 1.3). */

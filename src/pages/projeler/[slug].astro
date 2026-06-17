@@ -145,10 +145,17 @@ const pageJsonLd = [
 
     <aside class="proj-cta">
       <div>
-        <Eyebrow>Sıra sizde</Eyebrow>
-        <p class="proj-cta__title">Benzer bir iş mi hayal ediyorsunuz?</p>
+        <Eyebrow>Benzer bir proje</Eyebrow>
+        <p class="proj-cta__title">Bu formatta içerik planlayalım.</p>
+        <p class="proj-cta__text">
+          {d.category} kategorisinde markanıza uygun çekim kapsamını, teslim formatlarını
+          ve yayın mecralarını birlikte netleştirelim.
+        </p>
       </div>
-      <Button href={PRIMARY_CTA.href} arrow>{PRIMARY_CTA.label}</Button>
+      <div class="proj-cta__actions">
+        <Button href={PRIMARY_CTA.href} arrow>{PRIMARY_CTA.label}</Button>
+        <a href="/projeler" class="proj-cta__link">Diğer işleri incele</a>
+      </div>
     </aside>
   </Section>
 
@@ -284,6 +291,31 @@ const pageJsonLd = [
     font-family: var(--font-display);
     font-size: clamp(1.2rem, 3vw, 1.6rem);
     max-width: 22ch;
+  }
+  .proj-cta__text {
+    margin: 0.55rem 0 0;
+    max-width: 46rem;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+  .proj-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.8rem 1rem;
+  }
+  .proj-cta__link {
+    font-family: var(--font-utility);
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--ink) 22%, transparent);
+    text-underline-offset: 0.22em;
+  }
+  .proj-cta__link:hover {
+    color: var(--amber-text);
+    text-decoration-color: currentColor;
   }
   .related {
     display: grid;

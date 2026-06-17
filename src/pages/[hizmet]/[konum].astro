@@ -9,6 +9,7 @@ import { PRIMARY_CTA, CONTACT } from "../../consts";
 import { breadcrumb, faqPage, BUSINESS_ID } from "../../lib/schema";
 import { SEO_SERVICES, getService, type SeoService } from "../../data/seo-services";
 import { SEO_LOCATIONS, getLocation, type SeoLocation } from "../../data/locations";
+import { getServiceAudience } from "../../data/service-audience";
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
@@ -26,6 +27,7 @@ interface Props {
   location: SeoLocation;
 }
 const { service, location } = Astro.props as Props;
+const audience = getServiceAudience(service.slug);
 
 const title = `${location.name} ${service.name}`;
 const pageHeading = `${location.name} ${service.name}`;
@@ -119,6 +121,13 @@ const relatedProjects = allProjects
         ))
       }
     </ul>
+
+    <div class="fit" data-reveal>
+      <h2 class="fit__title">Bu hizmet kimler için uygun?</h2>
+      <ul class="fit__list">
+        {audience.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
 
     <div class="cta-inline">
       <Button href={PRIMARY_CTA.href} size="lg" arrow>
@@ -276,6 +285,40 @@ const relatedProjects = allProjects
     align-items: center;
     gap: 1rem 1.6rem;
     margin-top: 2.5rem;
+  }
+  .fit {
+    margin-top: 2.5rem;
+    padding: 1.4rem clamp(1.15rem, 4vw, 1.8rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--amber) 4%, transparent);
+  }
+  .fit__title {
+    margin: 0 0 1rem;
+    font-family: var(--font-utility);
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+  }
+  .fit__list {
+    display: grid;
+    gap: 0.75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .fit__list li {
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .fit__list li::before {
+    content: "";
+    display: inline-block;
+    width: 0.48rem;
+    height: 0.48rem;
+    margin-right: 0.65rem;
+    border-radius: 999px;
+    background: var(--amber);
+    vertical-align: 0.08em;
   }
   .projects-grid {
     display: grid;

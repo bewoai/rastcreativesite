@@ -65,6 +65,21 @@ const trustPoints = [
   "Teslim sonrası kullanım ihtiyacını da düşünür; reklam, web ve sosyal medya formatlarını baştan planlarız.",
 ];
 
+const whyUs = [
+  {
+    t: "Kurucu ortaklarla doğrudan süreç",
+    d: "Projenizi satıştan üretime devreden kalabalık bir zincir yerine, işi planlayan kurucu ortaklarla konuşursunuz.",
+  },
+  {
+    t: "Yeni medya ve yapay zeka takibi",
+    d: "Video üretimini sadece kamera ve kurgu olarak görmeyiz; yeni araçları, dikey formatları ve reklam ihtiyaçlarını sürece dahil ederiz.",
+  },
+  {
+    t: "Teslim sonrası kullanımı düşünürüz",
+    d: "Videonun web, sosyal medya, reklam ve sunum tarafında nasıl kullanılacağını daha çekimden önce planlarız.",
+  },
+];
+
 const teamMembers = [
   {
     name: "Muhammed Al Sheikhly",
@@ -218,10 +233,6 @@ const pageJsonLd = [
         }
       </div>
 
-      <div class="team-cta" aria-label="Ekip ile proje görüşmesi" data-reveal>
-        <p>Projenizi doğrudan Rast Creative’in kurucu ortaklarıyla konuşabilirsiniz.</p>
-        <Button href={PRIMARY_CTA.href} variant="secondary" arrow>{PRIMARY_CTA.label}</Button>
-      </div>
     </div>
   </Section>
 
@@ -249,7 +260,27 @@ const pageJsonLd = [
     </div>
   </Section>
 
-  {/* Sahne 03 · Çalışma Şeklimiz */}
+  {/* Sahne 03 · Neden Biz */}
+  <Section space="tight">
+    <div class="why">
+      <div class="why__head" data-reveal>
+        <Eyebrow>Neden Rast Creative?</Eyebrow>
+        <h2>Genç, güncel ve doğrudan ulaşılabilir bir prodüksiyon partneri.</h2>
+      </div>
+      <ul class="why__grid" aria-label="Rast Creative tercih sebepleri">
+        {
+          whyUs.map((item) => (
+            <li class="why__item" data-reveal>
+              <h3>{item.t}</h3>
+              <p>{item.d}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </Section>
+
+  {/* Sahne 04 · Çalışma Şeklimiz */}
   <Section space="tight" class="workflow-section">
     <div class="workflow-head" data-reveal>
       <Eyebrow>Çalışma Şeklimiz</Eyebrow>
@@ -272,7 +303,7 @@ const pageJsonLd = [
     </ol>
   </Section>
 
-  {/* Sahne 04 · Yaklaşımımız */}
+  {/* Sahne 05 · Yaklaşımımız */}
   <Section tone="ink" space="tight">
     <Eyebrow tone="paper">Yaklaşımımız</Eyebrow>
     <ul class="approach">
@@ -287,7 +318,7 @@ const pageJsonLd = [
     </ul>
   </Section>
 
-  {/* Sahne 05 · Güven Sinyalleri */}
+  {/* Sahne 06 · Güven Sinyalleri */}
   <Section space="tight">
     <div class="trust">
       <div data-reveal>
@@ -300,7 +331,7 @@ const pageJsonLd = [
     </div>
   </Section>
 
-  {/* Sahne 06 · Ekipman */}
+  {/* Sahne 07 · Ekipman */}
   <Section width="narrow">
     <div class="equip" data-reveal>
       <Eyebrow>Ekipman</Eyebrow>
@@ -322,7 +353,7 @@ const pageJsonLd = [
     </div>
   </Section>
 
-  {/* Sahne 07 · Tanışalım */}
+  {/* Sahne 08 · Tanışalım */}
   <Section tone="ink" space="tight">
     <div class="cta" data-reveal>
       <Eyebrow tone="paper">Tanışalım</Eyebrow>
@@ -393,6 +424,40 @@ const pageJsonLd = [
     display: grid;
     gap: 0.75rem;
     max-width: 44rem;
+  }
+  .why {
+    display: grid;
+    gap: 1.7rem;
+  }
+  .why__head {
+    display: grid;
+    gap: 0.7rem;
+    max-width: 48rem;
+  }
+  .why__head h2 {
+    margin: 0;
+    max-width: 18ch;
+  }
+  .why__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .why__item {
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+  }
+  .why__item h3 {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+  .why__item p {
+    margin: 0.55rem 0 0;
+    color: var(--ink-soft);
+    line-height: 1.55;
   }
   .workflow-head h2,
   .trust__title {
@@ -495,6 +560,7 @@ const pageJsonLd = [
     max-width: 13ch;
     font-size: clamp(2.45rem, 7vw, 5rem);
     line-height: 0.96;
+    overflow-wrap: anywhere;
   }
   .team-hero__text {
     margin: 1.2rem 0 0;
@@ -550,22 +616,6 @@ const pageJsonLd = [
     display: grid;
     grid-template-columns: 1fr;
     gap: 1rem;
-  }
-  .team-cta {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.9rem;
-    margin-top: 0.5rem;
-    padding: 1.45rem 0 0;
-    border-top: 1px solid var(--line);
-  }
-  .team-cta p {
-    margin: 0;
-    max-width: 34rem;
-    color: var(--ink-soft);
-    font-size: 0.98rem;
-    line-height: 1.5;
   }
   .member-card {
     display: flex;
@@ -638,6 +688,7 @@ const pageJsonLd = [
     font-weight: 700;
     line-height: var(--leading-flat);
     color: var(--ink);
+    overflow-wrap: anywhere;
   }
   .member-card__focus {
     margin: 0.8rem 0 0;
@@ -697,6 +748,45 @@ const pageJsonLd = [
   .member-card__link:active {
     transform: translateY(0);
   }
+  @media (max-width: 520px) {
+    .team-hero {
+      gap: 1.6rem;
+    }
+    .team-hero__title {
+      max-width: 11ch;
+      font-size: clamp(2.35rem, 11vw, 3.1rem);
+      line-height: 1;
+    }
+    .team-hero__text {
+      margin-top: 1rem;
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+    .team-hero__text--small {
+      font-size: 0.95rem;
+    }
+    .hero-actions {
+      width: min(100%, 21rem);
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+    .hero-actions :global(.btn) {
+      width: 100%;
+      min-height: 50px;
+      justify-content: center;
+      white-space: normal;
+      text-align: center;
+    }
+    .team-stats {
+      margin-top: 1.35rem;
+    }
+    .member-card__photo-container {
+      aspect-ratio: 1 / 0.78;
+    }
+    .member-card__body {
+      gap: 1.15rem;
+    }
+  }
   .about-photo {
     display: block;
     width: 100%;
@@ -741,8 +831,8 @@ const pageJsonLd = [
     html.js .team-hero__intro[data-reveal],
     html.js .team-stats [data-reveal],
     html.js .team-grid [data-reveal],
-    html.js .team-cta[data-reveal],
     html.js .vision-mission [data-reveal],
+    html.js .why [data-reveal],
     html.js .workflow-head[data-reveal],
     html.js .workflow [data-reveal],
     html.js .approach [data-reveal],
@@ -754,8 +844,8 @@ const pageJsonLd = [
     html.js .team-hero__intro[data-reveal].is-revealed,
     html.js .team-stats [data-reveal].is-revealed,
     html.js .team-grid [data-reveal].is-revealed,
-    html.js .team-cta[data-reveal].is-revealed,
     html.js .vision-mission [data-reveal].is-revealed,
+    html.js .why [data-reveal].is-revealed,
     html.js .workflow-head[data-reveal].is-revealed,
     html.js .workflow [data-reveal].is-revealed,
     html.js .approach [data-reveal].is-revealed,
@@ -767,12 +857,14 @@ const pageJsonLd = [
     .team-stats [data-reveal]:nth-child(2),
     .team-grid [data-reveal]:nth-child(2),
     .vision-mission [data-reveal]:nth-child(2),
+    .why__grid [data-reveal]:nth-child(2),
     .workflow [data-reveal]:nth-child(2),
     .approach [data-reveal]:nth-child(2),
     .trust__list [data-reveal]:nth-child(2) {
       transition-delay: 0.07s;
     }
     .team-stats [data-reveal]:nth-child(3),
+    .why__grid [data-reveal]:nth-child(3),
     .workflow [data-reveal]:nth-child(3),
     .approach [data-reveal]:nth-child(3),
     .trust__list [data-reveal]:nth-child(3) {
@@ -798,10 +890,6 @@ const pageJsonLd = [
       grid-template-columns: minmax(19rem, 0.85fr) minmax(0, 1.15fr);
       align-items: start;
     }
-    .team-hero__intro {
-      position: sticky;
-      top: 6.5rem;
-    }
     .approach {
       grid-template-columns: repeat(3, 1fr);
       gap: 2.5rem;
@@ -812,6 +900,15 @@ const pageJsonLd = [
     }
     .vision-mission__item h2 {
       max-width: 13ch;
+    }
+    .why {
+      grid-template-columns: minmax(16rem, 0.7fr) minmax(0, 1.3fr);
+      gap: clamp(2rem, 5vw, 4rem);
+      align-items: start;
+    }
+    .why__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.3rem;
     }
     .workflow {
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -832,20 +929,6 @@ const pageJsonLd = [
     .team-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 1rem;
-    }
-    .team-cta {
-      grid-column: 2;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      align-self: start;
-      gap: 1.5rem;
-      margin-top: clamp(1.5rem, 3vw, 2.5rem);
-      padding-top: 1.4rem;
-      min-width: 0;
-    }
-    .team-cta p {
-      max-width: 42rem;
     }
   }
   @media (min-width: 1100px) {

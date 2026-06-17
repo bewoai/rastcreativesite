@@ -291,6 +291,7 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
   }
   .tabbar__inner li {
     flex: 1 1 0;
+    min-width: 0;
   }
   .tab {
     display: flex;
@@ -319,9 +320,27 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
     letter-spacing: 0;
     text-transform: uppercase;
     white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .tab[aria-current="page"] {
     color: var(--amber-text);
+  }
+
+  @media (max-width: 380px) {
+    .tabbar {
+      padding-inline: 0.45rem;
+    }
+    .tabbar__inner {
+      gap: 0.08rem;
+    }
+    .tab {
+      padding-inline: 0.08rem;
+    }
+    .tab__label {
+      font-size: 0.58rem;
+    }
   }
 </style>
 
