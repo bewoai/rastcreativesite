@@ -1,4 +1,5 @@
 ---
+import { getCollection } from "astro:content";
 import { Picture } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Section from "../components/Section.astro";
@@ -7,6 +8,7 @@ import Button from "../components/Button.astro";
 import Icon from "../components/Icon.astro";
 import { PRIMARY_CTA, SITE } from "../consts";
 import { BUSINESS_ID, breadcrumb } from "../lib/schema";
+import { groupByBrand } from "../lib/brands";
 import equipPhoto from "../assets/photos/studio-lighting.jpg";
 import muhammedPhoto from "../assets/photos/muhammed-al-sheikhly.png";
 import beratPhoto from "../assets/photos/berat-degirmenci.png";
@@ -20,19 +22,47 @@ const pageTitle = "Hakkımızda | Sakarya Video Prodüksiyon Ekibi";
 const pageDescription =
   "Rast Creative Studio, Sakarya merkezli video prodüksiyon ekibi. Tanıtım filmi, sosyal medya videosu, podcast prodüksiyonu, kurgu ve dijital reklam süreçlerini birlikte planlarız.";
 
+const projects = (await getCollection("projects")).filter((p) => !p.data.draft);
+const brandCount = groupByBrand(projects).length;
+
 const approach = [
   {
-    t: "Doğru kare",
-    d: "İsabetli ve gösterişsiz. Her karede markanın özünü yakalamayı hedefleriz — gürültü değil, netlik.",
+    t: "Önce işi anlarız",
+    d: "Çekime geçmeden önce markanın derdini, kullanılacak mecrayı ve izleyicinin neyi görmesi gerektiğini netleştiririz.",
   },
   {
-    t: "Yerinde, Sakarya'da",
-    d: "Çekim ekibiyle sahadayız; ön görüşmeden teslime kadar süreci yüz yüze yönetiriz.",
+    t: "Sahada sade kalırız",
+    d: "Set günü karmaşayı azaltır, çekim akışını önceden planlar ve kararları görüntünün ihtiyacına göre veririz.",
   },
   {
-    t: "Sinema standardı",
-    d: "Profesyonel sinema kamera ve optik parkıyla, her bütçede sinematik bir görüntü dili kurarız.",
+    t: "Teslimi kullanıma hazır yaparız",
+    d: "Videoyu sadece güzel görünsün diye değil; web, sosyal medya, reklam ve sunum kullanımlarına hazır olacak şekilde teslim ederiz.",
   },
+];
+
+const workflow = [
+  {
+    n: "01",
+    t: "İhtiyacı netleştiririz",
+    d: "Projenin amacı, hedef kitlesi, yayınlanacağı mecra ve teslim formatları ilk görüşmede belirlenir.",
+  },
+  {
+    n: "02",
+    t: "Çekimi planlarız",
+    d: "Mekan, ekipman, çekim akışı ve zaman çizelgesi önceden hazırlanır; sürprizleri sahaya bırakmayız.",
+  },
+  {
+    n: "03",
+    t: "Kurgu ve teslimi yönetiriz",
+    d: "Renk, ses, altyazı ve reklam varyasyonları dahil gerekli çıktıları düzenli revizyon akışıyla teslim ederiz.",
+  },
+];
+
+const trustPoints = [
+  "Projeyi doğrudan üretimi planlayan kurucu ekiple konuşursunuz.",
+  "Sakarya ve çevresinde yerinde çekim için hızlı saha organizasyonu kurarız.",
+  "Kısa sosyal medya içeriğinden kurumsal tanıtım filmine kadar aynı prodüksiyon disiplinini koruruz.",
+  "Teslim sonrası kullanım ihtiyacını da düşünür; reklam, web ve sosyal medya formatlarını baştan planlarız.",
 ];
 
 const teamMembers = [
@@ -59,9 +89,9 @@ const teamMembers = [
 ];
 
 const teamStats = [
-  { value: "2", label: "Kurucu ortak" },
-  { value: "Sakarya", label: "Merkezli saha ekibi" },
-  { value: "Prodüksiyon + Reklam", label: "Tek planlama masası" },
+  { value: "2", label: "Direkt muhatap kurucu ortak" },
+  { value: `${brandCount}+`, label: "Marka deneyimi" },
+  { value: `${projects.length}`, label: "Yayında proje ve içerik" },
 ];
 
 const pageJsonLd = [
@@ -117,12 +147,21 @@ const pageJsonLd = [
     <div class="team-hero">
       <div class="team-hero__intro">
         <Eyebrow>Kurucu Ekip</Eyebrow>
-        <h1 class="team-hero__title">Sakarya'da video prodüksiyon ekibi.</h1>
+        <h1 class="team-hero__title">Sakarya'da işi sahiplenen video prodüksiyon ekibi.</h1>
         <p class="team-hero__text">
-          Rast Creative Studio'da tanıtım filmi, sosyal medya videosu, podcast prodüksiyonu, kurgu,
-          reklam dili ve teslim süreci doğrudan kurucu ekip tarafından planlanır. Sakarya merkezli
-          kompakt bir prodüksiyon yapısıyla çalışır; projeyi sahada takip eder, süreci açık ve düzenli tutarız.
+          Rast Creative Studio, çekimi sadece kamera günü olarak görmez. Markanın ne anlatmak
+          istediğini, videonun nerede kullanılacağını ve teslimden sonra nasıl sonuç üretmesi
+          gerektiğini baştan planlayan kompakt bir prodüksiyon ekibidir.
         </p>
+        <p class="team-hero__text team-hero__text--small">
+          Tanıtım filmi, sosyal medya videosu, podcast prodüksiyonu, kurgu ve dijital reklam dili
+          doğrudan kurucu ekip tarafından yönetilir. Bu yüzden proje boyunca muhatabınız değişmez;
+          fikir, çekim ve teslim aynı masada ilerler.
+        </p>
+        <div class="hero-actions" aria-label="Hakkımızda hızlı bağlantılar">
+          <Button href={PRIMARY_CTA.href} arrow>{PRIMARY_CTA.label}</Button>
+          <Button href="/projeler" variant="secondary" arrow>İşleri İncele</Button>
+        </div>
         <ul class="team-stats" aria-label="Rast Creative ekip özeti">
           {
             teamStats.map((stat) => (
@@ -185,6 +224,29 @@ const pageJsonLd = [
     </div>
   </Section>
 
+  {/* Sahne 02 · Çalışma Şeklimiz */}
+  <Section space="tight" class="workflow-section">
+    <div class="workflow-head">
+      <Eyebrow>Çalışma Şeklimiz</Eyebrow>
+      <h2>İyi bir video, set gününden önce netleşir.</h2>
+      <p>
+        Sürecin başında neyi, kimin için ve hangi formatta üreteceğimizi netleştiririz;
+        böylece çekim günü daha sakin, teslim süreci daha öngörülebilir ilerler.
+      </p>
+    </div>
+    <ol class="workflow" aria-label="Rast Creative çalışma süreci">
+      {
+        workflow.map((step) => (
+          <li class="workflow__item">
+            <span class="workflow__n">{step.n}</span>
+            <h3>{step.t}</h3>
+            <p>{step.d}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
+
   {/* Sahne 03 · Yaklaşımımız */}
   <Section tone="ink" space="tight">
     <Eyebrow tone="paper">Yaklaşımımız</Eyebrow>
@@ -200,15 +262,28 @@ const pageJsonLd = [
     </ul>
   </Section>
 
-  {/* Sahne 04 · Ekipman */}
+  {/* Sahne 04 · Güven Sinyalleri */}
+  <Section space="tight">
+    <div class="trust">
+      <div>
+        <Eyebrow>Nasıl Fark Yaratıyoruz?</Eyebrow>
+        <h2 class="trust__title">Küçük ekip, net sorumluluk, temiz teslim.</h2>
+      </div>
+      <ul class="trust__list" aria-label="Rast Creative güven veren çalışma prensipleri">
+        {trustPoints.map((point) => <li>{point}</li>)}
+      </ul>
+    </div>
+  </Section>
+
+  {/* Sahne 05 · Ekipman */}
   <Section width="narrow">
     <div class="equip">
       <Eyebrow>Ekipman</Eyebrow>
       <h2 class="equip__title">Sinema Standardı Ekipman</h2>
       <p class="equip__text">
-        Görüntü kalitesinden ödün vermiyoruz. Reklamdan medikale her projede,
-        sinema dünyasının standartlarında profesyonel kamera gövdeleri ve optiklerle
-        çekim yapıyor; renk ve detayı en üst standartta tutuyoruz.
+        Görüntü kalitesinden ödün vermiyoruz; ama ekipmanı gösteriş için değil,
+        hikayeyi daha temiz anlatmak için kullanıyoruz. Reklamdan medikale her projede
+        kamera, ışık, ses ve kurgu kararlarını markanın ihtiyacına göre kuruyoruz.
       </p>
       <Picture
         src={equipPhoto}
@@ -222,11 +297,15 @@ const pageJsonLd = [
     </div>
   </Section>
 
-  {/* Sahne 05 · Tanışalım */}
+  {/* Sahne 06 · Tanışalım */}
   <Section tone="ink" space="tight">
     <div class="cta">
       <Eyebrow tone="paper">Tanışalım</Eyebrow>
-      <h2 class="cta__title">Sakarya'da bir kahve, bir ön görüşme.</h2>
+      <h2 class="cta__title">Projenin neye dönüşeceğini birlikte netleştirelim.</h2>
+      <p class="cta__text">
+        İlk görüşmede kapsamı, çekim ihtiyacını ve teslim formatlarını konuşur;
+        size uygulanabilir bir prodüksiyon planı çıkarırız.
+      </p>
       <Button href={PRIMARY_CTA.href} size="lg" arrow>{PRIMARY_CTA.label}</Button>
     </div>
   </Section>
@@ -256,6 +335,87 @@ const pageJsonLd = [
     color: color-mix(in srgb, var(--on-ink) 75%, transparent);
     line-height: var(--leading-body);
   }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.35rem;
+  }
+  .workflow-head {
+    display: grid;
+    gap: 0.75rem;
+    max-width: 44rem;
+  }
+  .workflow-head h2,
+  .trust__title {
+    margin: 0;
+  }
+  .workflow-head p {
+    margin: 0;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .workflow {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    list-style: none;
+    margin: 2rem 0 0;
+    padding: 0;
+    counter-reset: workflow;
+  }
+  .workflow__item {
+    display: grid;
+    gap: 0.55rem;
+    padding: 1.1rem 0;
+    border-top: 1px solid var(--line);
+  }
+  .workflow__n {
+    color: var(--amber-text);
+    font-family: var(--font-utility);
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+  .workflow__item h3 {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+  .workflow__item p {
+    margin: 0;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+  .trust {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .trust__list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .trust__list li {
+    padding: 1rem 0;
+    border-top: 1px solid var(--line);
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+  .trust__list li::before {
+    content: "";
+    display: inline-block;
+    width: 0.55rem;
+    height: 0.55rem;
+    margin-right: 0.65rem;
+    border-radius: 999px;
+    background: var(--amber);
+    vertical-align: 0.05em;
+  }
   .team-hero {
     display: grid;
     grid-template-columns: 1fr;
@@ -277,6 +437,10 @@ const pageJsonLd = [
     color: var(--ink-soft);
     font-size: clamp(1.02rem, 1.4vw, 1.16rem);
     line-height: var(--leading-body);
+  }
+  .team-hero__text--small {
+    margin-top: 0.85rem;
+    font-size: 0.98rem;
   }
   .team-stats {
     display: grid;
@@ -486,8 +650,14 @@ const pageJsonLd = [
   }
   .cta__title {
     margin: 0;
-    max-width: 20ch;
+    max-width: 24ch;
     color: var(--on-ink);
+  }
+  .cta__text {
+    margin: 0;
+    max-width: 42rem;
+    color: color-mix(in srgb, var(--on-ink) 72%, transparent);
+    line-height: var(--leading-body);
   }
   @media (min-width: 768px) {
     .team-hero {
@@ -501,6 +671,22 @@ const pageJsonLd = [
     .approach {
       grid-template-columns: repeat(3, 1fr);
       gap: 2.5rem;
+    }
+    .workflow {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.5rem;
+    }
+    .workflow__item {
+      padding-top: 1.25rem;
+    }
+    .trust {
+      grid-template-columns: minmax(16rem, 0.75fr) minmax(0, 1.25fr);
+      align-items: start;
+      gap: clamp(2rem, 5vw, 4rem);
+    }
+    .trust__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 1.5rem;
     }
     .team-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
