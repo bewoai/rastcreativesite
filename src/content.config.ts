@@ -28,6 +28,7 @@ const projects = defineCollection({
     summary: z.string().optional(),
     client: z.string().optional(),
     year: z.number().int().optional(),
+    publishDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
     duration: z.string().optional(), // timecode shown on the card, e.g. "01:24"
     featured: z.boolean().default(false), // surfaces in homepage "Seçili işler"
     order: z.number().default(0),

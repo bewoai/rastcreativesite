@@ -7,6 +7,7 @@ poster: "https://i.ytimg.com/vi/JnIajHHQ9rM/maxresdefault.jpg"
 summary: "ThermoWay için dikey sosyal medya kurgusu."
 client: "ThermoWay"
 year: 2025
+publishDate: "2026-06-14"
 featured: false
 order: 14
 posterAlt: "ThermoWay endüstriyel soğutma cihazları dikey sosyal medya kurgusu video kapağı"

@@ -7,6 +7,7 @@ poster: "https://i.ytimg.com/vi/MbNmlRtUPQc/oardefault.jpg"
 summary: "Adatıp Hastanesi için vizyon ve gelecek temalı dikey sosyal medya içeriği."
 client: "Adatıp Hastanesi"
 year: 2025
+publishDate: "2026-06-15"
 featured: false
 order: 23
 posterAlt: "Adatıp Hastanesi 'gelecek bugünden başlıyor' vizyon temalı dikey sosyal medya videosu kapağı"

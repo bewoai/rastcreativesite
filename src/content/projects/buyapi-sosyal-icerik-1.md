@@ -7,6 +7,7 @@ poster: "https://i.ytimg.com/vi/8ze42tjjhZg/maxresdefault.jpg"
 summary: "Buyapı için dikey sosyal medya içeriği."
 client: "Buyapı"
 year: 2025
+publishDate: "2026-06-14"
 featured: false
 order: 9
 posterAlt: "Buyapı inşaat ve mimarlık projeleri dikey sosyal medya tanıtım videosu kapağı"

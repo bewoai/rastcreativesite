@@ -6,6 +6,7 @@ poster: "https://i.ytimg.com/vi/2DSMTNiYz0M/maxresdefault.jpg"
 summary: "Meteors Shipping için kurumsal tanıtım filmi."
 client: "Meteors Shipping"
 year: 2024
+publishDate: "2026-06-14"
 featured: true
 order: 3
 posterAlt: "Meteors Shipping deniz taşımacılığı ve lojistik kurumsal tanıtım filmi kapağı"

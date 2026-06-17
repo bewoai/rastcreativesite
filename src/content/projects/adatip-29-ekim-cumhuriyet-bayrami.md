@@ -7,6 +7,7 @@ poster: "https://i.ytimg.com/vi/HnQol4oRpbY/oardefault.jpg"
 summary: "Adatıp Hastanesi için 29 Ekim Cumhuriyet Bayramı'na özel dikey sosyal medya içeriği."
 client: "Adatıp Hastanesi"
 year: 2025
+publishDate: "2026-06-15"
 featured: false
 order: 22
 posterAlt: "Adatıp Hastanesi 29 Ekim Cumhuriyet Bayramı kutlama dikey sosyal medya videosu kapağı"

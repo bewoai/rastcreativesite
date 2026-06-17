@@ -7,6 +7,7 @@ poster: "https://i.ytimg.com/vi/pc2yzaWsGfk/oardefault.jpg"
 summary: "Radyasyon Onkolojisi Uzmanı Uzm. Dr. Atınç Aksu radyoterapi sürecini anlatıyor."
 client: "Adatıp Hastanesi"
 year: 2025
+publishDate: "2026-06-15"
 featured: false
 order: 24
 posterAlt: "Adatıp Hastanesi Radyasyon Onkolojisi Uzmanı Uzm. Dr. Atınç Aksu radyoterapi bilgilendirme dikey videosu kapağı"

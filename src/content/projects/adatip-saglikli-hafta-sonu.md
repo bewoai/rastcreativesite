@@ -7,6 +7,7 @@ poster: "https://i.ytimg.com/vi/gvOc6DPv0G0/oardefault.jpg"
 summary: "Adatıp Hastanesi için sağlıklı hafta sonu dileği temalı dikey sosyal medya içeriği."
 client: "Adatıp Hastanesi"
 year: 2025
+publishDate: "2026-06-15"
 featured: false
 order: 16
 posterAlt: "Adatıp Hastanesi sağlıklı hafta sonu dileği dikey sosyal medya videosu kapağı"

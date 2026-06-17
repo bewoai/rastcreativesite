@@ -7,6 +7,7 @@ poster: "https://i.ytimg.com/vi/LTuUOPdr4hM/hqdefault.jpg"
 summary: "Aytaş Home için kısa video ve sosyal medya içerik üretimi."
 client: "Aytaş Home"
 year: 2025
+publishDate: "2026-06-16"
 featured: false
 order: 16.4
 posterAlt: "Aytaş Home kısa dikey sosyal medya videosu önizleme kapağı"

@@ -7,6 +7,7 @@ poster: "https://i.ytimg.com/vi/LiaCxph8j-g/maxresdefault.jpg"
 summary: "Isıtan için dikey sosyal medya kurgusu."
 client: "Isıtan"
 year: 2025
+publishDate: "2026-06-14"
 featured: false
 order: 11
 posterAlt: "Isıtan mühendislik ve mekanik sistemler dikey sosyal medya Reels kurgusu kapağı"

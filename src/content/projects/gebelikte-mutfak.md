@@ -6,6 +6,7 @@ poster: "https://i.ytimg.com/vi/fjJt4ANqGw0/maxresdefault.jpg"
 summary: "Op. Dr. Duygu Cebecik Özmüş medikal içerik serisi #2."
 client: "Op. Dr. Duygu Cebecik Özmüş"
 year: 2024
+publishDate: "2026-06-14"
 featured: true
 order: 7
 posterAlt: "Op. Dr. Duygu Cebecik Özmüş ile hamilelikte mutfakta dikkat edilmesi gerekenler videosu kapağı"

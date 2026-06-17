@@ -6,6 +6,7 @@ poster: "/covers/federal-kurumsal.svg"
 summary: "Federal markası için hazırlanan kurumsal tanıtım filmi."
 client: "Federal"
 year: 2024
+publishDate: "2026-06-15"
 featured: false
 order: 2
 posterAlt: "Federal kurumsal tanıtım filmi için kırmızı marka kapak görseli"

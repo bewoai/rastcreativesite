@@ -6,6 +6,7 @@ poster: "https://i.ytimg.com/vi/kMjFDnWHdYs/maxresdefault.jpg"
 summary: "Mavi Vatan Gemi İnşa Atölyesi transfer süreci tanıtım filmi."
 client: "Mavi Vatan"
 year: 2024
+publishDate: "2026-06-14"
 featured: true
 order: 5
 posterAlt: "Mavi Vatan Gemi İnşaat Atölyesi gemi transfer süreci kurumsal belgesel videosu kapağı"

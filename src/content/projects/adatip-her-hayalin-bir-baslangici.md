@@ -7,6 +7,7 @@ poster: "https://i.ytimg.com/vi/9bLFImyTAdU/oardefault.jpg"
 summary: "Adatıp Hastanesi için marka mesajı temalı dikey sosyal medya içeriği."
 client: "Adatıp Hastanesi"
 year: 2025
+publishDate: "2026-06-15"
 featured: false
 order: 17
 posterAlt: "Adatıp Hastanesi 'her hayalin bir başlangıcı vardır' temalı dikey sosyal medya videosu kapağı"

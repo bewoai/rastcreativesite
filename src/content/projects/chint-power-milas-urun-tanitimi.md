@@ -6,6 +6,7 @@ poster: "https://i.ytimg.com/vi/HebW055kzaU/maxresdefault.jpg"
 summary: "Chint Power Milas projesi için 4K ürün tanıtım videosu."
 client: "Chint Power"
 year: 2024
+publishDate: "2026-06-14"
 featured: true
 order: 2
 posterAlt: "Chint Power solar enerji invertörü Milas GES projesi ürün tanıtım videosu kapağı"

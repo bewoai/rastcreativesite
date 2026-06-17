@@ -7,6 +7,7 @@ poster: "https://i.ytimg.com/vi/pP-CMGd7iaQ/oardefault.jpg"
 summary: "Adatıp Hastanesi için Sevgililer Günü'ne özel dikey sosyal medya içeriği."
 client: "Adatıp Hastanesi"
 year: 2025
+publishDate: "2026-06-15"
 featured: false
 order: 20
 posterAlt: "Adatıp Hastanesi Sevgililer Günü kutlama dikey sosyal medya videosu kapağı"
