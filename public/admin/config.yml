@@ -58,14 +58,22 @@ collections:
         name: poster
         widget: image
         required: true
-        hint: Yatay kartlar için 16:9, dikey Reels için YouTube kapak URL'si veya yüklenen görsel kullanılabilir.
+        hint: "Yatay kartlar için 16:9, dikey Reels için YouTube kapak URL'si veya yüklenen görsel kullanılabilir."
       - { label: Kapak alt metni, name: posterAlt, widget: string, required: false }
       - { label: YouTube ID, name: youtubeId, widget: string, required: false }
       - { label: Vimeo ID, name: vimeoId, widget: string, required: false }
       - { label: Dış bağlantı, name: externalUrl, widget: string, required: false }
       - { label: Dikey video, name: vertical, widget: boolean, default: false, required: false }
-      - { label: Kısa önizleme videosu, name: preview, widget: string, required: false, hint: Örnek: /videos/proje-preview.mp4 }
-      - { label: Süre etiketi, name: duration, widget: string, required: false, hint: Örnek: 01:24 }
+      - label: Kısa önizleme videosu
+        name: preview
+        widget: string
+        required: false
+        hint: "Örnek: /videos/proje-preview.mp4"
+      - label: Süre etiketi
+        name: duration
+        widget: string
+        required: false
+        hint: "Örnek: 01:24"
       - { label: Ana sayfada öne çıkar, name: featured, widget: boolean, default: false, required: false }
       - { label: Sıra, name: order, widget: number, value_type: int, default: 0 }
       - { label: Taslak, name: draft, widget: boolean, default: false, required: false }
