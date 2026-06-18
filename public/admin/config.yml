@@ -33,7 +33,9 @@ collections:
     editor:
       preview: false
     fields:
-      - { label: Başlık, name: title, widget: string }
+      - label: Baslik
+        name: title
+        widget: string
       - label: Kategori
         name: category
         widget: select
@@ -44,44 +46,85 @@ collections:
           - Kurumsal
           - Medikal
           - Sosyal Medya
-      - { label: Müşteri / Marka, name: client, widget: string, required: false }
-      - { label: Yıl, name: year, widget: number, value_type: int, required: false }
-      - label: Yayın tarihi
+      - label: Musteri / Marka
+        name: client
+        widget: string
+        required: false
+      - label: Yil
+        name: year
+        widget: number
+        value_type: int
+        required: false
+      - label: Yayin tarihi
         name: publishDate
         widget: date
         format: YYYY-MM-DD
         date_format: DD.MM.YYYY
         required: false
-        hint: VideoObject uploadDate bu tarihten üretilir. Video sayfalarında boş bırakmayın.
-      - { label: Özet, name: summary, widget: text, required: false }
-      - label: Kapak görseli
+        hint: "VideoObject uploadDate bu tarihten uretilir. Video sayfalarinda bos birakmayin."
+      - label: Ozet
+        name: summary
+        widget: text
+        required: false
+      - label: Kapak gorseli
         name: poster
         widget: image
         required: true
-        hint: "Yatay kartlar için 16:9, dikey Reels için YouTube kapak URL'si veya yüklenen görsel kullanılabilir."
-      - { label: Kapak alt metni, name: posterAlt, widget: string, required: false }
-      - { label: YouTube ID, name: youtubeId, widget: string, required: false }
-      - { label: Vimeo ID, name: vimeoId, widget: string, required: false }
-      - { label: Dış bağlantı, name: externalUrl, widget: string, required: false }
-      - { label: Dikey video, name: vertical, widget: boolean, default: false, required: false }
-      - label: Kısa önizleme videosu
+        hint: "Yatay kartlar icin 16:9, dikey Reels icin YouTube kapak URL'si veya yuklenen gorsel kullanilabilir."
+      - label: Kapak alt metni
+        name: posterAlt
+        widget: string
+        required: false
+      - label: YouTube ID
+        name: youtubeId
+        widget: string
+        required: false
+      - label: Vimeo ID
+        name: vimeoId
+        widget: string
+        required: false
+      - label: Dis baglanti
+        name: externalUrl
+        widget: string
+        required: false
+      - label: Dikey video
+        name: vertical
+        widget: boolean
+        default: false
+        required: false
+      - label: Kisa onizleme videosu
         name: preview
         widget: string
         required: false
-        hint: "Örnek: /videos/proje-preview.mp4"
-      - label: Süre etiketi
+        hint: "Ornek: /videos/proje-preview.mp4"
+      - label: Sure etiketi
         name: duration
         widget: string
         required: false
-        hint: "Örnek: 01:24"
-      - { label: Ana sayfada öne çıkar, name: featured, widget: boolean, default: false, required: false }
-      - { label: Sıra, name: order, widget: number, value_type: int, default: 0 }
-      - { label: Taslak, name: draft, widget: boolean, default: false, required: false }
-      - { label: İçerik, name: body, widget: markdown, required: false }
+        hint: "Ornek: 01:24"
+      - label: Ana sayfada one cikar
+        name: featured
+        widget: boolean
+        default: false
+        required: false
+      - label: Sira
+        name: order
+        widget: number
+        value_type: int
+        default: 0
+      - label: Taslak
+        name: draft
+        widget: boolean
+        default: false
+        required: false
+      - label: Icerik
+        name: body
+        widget: markdown
+        required: false
 
   - name: blog
     label: Blog
-    label_singular: Blog Yazısı
+    label_singular: Blog Yazisi
     folder: src/content/blog
     create: true
     extension: md
@@ -93,25 +136,47 @@ collections:
     editor:
       preview: false
     fields:
-      - { label: Başlık, name: title, widget: string }
-      - { label: Meta açıklama, name: description, widget: text }
-      - { label: Yazar, name: author, widget: string, default: "Berat Değirmenci" }
-      - label: Yayın tarihi
+      - label: Baslik
+        name: title
+        widget: string
+      - label: Meta aciklama
+        name: description
+        widget: text
+      - label: Yazar
+        name: author
+        widget: string
+        default: "Berat Degirmenci"
+      - label: Yayin tarihi
         name: pubDate
         widget: date
         format: YYYY-MM-DD
         date_format: DD.MM.YYYY
-      - label: Güncelleme tarihi
+      - label: Guncelleme tarihi
         name: updatedDate
         widget: date
         format: YYYY-MM-DD
         date_format: DD.MM.YYYY
         required: false
-      - { label: Kapak görseli, name: cover, widget: image, required: false }
-      - { label: Kapak alt metni, name: coverAlt, widget: string, required: false }
-      - { label: Etiketler, name: tags, widget: list, required: false }
-      - { label: Taslak, name: draft, widget: boolean, default: false, required: false }
-      - { label: İçerik, name: body, widget: markdown }
+      - label: Kapak gorseli
+        name: cover
+        widget: image
+        required: false
+      - label: Kapak alt metni
+        name: coverAlt
+        widget: string
+        required: false
+      - label: Etiketler
+        name: tags
+        widget: list
+        required: false
+      - label: Taslak
+        name: draft
+        widget: boolean
+        default: false
+        required: false
+      - label: Icerik
+        name: body
+        widget: markdown
 
   - name: services
     label: Hizmetler
@@ -125,11 +190,25 @@ collections:
     editor:
       preview: false
     fields:
-      - { label: Başlık, name: title, widget: string }
-      - { label: Kısa özet, name: summary, widget: text }
-      - { label: Özellikler, name: features, widget: list, required: false }
-      - { label: Sıra, name: order, widget: number, value_type: int, default: 0 }
-      - { label: İçerik, name: body, widget: markdown, required: false }
+      - label: Baslik
+        name: title
+        widget: string
+      - label: Kisa ozet
+        name: summary
+        widget: text
+      - label: Ozellikler
+        name: features
+        widget: list
+        required: false
+      - label: Sira
+        name: order
+        widget: number
+        value_type: int
+        default: 0
+      - label: Icerik
+        name: body
+        widget: markdown
+        required: false
 
   - name: faq
     label: SSS
@@ -143,6 +222,14 @@ collections:
     editor:
       preview: false
     fields:
-      - { label: Soru, name: question, widget: string }
-      - { label: Sıra, name: order, widget: number, value_type: int, default: 0 }
-      - { label: Cevap, name: body, widget: markdown }
+      - label: Soru
+        name: question
+        widget: string
+      - label: Sira
+        name: order
+        widget: number
+        value_type: int
+        default: 0
+      - label: Cevap
+        name: body
+        widget: markdown
