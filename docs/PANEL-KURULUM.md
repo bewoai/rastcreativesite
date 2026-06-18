@@ -33,6 +33,24 @@ repo: bewoai/rastcreativesite
 branch: main
 ```
 
+Eger panelde GitHub ile giris yaparken `api.netlify.com/auth ... Not Found`
+ekrani gelirse panel yuklenmis, ama GitHub OAuth araci henuz kurulmam demektir.
+Decap CMS, GitHub'a guvenli baglanmak icin arada bir OAuth servisi ister;
+statik Hostinger sitesinde bu servis kendiliginden gelmez.
+
+En pratik yol:
+
+1. Netlify'de bu GitHub reposuna bagli ucretsiz bir site olusturun.
+2. GitHub'da yeni bir OAuth App olusturun.
+3. OAuth App icin Authorization callback URL degerini
+   `https://api.netlify.com/auth/done` yapin.
+4. GitHub'in verdigi Client ID ve Client Secret degerlerini Netlify'de
+   `Project configuration > Access & security > OAuth` alanina ekleyin.
+5. Paneli Netlify'nin verdigi admin adresinden test edin.
+
+Site Hostinger'da kalabilir; Netlify burada sadece GitHub girisi icin araci
+olarak kullanilir.
+
 ## Yayin akisi
 
 1. Panelden icerik degistirilir.
