@@ -31,6 +31,7 @@ Hazir repo ayari:
 ```yaml
 repo: bewoai/rastcreativesite
 branch: main
+site_domain: vocal-capybara-3732a8.netlify.app
 ```
 
 Eger panelde GitHub ile giris yaparken `api.netlify.com/auth ... Not Found`
@@ -49,7 +50,8 @@ En pratik yol:
 5. Paneli Netlify'nin verdigi admin adresinden test edin.
 
 Site Hostinger'da kalabilir; Netlify burada sadece GitHub girisi icin araci
-olarak kullanilir.
+olarak kullanilir. Bu projede Netlify site domaini:
+`vocal-capybara-3732a8.netlify.app`
 
 ## Yayin akisi
 
