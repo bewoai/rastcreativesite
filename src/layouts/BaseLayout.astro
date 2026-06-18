@@ -113,12 +113,61 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
 
     {/* Google Analytics 4: queue immediately, load the external script after the page settles. */}
     <script is:inline define:vars={{ GA4_MEASUREMENT_ID }}>
+      const params = new URLSearchParams(window.location.search);
+      let storedAnalyticsDisabled = false;
+      try {
+        if (params.get("rc_analytics") === "off") {
+          localStorage.setItem("rc_analytics_disabled", "1");
+        }
+        if (params.get("rc_analytics") === "on") {
+          localStorage.removeItem("rc_analytics_disabled");
+        }
+        storedAnalyticsDisabled = localStorage.getItem("rc_analytics_disabled") === "1";
+      } catch (e) {
+        storedAnalyticsDisabled = false;
+      }
+
+      const analyticsDisabled =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1" ||
+        window.location.pathname.startsWith("/admin") ||
+        storedAnalyticsDisabled;
+
+      window[`ga-disable-${GA4_MEASUREMENT_ID}`] = analyticsDisabled;
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', GA4_MEASUREMENT_ID);
+
+      window.rcTrack = (eventName, eventParams = {}, callback) => {
+        const done = () => {
+          if (typeof callback === "function") callback();
+        };
+        if (analyticsDisabled || typeof gtag !== "function") {
+          done();
+          return;
+        }
+
+        let settled = false;
+        const finish = () => {
+          if (settled) return;
+          settled = true;
+          done();
+        };
+
+        gtag("event", eventName, {
+          ...eventParams,
+          event_callback: finish,
+          event_timeout: 1200,
+        });
+        window.setTimeout(finish, 1300);
+      };
+
+      if (!analyticsDisabled) {
+        gtag('js', new Date());
+        gtag('config', GA4_MEASUREMENT_ID);
+      }
 
       const loadAnalytics = () => {
+        if (analyticsDisabled) return;
         if (document.querySelector('script[data-ga4]')) return;
         cleanupAnalyticsTriggers();
         const s = document.createElement('script');
@@ -136,6 +185,35 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
 
       analyticsEvents.forEach((event) => window.addEventListener(event, loadAnalytics, analyticsOpts));
       window.addEventListener("load", () => window.setTimeout(loadAnalytics, 30000), { once: true });
+
+      document.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+
+        const link = target.closest("a[href]");
+        if (!(link instanceof HTMLAnchorElement)) return;
+
+        const href = link.getAttribute("href") || "";
+        if (href.startsWith("tel:")) {
+          window.rcTrack("contact_phone_click", {
+            event_category: "contact",
+            event_label: "phone",
+            link_url: href,
+          });
+        } else if (href.startsWith("mailto:")) {
+          window.rcTrack("contact_email_click", {
+            event_category: "contact",
+            event_label: "email",
+            link_url: href,
+          });
+        } else if (href.includes("wa.me/") || href.includes("api.whatsapp.com/")) {
+          window.rcTrack("contact_whatsapp_click", {
+            event_category: "contact",
+            event_label: "whatsapp_link",
+            link_url: href,
+          });
+        }
+      });
     </script>
   </head>
 

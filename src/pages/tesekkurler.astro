@@ -1,0 +1,61 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/Section.astro";
+import Button from "../components/Button.astro";
+import { CONTACT } from "../consts";
+---
+
+<BaseLayout
+  title="Teşekkürler"
+  description="Rast Creative Studio ile iletişime geçtiğiniz için teşekkürler."
+  noindex
+>
+  <Section>
+    <div class="thanks">
+      <p class="thanks__eyebrow">Mesajınız alındı</p>
+      <h1>Teşekkürler, en kısa sürede dönüş yapacağız.</h1>
+      <p>
+        Formunuz başarıyla bize ulaştı. Projeniz için uygun format, kapsam ve
+        takvim konusunda sizi telefonla veya e-posta ile bilgilendireceğiz.
+      </p>
+      <div class="thanks__actions">
+        <Button href="/" variant="secondary">Ana sayfa</Button>
+        <Button href={`tel:${CONTACT.phoneIntl}`}>Telefon et</Button>
+      </div>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .thanks {
+    max-width: 48rem;
+    padding-block: clamp(3rem, 8vw, 6rem);
+  }
+  .thanks__eyebrow {
+    margin: 0 0 0.8rem;
+    color: var(--amber-text);
+    font-family: var(--font-utility);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  h1 {
+    margin: 0;
+    max-width: 12ch;
+    font-size: clamp(2.6rem, 6vw, 5.8rem);
+    line-height: 0.96;
+  }
+  .thanks > p:not(.thanks__eyebrow) {
+    max-width: 58ch;
+    margin: 1.25rem 0 0;
+    color: var(--ink-soft);
+    font-size: 1.08rem;
+    line-height: 1.7;
+  }
+  .thanks__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 2rem;
+  }
+</style>
