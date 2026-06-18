@@ -2,13 +2,11 @@ backend:
   name: github
   repo: bewoai/rastcreativesite
   branch: main
-  base_url: https://api.netlify.com
-  auth_endpoint: auth
 
 local_backend: true
 publish_mode: editorial_workflow
 
-site_url: https://vocal-capybara-3732a8.netlify.app
+site_url: https://rastcreative.com
 display_url: https://rastcreative.com
 site_domain: vocal-capybara-3732a8.netlify.app
 logo_url: /logo-black.svg
