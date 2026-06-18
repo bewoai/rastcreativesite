@@ -1,0 +1,246 @@
+:root {
+  color-scheme: light;
+  --rast-ink: #17130f;
+  --rast-ink-soft: #3d352e;
+  --rast-muted: #776d63;
+  --rast-line: rgba(42, 35, 28, 0.12);
+  --rast-panel: #fffaf2;
+  --rast-panel-strong: #ffffff;
+  --rast-charcoal: #15120f;
+  --rast-charcoal-2: #231d18;
+  --rast-orange: #f26516;
+  --rast-orange-dark: #c94705;
+  --rast-blue: #145c66;
+  --rast-shadow: 0 18px 45px rgba(23, 19, 15, 0.14);
+  --rast-radius: 8px;
+}
+
+html,
+body {
+  min-height: 100%;
+  background:
+    radial-gradient(circle at 18% 10%, rgba(242, 101, 22, 0.12), transparent 32rem),
+    radial-gradient(circle at 82% 2%, rgba(20, 92, 102, 0.13), transparent 28rem),
+    linear-gradient(180deg, #f7f1e8 0%, #eee7dd 100%) !important;
+  color: var(--rast-ink);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif !important;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(115deg, rgba(21, 18, 15, 0.055) 0 1px, transparent 1px 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0));
+  background-size: 88px 88px, 100% 100%;
+  opacity: 0.55;
+  z-index: 0;
+}
+
+body > div {
+  position: relative;
+  z-index: 1;
+}
+
+a {
+  color: var(--rast-orange) !important;
+}
+
+header,
+nav {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+header:first-child,
+[class*="AppHeader"],
+[class*="ToolbarContainer"] {
+  background: rgba(21, 18, 15, 0.93) !important;
+  color: #fffaf2 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 16px 36px rgba(21, 18, 15, 0.24) !important;
+  backdrop-filter: blur(18px);
+}
+
+header:first-child a,
+[class*="AppHeader"] a,
+[class*="ToolbarContainer"] a,
+header:first-child button,
+[class*="AppHeader"] button,
+[class*="ToolbarContainer"] button {
+  color: #fffaf2 !important;
+}
+
+header:first-child a[aria-current],
+header:first-child a[aria-selected="true"],
+[class*="AppHeader"] a[aria-current],
+[class*="AppHeader"] a[aria-selected="true"] {
+  color: var(--rast-orange) !important;
+}
+
+main,
+[class*="AppMain"],
+[class*="CollectionPage"],
+[class*="EditorContainer"] {
+  background: transparent !important;
+}
+
+section,
+aside,
+article,
+[class*="Sidebar"],
+[class*="Card"],
+[class*="CollectionTop"],
+[class*="CollectionContainer"],
+[class*="EditorControlBar"],
+[class*="EditorControlPane"],
+[class*="PaneContainer"] {
+  border-radius: var(--rast-radius) !important;
+  border-color: var(--rast-line) !important;
+}
+
+aside,
+[class*="Sidebar"] {
+  background: rgba(255, 250, 242, 0.9) !important;
+  box-shadow: var(--rast-shadow) !important;
+  backdrop-filter: blur(12px);
+}
+
+[class*="CollectionTop"],
+[class*="CollectionContainer"],
+[class*="EditorControlPane"],
+[class*="PaneContainer"],
+[class*="Card"] {
+  background: rgba(255, 255, 255, 0.92) !important;
+  box-shadow: 0 14px 34px rgba(23, 19, 15, 0.1) !important;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--rast-ink) !important;
+  letter-spacing: 0 !important;
+}
+
+p,
+label,
+span {
+  letter-spacing: 0 !important;
+}
+
+button,
+[role="button"],
+input[type="button"],
+input[type="submit"] {
+  border-radius: 999px !important;
+  border-color: rgba(21, 18, 15, 0.15) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  box-shadow: none !important;
+}
+
+button:hover,
+[role="button"]:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover {
+  transform: translateY(-1px);
+}
+
+button:not([disabled]),
+[role="button"]:not([aria-disabled="true"]),
+input[type="submit"] {
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease !important;
+}
+
+button[style*="background"],
+button[class*="Button"],
+[class*="PrimaryButton"],
+[class*="StyledButton"] {
+  background: var(--rast-charcoal) !important;
+  color: #fffaf2 !important;
+}
+
+button[style*="background"]:hover,
+button[class*="Button"]:hover,
+[class*="PrimaryButton"]:hover,
+[class*="StyledButton"]:hover {
+  background: var(--rast-orange) !important;
+  color: #17130f !important;
+}
+
+input,
+textarea,
+select {
+  border-radius: var(--rast-radius) !important;
+  border: 1px solid rgba(42, 35, 28, 0.16) !important;
+  background: #fffaf2 !important;
+  color: var(--rast-ink) !important;
+  box-shadow: none !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: rgba(242, 101, 22, 0.7) !important;
+  box-shadow: 0 0 0 3px rgba(242, 101, 22, 0.14) !important;
+  outline: none !important;
+}
+
+[class*="Search"],
+[class*="SearchInput"] {
+  background: rgba(255, 250, 242, 0.92) !important;
+}
+
+[class*="ListCard"],
+[class*="EntryCard"],
+[class*="CollectionCard"] {
+  border-radius: var(--rast-radius) !important;
+  border: 1px solid rgba(42, 35, 28, 0.1) !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow: 0 10px 24px rgba(23, 19, 15, 0.08) !important;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease !important;
+}
+
+[class*="ListCard"]:hover,
+[class*="EntryCard"]:hover,
+[class*="CollectionCard"]:hover {
+  transform: translateY(-2px);
+  border-color: rgba(242, 101, 22, 0.28) !important;
+  box-shadow: 0 18px 36px rgba(23, 19, 15, 0.12) !important;
+}
+
+[aria-selected="true"],
+[aria-current="page"],
+[class*="Active"] {
+  border-color: rgba(242, 101, 22, 0.34) !important;
+}
+
+svg {
+  color: currentColor;
+}
+
+@media (max-width: 760px) {
+  body {
+    background:
+      radial-gradient(circle at 10% 0%, rgba(242, 101, 22, 0.14), transparent 20rem),
+      linear-gradient(180deg, #f7f1e8 0%, #eee7dd 100%) !important;
+  }
+
+  aside,
+  [class*="Sidebar"],
+  [class*="CollectionTop"],
+  [class*="CollectionContainer"],
+  [class*="Card"] {
+    border-radius: 8px !important;
+  }
+}
