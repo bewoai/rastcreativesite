@@ -33,6 +33,30 @@ const seoCoreLocations = SEO_LOCATIONS.filter((location) =>
   AREA_INDEX_LOCATION_SLUGS.includes(location.slug),
 );
 
+const deliveryPlan = [
+  {
+    t: "Çekim öncesi net plan",
+    d: "Amaç, hedef kitle, mecra, çekim akışı ve teslim formatları görüşme aşamasında belirlenir.",
+  },
+  {
+    t: "Mecra bazlı teslim",
+    d: "Web sitesi, Instagram, YouTube, reklam ve sunum kullanımı için farklı oran ve sürelerde çıktı hazırlanabilir.",
+  },
+  {
+    t: "Revizyon ve yayın hazırlığı",
+    d: "Kurgu, renk, ses, altyazı, kapak ve reklam varyasyonları kontrollü revizyon akışıyla tamamlanır.",
+  },
+];
+
+const useCases = [
+  "Kurumsal tanıtım filmi",
+  "Dikey Reels / Shorts içerikleri",
+  "Ürün ve mekan çekimi",
+  "Meta reklam videosu",
+  "Fuar ve satış sunumu",
+  "Podcast ve uzman içerikleri",
+];
+
 // Breadcrumb + a Service node per offering (local SEO).
 const pageJsonLd = [
   breadcrumb([
@@ -112,6 +136,36 @@ const pageJsonLd = [
         ))
       }
     </ul>
+  </Section>
+
+  <Section space="tight">
+    <div class="service-proof">
+      <div class="service-proof__head" data-reveal>
+        <Eyebrow>Planlı Teslim</Eyebrow>
+        <h2>Hizmeti sadece çekim günüyle sınırlı görmüyoruz.</h2>
+        <p>
+          Her hizmette önce içeriğin nerede kullanılacağını netleştiriyoruz. Böylece çekim,
+          kurgu ve teslim kararları tek bir ana videoya değil, markanın gerçek kullanım
+          alanlarına göre planlanıyor.
+        </p>
+      </div>
+      <ul class="service-proof__grid" aria-label="Hizmet teslim güvence adımları">
+        {
+          deliveryPlan.map((item) => (
+            <li data-reveal>
+              <h3>{item.t}</h3>
+              <p>{item.d}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="use-cases" data-reveal>
+        <h3>Örnek kullanım alanları</h3>
+        <ul>
+          {useCases.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </div>
   </Section>
 
   <Section space="tight">
@@ -257,6 +311,63 @@ const pageJsonLd = [
     outline: 2px solid var(--amber);
     outline-offset: 2px;
   }
+  .service-proof {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .service-proof__head {
+    display: grid;
+    gap: 0.7rem;
+    max-width: 46rem;
+  }
+  .service-proof__head h2 {
+    margin: 0;
+    max-width: 18ch;
+  }
+  .service-proof__head p {
+    margin: 0;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .service-proof__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .service-proof__grid li,
+  .use-cases {
+    padding: 1.1rem 0 0;
+    border-top: 1px solid var(--line);
+  }
+  .service-proof__grid h3,
+  .use-cases h3 {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+  .service-proof__grid p {
+    margin: 0.55rem 0 0;
+    color: var(--ink-soft);
+    line-height: 1.58;
+  }
+  .use-cases ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+  }
+  .use-cases li {
+    padding: 0.45rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    color: var(--ink-soft);
+    font-family: var(--font-utility);
+    font-size: 0.82rem;
+  }
   .cta {
     display: flex;
     flex-direction: column;
@@ -277,6 +388,18 @@ const pageJsonLd = [
     .svc {
       grid-template-columns: 6rem 1fr;
       gap: 2rem;
+    }
+    .service-proof {
+      grid-template-columns: minmax(18rem, 0.75fr) minmax(0, 1.25fr);
+      align-items: start;
+      gap: clamp(2rem, 5vw, 4rem);
+    }
+    .service-proof__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.35rem;
+    }
+    .use-cases {
+      grid-column: 2;
     }
   }
 </style>

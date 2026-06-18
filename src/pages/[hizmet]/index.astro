@@ -28,6 +28,20 @@ const description = `${service.name} — ${service.tagline}. Sakarya ve çevre i
 const coreLocations = SEO_LOCATIONS.filter((l) => l.core);
 const nearbyLocations = SEO_LOCATIONS.filter((l) => !l.core);
 const audience = getServiceAudience(service.slug);
+const serviceDeliverables = [
+  {
+    t: "Plan",
+    d: `${service.name} için hedef, mecra, çekim akışı ve teslim ölçüleri başlangıçta netleşir.`,
+  },
+  {
+    t: "Çıktı",
+    d: "Ana video, dikey/kısa varyasyon, kapak, altyazı veya reklam kesiti ihtiyaca göre hazırlanır.",
+  },
+  {
+    t: "Kullanım",
+    d: "Web sitesi, sosyal medya, YouTube, reklam kampanyası veya satış sunumu için kullanılabilir dosyalar teslim edilir.",
+  },
+];
 
 const jsonLd = [
   breadcrumb([
@@ -77,6 +91,20 @@ const jsonLd = [
       <h2 class="fit__title">Bu hizmet kimler için uygun?</h2>
       <ul class="fit__list">
         {audience.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+
+    <div class="deliverables" data-reveal>
+      <h2 class="deliverables__title">Süreç ve teslim nasıl netleşir?</h2>
+      <ul class="deliverables__list">
+        {
+          serviceDeliverables.map((item) => (
+            <li>
+              <span>{item.t}</span>
+              <p>{item.d}</p>
+            </li>
+          ))
+        }
       </ul>
     </div>
 
@@ -207,6 +235,45 @@ const jsonLd = [
     background: var(--amber);
     vertical-align: 0.08em;
   }
+  .deliverables {
+    margin-top: 1.1rem;
+    padding: 1.4rem clamp(1.15rem, 4vw, 1.8rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--ink) 2%, transparent);
+  }
+  .deliverables__title {
+    margin: 0 0 1rem;
+    font-family: var(--font-utility);
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+  }
+  .deliverables__list {
+    display: grid;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .deliverables__list li {
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--line);
+  }
+  .deliverables__list span {
+    display: inline-flex;
+    margin-bottom: 0.4rem;
+    color: var(--amber-text);
+    font-family: var(--font-utility);
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .deliverables__list p {
+    margin: 0;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
   .region-title {
     font-size: 1rem;
     font-family: var(--font-utility);
@@ -238,6 +305,10 @@ const jsonLd = [
   @media (min-width: 640px) {
     .loc-grid {
       grid-template-columns: 1fr 1fr;
+    }
+    .deliverables__list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.2rem;
     }
   }
 </style>

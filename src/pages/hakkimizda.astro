@@ -80,6 +80,24 @@ const whyUs = [
   },
 ];
 
+const projectProof = [
+  {
+    k: "Süreç",
+    t: "Başlamadan önce kapsam netleşir.",
+    d: "Amaç, hedef kitle, çekim günü, sahne akışı ve revizyon noktaları ilk plan içinde yazılı hale gelir.",
+  },
+  {
+    k: "Teslim",
+    t: "Video tek dosya olarak kalmaz.",
+    d: "İhtiyaca göre yatay ana film, dikey Reels/Shorts, kısa reklam varyasyonu, kapak ve altyazı dosyaları planlanır.",
+  },
+  {
+    k: "Kullanım",
+    t: "İçerik nerede yaşayacaksa ona göre üretilir.",
+    d: "Web sitesi, Instagram, YouTube, Meta reklamları, satış sunumu veya fuar ekranı için ayrı kullanım senaryosu düşünülür.",
+  },
+];
+
 const teamMembers = [
   {
     name: "Muhammed Al Sheikhly",
@@ -280,7 +298,33 @@ const pageJsonLd = [
     </div>
   </Section>
 
-  {/* Sahne 04 · Çalışma Şeklimiz */}
+  {/* Sahne 04 · Proje Güvencesi */}
+  <Section space="tight">
+    <div class="proof">
+      <div class="proof__head" data-reveal>
+        <Eyebrow>Proje Güvencesi</Eyebrow>
+        <h2>Güven veren şey büyük cümleler değil, net teslim planıdır.</h2>
+        <p>
+          Her işi sadece “çekim yapalım” diye ele almayız. Projenin başlamadan önce
+          nasıl ilerleyeceğini, sonunda hangi dosyaların çıkacağını ve bu içeriklerin
+          nerede kullanılacağını birlikte netleştiririz.
+        </p>
+      </div>
+      <ul class="proof__grid" aria-label="Rast Creative proje güvence maddeleri">
+        {
+          projectProof.map((item) => (
+            <li class="proof__item" data-reveal>
+              <span>{item.k}</span>
+              <h3>{item.t}</h3>
+              <p>{item.d}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </Section>
+
+  {/* Sahne 05 · Çalışma Şeklimiz */}
   <Section space="tight" class="workflow-section">
     <div class="workflow-head" data-reveal>
       <Eyebrow>Çalışma Şeklimiz</Eyebrow>
@@ -303,7 +347,7 @@ const pageJsonLd = [
     </ol>
   </Section>
 
-  {/* Sahne 05 · Yaklaşımımız */}
+  {/* Sahne 06 · Yaklaşımımız */}
   <Section tone="ink" space="tight">
     <Eyebrow tone="paper">Yaklaşımımız</Eyebrow>
     <ul class="approach">
@@ -318,7 +362,7 @@ const pageJsonLd = [
     </ul>
   </Section>
 
-  {/* Sahne 06 · Güven Sinyalleri */}
+  {/* Sahne 07 · Güven Sinyalleri */}
   <Section space="tight">
     <div class="trust">
       <div data-reveal>
@@ -331,7 +375,7 @@ const pageJsonLd = [
     </div>
   </Section>
 
-  {/* Sahne 07 · Ekipman */}
+  {/* Sahne 08 · Ekipman */}
   <Section width="narrow">
     <div class="equip" data-reveal>
       <Eyebrow>Ekipman</Eyebrow>
@@ -353,7 +397,7 @@ const pageJsonLd = [
     </div>
   </Section>
 
-  {/* Sahne 08 · Tanışalım */}
+  {/* Sahne 09 · Tanışalım */}
   <Section tone="ink" space="tight">
     <div class="cta" data-reveal>
       <Eyebrow tone="paper">Tanışalım</Eyebrow>
@@ -424,6 +468,55 @@ const pageJsonLd = [
     display: grid;
     gap: 0.75rem;
     max-width: 44rem;
+  }
+  .proof {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .proof__head {
+    display: grid;
+    gap: 0.7rem;
+    max-width: 46rem;
+  }
+  .proof__head h2 {
+    margin: 0;
+    max-width: 17ch;
+  }
+  .proof__head p {
+    margin: 0;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .proof__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .proof__item {
+    padding: 1rem 0 0;
+    border-top: 1px solid var(--line);
+  }
+  .proof__item span {
+    display: inline-flex;
+    margin-bottom: 0.7rem;
+    color: var(--amber-text);
+    font-family: var(--font-utility);
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .proof__item h3 {
+    margin: 0;
+    font-size: 1.08rem;
+  }
+  .proof__item p {
+    margin: 0.6rem 0 0;
+    color: var(--ink-soft);
+    line-height: 1.58;
   }
   .why {
     display: grid;
@@ -833,6 +926,7 @@ const pageJsonLd = [
     html.js .team-grid [data-reveal],
     html.js .vision-mission [data-reveal],
     html.js .why [data-reveal],
+    html.js .proof [data-reveal],
     html.js .workflow-head[data-reveal],
     html.js .workflow [data-reveal],
     html.js .approach [data-reveal],
@@ -846,6 +940,7 @@ const pageJsonLd = [
     html.js .team-grid [data-reveal].is-revealed,
     html.js .vision-mission [data-reveal].is-revealed,
     html.js .why [data-reveal].is-revealed,
+    html.js .proof [data-reveal].is-revealed,
     html.js .workflow-head[data-reveal].is-revealed,
     html.js .workflow [data-reveal].is-revealed,
     html.js .approach [data-reveal].is-revealed,
@@ -858,6 +953,7 @@ const pageJsonLd = [
     .team-grid [data-reveal]:nth-child(2),
     .vision-mission [data-reveal]:nth-child(2),
     .why__grid [data-reveal]:nth-child(2),
+    .proof__grid [data-reveal]:nth-child(2),
     .workflow [data-reveal]:nth-child(2),
     .approach [data-reveal]:nth-child(2),
     .trust__list [data-reveal]:nth-child(2) {
@@ -865,6 +961,7 @@ const pageJsonLd = [
     }
     .team-stats [data-reveal]:nth-child(3),
     .why__grid [data-reveal]:nth-child(3),
+    .proof__grid [data-reveal]:nth-child(3),
     .workflow [data-reveal]:nth-child(3),
     .approach [data-reveal]:nth-child(3),
     .trust__list [data-reveal]:nth-child(3) {
@@ -913,6 +1010,15 @@ const pageJsonLd = [
     .workflow {
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 1.5rem;
+    }
+    .proof {
+      grid-template-columns: minmax(16rem, 0.74fr) minmax(0, 1.26fr);
+      gap: clamp(2rem, 5vw, 4rem);
+      align-items: start;
+    }
+    .proof__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.35rem;
     }
     .workflow__item {
       padding-top: 1.25rem;
