@@ -7,6 +7,12 @@
   ASTRO_TELEMETRY_DISABLED = "1"
 
 [[redirects]]
+  from = "https://panel.rastcreative.com/"
+  to = "https://panel.rastcreative.com/admin/"
+  status = 302
+  force = true
+
+[[redirects]]
   from = "/admin"
   to = "/admin/index.html"
   status = 200
