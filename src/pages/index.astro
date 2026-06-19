@@ -25,16 +25,8 @@ const byOrder = (a: { data: { order: number } }, b: { data: { order: number } })
   a.data.order - b.data.order;
 
 const projects = (await getCollection("projects")).filter((p) => !p.data.draft);
-const featuredProjectSlugs = [
-  "buyapi-sosyal-icerik-1",
-  "altoteks-tanitim-filmi",
-  "gebelik-ilk-7-gun",
-];
-const isProject = (project: (typeof projects)[number] | undefined): project is (typeof projects)[number] =>
-  Boolean(project);
-const featured = featuredProjectSlugs
-  .map((slug) => projects.find((project) => project.id === slug))
-  .filter(isProject);
+const dailyProjectCount = 3;
+const dailyProjects = [...projects].sort(byOrder);
 const services = (await getCollection("services")).sort(byOrder);
 const faqEntries = (await getCollection("faq")).sort(byOrder);
 const faqRendered = await Promise.all(
@@ -165,22 +157,24 @@ const heroPoster = await getImage({
       <SectionHeading eyebrow="Sahne 02 · Seçili İşler">Son işlerimizden seçmeler</SectionHeading>
       <Button href="/projeler" variant="secondary" arrow class="head-row__cta">Tümünü gör</Button>
     </div>
-    <div class="grid-cards">
+    <div class="grid-cards" data-daily-projects data-daily-count={dailyProjectCount}>
       {
-        featured.map((p) => (
-          <ProjectCard
-            href={p.data.externalUrl ?? `/projeler/${p.id}`}
-            title={p.data.title}
-            category={p.data.category}
-            poster={p.data.poster}
-            posterAlt={p.data.posterAlt}
-            client={p.data.client}
-            year={p.data.year}
-            timecode={p.data.duration}
-            vertical={p.data.vertical}
-            preview={p.data.preview}
-            summary={p.data.summary}
-          />
+        dailyProjects.map((p, index) => (
+          <div class="daily-project" data-daily-project data-project-index={index}>
+            <ProjectCard
+              href={p.data.externalUrl ?? `/projeler/${p.id}`}
+              title={p.data.title}
+              category={p.data.category}
+              poster={p.data.poster}
+              posterAlt={p.data.posterAlt}
+              client={p.data.client}
+              year={p.data.year}
+              timecode={p.data.duration}
+              vertical={p.data.vertical}
+              preview={p.data.preview}
+              summary={p.data.summary}
+            />
+          </div>
         ))
       }
     </div>
@@ -497,6 +491,15 @@ const heroPoster = await getImage({
   .daily-project {
     min-width: 0;
   }
+  .daily-project:nth-child(n + 4) {
+    display: none;
+  }
+  .daily-project.is-active {
+    display: block;
+  }
+  .daily-project.is-inactive {
+    display: none;
+  }
   @media (min-width: 640px) {
     .grid-cards {
       grid-template-columns: repeat(2, 1fr);
@@ -732,3 +735,66 @@ const heroPoster = await getImage({
     color: var(--on-ink);
   }
 </style>
+
+<script>
+  const dailyProjectRoot = document.querySelector<HTMLElement>("[data-daily-projects]");
+  if (dailyProjectRoot) {
+    const cards = Array.from(dailyProjectRoot.querySelectorAll<HTMLElement>("[data-daily-project]"));
+    const count = Math.min(Number(dailyProjectRoot.dataset.dailyCount ?? 3), cards.length);
+
+    const istanbulDateKey = () => {
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Europe/Istanbul",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).formatToParts(new Date());
+      const get = (type: string) => parts.find((part) => part.type === type)?.value ?? "";
+      return `${get("year")}-${get("month")}-${get("day")}`;
+    };
+
+    const seedFromString = (value: string) => {
+      let seed = 2166136261;
+      for (let i = 0; i < value.length; i += 1) {
+        seed ^= value.charCodeAt(i);
+        seed = Math.imul(seed, 16777619);
+      }
+      return seed >>> 0;
+    };
+
+    const nextRandom = (seed: number) => {
+      let state = seed || 1;
+      return () => {
+        state = Math.imul(state ^ (state >>> 15), 1 | state);
+        state ^= state + Math.imul(state ^ (state >>> 7), 61 | state);
+        return ((state ^ (state >>> 14)) >>> 0) / 4294967296;
+      };
+    };
+
+    let currentDateKey = "";
+    const applyDailyProjects = () => {
+      const dateKey = istanbulDateKey();
+      if (dateKey === currentDateKey) return;
+      currentDateKey = dateKey;
+
+      const random = nextRandom(seedFromString(dateKey));
+      const indexes = cards.map((_, index) => index);
+      for (let i = indexes.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(random() * (i + 1));
+        [indexes[i], indexes[j]] = [indexes[j], indexes[i]];
+      }
+
+      const selected = new Set(indexes.slice(0, count));
+      cards.forEach((card, index) => {
+        const order = indexes.indexOf(index);
+        const active = selected.has(index);
+        card.classList.toggle("is-active", active);
+        card.classList.toggle("is-inactive", !active);
+        if (active) card.style.order = String(order);
+      });
+    };
+
+    applyDailyProjects();
+    window.setInterval(applyDailyProjects, 60_000);
+  }
+</script>
