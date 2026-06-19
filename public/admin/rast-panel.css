@@ -94,10 +94,7 @@ article,
 [class*="Sidebar"],
 [class*="Card"],
 [class*="CollectionTop"],
-[class*="CollectionContainer"],
-[class*="EditorControlBar"],
-[class*="EditorControlPane"],
-[class*="PaneContainer"] {
+[class*="CollectionContainer"] {
   border-radius: var(--rast-radius) !important;
   border-color: var(--rast-line) !important;
 }
@@ -111,8 +108,6 @@ aside,
 
 [class*="CollectionTop"],
 [class*="CollectionContainer"],
-[class*="EditorControlPane"],
-[class*="PaneContainer"],
 [class*="Card"] {
   background: rgba(255, 255, 255, 0.92) !important;
   box-shadow: 0 14px 34px rgba(23, 19, 15, 0.1) !important;

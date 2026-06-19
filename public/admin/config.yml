@@ -191,9 +191,8 @@ collections:
         required: false
       - label: Icerik
         name: body
-        widget: richtext
+        widget: markdown
         required: false
-        modes: [rich_text, raw]
         editor_components: [image, code-block]
         hint: "Metin icine gorsel eklemek icin editor toolbar'indaki image secenegini kullanin. Blog ici gorseller en fazla 1 MB olmali; onerilen 200-700 KB."
 
