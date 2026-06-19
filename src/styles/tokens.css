@@ -30,9 +30,10 @@
 
   /* ---- Type families (1.3) ---------------------------------------- */
   --font-display: "Fraunces Variable", Georgia, "Times New Roman", serif;
-  --font-body: "Inter Variable", system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
-  --font-utility: "Space Grotesk Variable", system-ui, sans-serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  --font-utility: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
 
   /* ---- Type scale -------------------------------------------------- */
   /* Body min 18px for the 35+ audience, generous line-height.         */

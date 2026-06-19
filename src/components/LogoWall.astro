@@ -56,6 +56,7 @@ const logos = [
             alt={`${l.name} logosu`}
             height={l.big ? 64 : 44}
             densities={[1.5, 2]}
+            quality={72}
             loading="lazy"
             draggable={false}
             class:list={["logo-chip__img", { "logo-chip__img--big": l.big }]}
@@ -71,6 +72,7 @@ const logos = [
             alt={`${l.name} logosu`}
             height={l.big ? 64 : 44}
             densities={[1.5, 2]}
+            quality={72}
             loading="lazy"
             draggable={false}
             class:list={["logo-chip__img", { "logo-chip__img--big": l.big }]}
@@ -188,13 +190,17 @@ const logos = [
     let isDragging = false;
     let startX = 0;
     let startScrollLeft = 0;
+    let loopWidth = 0;
+    let wallWidth = 0;
 
-    const getLoopWidth = () => track.scrollWidth / 2;
     const shouldAutoScroll = () => !prefersReducedMotion.matches && !isHovering && !isDragging;
+    const measure = () => {
+      loopWidth = track.scrollWidth / 2;
+      wallWidth = wall.clientWidth;
+    };
 
     const normalizeScroll = () => {
-      const loopWidth = getLoopWidth();
-      if (loopWidth <= wall.clientWidth) return;
+      if (loopWidth <= wallWidth) return;
 
       if (wall.scrollLeft >= loopWidth) {
         wall.scrollLeft -= loopWidth;
@@ -210,7 +216,7 @@ const logos = [
       lastTime = time;
 
       if (shouldAutoScroll()) {
-        wall.scrollLeft += (getLoopWidth() / 42000) * elapsed;
+        wall.scrollLeft += (loopWidth / 42000) * elapsed;
         normalizeScroll();
       }
 
@@ -256,8 +262,22 @@ const logos = [
     wall.addEventListener("dragstart", (event) => event.preventDefault());
     wall.addEventListener("contextmenu", (event) => event.preventDefault());
 
+    measure();
+    const resizeObserver = "ResizeObserver" in window ? new ResizeObserver(measure) : null;
+    resizeObserver?.observe(wall);
+    resizeObserver?.observe(track);
+    window.addEventListener("load", measure, { once: true });
+    window.addEventListener("resize", measure, { passive: true });
+
     frame = window.requestAnimationFrame(tick);
 
-    window.addEventListener("pagehide", () => window.cancelAnimationFrame(frame), { once: true });
+    window.addEventListener(
+      "pagehide",
+      () => {
+        window.cancelAnimationFrame(frame);
+        resizeObserver?.disconnect();
+      },
+      { once: true },
+    );
   });
 </script>

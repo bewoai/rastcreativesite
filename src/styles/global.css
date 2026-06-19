@@ -19,7 +19,7 @@
   --font-display: var(--font-display);
   --font-body: var(--font-body);
   --font-utility: var(--font-utility);
-  --font-sans: var(--font-body); /* default sans -> Inter */
+  --font-sans: var(--font-body); /* default sans -> system stack */
 }
 
 @layer base {
