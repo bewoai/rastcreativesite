@@ -114,16 +114,6 @@
 /* Scroll-reveal: fade + 8px up as elements enter view (roadmap §1.4). Gated to
    no-preference so reduced-motion users always see content (no opacity:0 trap). */
 @media (prefers-reduced-motion: no-preference) {
-  body.is-page-leaving main {
-    opacity: 0;
-    transform: translateY(-4px);
-    filter: blur(1px);
-    transition:
-      opacity 120ms var(--ease-out),
-      transform 120ms var(--ease-out),
-      filter 120ms var(--ease-out);
-  }
-
   html.js [data-reveal] {
     opacity: 0;
     transform: translateY(8px);
