@@ -10,10 +10,17 @@ export default defineConfig({
   // Canonical origin — used for canonical URLs, OG tags and (Faz 5) sitemap.
   site: 'https://rastcreative.com',
 
+  devToolbar: {
+    enabled: false,
+  },
+
   build: { inlineStylesheets: 'always' },
 
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    optimizeDeps: {
+      exclude: ['aria-query', 'axobject-query', 'astro/dist/runtime/client/dev-toolbar/entrypoint.js'],
+    },
   },
 
   integrations: [

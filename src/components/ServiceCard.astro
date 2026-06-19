@@ -31,6 +31,7 @@ const Tag = href ? "a" : "div";
       </ul>
     )
   }
+  {href && <span class="scard__cta">Hizmeti İncele</span>}
 </Tag>
 
 <style>
@@ -103,6 +104,14 @@ const Tag = href ? "a" : "div";
   .scard__ic {
     margin-top: 0.2rem;
     flex: none;
+    color: var(--amber-text);
+  }
+  .scard__cta {
+    margin-top: auto;
+    padding-top: 0.5rem;
+    font-family: var(--font-utility);
+    font-size: 0.82rem;
+    font-weight: 600;
     color: var(--amber-text);
   }
 </style>

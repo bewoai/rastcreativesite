@@ -52,10 +52,26 @@ const fmtBlogDate = (d: Date) =>
 // Quick credibility numbers — derived from real content so they stay accurate.
 const brandCount = groupByBrand(projects).length;
 const stats = [
-  { n: `${brandCount}+`, l: "Marka" },
-  { n: `${projects.length}`, l: "İçerik" },
-  { n: "4K", l: "Sinema Standardı" },
-  { n: "Sakarya", l: "Merkezli Stüdyo" },
+  {
+    n: `${brandCount}+`,
+    l: "Marka",
+    d: "Sanayi, medikal, perakende ve hizmet sektörlerinde farklı markalarla üretim süreci yürüttük.",
+  },
+  {
+    n: `${projects.length}`,
+    l: "İçerik",
+    d: "Tanıtım filmi, sosyal medya videosu, ürün videosu ve reklam formatlarında içerikler ürettik.",
+  },
+  {
+    n: "4K",
+    l: "Sinema Standardı",
+    d: "Profesyonel kamera, ışık, ses ve renk düzenleme süreciyle yayına hazır çıktılar teslim ederiz.",
+  },
+  {
+    n: "Sakarya",
+    l: "Merkezli Stüdyo",
+    d: "Sakarya, Kocaeli, Gebze ve çevresinde yerinde çekim süreçleri planlıyoruz.",
+  },
 ];
 
 // "Nasıl çalışırız" — process clarity the 35+ audience wants (roadmap §2.5).
@@ -80,19 +96,19 @@ const steps = [
 // "Neden Rast" — concrete trust signals for the 35+ audience (roadmap §2.5).
 const whyRast = [
   {
-    k: "Yerinde",
-    t: "Sakarya'da yerinde hizmet",
-    d: "Ön görüşmeden çekime kadar sahadayız; uzaktan koordinasyon derdi olmadan, yüz yüze çalışırız.",
+    k: "Yerinde çekim",
+    t: "Sahaya yakın prodüksiyon",
+    d: "Sakarya ve çevresinde keşif, planlama, prodüksiyon ve kurgu sürecini tek ekip olarak yürütürüz.",
   },
   {
-    k: "Ekipman",
-    t: "Sinema standardı ekipman",
-    d: "Profesyonel sinema kamera ve optik parkıyla, reklamdan medikale her projede sinematik kalite.",
+    k: "Tek elden",
+    t: "Dağılmayan üretim akışı",
+    d: "Fikir, senaryo, çekim, kurgu, renk ve teslim süreci aynı masada ilerler; projenin muhatabı değişmez.",
   },
   {
-    k: "2–4 hafta",
-    t: "Net teslim süresi",
-    d: "Projeler kapsamına göre genellikle 2–4 hafta içinde teslim edilir; takvimi baştan netleştiririz.",
+    k: "Format uyumu",
+    t: "Web, reklam ve sosyal medya",
+    d: "Ana videonun yanında Reels, Shorts, YouTube ve reklam kullanımına uygun versiyonları baştan planlarız.",
   },
 ];
 
@@ -131,9 +147,12 @@ const heroPoster = await getImage({
       <Eyebrow tone="paper">Sakarya · Sinematik Video Prodüksiyon</Eyebrow>
       <h1 class="hero__title">{COPY.heroTitle}</h1>
       <p class="hero__subtitle">{COPY.heroSubtitle}</p>
+      <p class="hero__trust">{COPY.heroTrust}</p>
       <div class="hero__cta">
-        <Button href={PRIMARY_CTA.href} size="lg" arrow>{PRIMARY_CTA.label}</Button>
-        <Button href="/projeler" variant="secondary" size="lg" class="hero__ghost">
+        <Button href={PRIMARY_CTA.href} size="lg" arrow data-cta-location="hero">
+          {PRIMARY_CTA.label}
+        </Button>
+        <Button href="/projeler" variant="secondary" size="lg" class="hero__ghost" data-cta-location="hero">
           {COPY.heroSecondaryCta}
         </Button>
       </div>
@@ -160,6 +179,7 @@ const heroPoster = await getImage({
             timecode={p.data.duration}
             vertical={p.data.vertical}
             preview={p.data.preview}
+            summary={p.data.summary}
           />
         ))
       }
@@ -182,6 +202,7 @@ const heroPoster = await getImage({
           <li class="stats__item">
             <span class="stats__n">{s.n}</span>
             <span class="stats__l">{s.l}</span>
+            <span class="stats__d">{s.d}</span>
           </li>
         ))
       }
@@ -252,7 +273,7 @@ const heroPoster = await getImage({
   <Section space="tight">
     <div class="services-cta" data-reveal>
       <p class="services-cta__text">Projeniz için doğru kareyi birlikte yakalayalım.</p>
-      <Button href={PRIMARY_CTA.href} arrow>{PRIMARY_CTA.label}</Button>
+      <Button href={PRIMARY_CTA.href} arrow data-cta-location="services_mid_page">{PRIMARY_CTA.label}</Button>
     </div>
   </Section>
 
@@ -351,7 +372,7 @@ const heroPoster = await getImage({
     <div class="cta-band">
       <Eyebrow tone="paper">Hazır mısınız?</Eyebrow>
       <h2 class="cta-band__title">Markanızın sinematik yüzünü birlikte çekelim.</h2>
-      <Button href={PRIMARY_CTA.href} size="lg" arrow>{PRIMARY_CTA.label}</Button>
+      <Button href={PRIMARY_CTA.href} size="lg" arrow data-cta-location="final_band">{PRIMARY_CTA.label}</Button>
     </div>
   </Section>
 </BaseLayout>
@@ -372,10 +393,25 @@ const heroPoster = await getImage({
   }
   .hero__subtitle {
     margin: 0;
-    max-width: 46ch;
+    max-width: 58ch;
     font-size: 1.2rem;
     color: color-mix(in srgb, var(--on-ink) 82%, transparent);
     line-height: 1.5;
+  }
+  .hero__trust {
+    margin: -0.25rem 0 0;
+    max-width: max-content;
+    padding: 0.45rem 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--on-ink) 22%, transparent);
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--ink) 46%, transparent);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    color: color-mix(in srgb, var(--on-ink) 82%, transparent);
+    font-family: var(--font-utility);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
   }
   .hero__cta {
     display: flex;
@@ -397,6 +433,16 @@ const heroPoster = await getImage({
       max-width: 30ch;
       font-size: 1rem;
       line-height: 1.45;
+    }
+    .hero__trust {
+      max-width: 20rem;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+      font-size: 0.74rem;
+      line-height: 1.35;
     }
     .hero__cta {
       width: min(100%, 20rem);
@@ -590,7 +636,7 @@ const heroPoster = await getImage({
     padding: 1.4rem clamp(1rem, 4vw, 2rem);
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.4rem 1rem;
+    gap: 1.5rem 1.1rem;
     border-block: 1px solid var(--line);
   }
   .stats__item {
@@ -612,6 +658,13 @@ const heroPoster = await getImage({
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--ink-soft);
+  }
+  .stats__d {
+    max-width: 24ch;
+    margin-top: 0.35rem;
+    color: var(--ink-soft);
+    font-size: 0.86rem;
+    line-height: 1.45;
   }
   @media (min-width: 720px) {
     .stats {

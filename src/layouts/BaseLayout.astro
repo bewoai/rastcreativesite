@@ -194,6 +194,25 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
         if (!(link instanceof HTMLAnchorElement)) return;
 
         const href = link.getAttribute("href") || "";
+        const text = (link.textContent || "").trim().replace(/\s+/g, " ");
+        const ctaLocation = link.dataset.ctaLocation;
+        if (ctaLocation) {
+          window.rcTrack("cta_click", {
+            event_category: "engagement",
+            cta_text: text,
+            location: ctaLocation,
+            link_url: href,
+          });
+        }
+
+        if (href.startsWith("/projeler/")) {
+          window.rcTrack("project_view", {
+            event_category: "portfolio",
+            project_slug: href.replace(/^\/projeler\//, "").replace(/\/$/, ""),
+            link_text: text,
+          });
+        }
+
         if (href.startsWith("tel:")) {
           window.rcTrack("contact_phone_click", {
             event_category: "contact",
@@ -232,26 +251,57 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
     {!bare && <Footer />}
 
     <script>
-      // Scroll-reveal: reveal [data-reveal] elements as they enter the viewport.
-      const revealEls = document.querySelectorAll<HTMLElement>("[data-reveal]");
-      if (revealEls.length) {
+      const initReveal = () => {
+        // Scroll-reveal: reveal [data-reveal] elements as they enter the viewport.
+        const revealEls = document.querySelectorAll<HTMLElement>("[data-reveal]:not(.is-revealed)");
+        if (!revealEls.length) return;
+
         if (!("IntersectionObserver" in window)) {
           revealEls.forEach((el) => el.classList.add("is-revealed"));
-        } else {
-          const io = new IntersectionObserver(
-            (entries) => {
-              for (const entry of entries) {
-                if (entry.isIntersecting) {
-                  entry.target.classList.add("is-revealed");
-                  io.unobserve(entry.target);
-                }
-              }
-            },
-            { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
-          );
-          revealEls.forEach((el) => io.observe(el));
+          return;
         }
-      }
+
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-revealed");
+                io.unobserve(entry.target);
+              }
+            }
+          },
+          { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
+        );
+        revealEls.forEach((el) => io.observe(el));
+      };
+
+      initReveal();
+      document.addEventListener("astro:page-load", initReveal);
+
+      document.addEventListener("click", (event) => {
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+          return;
+        }
+
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+
+        const link = target.closest("a[href]");
+        if (!(link instanceof HTMLAnchorElement)) return;
+
+        if (link.target && link.target !== "_self") return;
+        if (link.hasAttribute("download")) return;
+
+        const url = new URL(link.href);
+        if (url.origin !== window.location.origin) return;
+        if (url.pathname === window.location.pathname && url.hash) return;
+
+        event.preventDefault();
+        document.body.classList.add("is-page-leaving");
+        window.setTimeout(() => {
+          window.location.href = url.href;
+        }, 120);
+      });
     </script>
   </body>
 </html>

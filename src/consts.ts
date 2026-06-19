@@ -119,7 +119,9 @@ export function waLink(message: string = WHATSAPP_QUOTE_MESSAGE): string | null 
  */
 export const COPY = {
   heroTitle: "Sakarya Video Çekimi ve Prodüksiyon",
-  heroSubtitle: "Tanıtım filmi, sosyal medya videosu, ürün çekimi ve kurgu için sinematik ekip.",
+  heroSubtitle:
+    "Markanız için reklam filmi, tanıtım filmi ve sosyal medya videoları üretiyoruz. Sinematik görüntü, doğru hikâye ve güçlü kurgu ile dijital yüzünüzü daha profesyonel hale getiriyoruz.",
+  heroTrust: "13+ marka · 26+ içerik · Sakarya merkezli prodüksiyon ekibi",
   heroSecondaryCta: "Projelerimizi İzleyin",
   aboutIntro:
     "Yolculuğumuz boyunca farklı sektörlerden markaların dijital hikâyelerini yönettik. Ekibimizin geçmişindeki bu deneyim, bugün Rast Creative Studio çatısı altında sunduğumuz vizyonun temelini oluşturuyor.",
