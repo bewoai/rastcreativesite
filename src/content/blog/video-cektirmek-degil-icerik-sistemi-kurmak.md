@@ -1,11 +1,18 @@
 ---
-title: "Video çektirmek değil, içerik sistemi kurmak"
-description: "Bir çekim gününü sadece tek bir video teslimi gibi görmek yerine, markanın aylarca kullanabileceği bir içerik sistemine çevirmek mümkün. Rast Creative'de projelere neden böyle baktığımızı kendi dilimle anlattım."
-author: "Berat Değirmenci"
+title: Video çektirmek değil, içerik sistemi kurmak
+description: Bir çekim gününü sadece tek bir video teslimi gibi görmek yerine,
+  markanın aylarca kullanabileceği bir içerik sistemine çevirmek mümkün. Rast
+  Creative'de projelere neden böyle baktığımızı kendi dilimle anlattım.
+author: Berat Değirmenci
 pubDate: 2026-06-19
-cover: ../../assets/photos/crew-onset.jpg
-coverAlt: "Çekim setinde kameraya hazırlanan prodüksiyon ekibi"
-tags: ["video prodüksiyon", "içerik stratejisi", "sosyal medya", "Sakarya", "marka"]
+cover: ../../assets/uploads/blog/chatgpt-image-20-haz-2026-21_31_59.webp
+coverAlt: Çekim setinde kameraya hazırlanan prodüksiyon ekibi
+tags:
+  - video prodüksiyon
+  - içerik stratejisi
+  - sosyal medya
+  - Sakarya
+  - marka
 draft: false
 ---
 
