@@ -49,7 +49,7 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
 </header>
 
 {/* Mobile: bottom glass tab-bar */}
-<nav class="tabbar" aria-label="Ana gezinme">
+<nav class="tabbar" aria-label="Ana gezinme" data-mobile-tabbar>
   <ul class="tabbar__inner">
     {
       tabs.map((item) => (
@@ -66,6 +66,18 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
       ))
     }
   </ul>
+  <button
+    class="tabbar__fab"
+    type="button"
+    aria-label="Menüyü aç"
+    aria-expanded="false"
+    aria-hidden="true"
+    tabindex="-1"
+    data-tabbar-fab
+  >
+    <Icon name="menu" size={22} class="tabbar__fab-icon" />
+    <span>Menü</span>
+  </button>
 </nav>
 
 <style>
@@ -158,7 +170,8 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
   }
 
   :global(html[data-theme="dark"]) .nav__pill,
-  :global(html[data-theme="dark"]) .tabbar__inner {
+  :global(html[data-theme="dark"]) .tabbar__inner,
+  :global(html[data-theme="dark"]) .tabbar__fab {
     background: linear-gradient(
       180deg,
       color-mix(in srgb, #2a241e 78%, transparent),
@@ -290,6 +303,13 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
     box-shadow:
       0 -10px 30px -16px rgba(17, 17, 16, 0.32),
       0 1px 0 0 color-mix(in srgb, #ffffff 75%, transparent) inset;
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+    transition:
+      transform var(--dur) var(--ease-out),
+      opacity var(--dur-fast) var(--ease-out),
+      visibility var(--dur-fast) var(--ease-out);
   }
   .tabbar__inner li {
     flex: 1 1 0;
@@ -330,6 +350,60 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
     color: var(--amber-text);
   }
 
+  .tabbar__fab {
+    pointer-events: none;
+    position: absolute;
+    right: 0.75rem;
+    bottom: calc(0.55rem + env(safe-area-inset-bottom, 0px));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    min-width: 3.35rem;
+    min-height: var(--tap-min);
+    padding: 0 0.8rem;
+    border: 1px solid color-mix(in srgb, #ffffff 55%, transparent);
+    border-radius: var(--radius-pill);
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, #ffffff 68%, transparent),
+      color-mix(in srgb, var(--paper) 52%, transparent)
+    );
+    color: var(--ink);
+    font: 600 0.72rem/1 var(--font-utility);
+    box-shadow:
+      0 -10px 30px -16px rgba(17, 17, 16, 0.32),
+      0 1px 0 0 color-mix(in srgb, #ffffff 75%, transparent) inset;
+    -webkit-backdrop-filter: blur(24px) saturate(1.85) brightness(1.05);
+    backdrop-filter: blur(24px) saturate(1.85) brightness(1.05);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.8rem) scale(0.96);
+    transition:
+      transform var(--dur) var(--ease-out),
+      opacity var(--dur-fast) var(--ease-out),
+      visibility var(--dur-fast) var(--ease-out);
+  }
+  .tabbar__fab:focus {
+    outline: none;
+  }
+  .tabbar__fab:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+  }
+  .tabbar.is-condensed .tabbar__inner {
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(calc(100% + 0.9rem));
+  }
+  .tabbar.is-condensed .tabbar__fab {
+    pointer-events: auto;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+
   @media (max-width: 380px) {
     .tabbar {
       padding-inline: 0.45rem;
@@ -344,26 +418,82 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
       font-size: 0.58rem;
     }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tabbar__inner,
+    .tabbar__fab {
+      transition: none;
+    }
+  }
 </style>
 
 <script>
-  // Subtle scroll-shrink for the desktop pill (rAF-throttled).
+  // Scroll-aware chrome: desktop pill shrinks; mobile tabs condense while moving down.
   const nav = document.querySelector<HTMLElement>("[data-nav]");
-  const desktopNav = matchMedia("(min-width: 768px)").matches;
-  if (nav && desktopNav) {
-    let ticking = false;
-    const update = () => {
-      nav.classList.toggle("is-scrolled", window.scrollY > 8);
-      ticking = false;
-    };
-    const onScroll = () => {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(update);
+  const tabbar = document.querySelector<HTMLElement>("[data-mobile-tabbar]");
+  const tabbarFab = document.querySelector<HTMLButtonElement>("[data-tabbar-fab]");
+  const desktopQuery = matchMedia("(min-width: 768px)");
+  const mobileQuery = matchMedia("(max-width: 767.98px)");
+
+  let ticking = false;
+  let lastScrollY = Math.max(0, window.scrollY);
+
+  const setTabbarCondensed = (condensed: boolean) => {
+    if (!tabbar || !tabbarFab) return;
+
+    tabbar.classList.toggle("is-condensed", condensed);
+    tabbarFab.setAttribute("aria-expanded", "false");
+    tabbarFab.setAttribute("aria-hidden", condensed ? "false" : "true");
+    tabbarFab.tabIndex = condensed ? 0 : -1;
+  };
+
+  const updateChrome = () => {
+    const currentY = Math.max(0, window.scrollY);
+    const delta = currentY - lastScrollY;
+
+    if (nav) {
+      nav.classList.toggle("is-scrolled", desktopQuery.matches && currentY > 8);
+    }
+
+    if (tabbar && tabbarFab) {
+      if (!mobileQuery.matches) {
+        setTabbarCondensed(false);
+      } else {
+        const documentHeight = document.documentElement.scrollHeight;
+        const nearTop = currentY < 96;
+        const nearBottom = window.innerHeight + currentY >= documentHeight - 120;
+
+        if (nearTop || nearBottom || delta < -10) {
+          setTabbarCondensed(false);
+        } else if (delta > 10 && currentY > 140) {
+          setTabbarCondensed(true);
+        }
       }
-    };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
+    }
+
+    lastScrollY = currentY;
+    ticking = false;
+  };
+
+  const requestChromeUpdate = () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(updateChrome);
+    }
+  };
+
+  updateChrome();
+  window.addEventListener("scroll", requestChromeUpdate, { passive: true });
+  window.addEventListener("resize", requestChromeUpdate);
+  desktopQuery.addEventListener("change", requestChromeUpdate);
+  mobileQuery.addEventListener("change", requestChromeUpdate);
+
+  if (tabbarFab) {
+    tabbarFab.addEventListener("click", () => {
+      setTabbarCondensed(false);
+      lastScrollY = Math.max(0, window.scrollY);
+      ticking = false;
+    });
   }
 </script>
 

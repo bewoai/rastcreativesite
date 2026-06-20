@@ -27,6 +27,7 @@ export type IconName =
   | "services"
   | "about"
   | "contact"
+  | "menu"
   | "instagram"
   | "youtube"
   | "tiktok"
