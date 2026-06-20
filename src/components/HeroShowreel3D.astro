@@ -10,28 +10,28 @@ import dronePlan from "../assets/photos/aerial-drone-landscape.jpg";
 <section class="story" aria-labelledby="production-story-title" data-production-story>
   <div class="story__sticky">
     <div class="story__narrative">
-      <span class="story__eyebrow">Sahne 01.5 · Üretim Sistemi</span>
-      <h2 id="production-story-title">Tek çekimden dört ayrı pazarlama çıktısı</h2>
+      <span class="story__eyebrow">Sahne 01.5 · Üretim Akışı</span>
+      <h2 id="production-story-title">Tek çekimden web, sosyal ve reklam formatları</h2>
       <p>
-        Rast için asıl değer sadece güzel bir video değil; ana film, reklam kesiti,
-        Reels ve drone planının tek bir üretim akışı içinde hazırlanması.
+        Ana videonun yanında Reels, Shorts, YouTube ve reklam kullanımına uygun
+        versiyonları baştan planlıyoruz. Fikir, çekim, kurgu ve teslim tek elden ilerliyor.
       </p>
 
       <ol class="story__steps" aria-label="Üretim akışı">
         <li class="story__step story__step--one">
           <span>01</span>
-          <strong>Sahada ana film</strong>
-          <em>Markanın asıl hikayesi sinematik çekimle kurulur.</em>
+          <strong>Sahada çekim</strong>
+          <em>Markanın hikâyesini sinematik kurguyla çekeriz.</em>
         </li>
         <li class="story__step story__step--two">
           <span>02</span>
-          <strong>Dikey reklam kesiti</strong>
-          <em>Aynı çekimden Reels, Shorts ve reklam formatları çıkar.</em>
+          <strong>Formatlara uyarlama</strong>
+          <em>Aynı çekimden Reels, Shorts ve reklam versiyonlarını hazırlarız.</em>
         </li>
         <li class="story__step story__step--three">
           <span>03</span>
-          <strong>Yayına hazır teslim</strong>
-          <em>Renk, ses, kurgu ve versiyonlama tek pakette tamamlanır.</em>
+          <strong>Kurgu ve teslim</strong>
+          <em>Renk, ses ve kurgu sonrası yayına hazır teslim ederiz.</em>
         </li>
       </ol>
 
@@ -50,7 +50,7 @@ import dronePlan from "../assets/photos/aerial-drone-landscape.jpg";
         <div class="story__screen">
           <div class="story__screenTop">
             <span>Rast Production Board</span>
-            <span>01 / 04</span>
+            <span>00:14</span>
           </div>
 
           <div class="story__heroFrame">
@@ -99,13 +99,13 @@ import dronePlan from "../assets/photos/aerial-drone-landscape.jpg";
             loading="lazy"
             class="story__droneImage"
           />
-          <span>Drone rota</span>
-          <strong>Saha + mekan</strong>
+          <span>Drone</span>
+          <strong>Hava çekimi</strong>
         </div>
 
         <div class="story__post">
-          <span>Color & Kurgu</span>
-          <strong>Final teslimler</strong>
+          <span>Kurgu & Renk</span>
+          <strong>Yayına hazır</strong>
           <div class="story__meters">
             <i></i>
             <i></i>
@@ -633,7 +633,7 @@ import dronePlan from "../assets/photos/aerial-drone-landscape.jpg";
       inset: auto;
       grid-column: 1 / -1;
       width: 100%;
-      transform: none;
+      transform: translateY(calc((var(--p) - 0.5) * -8px));
       border-radius: 0.9rem;
     }
 
@@ -653,15 +653,49 @@ import dronePlan from "../assets/photos/aerial-drone-landscape.jpg";
       padding-inline: 0.9rem;
     }
 
+    /* Playhead still sweeps with scroll → the section never feels frozen. */
     .story__playhead {
-      left: 34%;
+      left: calc(16% + (var(--p) * 58%));
     }
 
     .story__focusRing {
       display: none;
     }
 
-    /* The three secondary outputs become an even, contained row. */
+    /* Scroll-reveal (site idiom): board + outputs fade in, clearly staggered, as
+       they enter. Opacity-only so it never fights the scroll parallax (transform).
+       Gated by .story--anim (added by JS on mobile + no-preference) → no opacity
+       trap for no-JS / reduced-motion users. */
+    .story--anim .story__screen,
+    .story--anim .story__phone,
+    .story--anim .story__drone,
+    .story--anim .story__post {
+      opacity: 0;
+      transition: opacity 0.6s var(--ease-out);
+    }
+
+    .story--anim .story__phone {
+      transition-delay: 0.1s;
+    }
+
+    .story--anim .story__drone {
+      transition-delay: 0.2s;
+    }
+
+    .story--anim .story__post {
+      transition-delay: 0.3s;
+    }
+
+    .story--anim .story__screen.is-in,
+    .story--anim .story__phone.is-in,
+    .story--anim .story__drone.is-in,
+    .story--anim .story__post.is-in {
+      opacity: 1;
+    }
+
+    /* The three secondary outputs become an even, contained row with a gentle
+       scroll-linked vertical parallax — moves faster than the board (depth),
+       vertical-only so the row stays aligned and never clips sideways. */
     .story__phone,
     .story__drone,
     .story__post {
@@ -670,7 +704,7 @@ import dronePlan from "../assets/photos/aerial-drone-landscape.jpg";
       width: auto;
       min-width: 0;
       height: 6.6rem;
-      transform: none;
+      transform: translateY(calc((var(--p) - 0.5) * -20px));
       opacity: 1;
       border-radius: 0.7rem;
       padding: 0.6rem;
@@ -851,6 +885,27 @@ import dronePlan from "../assets/photos/aerial-drone-landscape.jpg";
     if (reduceMotion) {
       setProgress(1);
       return;
+    }
+
+    // Mobile: the desktop 3D parallax is dropped (it clipped), so the stage was
+    // static. Give it life with the site's scroll-reveal idiom — fade/rise the
+    // board + outputs as they enter. (Playhead also sweeps via --p in CSS.)
+    if (window.innerWidth < 980) {
+      story.classList.add("story--anim");
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-in");
+              io.unobserve(entry.target);
+            }
+          }
+        },
+        { threshold: 0.18, rootMargin: "0px 0px -8% 0px" },
+      );
+      story
+        .querySelectorAll(".story__screen, .story__phone, .story__drone, .story__post")
+        .forEach((el) => io.observe(el));
     }
 
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t;

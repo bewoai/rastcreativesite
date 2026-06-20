@@ -35,9 +35,15 @@ ziyaretçiyi *izlemeye* ikna ederek lead niyetini artırmak. Sitenin "vay" anı 
       fly-out kaldırıldı, yerine temiz statik galeri (tam genişlik pano + 3'lü çıktı satırı:
       9:16 Reels / Drone / Final). Kırpılma/çakışma yok; `min-height` mobilde `auto`.
       Masaüstü 3B collage korunuyor. Tablet/360/390/420 preview'da doğrulandı.
-- [x] **Estetik/metin uyumu** → eyebrow site `Eyebrow` kalıbına çekildi
-      ("SAHNE 01.5 · ÜRETİM SİSTEMİ", 0.18em tracking, tabular-nums); karanlık bantta
-      okunaklı parlak amber renk. Kart mini-etiketleri "slate" stili olarak ayrıştırıldı.
+- [x] **Mobil "hareketsiz" hissi** → pin'siz hareket eklendi: kartlara scroll-bağlı
+      **dikey parallax** (`--p`, yalnız dikey → kırpmaz), **belirgin reveal stagger**
+      (opaklık, 0.1/0.2/0.3s — IntersectionObserver `.story--anim`), ve playhead süpürmesi.
+- [x] **Metin: "siteyle alakasız gereksiz vaatler"** → siteye dayandırıldı: başlık
+      "Tek çekimden web, sosyal ve reklam formatları"; paragraf whyRast "Format uyumu"+
+      "Tek elden"den; adımlar "biz" dilinde; "01/04" → "00:14", "Saha+mekan" → "Hava çekimi",
+      "Final teslimler" → "Yayına hazır". Eyebrow site `Eyebrow` kalıbında.
+- [x] **Tipografi**: gövde Inter, eyebrow/buton/timecode Space Grotesk, başlık Fraunces
+      (self-host + subset + swap; `tokens.css`). CLS 0.0026.
 - [ ] **Desktop bölüm uzun** (`min-height` ~230dvh): video gelmeden "boş" his — beklemede.
 - [x] **reduced-motion**: önce sadece transform sıfırlanıyordu → masaüstünde kartlar
       panonun üstüne biniyordu (preview'da yakalandı). Düzeltildi: reduced-motion artık
