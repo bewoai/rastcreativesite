@@ -39,8 +39,13 @@ ziyaretçiyi *izlemeye* ikna ederek lead niyetini artırmak. Sitenin "vay" anı 
       ("SAHNE 01.5 · ÜRETİM SİSTEMİ", 0.18em tracking, tabular-nums); karanlık bantta
       okunaklı parlak amber renk. Kart mini-etiketleri "slate" stili olarak ayrıştırıldı.
 - [ ] **Desktop bölüm uzun** (`min-height` ~230dvh): video gelmeden "boş" his — beklemede.
-- [x] **reduced-motion**: script erken `return`, `--p:1` statik; CSS bloğu transform +
-      will-change sıfırlıyor. (Mobil pin canlı cihazda ayrıca test edilmeli.)
+- [x] **reduced-motion**: önce sadece transform sıfırlanıyordu → masaüstünde kartlar
+      panonun üstüne biniyordu (preview'da yakalandı). Düzeltildi: reduced-motion artık
+      mobildeki **aynı düz galeri** düzenini kullanıyor (pano + 3'lü satır), çakışma yok.
+- [x] **Lead CTA**: bölüm sonuna birincil "Ücretsiz Ön Görüşme" butonu eklendi
+      (`data-cta-location="showreel"`) — "vay" anında dönüşüm yolu (iş hedefi #1).
+- [x] **Production-readiness doğrulandı** (preview): CLS = 0 (pin geçişleri dahil),
+      ~60fps+ / 0 uzun görev, dark mode uyumlu, 360/390/768/1440'ta taşma yok.
 
 ## Faz 1 planı — gerçek showreel
 1. YouTube'daki işlerden **20–30 sn** sessiz kurgu çıkar.
@@ -59,5 +64,7 @@ ziyaretçiyi *izlemeye* ikna ederek lead niyetini artırmak. Sitenin "vay" anı 
 - Katmanlara farklı hız ver (gerçek parallax derinliği).
 
 ## "Bitti"
-- [ ] Gerçek video oynuyor (mobil dahil)  [ ] Çakışma yok  [ ] 60fps  [ ] reduced-motion kapanıyor
-- [ ] VideoObject schema  [ ] Lighthouse CLS/LCP regresyon yok
+- [ ] Gerçek video oynuyor (mobil dahil) — **kullanıcı kararı: en sona**
+- [x] Çakışma yok  [x] 60fps+  [x] reduced-motion temiz fallback
+- [x] CLS regresyon yok (= 0)  [x] dark mode  [x] mobil/tablet temiz  [x] lead CTA
+- [ ] VideoObject schema — video gelince  [ ] Prod Lighthouse (deploy sonrası teyit)

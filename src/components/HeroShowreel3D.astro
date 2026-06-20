@@ -1,5 +1,7 @@
 ---
 import { Image } from "astro:assets";
+import Button from "./Button.astro";
+import { PRIMARY_CTA } from "../consts";
 import brandFilm from "../assets/photos/film-crew-red-camera.jpg";
 import reelsCut from "../assets/photos/vertical-video-creator.jpg";
 import dronePlan from "../assets/photos/aerial-drone-landscape.jpg";
@@ -32,6 +34,12 @@ import dronePlan from "../assets/photos/aerial-drone-landscape.jpg";
           <em>Renk, ses, kurgu ve versiyonlama tek pakette tamamlanır.</em>
         </li>
       </ol>
+
+      <div class="story__cta">
+        <Button href={PRIMARY_CTA.href} size="lg" arrow data-cta-location="showreel">
+          {PRIMARY_CTA.label}
+        </Button>
+      </div>
     </div>
 
     <div class="story__stage" aria-hidden="true">
@@ -260,6 +268,10 @@ import dronePlan from "../assets/photos/aerial-drone-landscape.jpg";
   .story__step--three {
     opacity: calc(0.36 + (var(--p3) * 0.64));
     transform: translateY(calc((1 - var(--p3)) * 12px));
+  }
+
+  .story__cta {
+    margin-top: clamp(1.5rem, 3vw, 2.2rem);
   }
 
   .story__stage {
@@ -712,6 +724,9 @@ import dronePlan from "../assets/photos/aerial-drone-landscape.jpg";
     }
   }
 
+  /* Reduced-motion: no pin, no 3D. Without the 3D offsets the absolute cards
+     would pile onto the board, so we fall back to the SAME flat, contained
+     gallery the mobile layout uses (board + 3-up output row) at any width. */
   @media (prefers-reduced-motion: reduce) {
     .story {
       --p: 1;
@@ -722,22 +737,100 @@ import dronePlan from "../assets/photos/aerial-drone-landscape.jpg";
       padding-block: clamp(3rem, 8vw, 6rem);
     }
 
+    .story.is-pinned .story__sticky,
+    .story.is-after .story__sticky,
     .story__sticky {
       position: relative;
+      inset: auto;
       top: auto;
+      width: min(46rem, 100%);
       min-height: auto;
+      transform: none;
+      grid-template-columns: 1fr;
+      align-content: start;
+      gap: clamp(1.5rem, 5vw, 2.25rem);
     }
 
-    .story__deck,
-    .story__screen,
-    .story__phone,
-    .story__drone,
-    .story__post,
-    .story__focusRing,
+    .story__ambient {
+      display: none;
+    }
+
+    .story__narrative {
+      order: 1;
+      max-width: 100%;
+      opacity: 1;
+    }
+
     .story__step {
+      opacity: 1;
       transform: none;
       transition: none;
       will-change: auto;
+    }
+
+    .story__stage {
+      order: 2;
+      justify-self: stretch;
+      width: 100%;
+      perspective: none;
+    }
+
+    .story__deck {
+      height: auto;
+      transform: none;
+      transform-style: flat;
+      will-change: auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.6rem;
+    }
+
+    .story__screen {
+      position: static;
+      inset: auto;
+      grid-column: 1 / -1;
+      width: 100%;
+      transform: none;
+      will-change: auto;
+      border-radius: 0.9rem;
+    }
+
+    .story__heroFrame {
+      height: auto;
+      aspect-ratio: 16 / 9;
+    }
+
+    .story__playhead {
+      left: 34%;
+    }
+
+    .story__focusRing {
+      display: none;
+    }
+
+    .story__phone,
+    .story__drone,
+    .story__post {
+      position: static;
+      inset: auto;
+      width: auto;
+      min-width: 0;
+      height: 7rem;
+      transform: none;
+      opacity: 1;
+      will-change: auto;
+      border-radius: 0.7rem;
+    }
+
+    .story__post {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 0.15rem;
+    }
+
+    .story__meters {
+      display: none;
     }
   }
 </style>
