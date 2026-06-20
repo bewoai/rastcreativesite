@@ -1,11 +1,19 @@
 ---
-title: "Yapay zekayı prodüksiyonda nasıl kullanıyoruz? (Ve neyi asla ona bırakmıyoruz)"
-description: "Yapay zeka video ve fotoğraf üretiminde gerçekten işe yarıyor — doğru yerde kullanıldığında. Rast Creative'de AI'yı bir asistan olarak nasıl kullandığımızı ve hangi kararları neden hâlâ insana bıraktığımızı dürüstçe anlattım."
-author: "Berat Değirmenci"
+title: Yapay zekayı prodüksiyonda nasıl kullanıyoruz? (Ve neyi asla ona bırakmıyoruz)
+description: Yapay zeka video ve fotoğraf üretiminde gerçekten işe yarıyor —
+  doğru yerde kullanıldığında. Rast Creative'de AI'yı bir asistan olarak nasıl
+  kullandığımızı ve hangi kararları neden hâlâ insana bıraktığımızı dürüstçe
+  anlattım.
+author: Berat Değirmenci
 pubDate: 2026-06-16
-cover: ../../assets/photos/post-production-color-grading.jpg
-coverAlt: "Loş ışıkta çift monitörde renk düzenleme yapan editör — post-prodüksiyon"
-tags: ["yapay zeka", "post prodüksiyon", "video", "iş akışı", "Sakarya"]
+cover: ../../assets/uploads/blog/chatgpt-image-20-haz-2026-21_34_15.webp
+coverAlt: Loş ışıkta çift monitörde renk düzenleme yapan editör — post-prodüksiyon
+tags:
+  - yapay zeka
+  - post prodüksiyon
+  - video
+  - iş akışı
+  - Sakarya
 draft: false
 ---
 
