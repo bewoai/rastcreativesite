@@ -1,10 +1,17 @@
 ---
 title: "E-ticarette ürün çekimi: fotoğraf mı, video mu?"
-description: "Online satışta görsel, satış elemanınızın yerini tutuyor. Ürün fotoğrafı ile ürün videosunun nerede işe yaradığını ve e-ticaret için doğru kombinasyonu Sakarya'daki çekim deneyimimizle anlattık."
+description: Online satışta görsel, satış elemanınızın yerini tutuyor. Ürün
+  fotoğrafı ile ürün videosunun nerede işe yaradığını ve e-ticaret için doğru
+  kombinasyonu Sakarya'daki çekim deneyimimizle anlattık.
+author: Berat Değirmenci
 pubDate: 2026-06-15
-cover: ../../assets/photos/product-photography-studio.jpg
-coverAlt: "Softbox aydınlatmasıyla stüdyoda ürün çekimi yapan fotoğrafçı"
-tags: ["ürün çekimi", "e-ticaret", "ürün fotoğrafı", "Sakarya"]
+cover: ../../assets/uploads/blog/chatgpt-image-20-haz-2026-21_19_16.webp
+coverAlt: Softbox aydınlatmasıyla stüdyoda ürün çekimi yapan fotoğrafçı
+tags:
+  - ürün çekimi
+  - e-ticaret
+  - ürün fotoğrafı
+  - Sakarya
 draft: false
 ---
 
