@@ -3,6 +3,7 @@ title: Sosyal medya videosu neden izlenmiyor? Dürüst bir cevap.
 description: Sosyal medya videosu sadece güzel görünmekle izlenmez. İlk saniye,
   mesaj, kurgu ve kullanım amacını Rast Creative deneyimiyle anlattık.
 author: Berat Degirmenci
+pubDate: 2026-06-20
 cover: ../../assets/uploads/blog/chatgpt-image-20-haz-2026-21_15_59.webp
 coverAlt: Sosyal medya videosu için çekim ve kurgu planı yapan prodüksiyon ekibi.
 tags:
