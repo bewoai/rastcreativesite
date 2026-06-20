@@ -3,13 +3,13 @@ title: "Gebelikte Banyoda Neleri Değiştirmelisin? Part 1 #3"
 category: Medikal
 client: Op. Dr. Duygu Cebecik Özmüş
 year: 2026
-publishDate: 2026-06-17
+publishDate: "2026-06-17"
 summary: Gebelikte banyoda ve cilt bakımında neleri değiştirmen gerekiyor?
-poster: https://www.youtube.com/watch?v=TKPtNmIqPdU&t=40s
+poster: https://i.ytimg.com/vi/TKPtNmIqPdU/maxresdefault.jpg
 posterAlt: ""
-youtubeId: TKPtNmIqPdU&t=40s
+youtubeId: TKPtNmIqPdU
 vertical: false
-duration: "07.03"
+duration: "07:03"
 featured: false
 order: 0
 draft: false
