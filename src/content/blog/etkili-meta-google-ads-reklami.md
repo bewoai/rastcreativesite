@@ -1,11 +1,17 @@
 ---
-title: "Etkili Meta ve Google Ads reklamı nasıl kurulur?"
-description: "Google'da öne çıkmak, Meta'da müşteri kazanmak ve sıcak müşteriyi doğru teklife taşımak için reklamı nasıl düşündüğümüzü kendi dilimle anlattım."
-author: "Berat Değirmenci"
+title: Etkili Meta ve Google Ads reklamı nasıl kurulur?
+description: Google'da öne çıkmak, Meta'da müşteri kazanmak ve sıcak müşteriyi
+  doğru teklife taşımak için reklamı nasıl düşündüğümüzü kendi dilimle anlattım.
+author: Berat Değirmenci
 pubDate: 2026-06-19
-cover: ../../assets/photos/creative-branding-team.jpg
-coverAlt: "Dijital kampanya ve marka iletişimi üzerine çalışan kreatif ekip"
-tags: ["Meta reklamı", "Google Ads", "dijital reklam", "sıcak müşteri", "Sakarya"]
+cover: ../../assets/uploads/blog/chatgpt-image-20-haz-2026-21_21_55.webp
+coverAlt: Dijital kampanya ve marka iletişimi üzerine çalışan kreatif ekip
+tags:
+  - Meta reklamı
+  - Google Ads
+  - dijital reklam
+  - sıcak müşteri
+  - Sakarya
 draft: false
 ---
 
