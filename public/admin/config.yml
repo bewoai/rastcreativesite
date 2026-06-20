@@ -34,6 +34,46 @@ collections:
     summary: "{{title}} - {{client}} - {{category}}"
     preview_path: "projeler/{{slug}}"
     sortable_fields: [order, title, client, year]
+    view_filters:
+      - label: "Musteri: Adatip Hastanesi"
+        field: client
+        pattern: "Adatıp Hastanesi"
+      - label: "Musteri: Altoteks"
+        field: client
+        pattern: "Altoteks"
+      - label: "Musteri: Aytas Home"
+        field: client
+        pattern: "Aytaş Home"
+      - label: "Musteri: Buyapi"
+        field: client
+        pattern: "Buyapı"
+      - label: "Musteri: Canex"
+        field: client
+        pattern: "Canex"
+      - label: "Musteri: Chint Power"
+        field: client
+        pattern: "Chint Power"
+      - label: "Musteri: Federal"
+        field: client
+        pattern: "Federal"
+      - label: "Musteri: Isitan"
+        field: client
+        pattern: "Isıtan"
+      - label: "Musteri: Mavi Vatan"
+        field: client
+        pattern: "Mavi Vatan"
+      - label: "Musteri: Meteors Shipping"
+        field: client
+        pattern: "Meteors Shipping"
+      - label: "Musteri: Op. Dr. Duygu Cebecik Ozmus"
+        field: client
+        pattern: "Op. Dr. Duygu Cebecik Özmüş"
+      - label: "Musteri: Rosa Coffee"
+        field: client
+        pattern: "Rosa Coffee"
+      - label: "Musteri: ThermoWay"
+        field: client
+        pattern: "ThermoWay"
     media_folder: ../../../public/uploads/projects
     public_folder: /uploads/projects
     editor:
