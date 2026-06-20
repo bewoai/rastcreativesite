@@ -12,6 +12,7 @@ import ServiceCard from "../components/ServiceCard.astro";
 import AccordionItem from "../components/AccordionItem.astro";
 import LogoWall from "../components/LogoWall.astro";
 import VideoHero from "../components/VideoHero.astro";
+import HeroShowreel3D from "../components/HeroShowreel3D.astro";
 import AreaIndex from "../components/AreaIndex.astro";
 import BlogCard from "../components/BlogCard.astro";
 import heroPosterImg from "../assets/photos/hero-cinema.jpg";
@@ -135,21 +136,25 @@ const heroPoster = await getImage({
 <BaseLayout jsonLd={pageJsonLd} preloadImage={heroPoster.src}>
   {/* 1 — Hero (showreel background) */}
   <VideoHero poster={heroPoster.src} flush class="hero">
-    <div class="hero__text">
-      <Eyebrow tone="paper">Sakarya · Sinematik Video Prodüksiyon</Eyebrow>
-      <h1 class="hero__title">{COPY.heroTitle}</h1>
-      <p class="hero__subtitle">{COPY.heroSubtitle}</p>
-      <p class="hero__trust">{COPY.heroTrust}</p>
-      <div class="hero__cta">
-        <Button href={PRIMARY_CTA.href} size="lg" arrow data-cta-location="hero">
-          {PRIMARY_CTA.label}
-        </Button>
-        <Button href="/projeler" variant="secondary" size="lg" class="hero__ghost" data-cta-location="hero">
-          {COPY.heroSecondaryCta}
-        </Button>
+    <div class="hero__layout">
+      <div class="hero__text">
+        <Eyebrow tone="paper">Sakarya · Sinematik Video Prodüksiyon</Eyebrow>
+        <h1 class="hero__title">{COPY.heroTitle}</h1>
+        <p class="hero__subtitle">{COPY.heroSubtitle}</p>
+        <p class="hero__trust">{COPY.heroTrust}</p>
+        <div class="hero__cta">
+          <Button href={PRIMARY_CTA.href} size="lg" arrow data-cta-location="hero">
+            {PRIMARY_CTA.label}
+          </Button>
+          <Button href="/projeler" variant="secondary" size="lg" class="hero__ghost" data-cta-location="hero">
+            {COPY.heroSecondaryCta}
+          </Button>
+        </div>
       </div>
     </div>
   </VideoHero>
+
+  <HeroShowreel3D />
 
   {/* 2 — Seçili işler */}
   <Section id="secili-isler">
@@ -373,11 +378,19 @@ const heroPoster = await getImage({
 
 <style>
   /* 1 — Hero (showreel background); content sits light over the video scrim */
+  .hero__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(1.5rem, 4vw, 3rem);
+  }
   .hero__text {
     display: flex;
     flex-direction: column;
     gap: 1.4rem;
     max-width: 42rem;
+    position: relative;
+    z-index: 2;
   }
   .hero__title {
     margin: 0;
@@ -469,6 +482,17 @@ const heroPoster = await getImage({
   :global(.hero__ghost:hover) {
     border-color: var(--on-ink) !important;
     background: color-mix(in srgb, var(--on-ink) 14%, transparent) !important;
+  }
+  @media (min-width: 920px) {
+    .hero__layout {
+      grid-template-columns: minmax(0, 1fr);
+      max-width: 48rem;
+    }
+  }
+  @media (max-width: 919.98px) {
+    .hero__layout {
+      justify-items: start;
+    }
   }
 
   /* 2 — section head row with side CTA */

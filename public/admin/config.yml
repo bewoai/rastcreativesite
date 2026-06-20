@@ -63,9 +63,10 @@ collections:
         required: false
       - label: Yayin tarihi
         name: publishDate
-        widget: date
+        widget: datetime
         format: YYYY-MM-DD
         date_format: DD.MM.YYYY
+        time_format: false
         required: false
         hint: "VideoObject uploadDate bu tarihten uretilir. Video sayfalarinda bos birakmayin."
       - label: Ozet
@@ -157,14 +158,16 @@ collections:
         default: "Berat Degirmenci"
       - label: Yayin tarihi
         name: pubDate
-        widget: date
+        widget: datetime
         format: YYYY-MM-DD
         date_format: DD.MM.YYYY
+        time_format: false
       - label: Guncelleme tarihi
         name: updatedDate
-        widget: date
+        widget: datetime
         format: YYYY-MM-DD
         date_format: DD.MM.YYYY
+        time_format: false
         required: false
       - label: Kapak gorseli
         name: cover

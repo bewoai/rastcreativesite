@@ -41,10 +41,10 @@ const {
   class: className,
 } = Astro.props;
 
-const styleVars =
-  height !== defaultHeight || scrim !== defaultScrim
-    ? `--vhero-h:${height}; --vhero-scrim:${scrim}%`
-    : undefined;
+// Always emit the custom properties — the scrim gradient and min-height read
+// `var(--vhero-scrim)` / `var(--vhero-h)`, so omitting them (the old "defaults"
+// path) left the variables undefined → invalid color-mix → no scrim at all.
+const styleVars = `--vhero-h:${height}; --vhero-scrim:${scrim}%`;
 ---
 
 <section
