@@ -86,9 +86,8 @@ const logos = [
 <style>
   .marquee {
     width: 100%;
-    overflow-x: auto;
+    overflow-x: hidden;
     overflow-y: hidden;
-    cursor: grab;
     overscroll-behavior-inline: contain;
     scrollbar-width: none;
     touch-action: pan-y;
@@ -102,17 +101,23 @@ const logos = [
   .marquee::-webkit-scrollbar {
     display: none;
   }
-  .marquee.is-dragging {
-    cursor: grabbing;
-  }
   .marquee__track {
     list-style: none;
     margin: 1.6rem 0 0;
     padding: 0.5rem 0; /* room for the hover lift */
     display: flex;
     width: max-content;
-    transform: translateZ(0);
+    animation: logo-marquee 42s linear infinite;
     backface-visibility: hidden;
+    will-change: transform;
+  }
+  @keyframes logo-marquee {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
   }
 
   .logo-chip {
@@ -167,117 +172,25 @@ const logos = [
     filter: grayscale(0);
     opacity: 1;
   }
+  @media (hover: hover) and (pointer: fine) {
+    .marquee:hover .marquee__track {
+      animation-play-state: paused;
+    }
+  }
 
   /* Reduced motion: stop the auto-scroll, let the visitor swipe through. */
   @media (prefers-reduced-motion: reduce) {
+    .marquee {
+      overflow-x: auto;
+    }
+    .marquee__track {
+      animation: none;
+      transform: none;
+      will-change: auto;
+    }
     .logo-chip,
     .logo-chip__img {
       transition: none;
     }
   }
 </style>
-
-<script>
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-  document.querySelectorAll<HTMLElement>("[data-logo-wall]").forEach((wall) => {
-    const track = wall.querySelector<HTMLElement>("[data-logo-track]");
-    if (!track) return;
-
-    let frame = 0;
-    let lastTime = 0;
-    let isHovering = false;
-    let isDragging = false;
-    let startX = 0;
-    let startScrollLeft = 0;
-    let loopWidth = 0;
-    let wallWidth = 0;
-
-    const shouldAutoScroll = () => !prefersReducedMotion.matches && !isHovering && !isDragging;
-    const measure = () => {
-      loopWidth = track.scrollWidth / 2;
-      wallWidth = wall.clientWidth;
-    };
-
-    const normalizeScroll = () => {
-      if (loopWidth <= wallWidth) return;
-
-      if (wall.scrollLeft >= loopWidth) {
-        wall.scrollLeft -= loopWidth;
-      } else if (wall.scrollLeft <= 0 && isDragging) {
-        wall.scrollLeft += loopWidth;
-        startScrollLeft += loopWidth;
-      }
-    };
-
-    const tick = (time: number) => {
-      if (!lastTime) lastTime = time;
-      const elapsed = time - lastTime;
-      lastTime = time;
-
-      if (shouldAutoScroll()) {
-        wall.scrollLeft += (loopWidth / 42000) * elapsed;
-        normalizeScroll();
-      }
-
-      frame = window.requestAnimationFrame(tick);
-    };
-
-    const stopDragging = () => {
-      if (!isDragging) return;
-      isDragging = false;
-      wall.classList.remove("is-dragging");
-      normalizeScroll();
-    };
-
-    wall.addEventListener("pointerenter", () => {
-      isHovering = true;
-    });
-
-    wall.addEventListener("pointerleave", () => {
-      isHovering = false;
-      stopDragging();
-    });
-
-    wall.addEventListener("pointerdown", (event) => {
-      if (event.button !== 0) return;
-
-      isDragging = true;
-      startX = event.clientX;
-      startScrollLeft = wall.scrollLeft;
-      wall.classList.add("is-dragging");
-      wall.setPointerCapture(event.pointerId);
-      event.preventDefault();
-    });
-
-    wall.addEventListener("pointermove", (event) => {
-      if (!isDragging) return;
-
-      wall.scrollLeft = startScrollLeft - (event.clientX - startX);
-      normalizeScroll();
-    });
-
-    wall.addEventListener("pointerup", stopDragging);
-    wall.addEventListener("pointercancel", stopDragging);
-    wall.addEventListener("dragstart", (event) => event.preventDefault());
-    wall.addEventListener("contextmenu", (event) => event.preventDefault());
-
-    measure();
-    const resizeObserver = "ResizeObserver" in window ? new ResizeObserver(measure) : null;
-    resizeObserver?.observe(wall);
-    resizeObserver?.observe(track);
-    window.addEventListener("load", measure, { once: true });
-    window.addEventListener("resize", measure, { passive: true });
-
-    frame = window.requestAnimationFrame(tick);
-
-    window.addEventListener(
-      "pagehide",
-      () => {
-        window.cancelAnimationFrame(frame);
-        resizeObserver?.disconnect();
-      },
-      { once: true },
-    );
-  });
-</script>
