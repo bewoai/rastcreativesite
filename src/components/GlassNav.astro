@@ -212,7 +212,9 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
   :global(.mobile-rail__logo) {
     pointer-events: auto;
     position: relative;
-    min-height: 2.44rem;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
     padding: 0.38rem 0.82rem;
     border: 1px solid color-mix(in srgb, #ffffff 48%, transparent);
     border-radius: var(--radius-pill);
@@ -240,8 +242,8 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
     pointer-events: auto;
     display: grid;
     place-items: center;
-    min-width: 2.75rem;
-    min-height: 2.75rem;
+    min-width: var(--tap-min);
+    min-height: var(--tap-min);
     padding: 0;
   }
   :global(.mobile-rail__theme) {

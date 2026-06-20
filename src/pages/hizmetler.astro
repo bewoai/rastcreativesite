@@ -81,7 +81,7 @@ const pageJsonLd = [
   jsonLd={pageJsonLd}
 >
   <Section>
-    <SectionHeading eyebrow="Sahne 01 · Hizmetler">
+    <SectionHeading eyebrow="Sahne 01 · Hizmetler" as="h1">
       Uçtan uca üç ana hizmet
       <Fragment slot="intro">
         <p>
@@ -287,6 +287,7 @@ const pageJsonLd = [
     gap: 0.4rem;
     margin-top: 1.4rem;
     align-self: flex-start;
+    min-height: var(--tap-min);
     padding: 0.55rem 1.1rem;
     border: 1px solid color-mix(in srgb, var(--amber) 40%, var(--line));
     border-radius: var(--radius-pill);

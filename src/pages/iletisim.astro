@@ -29,7 +29,7 @@ const pageJsonLd = [
   jsonLd={pageJsonLd}
 >
   <Section>
-    <SectionHeading eyebrow="Sahne 01 · İletişim">
+    <SectionHeading eyebrow="Sahne 01 · İletişim" as="h1">
       Ücretsiz ön görüşme
       <Fragment slot="intro">
         <p>
@@ -126,6 +126,11 @@ const pageJsonLd = [
   }
   .channels__row a:hover {
     color: var(--amber-text);
+  }
+  .channels__row a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
   }
   .pending {
     color: var(--ink-soft);

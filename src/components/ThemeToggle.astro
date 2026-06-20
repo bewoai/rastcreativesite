@@ -53,6 +53,7 @@ const { class: className } = Astro.props;
     align-items: center;
     width: var(--tt-w);
     height: var(--tt-h);
+    min-height: var(--tap-min);
     flex-shrink: 0;
     border-radius: 99px;
     overflow: hidden;
@@ -111,7 +112,7 @@ const { class: className } = Astro.props;
   /* ── Thumb: diameter = H - 2×pad, slides by exactly H (= W/2) ── */
   .tt-thumb {
     position: absolute;
-    top: var(--tt-pad);
+    top: calc((100% - (var(--tt-h) - 2 * var(--tt-pad))) / 2);
     left: var(--tt-pad);
     width: calc(var(--tt-h) - 2 * var(--tt-pad));
     height: calc(var(--tt-h) - 2 * var(--tt-pad));

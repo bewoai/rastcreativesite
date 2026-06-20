@@ -227,6 +227,7 @@ const previewLocationNames = (items: readonly SeoLocation[]) =>
     align-items: center;
     gap: 0.28rem;
     margin-bottom: 0.85rem;
+    min-height: var(--tap-min);
     color: var(--amber-text);
     font-family: var(--font-utility);
     font-size: 0.76rem;
@@ -256,8 +257,8 @@ const previewLocationNames = (items: readonly SeoLocation[]) =>
   .area-card__body li a {
     display: inline-flex;
     align-items: center;
-    height: 1.75rem;
-    padding: 0 0.6rem;
+    min-height: var(--tap-min);
+    padding: 0 0.82rem;
     border: 1px solid var(--line);
     border-radius: 999px;
     background: color-mix(in srgb, var(--paper) 60%, transparent);
