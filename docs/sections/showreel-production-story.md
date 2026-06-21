@@ -22,8 +22,9 @@ ziyaretçiyi *izlemeye* ikna ederek lead niyetini artırmak. Sitenin "vay" anı 
       1280×720 16:9, 4 sn loop) panoya (`story__heroFrame`) `<video muted loop playsinline
       preload="none" poster=...>` olarak gömüldü. Bölüm görünümüne girince IntersectionObserver
       ile oynuyor (3B deck'in izdüşümü güvenilmez olduğu için `.story` gözleniyor); reduced-motion
-      / Save-Data / no-JS'te poster kalıyor. **Not:** dosya ~6.3MB / ~13Mbps (ffmpeg yok → sıkıştırılamadı);
-      lazy yüklendiği için ilk yüklemeyi/LCP'yi etkilemiyor ama ileride ~1MB + webm'e indirilmeli.
+      / Save-Data / no-JS'te poster kalıyor. İki kaynak: **webm 1.2MB** (VP9/AV1 — modern
+      tarayıcıların çoğu bunu alır) + **mp4 6.3MB** fallback (Safari/iOS). Lazy (`preload=none`)
+      yüklendiği için ilk yüklemeyi/LCP'yi etkilemez. İleride mp4 de ~1-2MB'a inilebilir.
 - [x] **Kart çakışması:** çözüldü. `story__drone` yukarı alınıp kısaltıldı (top:-1rem),
       artık panonun üst kenarının üzerinde yüzen bir hava-çekimi şeridi; "Rast Production
       Board / 01·04" başlık satırı üç breakpoint'te de tamamen açıkta (preview'da doğrulandı).
