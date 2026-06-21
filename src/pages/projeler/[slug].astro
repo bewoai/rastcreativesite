@@ -45,6 +45,17 @@ const provider = d.vimeoId ? "vimeo" : d.youtubeId ? "youtube" : null;
 const videoId = d.vimeoId ?? d.youtubeId;
 const uploadDate = d.publishDate ? `${d.publishDate}T00:00:00+03:00` : undefined;
 
+// Timecode ("MM:SS" / "HH:MM:SS") → ISO 8601 ("PT7M3S") for VideoObject.duration.
+const isoDuration = (tc?: string): string | undefined => {
+  if (!tc) return undefined;
+  const parts = tc.split(":").map((n) => Number(n));
+  if (parts.some((n) => Number.isNaN(n))) return undefined;
+  const [h, m, s] = parts.length === 3 ? parts : [0, ...parts];
+  const out = `PT${h ? `${h}H` : ""}${m ? `${m}M` : ""}${s ? `${s}S` : ""}`;
+  return out === "PT" ? undefined : out;
+};
+const videoDuration = isoDuration(d.duration);
+
 // VideoObject only once a real video exists (placeholders emit nothing).
 const videoObject =
   provider && videoId && uploadDate
@@ -55,6 +66,7 @@ const videoObject =
         description: d.summary ?? `${d.title} — ${d.category}`,
         thumbnailUrl: [new URL(d.poster, SITE.url).href],
         uploadDate,
+        ...(videoDuration ? { duration: videoDuration } : {}),
         embedUrl:
           provider === "vimeo"
             ? `https://player.vimeo.com/video/${videoId}`
