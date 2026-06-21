@@ -146,7 +146,7 @@ const boardPoster = await getImage({
     padding-inline: var(--container-pad);
     background:
       radial-gradient(circle at 82% 22%, color-mix(in srgb, var(--amber) 18%, transparent), transparent 26rem),
-      linear-gradient(180deg, var(--ink-band), var(--ink) 52%, var(--paper) 100%);
+      linear-gradient(180deg, var(--ink-band), var(--ink-band) 52%, var(--paper) 100%);
     isolation: isolate;
   }
 
@@ -632,7 +632,7 @@ const boardPoster = await getImage({
       padding-block: clamp(2.75rem, 9vw, 4rem);
       background:
         radial-gradient(circle at 70% 12%, color-mix(in srgb, var(--amber) 14%, transparent), transparent 18rem),
-        linear-gradient(180deg, var(--ink-band), var(--ink) 68%, var(--paper) 100%);
+        linear-gradient(180deg, var(--ink-band), var(--ink-band) 68%, var(--paper) 100%);
     }
 
     /* Neutralise the pin state machine — same specificity as the desktop
