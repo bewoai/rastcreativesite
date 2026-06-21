@@ -6,7 +6,7 @@ year: 2026
 publishDate: "2026-06-17"
 summary: Gebelikte banyoda ve cilt bakımında neleri değiştirmen gerekiyor?
 poster: https://i.ytimg.com/vi/TKPtNmIqPdU/maxresdefault.jpg
-posterAlt: ""
+posterAlt: "Op. Dr. Duygu Cebecik Özmüş ile gebelikte banyoda dikkat edilmesi gerekenler videosu kapağı"
 youtubeId: TKPtNmIqPdU
 vertical: false
 duration: "07:03"
