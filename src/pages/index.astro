@@ -15,7 +15,8 @@ import VideoHero from "../components/VideoHero.astro";
 import HeroShowreel3D from "../components/HeroShowreel3D.astro";
 import AreaIndex from "../components/AreaIndex.astro";
 import BlogCard from "../components/BlogCard.astro";
-import heroPosterImg from "../assets/photos/hero-cinema.jpg";
+import heroDesktopImg from "../assets/photos/hero-set-desktop.webp";
+import heroMobileImg from "../assets/photos/hero-set-mobile.webp";
 import { COPY, PRIMARY_CTA } from "../consts";
 import { localBusiness, organization, webSite, faqPage, toPlainText } from "../lib/schema";
 import { groupByBrand } from "../lib/brands";
@@ -125,17 +126,23 @@ const pageJsonLd = [
   ),
 ];
 
-const heroPoster = await getImage({
-  src: heroPosterImg,
+const heroDesktop = await getImage({
+  src: heroDesktopImg,
+  width: 1920,
+  format: "webp",
+  quality: 72,
+});
+const heroMobile = await getImage({
+  src: heroMobileImg,
   width: 900,
   format: "webp",
   quality: 72,
 });
 ---
 
-<BaseLayout jsonLd={pageJsonLd} preloadImage={heroPoster.src}>
-  {/* 1 — Hero (showreel background) */}
-  <VideoHero poster={heroPoster.src} flush class="hero">
+<BaseLayout jsonLd={pageJsonLd}>
+  {/* 1 — Hero (cinematic film-set header; art-directed poster) */}
+  <VideoHero poster={heroDesktop.src} posterMobile={heroMobile.src} flush class="hero">
     <div class="hero__layout">
       <div class="hero__text">
         <Eyebrow tone="paper">Sakarya · Sinematik Video Prodüksiyon</Eyebrow>

@@ -14,8 +14,10 @@
  * poster carries the hero on its own.
  */
 interface Props {
-  /** Built URL of the poster image (e.g. `posterImg.src`). */
+  /** Built URL of the poster image (desktop / default). */
   poster: string;
+  /** Optional art-directed poster for narrow screens (portrait crop). */
+  posterMobile?: string;
   /** Public paths to the encoded loop; both recommended. */
   webm?: string;
   mp4?: string;
@@ -33,6 +35,7 @@ const defaultScrim = 62;
 
 const {
   poster,
+  posterMobile,
   webm,
   mp4,
   height = defaultHeight,
@@ -40,6 +43,8 @@ const {
   flush = false,
   class: className,
 } = Astro.props;
+
+const hasVideo = Boolean(webm || mp4);
 
 // Always emit the custom properties — the scrim gradient and min-height read
 // `var(--vhero-scrim)` / `var(--vhero-h)`, so omitting them (the old "defaults"
@@ -51,20 +56,29 @@ const styleVars = `--vhero-h:${height}; --vhero-scrim:${scrim}%`;
   class:list={["vhero", { "vhero--flush": flush }, className]}
   style={styleVars}
 >
-  <video
-    class="vhero__media"
-    poster={poster}
-    muted
-    loop
-    playsinline
-    preload="none"
-    aria-hidden="true"
-    tabindex="-1"
-    data-showreel
-  >
-    {webm && <source src={webm} type="video/webm" />}
-    {mp4 && <source src={mp4} type="video/mp4" />}
-  </video>
+  {/* Art-directed poster: portrait crop on phones, landscape on desktop. It is
+      the LCP, so the <img> is eager + high priority (no separate preload). */}
+  <picture class="vhero__media">
+    {posterMobile && <source media="(max-width: 767.98px)" srcset={posterMobile} />}
+    <img src={poster} alt="" decoding="async" fetchpriority="high" />
+  </picture>
+  {
+    hasVideo && (
+      <video
+        class="vhero__media vhero__video"
+        muted
+        loop
+        playsinline
+        preload="none"
+        aria-hidden="true"
+        tabindex="-1"
+        data-showreel
+      >
+        {webm && <source src={webm} type="video/webm" />}
+        {mp4 && <source src={mp4} type="video/mp4" />}
+      </video>
+    )
+  }
   <div class="vhero__scrim" aria-hidden="true"></div>
   <div class="vhero__inner">
     <slot />
@@ -90,6 +104,12 @@ const styleVars = `--vhero-h:${height}; --vhero-scrim:${scrim}%`;
     z-index: -1;
   }
   .vhero__media {
+    object-fit: cover;
+    display: block;
+  }
+  .vhero__media img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     display: block;
   }
