@@ -78,6 +78,14 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
 
+    {/* Blog RSS feed discovery */}
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${SITE.name} — Günlük`}
+      href={new URL("/rss.xml", SITE.url).href}
+    />
+
     {/* Local SEO geo hints (Sakarya / TR-54). No invented coordinates. */}
     <meta name="geo.region" content="TR-54" />
     <meta name="geo.placename" content="Sakarya" />
