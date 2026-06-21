@@ -27,6 +27,9 @@ interface Props {
   scrim?: number;
   /** Pull up under the floating nav so the video reaches the top edge. */
   flush?: boolean;
+  /** Fade the bottom edge into `--ink-band` for a seamless join with the
+   *  dark section below (use only when the next section starts on --ink-band). */
+  fadeBottom?: boolean;
   class?: string;
 }
 
@@ -41,6 +44,7 @@ const {
   height = defaultHeight,
   scrim = defaultScrim,
   flush = false,
+  fadeBottom = false,
   class: className,
 } = Astro.props;
 
@@ -53,7 +57,7 @@ const styleVars = `--vhero-h:${height}; --vhero-scrim:${scrim}%`;
 ---
 
 <section
-  class:list={["vhero", { "vhero--flush": flush }, className]}
+  class:list={["vhero", { "vhero--flush": flush, "vhero--fade": fadeBottom }, className]}
   style={styleVars}
 >
   {/* Art-directed poster: portrait crop on phones, landscape on desktop. It is
@@ -112,6 +116,21 @@ const styleVars = `--vhero-h:${height}; --vhero-scrim:${scrim}%`;
     height: 100%;
     object-fit: cover;
     display: block;
+  }
+
+  /* Seamless fade of the hero's bottom edge into the dark section below
+     (--ink-band, theme-aware) — removes the hard horizontal seam. Painted above
+     the image/scrim (z-index:-1, but generated last) yet below the content;
+     never intercepts pointer events. Height scales with the viewport. */
+  .vhero--fade::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: clamp(6rem, 18vh, 14rem);
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(to bottom, transparent, var(--ink-band));
   }
   .vhero__scrim {
     background:
