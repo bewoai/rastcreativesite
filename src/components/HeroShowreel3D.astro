@@ -1,10 +1,19 @@
 ---
-import { Image } from "astro:assets";
+import { Image, getImage } from "astro:assets";
 import Button from "./Button.astro";
 import { PRIMARY_CTA } from "../consts";
 import brandFilm from "../assets/photos/film-crew-red-camera.jpg";
 import reelsCut from "../assets/photos/vertical-video-creator.jpg";
 import dronePlan from "../assets/photos/aerial-drone-landscape.jpg";
+
+// Poster for the board video — shows instantly (LCP-safe) and stays for
+// reduced-motion / no-JS. The video itself loads only when scrolled into view.
+const boardPoster = await getImage({
+  src: brandFilm,
+  width: 980,
+  format: "webp",
+  quality: 70,
+});
 ---
 
 <section class="story" aria-labelledby="production-story-title" data-production-story>
@@ -55,14 +64,19 @@ import dronePlan from "../assets/photos/aerial-drone-landscape.jpg";
           </div>
 
           <div class="story__heroFrame">
-            <Image
-              src={brandFilm}
-              alt=""
-              widths={[360, 560, 760, 980]}
-              sizes="(min-width: 980px) 41rem, 92vw"
-              loading="lazy"
-              class="story__image"
-            />
+            <video
+              class="story__image story__video"
+              poster={boardPoster.src}
+              muted
+              loop
+              playsinline
+              preload="none"
+              aria-hidden="true"
+              tabindex="-1"
+              data-board-video
+            >
+              <source src="/videos/showreel-board.mp4" type="video/mp4" />
+            </video>
             <div class="story__frameOverlay">
               <span>4K Brand Film</span>
               <strong>Tanıtım filmi</strong>
@@ -368,6 +382,11 @@ import dronePlan from "../assets/photos/aerial-drone-landscape.jpg";
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  .story__video {
+    display: block;
+    background: var(--ink-band);
   }
 
   .story__heroFrame::after,
@@ -954,6 +973,27 @@ import dronePlan from "../assets/photos/aerial-drone-landscape.jpg";
     if (reduceMotion) {
       setProgress(1);
       return;
+    }
+
+    // Board video: load + play only when the production board scrolls into view
+    // (preload="none" → no bytes until then; never for reduced-motion/Save-Data).
+    const boardVideo = story.querySelector<HTMLVideoElement>("[data-board-video]");
+    const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } })
+      .connection?.saveData;
+    if (boardVideo && !saveData) {
+      // Observe the (non-transformed) section, not the video: the board sits in
+      // a 3D-transformed deck whose projected rect makes IntersectionObserver
+      // unreliable. Play while the section is anywhere in view; pause when past.
+      const videoIO = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) boardVideo.play().catch(() => {});
+            else boardVideo.pause();
+          }
+        },
+        { threshold: 0 },
+      );
+      videoIO.observe(story);
     }
 
     // Mobile: the desktop 3D parallax is dropped (it clipped), so the stage was

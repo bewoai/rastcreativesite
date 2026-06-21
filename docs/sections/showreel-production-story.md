@@ -18,7 +18,12 @@ ziyaretçiyi *izlemeye* ikna ederek lead niyetini artırmak. Sitenin "vay" anı 
 
 ## Bilinen sorunlar (gözlemlenen)
 > Güncelleme 2026-06-20 (branch `codex/hero-showreel-3d`): akıcılık/bug paketi `HeroShowreel3D.astro`'da uygulandı ve preview'da doğrulandı.
-- [ ] **Gerçek video yok.** (Kullanıcı kararı: en sona bırakıldı; şimdilik statik kalıyor.)
+- [x] **Gerçek video eklendi** (2026-06-21): `public/videos/showreel-board.mp4` (Kling,
+      1280×720 16:9, 4 sn loop) panoya (`story__heroFrame`) `<video muted loop playsinline
+      preload="none" poster=...>` olarak gömüldü. Bölüm görünümüne girince IntersectionObserver
+      ile oynuyor (3B deck'in izdüşümü güvenilmez olduğu için `.story` gözleniyor); reduced-motion
+      / Save-Data / no-JS'te poster kalıyor. **Not:** dosya ~6.3MB / ~13Mbps (ffmpeg yok → sıkıştırılamadı);
+      lazy yüklendiği için ilk yüklemeyi/LCP'yi etkilemiyor ama ileride ~1MB + webm'e indirilmeli.
 - [x] **Kart çakışması:** çözüldü. `story__drone` yukarı alınıp kısaltıldı (top:-1rem),
       artık panonun üst kenarının üzerinde yüzen bir hava-çekimi şeridi; "Rast Production
       Board / 01·04" başlık satırı üç breakpoint'te de tamamen açıkta (preview'da doğrulandı).
