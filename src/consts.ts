@@ -122,7 +122,8 @@ export const COPY = {
   heroTitle: "Sakarya Video Çekimi ve Prodüksiyon",
   heroSubtitle:
     "Markanız için reklam filmi, tanıtım filmi ve sosyal medya videoları üretiyoruz. Sinematik görüntü, doğru hikâye ve güçlü kurgu ile dijital yüzünüzü daha profesyonel hale getiriyoruz.",
-  heroTrust: "13+ marka · 26+ içerik · Sakarya merkezli prodüksiyon ekibi",
+  // Note: the hero trust line ("X+ marka · Y+ içerik …") is built dynamically
+  // in index.astro from real content counts, so it is not hard-coded here.
   heroSecondaryCta: "Projelerimizi İzleyin",
   aboutIntro:
     "Yolculuğumuz boyunca farklı sektörlerden markaların dijital hikâyelerini yönettik. Ekibimizin geçmişindeki bu deneyim, bugün Rast Creative Studio çatısı altında sunduğumuz vizyonun temelini oluşturuyor.",

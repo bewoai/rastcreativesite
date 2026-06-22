@@ -10,6 +10,7 @@ import ProjectCard from "../../components/ProjectCard.astro";
 import Button from "../../components/Button.astro";
 import { SITE, PRIMARY_CTA } from "../../consts";
 import { breadcrumb } from "../../lib/schema";
+import { ytThumbToWebp } from "../../lib/ytimg";
 
 export async function getStaticPaths() {
   // External-only entries (e.g. Instagram link-outs) have no detail page;
@@ -34,6 +35,10 @@ export async function getStaticPaths() {
 const { entry, related } = Astro.props;
 const { Content } = await render(entry);
 const d = entry.data;
+
+// Lighter WebP for the large on-page poster; the raw JPG is kept for OG/Twitter
+// and schema thumbnails, where universal compatibility matters more than weight.
+const posterLarge = ytThumbToWebp(d.poster, "large");
 
 const credits = [
   ["Müşteri", d.client],
@@ -113,14 +118,14 @@ const pageJsonLd = [
             provider={provider}
             videoId={videoId}
             title={d.title}
-            poster={d.poster}
+            poster={posterLarge}
             posterAlt={d.posterAlt}
             vertical={d.vertical}
           />
         ) : (
           <div class="poster">
             <img
-              src={d.poster}
+              src={posterLarge}
               alt={d.posterAlt ?? `${d.title} — proje görseli`}
               width="1600"
               height="900"

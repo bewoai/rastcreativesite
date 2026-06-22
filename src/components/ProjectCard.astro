@@ -1,5 +1,6 @@
 ---
 import Eyebrow from "./Eyebrow.astro";
+import { ytThumbToWebp } from "../lib/ytimg";
 
 interface Props {
   href: string;
@@ -36,10 +37,7 @@ const {
 } = Astro.props;
 const meta = [client].filter(Boolean).join(" · ");
 const isExternal = /^https?:\/\//.test(href);
-const cardPoster = poster.replace(
-  /^https:\/\/i\.ytimg\.com\/vi\/([^/]+)\/(?:maxresdefault|oardefault)\.jpg$/,
-  "https://i.ytimg.com/vi_webp/$1/hqdefault.webp",
-);
+const cardPoster = ytThumbToWebp(poster, "card");
 ---
 
 <a
@@ -89,6 +87,7 @@ const cardPoster = poster.replace(
         />
       )
     }
+    {timecode && <span class="card__timecode">{timecode}</span>}
   </div>
   <div class="card__body">
     <Eyebrow tone="amber">{category}</Eyebrow>

@@ -45,6 +45,9 @@ const fmtBlogDate = (d: Date) =>
 
 // Quick credibility numbers — derived from real content so they stay accurate.
 const brandCount = groupByBrand(projects).length;
+// Hero trust line — built from the same real counts as the stats bar below so
+// the two never disagree (no hand-maintained numbers going stale).
+const heroTrust = `${brandCount}+ marka · ${projects.length}+ içerik · Sakarya merkezli prodüksiyon ekibi`;
 const stats = [
   {
     n: `${brandCount}+`,
@@ -148,7 +151,7 @@ const heroMobile = await getImage({
         <Eyebrow tone="paper">Sakarya · Sinematik Video Prodüksiyon</Eyebrow>
         <h1 class="hero__title">{COPY.heroTitle}</h1>
         <p class="hero__subtitle">{COPY.heroSubtitle}</p>
-        <p class="hero__trust">{COPY.heroTrust}</p>
+        <p class="hero__trust">{heroTrust}</p>
         <div class="hero__cta">
           <Button href={PRIMARY_CTA.href} size="lg" arrow data-cta-location="hero">
             {PRIMARY_CTA.label}

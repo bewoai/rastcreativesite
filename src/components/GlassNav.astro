@@ -3,7 +3,7 @@ import Logo from "./Logo.astro";
 import Button from "./Button.astro";
 import Icon from "./Icon.astro";
 import ThemeToggle from "./ThemeToggle.astro";
-import { NAV, PRIMARY_CTA } from "../consts";
+import { NAV, PRIMARY_CTA, waLink } from "../consts";
 
 // Active-route detection (ignore trailing slash).
 const path = Astro.url.pathname.replace(/\/+$/, "") || "/";
@@ -12,6 +12,9 @@ const isActive = (href: string) =>
 
 // Mobile tab-bar mirrors the full nav + Home for thumb-reach parity.
 const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
+
+// WhatsApp quick-action, surfaced in the condensed tab-bar (null → hidden).
+const whatsappHref = waLink();
 ---
 
 {/* Desktop: floating glass pill */}
@@ -66,6 +69,24 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
       ))
     }
   </ul>
+  {
+    whatsappHref && (
+      <a
+        class="tabbar__wa"
+        href={whatsappHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="WhatsApp'tan yazın"
+        aria-hidden="true"
+        tabindex="-1"
+        data-cta-location="mobile_tabbar"
+        data-tabbar-wa
+      >
+        <Icon name="whatsapp" size={20} class="tabbar__wa-icon" />
+        <span>WhatsApp</span>
+      </a>
+    )
+  }
   <button
     class="tabbar__fab"
     type="button"
@@ -404,6 +425,48 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
     transform: translateY(0) scale(1);
   }
 
+  /* WhatsApp quick-action: mirror of the Menü FAB on the left, revealed with it
+     when the tab-bar condenses — so the two never collide and stay balanced. */
+  .tabbar__wa {
+    pointer-events: none;
+    position: absolute;
+    left: 0.75rem;
+    bottom: calc(0.55rem + env(safe-area-inset-bottom, 0px));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: var(--tap-min);
+    padding: 0 0.95rem;
+    border-radius: var(--radius-pill);
+    background: #25d366;
+    color: #fff;
+    font: 600 0.78rem/1 var(--font-utility);
+    box-shadow:
+      0 -10px 30px -16px rgba(17, 17, 16, 0.32),
+      0 6px 18px -8px rgba(37, 211, 102, 0.6);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.8rem) scale(0.96);
+    transition:
+      transform var(--dur) var(--ease-out),
+      opacity var(--dur-fast) var(--ease-out),
+      visibility var(--dur-fast) var(--ease-out);
+  }
+  .tabbar__wa:focus {
+    outline: none;
+  }
+  .tabbar__wa:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+  }
+  .tabbar.is-condensed .tabbar__wa {
+    pointer-events: auto;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+
   @media (max-width: 380px) {
     .tabbar {
       padding-inline: 0.45rem;
@@ -421,7 +484,8 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
 
   @media (prefers-reduced-motion: reduce) {
     .tabbar__inner,
-    .tabbar__fab {
+    .tabbar__fab,
+    .tabbar__wa {
       transition: none;
     }
   }
@@ -432,6 +496,7 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
   const nav = document.querySelector<HTMLElement>("[data-nav]");
   const tabbar = document.querySelector<HTMLElement>("[data-mobile-tabbar]");
   const tabbarFab = document.querySelector<HTMLButtonElement>("[data-tabbar-fab]");
+  const tabbarWa = document.querySelector<HTMLAnchorElement>("[data-tabbar-wa]");
   const desktopQuery = matchMedia("(min-width: 768px)");
   const mobileQuery = matchMedia("(max-width: 767.98px)");
 
@@ -445,6 +510,10 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
     tabbarFab.setAttribute("aria-expanded", "false");
     tabbarFab.setAttribute("aria-hidden", condensed ? "false" : "true");
     tabbarFab.tabIndex = condensed ? 0 : -1;
+    if (tabbarWa) {
+      tabbarWa.setAttribute("aria-hidden", condensed ? "false" : "true");
+      tabbarWa.tabIndex = condensed ? 0 : -1;
+    }
   };
 
   const updateChrome = () => {
