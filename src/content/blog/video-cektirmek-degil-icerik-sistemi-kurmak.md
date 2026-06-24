@@ -46,7 +46,7 @@ Doğru planlanan bir çekim gününün verimi çok yükselir. Bazen tek bir gün
 
 Bu, “her şeyi aceleyle sıkıştıralım” demek değil. Tam tersi. Sete girmeden önce neye ihtiyacımız olduğunu bilirsek, günü daha temiz yönetiriz. Kamera neyi neden çektiğini bilir. Kurgu masasında da elimizde sadece güzel görüntüler değil, işe yarayan malzeme olur.
 
-Benim gözümde profesyonel prodüksiyonun farkı biraz burada başlıyor. Sadece iyi kamera kullanmakta değil; çekilen her planın sonradan ne işe yarayacağını bilmekte.
+Benim gözümde [profesyonel prodüksiyonun](/video-cekimi/sakarya) farkı biraz burada başlıyor. Sadece iyi kamera kullanmakta değil; çekilen her planın sonradan ne işe yarayacağını bilmekte.
 
 ## Sosyal medya ayrı bir iş gibi düşünülmeli
 

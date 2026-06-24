@@ -56,7 +56,7 @@ Teknik standartlarımız, görsel kalitenin sınırlarını zorlamak üzerine ku
 
 ## Reklam Prodüksiyon Süreci: Fikirden Yayına 5 Adım
 
-Profesyonel bir video üretimi, sadece kamerayı kayda almaktan çok daha fazlasıdır. Başarılı bir **Sakarya reklam çekimi** için izlediğimiz metodik süreç, fikrin doğuşundan nihai teslimata kadar beş kritik aşamadan oluşur. Bu sistemli yaklaşım, hem bütçenizin verimli kullanılmasını sağlar hem de belirsizlikleri ortadan kaldırır. Her adımda kalite kontrol mekanizmalarımızı işleterek, markanızın vizyonunu sinematik bir standartta mühürlüyoruz.
+[Profesyonel bir video üretimi](/video-cekimi/sakarya), sadece kamerayı kayda almaktan çok daha fazlasıdır. Başarılı bir **Sakarya reklam çekimi** için izlediğimiz metodik süreç, fikrin doğuşundan nihai teslimata kadar beş kritik aşamadan oluşur. Bu sistemli yaklaşım, hem bütçenizin verimli kullanılmasını sağlar hem de belirsizlikleri ortadan kaldırır. Her adımda kalite kontrol mekanizmalarımızı işleterek, markanızın vizyonunu sinematik bir standartta mühürlüyoruz.
 
 Süreç, pre-prodüksiyon dediğimiz hazırlık aşamasıyla başlar. Burada senaryo, storyboard ve çekim takvimi netleşir. Ardından prodüksiyon aşamasına geçilir; bu, teknik ekibin ve yönetmenin sahada olduğu set günüdür. Önceden planlanan her kare, en yüksek teknik standartlarda kayda alınır. Çekim tamamlandığında ise işin asıl mutfağı olan post-prodüksiyon süreci devreye girer. Görüntülerin seçilmesi, kurgulanması ve hikaye akışının oluşturulması bu aşamada gerçekleşir. Son aşamada ise müşteri geri bildirimleriyle şekillenen revizeler tamamlanarak yüksek çözünürlüklü teslimat yapılır.
 

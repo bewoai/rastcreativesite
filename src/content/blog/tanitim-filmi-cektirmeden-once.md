@@ -8,7 +8,7 @@ tags: ["tanıtım filmi", "video prodüksiyon", "Sakarya", "süreç"]
 draft: false
 ---
 
-Bize ulaşan markaların ilk sorusu genelde aynı oluyor: "Tanıtım filmi ne kadar tutar?" Dürüst cevap belki hoşunuza gitmeyecek ama gerçek bu: değişir. Yine de bu "bilmiyoruz" demek değil — neyin hem fiyatı hem de sonucu değiştirdiğini gayet iyi biliyoruz. Sakarya'da yıllardır kamera arkasındayız; bu yazıda, bir film çektirmeden önce keşke herkes bilse dediğimiz şeyleri olabildiğince açık yazdık.
+Bize ulaşan markaların ilk sorusu genelde aynı oluyor: "Tanıtım filmi ne kadar tutar?" Dürüst cevap belki hoşunuza gitmeyecek ama gerçek bu: değişir. Yine de bu "bilmiyoruz" demek değil — neyin hem fiyatı hem de sonucu değiştirdiğini gayet iyi biliyoruz. [Sakarya'da video çekimi](/video-cekimi/sakarya) tarafında yıllardır kamera arkasındayız; bu yazıda, bir film çektirmeden önce keşke herkes bilse dediğimiz şeyleri olabildiğince açık yazdık.
 
 ## "Video" ile "tanıtım filmi" aynı şey değil
 

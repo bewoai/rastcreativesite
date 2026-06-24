@@ -32,7 +32,7 @@ export const SEO_SERVICES: readonly SeoService[] = [
     name: "Video Çekimi",
     tagline: "Markanız için profesyonel çekim, kurgu ve teslim",
     intro:
-      "Video çekimi, bir işletmenin kendini dijitalde en hızlı anlatma yollarından biridir. Rast Creative Studio olarak tanıtım, sosyal medya, etkinlik, ürün ve kurumsal video ihtiyaçlarını tek çekim planında toplar; senaryo, kamera, ışık, ses, kurgu ve renk düzenleme süreçlerini birlikte yönetiriz.",
+      "Video çekimi, bir işletmenin kendini dijitalde en hızlı ve en güçlü anlatma yollarından biridir. Rast Creative Studio olarak tanıtım filmi, sosyal medya videosu, etkinlik kaydı, ürün ve kurumsal video ihtiyaçlarını tek bir çekim planında toplarız; senaryo, kamera, ışık, ses, kurgu ve renk düzenleme süreçlerini baştan sona aynı ekip yürütür. Çekimi yalnızca güzel görüntü almak için değil, markanın web sitesinde, sosyal medyasında ve reklamlarında gerçekten kullanabileceği bir içerik havuzu oluşturmak için planlarız; böylece aynı prodüksiyondan yatay ana film, dikey Reels/Shorts ve kısa reklam kurguları birlikte çıkar.",
     benefits: [
       {
         title: "İhtiyaca göre çekim planı",

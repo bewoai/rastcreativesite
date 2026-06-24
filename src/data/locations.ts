@@ -34,7 +34,7 @@ export const SEO_LOCATIONS: readonly SeoLocation[] = [
     province: "Sakarya",
     core: true,
     blurb:
-      "Stüdyomuzun merkezi Serdivan'da; Sakarya'nın her ilçesine aynı gün ulaşıp çekim yapabiliyoruz. Sanayi tesislerinden Sapanca'nın doğasına kadar ilin tüm dokusunu yakından tanıyoruz.",
+      "Stüdyomuzun merkezi Serdivan'da; Sakarya'nın her ilçesine aynı gün ulaşıp çekim yapabiliyoruz. Adapazarı, Serdivan, Arifiye, Hendek ve Sapanca başta olmak üzere ilin sanayi tesislerini, mağazalarını, sağlık kuruluşlarını ve doğal dokusunu yakından tanıyoruz. Sakarya'da çekim izni, sahne akışı ve teslim takvimini baştan netleştirir; yerel ekip avantajıyla hem maliyeti hem de organizasyon yükünü azaltırız.",
     nearby: ["serdivan", "adapazari", "sapanca", "kocaeli"],
   },
   {

@@ -5,7 +5,7 @@ import SectionHeading from "../../components/SectionHeading.astro";
 import Button from "../../components/Button.astro";
 import Icon from "../../components/Icon.astro";
 import ProjectCard from "../../components/ProjectCard.astro";
-import { PRIMARY_CTA, CONTACT } from "../../consts";
+import { PRIMARY_CTA, CONTACT, SITE } from "../../consts";
 import { breadcrumb, faqPage, BUSINESS_ID } from "../../lib/schema";
 import { SEO_SERVICES, getService, type SeoService } from "../../data/seo-services";
 import { SEO_LOCATIONS, getLocation, type SeoLocation } from "../../data/locations";
@@ -50,6 +50,18 @@ const faqs = [
     question: `${service.name} hizmetinde neler teslim ediyorsunuz?`,
     answer: `${service.intro} Çekim sonrası kurgu, renk düzenleme ve teslim formatları dahildir.`,
   },
+  {
+    question: `${location.name} dışındaki çevre ilçelere de geliyor musunuz?`,
+    answer: `Evet. Serdivan'daki stüdyomuzdan ${location.name} merkez ve çevre ilçelerin tamamına ekip yönlendiriyoruz; bölgeyi yakından tanıdığımız için ulaşım ve organizasyonu hızlı planlarız.`,
+  },
+  {
+    question: `${service.name} için ne kadar önceden planlama yapmak gerekir?`,
+    answer: `İdealinde çekimden 1–2 hafta önce ön görüşme yapmak senaryoyu ve çekim akışını rahatça netleştirir. Yoğun dönemlerde bile ${location.loc} kısa sürede organizasyon kurmaya çalışırız.`,
+  },
+  {
+    question: `Videoları hangi formatlarda teslim ediyorsunuz?`,
+    answer: `Aynı çekimden yatay ana film, dikey Reels/Shorts ve kısa reklam kurgularını birlikte hazırlayabiliyoruz; web sitesi, Instagram, YouTube ve Meta reklamları için uygun oran ve sürelerde teslim ederiz.`,
+  },
 ];
 
 const jsonLd = [
@@ -77,6 +89,8 @@ const nearby = location.nearby
 const otherServices = SEO_SERVICES.filter((s) => s.slug !== service.slug);
 
 const serviceProjectCategories: Record<string, string[]> = {
+  // Video Çekimi is the umbrella service — show our best work across every category.
+  "video-cekimi": ["Kurumsal", "Marka Hikayesi", "Reklam", "Ürün", "Sosyal Medya", "Medikal"],
   "drone-cekimi": ["Kurumsal", "Ürün", "Reklam"],
   "tanitim-filmi": ["Kurumsal", "Marka Hikayesi"],
   "reklam-filmi": ["Reklam", "Ürün", "Kurumsal"],
@@ -88,9 +102,34 @@ const allProjects = (await getCollection("projects"))
   .filter((p) => !p.data.draft)
   .sort((a, b) => a.data.order - b.data.order);
 const relatedCategories = serviceProjectCategories[service.slug] ?? [];
+// Up to 6 projects, one per client/brand so the proof reel stays varied.
+const seenClients = new Set<string>();
 const relatedProjects = allProjects
   .filter((p) => relatedCategories.includes(p.data.category))
-  .slice(0, 3);
+  .filter((p) => {
+    const key = p.data.client ?? p.id;
+    if (seenClients.has(key)) return false;
+    seenClients.add(key);
+    return true;
+  })
+  .slice(0, 6);
+
+// ItemList of the referenced works — a structured "real projects" signal.
+const projectsItemList =
+  relatedProjects.length > 0
+    ? {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name: `${title} — referans projeler`,
+        itemListElement: relatedProjects.map((p, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          url: new URL(p.data.externalUrl ?? `/projeler/${p.id}`, SITE.url).href,
+          name: p.data.title,
+        })),
+      }
+    : null;
+if (projectsItemList) jsonLd.push(projectsItemList);
 ---
 
 <BaseLayout title={title} description={description} jsonLd={jsonLd}>
@@ -143,12 +182,12 @@ const relatedProjects = allProjects
     relatedProjects.length > 0 && (
       <Section width="narrow" space="tight">
         <SectionHeading eyebrow="Gerçek işler">
-          {service.name} için referans projeler
+          {location.name} ve çevresinde {service.name.toLowerCase()} işlerimiz
           <Fragment slot="intro">
             <p>
-              Bölge sayfalarını sadece anahtar kelime için değil, gerçek üretim
-              tecrübemizi göstermek için kullanıyoruz. Aşağıdaki işler aynı hizmet
-              disiplinine yakın örneklerdir.
+              Bu sayfayı yalnızca anahtar kelime için değil, gerçek üretim
+              tecrübemizi göstermek için hazırlıyoruz. Aşağıda {location.name} ve
+              çevresinde ürettiğimiz işlerden bir seçki var.
             </p>
           </Fragment>
         </SectionHeading>
@@ -164,6 +203,7 @@ const relatedProjects = allProjects
               year={p.data.year}
               timecode={p.data.duration}
               vertical={p.data.vertical}
+              summary={p.data.summary}
             />
           ))}
         </div>
