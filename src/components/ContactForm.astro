@@ -22,18 +22,33 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
     </div>
   </div>
 
-  <div class="field">
-    <label for="cf-phone">Telefon <span class="req" aria-hidden="true">*</span></label>
-    <input
-      id="cf-phone"
-      name="phone"
-      type="tel"
-      inputmode="tel"
-      autocomplete="tel"
-      required
-      aria-describedby="cf-phone-hint"
-    />
-    <span id="cf-phone-hint" class="hint">Size en hızlı telefonla dönüş yaparız.</span>
+  <div class="cform__row">
+    <div class="field">
+      <label for="cf-phone">Telefon <span class="req" aria-hidden="true">*</span></label>
+      <input
+        id="cf-phone"
+        name="phone"
+        type="tel"
+        inputmode="tel"
+        autocomplete="tel"
+        required
+        aria-describedby="cf-phone-hint"
+      />
+      <span id="cf-phone-hint" class="hint">Size en hızlı telefonla dönüş yaparız.</span>
+    </div>
+    <div class="field">
+      <label for="cf-email">E-posta <span class="req" aria-hidden="true">*</span></label>
+      <input
+        id="cf-email"
+        name="email"
+        type="email"
+        inputmode="email"
+        autocomplete="email"
+        required
+        aria-describedby="cf-email-hint"
+      />
+      <span id="cf-email-hint" class="hint">Teklif ve detayları e-posta ile paylaşırız.</span>
+    </div>
   </div>
 
   <div class="field">
@@ -116,6 +131,7 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
   }
   input[type="text"],
   input[type="tel"],
+  input[type="email"],
   select,
   textarea {
     font: inherit;
@@ -337,7 +353,7 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
     waBtn?.addEventListener("click", () => {
       const get = (sel: string) =>
         form.querySelector<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(sel);
-      for (const sel of ["#cf-name", "#cf-phone", "#cf-project", "#cf-message", 'input[name="kvkk"]']) {
+      for (const sel of ["#cf-name", "#cf-phone", "#cf-email", "#cf-project", "#cf-message", 'input[name="kvkk"]']) {
         const el = get(sel);
         if (el && !el.checkValidity()) {
           el.reportValidity();
@@ -348,6 +364,7 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
       const lines = ["Yeni teklif talebi — rastcreative.com", "", `Ad: ${val("#cf-name")}`];
       if (val("#cf-company")) lines.push(`Firma: ${val("#cf-company")}`);
       lines.push(`Telefon: ${val("#cf-phone")}`);
+      if (val("#cf-email")) lines.push(`E-posta: ${val("#cf-email")}`);
       lines.push(`Proje türü: ${val("#cf-project")}`);
       lines.push(`Mesaj: ${val("#cf-message")}`);
       const url = waLink(lines.join("\n"));
