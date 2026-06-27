@@ -17,7 +17,7 @@ import AreaIndex from "../components/AreaIndex.astro";
 import BlogCard from "../components/BlogCard.astro";
 import heroDesktopImg from "../assets/photos/hero-set-desktop.webp";
 import heroMobileImg from "../assets/photos/hero-set-mobile.webp";
-import { COPY, PRIMARY_CTA } from "../consts";
+import { COPY, PRIMARY_CTA, CONTACT } from "../consts";
 import { localBusiness, organization, webSite, faqPage, toPlainText } from "../lib/schema";
 import { groupByBrand } from "../lib/brands";
 import { SEO_SERVICES } from "../data/seo-services";
@@ -165,6 +165,87 @@ const heroMobile = await getImage({
   </VideoHero>
 
   <HeroShowreel3D />
+
+  {/* 1.5 — Kurumsal kimlik / "ne yapar" — yanıt-öncelikli, AI motorları ve yeni ziyaretçiler için */}
+  <Section width="narrow" space="tight">
+    <div class="entity" data-reveal>
+      <Eyebrow>Rast Creative Studio ne yapar?</Eyebrow>
+      <p class="entity__lead">
+        Rast Creative Studio, <strong>Serdivan/Sakarya merkezli bir video prodüksiyon ve
+        kreatif içerik ajansıdır.</strong> Markalar için reklam filmi, tanıtım filmi, sosyal
+        medya videosu, ürün ve drone çekimi üretir; çekim, kurgu ve renk düzenlemeyi tek
+        elden yürütür.
+      </p>
+      <p class="entity__text">
+        Serdivan'daki stüdyosundan Sakarya, Adapazarı, Erenler, Arifiye ve çevre ilçelerin
+        yanı sıra Kocaeli, Gebze ve Düzce hattında yerinde çekim yapar. Fikirden teslime
+        kadar süreç, projeyi planlayan kurucu ortakların kontrolünde ilerler.
+      </p>
+      <dl class="entity__facts">
+        <div><dt>Merkez</dt><dd>Serdivan, Sakarya</dd></div>
+        <div><dt>Hizmet bölgesi</dt><dd>Sakarya ve çevresi · Kocaeli · Gebze · Düzce</dd></div>
+        <div>
+          <dt>Ana hizmetler</dt>
+          <dd>Reklam ve tanıtım filmi, sosyal medya videosu, ürün & drone çekimi, kurgu</dd>
+        </div>
+        <div>
+          <dt>İletişim</dt>
+          <dd>
+            <a href={`tel:${CONTACT.phoneIntl}`}>{CONTACT.phone}</a> ·
+            <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </Section>
+
+  <style>
+    .entity__lead {
+      margin: 1rem 0 0;
+      font-size: 1.15rem;
+      line-height: var(--leading-body);
+      color: var(--ink);
+      max-width: 60ch;
+    }
+    .entity__text {
+      margin: 0.9rem 0 0;
+      color: var(--ink-soft);
+      line-height: var(--leading-body);
+      max-width: 62ch;
+    }
+    .entity__facts {
+      margin: 1.6rem 0 0;
+      border-top: 1px solid var(--line);
+    }
+    .entity__facts > div {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.15rem;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .entity__facts dt {
+      font-family: var(--font-utility);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+    .entity__facts dd {
+      margin: 0;
+      color: var(--ink);
+    }
+    .entity__facts a:hover {
+      color: var(--amber-text);
+    }
+    @media (min-width: 640px) {
+      .entity__facts > div {
+        grid-template-columns: 12rem 1fr;
+        gap: 1rem;
+        align-items: baseline;
+      }
+    }
+  </style>
 
   {/* 2 — Seçili işler */}
   <Section id="secili-isler">

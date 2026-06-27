@@ -9,7 +9,7 @@ import Button from "../components/Button.astro";
 import Icon from "../components/Icon.astro";
 import AreaIndex from "../components/AreaIndex.astro";
 import { PRIMARY_CTA } from "../consts";
-import { breadcrumb, BUSINESS_ID } from "../lib/schema";
+import { breadcrumb, BUSINESS_ID, faqPage } from "../lib/schema";
 import bannerPhoto from "../assets/photos/director-clapper.jpg";
 import { SEO_SERVICES } from "../data/seo-services";
 import { AREA_INDEX_LOCATION_SLUGS, SEO_LOCATIONS } from "../data/locations";
@@ -57,7 +57,36 @@ const useCases = [
   "Podcast ve uzman içerikleri",
 ];
 
-// Breadcrumb + a Service node per offering (local SEO).
+// Concise, answer-first FAQ — useful for visitors and AI summaries (GEO).
+const faqs = [
+  {
+    question: "Rast Creative Studio hangi hizmetleri sunar?",
+    answer:
+      "Reklam filmi, tanıtım filmi, sosyal medya videosu, ürün ve drone çekimi ile kurgu ve renk düzenleme dahil post-prodüksiyon. Strateji, çekim ve kurgu tek elden yürütülür.",
+  },
+  {
+    question: "Hangi bölgelerde çekim yapıyorsunuz?",
+    answer:
+      "Serdivan'daki stüdyomuzdan Sakarya, Adapazarı, Erenler, Arifiye ve çevre ilçelere; ayrıca Kocaeli, Gebze ve Düzce hattına yerinde çekime gidiyoruz.",
+  },
+  {
+    question: "Bir video projesi ne kadar sürede teslim edilir?",
+    answer:
+      "Kapsama göre değişmekle birlikte çoğu proje, ön görüşmeden sonra genellikle 2–4 hafta içinde kurgulanıp teslim edilir.",
+  },
+  {
+    question: "Videoları hangi formatlarda teslim ediyorsunuz?",
+    answer:
+      "Aynı çekimden yatay ana film, dikey Reels/Shorts ve kısa reklam kurguları çıkarıyoruz; web sitesi, Instagram, YouTube ve Meta reklamları için uygun oran ve sürelerde teslim ediyoruz.",
+  },
+  {
+    question: "Video çekimi fiyatını ne belirler?",
+    answer:
+      "Çekim süresi, ekip ve ekipman, lokasyon, teslim edilecek video sayısı ve kurgu kapsamı fiyatı belirler. Net teklifi ücretsiz ön görüşmede çıkarıyoruz.",
+  },
+];
+
+// Breadcrumb + a Service node per offering + FAQ (local SEO + GEO).
 const pageJsonLd = [
   breadcrumb([
     { name: "Ana Sayfa", path: "/" },
@@ -72,6 +101,7 @@ const pageJsonLd = [
     areaServed: { "@type": "City", name: "Sakarya" },
     provider: { "@id": BUSINESS_ID },
   })),
+  faqPage(faqs),
 ];
 ---
 
@@ -177,6 +207,20 @@ const pageJsonLd = [
     />
   </Section>
 
+  <Section width="narrow" space="tight">
+    <SectionHeading eyebrow="Sık sorulanlar">Hizmetler hakkında sık sorulanlar</SectionHeading>
+    <dl class="faq">
+      {
+        faqs.map((f) => (
+          <div class="faq__item" data-reveal>
+            <dt class="faq__q">{f.question}</dt>
+            <dd class="faq__a">{f.answer}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Section>
+
   <Section tone="ink" space="tight">
     <div class="cta">
       <Eyebrow tone="paper">Projeniz mi var?</Eyebrow>
@@ -189,6 +233,26 @@ const pageJsonLd = [
 </BaseLayout>
 
 <style>
+  .faq {
+    margin: 2rem 0 0;
+    display: grid;
+    gap: 1.2rem;
+  }
+  .faq__item {
+    border-top: 1px solid var(--line);
+    padding-top: 1.2rem;
+  }
+  .faq__q {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  .faq__a {
+    margin: 0;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
   .svc-banner {
     display: block;
     width: 100%;

@@ -1,7 +1,10 @@
 # Rast Creative Studio
 
-Rast Creative Studio, Sakarya merkezli bir video çekimi ve prodüksiyon ajansıdır.
-Serdivan'dan Sakarya geneline ve yakın illere hizmet verir.
+Rast Creative Studio, Serdivan/Sakarya merkezli bir video prodüksiyon ve kreatif
+içerik ajansıdır. Markalar için reklam filmi, tanıtım filmi, sosyal medya videosu,
+ürün ve drone çekimi üretir; çekim, kurgu ve renk düzenlemeyi tek elden yürütür.
+Serdivan'daki stüdyodan Sakarya, Adapazarı, Erenler, Arifiye ve çevre ilçelere;
+ayrıca Kocaeli, Gebze ve Düzce hattına yerinde çekime gidilir.
 
 ## Ana Hizmetler
 
@@ -41,3 +44,25 @@ Serdivan'dan Sakarya geneline ve yakın illere hizmet verir.
 Rast Creative Studio; markalar, üretim tesisleri, sağlık kurumları, gayrimenkul
 projeleri ve yerel işletmeler için sinematik video çekimi, kurumsal tanıtım
 filmi, sosyal medya videosu, ürün çekimi, drone çekimi ve kurgu hizmetleri sunar.
+
+## Hizmet Bölgesi
+
+Sakarya (Serdivan, Adapazarı, Erenler, Arifiye, Hendek, Sapanca), Kocaeli (İzmit,
+Gebze) ve Düzce başta olmak üzere bölge geneli.
+
+## Sık Sorulan Sorular
+
+S: Rast Creative Studio nerede?
+C: Merkezi Serdivan, Sakarya'dadır.
+
+S: Hangi hizmetleri sunar?
+C: Reklam filmi, tanıtım filmi, sosyal medya videosu, ürün ve drone çekimi, kurgu ve renk düzenleme.
+
+S: Hangi bölgelerde çekim yapar?
+C: Sakarya ve çevre ilçeler ile Kocaeli, Gebze ve Düzce hattı.
+
+S: Bir video ne kadar sürede teslim edilir?
+C: Kapsama göre değişir; çoğu proje genellikle 2-4 hafta içinde teslim edilir.
+
+S: İletişim nasıl?
+C: Telefon +90 543 838 2404, e-posta studio@rastcreative.com.

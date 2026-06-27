@@ -11,9 +11,19 @@ const abs = (path: string) => new URL(path, SITE.url).href;
 export const BUSINESS_ID = `${SITE.url}#business`;
 
 /** Service area — "Sakarya geneli" per client (2026-06). */
-const AREA_SERVED = ["Sakarya", "Serdivan", "Adapazarı", "Sakarya ili"].map(
-  (name) => ({ "@type": "City", name }),
-);
+const AREA_SERVED = [
+  "Sakarya",
+  "Serdivan",
+  "Adapazarı",
+  "Erenler",
+  "Arifiye",
+  "Hendek",
+  "Sapanca",
+  "Kocaeli",
+  "İzmit",
+  "Gebze",
+  "Düzce",
+].map((name) => ({ "@type": "City", name }));
 
 const CORE_SERVICES = [
   {
@@ -101,6 +111,8 @@ export const organization = {
   "@id": `${SITE.url}#organization`,
   name: SITE.name,
   alternateName: SITE.shortName,
+  description:
+    "Rast Creative Studio, Serdivan/Sakarya merkezli video prodüksiyon ve kreatif içerik ajansıdır.",
   url: SITE.url,
   logo: abs("/logo-black.svg"),
   image: abs(SITE.ogImage),
