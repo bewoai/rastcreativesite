@@ -45,6 +45,9 @@ ErrorDocument 404 /404.html
   # CSS & JS (hashed by Astro build, so long cache is safe)
   ExpiresByType text/css "access plus 1 year"
   ExpiresByType application/javascript "access plus 1 year"
+  # Videos are not fingerprinted, so keep the cache useful but safely refreshable.
+  ExpiresByType video/webm "access plus 1 month"
+  ExpiresByType video/mp4 "access plus 1 month"
   # HTML — short cache (content updates)
   ExpiresByType text/html "access plus 10 minutes"
 </IfModule>
@@ -62,4 +65,5 @@ ErrorDocument 404 /404.html
   Header set X-Content-Type-Options "nosniff"
   Header set X-Frame-Options "SAMEORIGIN"
   Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set Strict-Transport-Security "max-age=31536000; includeSubDomains" "expr=%{HTTPS} == 'on'"
 </IfModule>

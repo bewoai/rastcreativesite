@@ -21,6 +21,16 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
+[[headers]]
+  for = "/videos/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+
 [[redirects]]
   from = "https://panel.rastcreative.com/"
   to = "https://panel.rastcreative.com/admin/"

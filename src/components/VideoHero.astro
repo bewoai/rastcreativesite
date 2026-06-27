@@ -18,6 +18,9 @@ interface Props {
   poster: string;
   /** Optional art-directed poster for narrow screens (portrait crop). */
   posterMobile?: string;
+  /** Intrinsic poster dimensions; keeps the LCP image fully declared. */
+  posterWidth?: number;
+  posterHeight?: number;
   /** Public paths to the encoded loop; both recommended. */
   webm?: string;
   mp4?: string;
@@ -39,6 +42,8 @@ const defaultScrim = 62;
 const {
   poster,
   posterMobile,
+  posterWidth,
+  posterHeight,
   webm,
   mp4,
   height = defaultHeight,
@@ -64,7 +69,15 @@ const styleVars = `--vhero-h:${height}; --vhero-scrim:${scrim}%`;
       the LCP, so the <img> is eager + high priority (no separate preload). */}
   <picture class="vhero__media">
     {posterMobile && <source media="(max-width: 767.98px)" srcset={posterMobile} />}
-    <img src={poster} alt="" decoding="async" fetchpriority="high" />
+    <img
+      src={poster}
+      alt=""
+      loading="eager"
+      decoding="async"
+      fetchpriority="high"
+      width={posterWidth}
+      height={posterHeight}
+    />
   </picture>
   {
     hasVideo && (

@@ -10,9 +10,9 @@ import dronePlan from "../assets/photos/drone-aerial-road.webp";
 // reduced-motion / no-JS. The video itself loads only when scrolled into view.
 const boardPoster = await getImage({
   src: brandFilm,
-  width: 980,
+  width: 720,
   format: "webp",
-  quality: 70,
+  quality: 72,
 });
 ---
 
@@ -67,6 +67,8 @@ const boardPoster = await getImage({
             <video
               class="story__image story__video"
               poster={boardPoster.src}
+              width="720"
+              height="405"
               muted
               loop
               playsinline
@@ -1021,8 +1023,7 @@ const boardPoster = await getImage({
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
     const sticky = story.querySelector<HTMLElement>(".story__sticky");
 
-    // Layout metrics are cached and only recomputed on resize. Reading
-    // offsetHeight on every scroll frame forces a reflow → the "rubber" jank.
+    // Layout metrics are cached and only recomputed on resize.
     let viewport = 1;
     let pinTop = 0;
     let stickyHeight = 0;
@@ -1031,9 +1032,9 @@ const boardPoster = await getImage({
     const measure = () => {
       viewport = window.innerHeight || 1;
       pinTop = window.innerWidth < 980 ? 0 : Math.min(102, Math.max(74, viewport * 0.08));
+      stickyHeight = Math.max(1, viewport - pinTop, sticky?.scrollHeight ?? viewport);
+      scrollRange = Math.max(1, story.scrollHeight - viewport);
       story.style.setProperty("--pin-top", `${pinTop}px`);
-      stickyHeight = sticky ? sticky.offsetHeight : viewport;
-      scrollRange = Math.max(1, story.offsetHeight - viewport);
     };
 
     let target = 0;
@@ -1070,9 +1071,15 @@ const boardPoster = await getImage({
       window.requestAnimationFrame(render);
     };
 
+    let scrollQueued = false;
     const onScroll = () => {
-      readTarget();
-      kick();
+      if (scrollQueued) return;
+      scrollQueued = true;
+      window.requestAnimationFrame(() => {
+        scrollQueued = false;
+        readTarget();
+        kick();
+      });
     };
 
     const onResize = () => {

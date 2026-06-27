@@ -1,68 +1,28 @@
 # Rast Creative Studio
 
-Rast Creative Studio, Serdivan/Sakarya merkezli bir video prodüksiyon ve kreatif
-içerik ajansıdır. Markalar için reklam filmi, tanıtım filmi, sosyal medya videosu,
-ürün ve drone çekimi üretir; çekim, kurgu ve renk düzenlemeyi tek elden yürütür.
-Serdivan'daki stüdyodan Sakarya, Adapazarı, Erenler, Arifiye ve çevre ilçelere;
-ayrıca Kocaeli, Gebze ve Düzce hattına yerinde çekime gidilir.
+Rast Creative Studio is a Serdivan/Sakarya-based video production and creative content studio.
 
-## Ana Hizmetler
+## Key Pages
 
-- Sakarya video çekimi
-- Video prodüksiyon
-- Tanıtım filmi
-- Reklam filmi
-- Sosyal medya videosu ve Reels çekimi
-- Ürün ve mekan çekimi
-- Drone çekimi
-- Kurgu, renk düzenleme ve post-prodüksiyon
+- [Homepage](https://rastcreative.com/)
+- [Services](https://rastcreative.com/hizmetler/)
+- [Projects](https://rastcreative.com/projeler/)
+- [About](https://rastcreative.com/hakkimizda/)
+- [Contact](https://rastcreative.com/iletisim/)
 
-## Önemli Sayfalar
+## Main Services
 
-- Ana sayfa: https://rastcreative.com/
-- Hizmetler: https://rastcreative.com/hizmetler/
-- Projeler: https://rastcreative.com/projeler/
-- İletişim: https://rastcreative.com/iletisim/
-- Sakarya video çekimi: https://rastcreative.com/video-cekimi/sakarya/
-- Sakarya drone çekimi: https://rastcreative.com/drone-cekimi/sakarya/
-- Sakarya tanıtım filmi: https://rastcreative.com/tanitim-filmi/sakarya/
-- Sakarya reklam filmi: https://rastcreative.com/reklam-filmi/sakarya/
-- Sakarya sosyal medya içeriği: https://rastcreative.com/sosyal-medya-icerigi/sakarya/
+- [Sakarya Video Çekimi](https://rastcreative.com/video-cekimi/sakarya/)
+- [Sakarya Tanıtım Filmi](https://rastcreative.com/tanitim-filmi/sakarya/)
+- [Sakarya Reklam Filmi](https://rastcreative.com/reklam-filmi/sakarya/)
+- [Sakarya Drone Çekimi](https://rastcreative.com/drone-cekimi/sakarya/)
+- [Sakarya Sosyal Medya İçeriği](https://rastcreative.com/sosyal-medya-icerigi/sakarya/)
 
-## İletişim
+## Service Area
 
-- Marka: Rast Creative Studio
-- Konum: Serdivan, Sakarya, Türkiye
-- Telefon: +90 543 838 2404
-- E-posta: studio@rastcreative.com
-- Web: https://rastcreative.com/
-- Instagram: https://instagram.com/rastcreative
-- YouTube: https://www.youtube.com/@RastCreativeStudio
+Rast Creative Studio serves Sakarya, Serdivan, Adapazarı, Erenler, Arifiye, Hendek, Sapanca, Kocaeli, İzmit, Gebze, Düzce, Bolu and nearby regions.
 
-## Kısa Tanım
+## Contact
 
-Rast Creative Studio; markalar, üretim tesisleri, sağlık kurumları, gayrimenkul
-projeleri ve yerel işletmeler için sinematik video çekimi, kurumsal tanıtım
-filmi, sosyal medya videosu, ürün çekimi, drone çekimi ve kurgu hizmetleri sunar.
-
-## Hizmet Bölgesi
-
-Sakarya (Serdivan, Adapazarı, Erenler, Arifiye, Hendek, Sapanca), Kocaeli (İzmit,
-Gebze) ve Düzce başta olmak üzere bölge geneli.
-
-## Sık Sorulan Sorular
-
-S: Rast Creative Studio nerede?
-C: Merkezi Serdivan, Sakarya'dadır.
-
-S: Hangi hizmetleri sunar?
-C: Reklam filmi, tanıtım filmi, sosyal medya videosu, ürün ve drone çekimi, kurgu ve renk düzenleme.
-
-S: Hangi bölgelerde çekim yapar?
-C: Sakarya ve çevre ilçeler ile Kocaeli, Gebze ve Düzce hattı.
-
-S: Bir video ne kadar sürede teslim edilir?
-C: Kapsama göre değişir; çoğu proje genellikle 2-4 hafta içinde teslim edilir.
-
-S: İletişim nasıl?
-C: Telefon +90 543 838 2404, e-posta studio@rastcreative.com.
+- Website: https://rastcreative.com/
+- Email: studio@rastcreative.com

@@ -145,7 +145,15 @@ const heroMobile = await getImage({
 
 <BaseLayout jsonLd={pageJsonLd}>
   {/* 1 — Hero (cinematic film-set header; art-directed poster) */}
-  <VideoHero poster={heroDesktop.src} posterMobile={heroMobile.src} flush fadeBottom class="hero">
+  <VideoHero
+    poster={heroDesktop.src}
+    posterMobile={heroMobile.src}
+    posterWidth={1920}
+    posterHeight={1080}
+    flush
+    fadeBottom
+    class="hero"
+  >
     <div class="hero__layout">
       <div class="hero__text">
         <Eyebrow tone="paper">Sakarya · Sinematik Video Prodüksiyon</Eyebrow>
