@@ -27,6 +27,8 @@ const projects = defineCollection({
     preview: z.string().optional(),
     summary: z.string().optional(),
     client: z.string().optional(),
+    sector: z.string().optional(),
+    projectType: z.string().optional(),
     year: z.number().int().optional(),
     publishDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
     duration: z.string().optional(), // timecode shown on the card, e.g. "01:24"

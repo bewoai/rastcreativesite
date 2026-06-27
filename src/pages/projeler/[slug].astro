@@ -42,6 +42,8 @@ const posterLarge = ytThumbToWebp(d.poster, "large");
 
 const credits = [
   ["Müşteri", d.client],
+  ["Sektör", d.sector],
+  ["İş türü", d.projectType],
   ["Kategori", d.category],
 ].filter(([, v]) => v) as [string, string][];
 
