@@ -1,6 +1,6 @@
 ---
 import { getCollection, render } from "astro:content";
-import { Picture, getImage } from "astro:assets";
+import { Picture } from "astro:assets";
 import whyPhoto from "../assets/photos/hero-cinema.jpg";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Section from "../components/Section.astro";
@@ -12,11 +12,10 @@ import ServiceCard from "../components/ServiceCard.astro";
 import AccordionItem from "../components/AccordionItem.astro";
 import LogoWall from "../components/LogoWall.astro";
 import VideoHero from "../components/VideoHero.astro";
+import LiquidHeroAnimation from "../components/LiquidHeroAnimation.astro";
 import HeroShowreel3D from "../components/HeroShowreel3D.astro";
 import AreaIndex from "../components/AreaIndex.astro";
 import BlogCard from "../components/BlogCard.astro";
-import heroDesktopImg from "../assets/photos/hero-set-desktop.webp";
-import heroMobileImg from "../assets/photos/hero-set-mobile.webp";
 import { COPY, PRIMARY_CTA, CONTACT } from "../consts";
 import { localBusiness, organization, webSite, faqPage, toPlainText } from "../lib/schema";
 import { groupByBrand } from "../lib/brands";
@@ -128,47 +127,36 @@ const pageJsonLd = [
     })),
   ),
 ];
-
-const heroDesktop = await getImage({
-  src: heroDesktopImg,
-  width: 1920,
-  format: "webp",
-  quality: 72,
-});
-const heroMobile = await getImage({
-  src: heroMobileImg,
-  width: 900,
-  format: "webp",
-  quality: 72,
-});
 ---
 
 <BaseLayout jsonLd={pageJsonLd}>
-  {/* 1 — Hero (cinematic film-set header; art-directed poster) */}
-  <VideoHero
-    poster={heroDesktop.src}
-    posterMobile={heroMobile.src}
-    posterWidth={1920}
-    posterHeight={1080}
-    flush
-    fadeBottom
-    class="hero"
-  >
+  {/* 1 — Hero (sinematik merkezi tablo; Monopo Saigon esinli) */}
+  <VideoHero flush fadeBottom class="hero" height="min(100svh, 900px)">
+    <LiquidHeroAnimation />
     <div class="hero__layout">
-      <div class="hero__text">
-        <Eyebrow tone="paper">Sakarya · Sinematik Video Prodüksiyon</Eyebrow>
-        <h1 class="hero__title">{COPY.heroTitle}</h1>
-        <p class="hero__subtitle">{COPY.heroSubtitle}</p>
-        <p class="hero__trust">{heroTrust}</p>
+      <span class="hero__intro-glow" aria-hidden="true"></span>
+      <p class="hero__introline" aria-hidden="true">Doğru kare, doğru hikaye.</p>
+      <div class="hero__center">
+        <p class="hero__eyebrow">SAKARYA · SİNEMATİK VİDEO PRODÜKSİYON</p>
+        <h1 class="hero__title">Sakarya Video Çekimi<br class="hero__title-br" />ve Prodüksiyon</h1>
+        <p class="hero__tagline">
+          Markanız için reklam filmi, tanıtım filmi ve sosyal medya videoları üretiyoruz.
+          Sakarya merkezli prodüksiyon ekibimizle fikrinizi sinematik bir hikâyeye dönüştürüyoruz.
+        </p>
         <div class="hero__cta">
           <Button href={PRIMARY_CTA.href} size="lg" arrow data-cta-location="hero">
             {PRIMARY_CTA.label}
           </Button>
           <Button href="/projeler" variant="secondary" size="lg" class="hero__ghost" data-cta-location="hero">
-            {COPY.heroSecondaryCta}
+            Projelerimizi İzleyin
           </Button>
         </div>
+        <p class="hero__meta">13+ marka · 33+ içerik · Sakarya merkezli prodüksiyon ekibi</p>
       </div>
+    </div>
+    <div class="hero__scroll" aria-hidden="true">
+      <span class="hero__scroll-line"></span>
+      Keşfet
     </div>
   </VideoHero>
 
@@ -476,101 +464,173 @@ const heroMobile = await getImage({
 </BaseLayout>
 
 <style>
-  /* 1 — Hero (showreel background); content sits light over the video scrim */
+  /* 1 — Hero (sinematik merkezi tablo; Monopo Saigon esinli) */
+  :global(.hero) {
+    background: #050403 !important;
+  }
+  :global(.hero .vhero__scrim) {
+    display: block !important;
+    background:
+      radial-gradient(70% 54% at 50% 48%, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.50) 70%),
+      linear-gradient(180deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.78)) !important;
+  }
   .hero__layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    align-items: center;
-    gap: clamp(1.5rem, 4vw, 3rem);
+    place-items: center;
+    min-height: inherit;
   }
-  .hero__text {
+  /* ---- Intro statement (first phase) ---- */
+  .hero__intro-glow {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate3d(-50%, -50%, 0) scale(0.7);
+    width: min(44rem, 95vw);
+    aspect-ratio: 1;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(226, 83, 3, 0.45) 0%, rgba(255, 176, 92, 0.14) 38%, transparent 70%);
+    filter: blur(50px);
+    opacity: 0;
+    z-index: 3;
+    pointer-events: none;
+    animation: hero-intro-glow 2.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .hero__introline {
+    position: absolute;
+    inset-inline: 50% auto;
+    top: 50%;
+    width: min(88vw, 48rem);
+    margin: 0;
+    color: var(--on-ink);
+    font-family: var(--font-display);
+    font-size: clamp(2.6rem, 7.5vw, 5.2rem);
+    font-weight: 480;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    text-align: center;
+    text-wrap: balance;
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate3d(-50%, -50%, 0) scale(0.94);
+    animation: hero-intro-statement 2.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+    pointer-events: none;
+    z-index: 5;
+    text-shadow: 0 0 40px rgba(255, 176, 92, 0.15);
+  }
+  /* ---- Centered hero block (second phase) ---- */
+  .hero__center {
     display: flex;
     flex-direction: column;
-    gap: 1.4rem;
-    max-width: 42rem;
+    align-items: center;
+    text-align: center;
+    gap: 1.8rem;
+    width: 100%;
+    max-width: 58rem;
+    padding-inline: var(--container-pad);
     position: relative;
     z-index: 2;
+    opacity: 0;
+    filter: blur(12px);
+    transform: translate3d(0, 24px, 0);
+    animation: hero-reveal 1.5s var(--ease-out) 1.65s both;
   }
+  .hero__eyebrow {
+    margin: 0;
+    color: color-mix(in srgb, var(--on-ink) 50%, transparent);
+    font-family: var(--font-utility);
+    font-size: 0.72rem;
+    font-weight: 400;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+  }
+  /* Monumental display matching the site's default serif style (Fraunces weight 480). */
   .hero__title {
     margin: 0;
-    max-width: 18ch;
     color: var(--on-ink);
-    letter-spacing: 0;
+    font-family: var(--font-display);
+    font-weight: 480;
+    font-size: clamp(2.5rem, 8vw, 6.2rem);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
   }
-  .hero__subtitle {
+  .hero__title-br {
+    display: block;
+  }
+  .hero__tagline {
     margin: 0;
-    max-width: 58ch;
-    font-size: 1.2rem;
-    color: color-mix(in srgb, var(--on-ink) 82%, transparent);
-    line-height: 1.5;
-  }
-  .hero__trust {
-    margin: -0.25rem 0 0;
-    max-width: max-content;
-    padding: 0.45rem 0.75rem;
-    border: 1px solid color-mix(in srgb, var(--on-ink) 22%, transparent);
-    border-radius: var(--radius-pill);
-    background: color-mix(in srgb, var(--ink) 46%, transparent);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    color: color-mix(in srgb, var(--on-ink) 82%, transparent);
-    font-family: var(--font-utility);
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
+    max-width: 54rem;
+    color: color-mix(in srgb, var(--on-ink) 68%, transparent);
+    font-family: var(--font-body);
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    font-weight: 400;
+    line-height: 1.65;
   }
   .hero__cta {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 0.85rem;
-    margin-top: 0.5rem;
+    margin-top: 0.2rem;
   }
-  @media (max-width: 520px) {
-    .hero__text {
-      gap: 0.9rem;
-      max-width: 100%;
+  /* Tiny trust meta-line beneath CTAs. */
+  .hero__meta {
+    margin: 0;
+    margin-top: -0.4rem;
+    color: color-mix(in srgb, var(--on-ink) 54%, transparent);
+    font-family: var(--font-utility);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  @keyframes hero-intro-glow {
+    0% {
+      opacity: 0;
+      transform: translate3d(-50%, -50%, 0) scale(0.7);
+      filter: blur(60px);
     }
-    .hero__title {
-      max-width: 13ch;
-      font-size: clamp(2.35rem, 11vw, 3rem);
-      line-height: 1.04;
+    30%,
+    58% {
+      opacity: 0.95;
+      transform: translate3d(-50%, -50%, 0) scale(1.15);
+      filter: blur(40px);
     }
-    .hero__subtitle {
-      max-width: 30ch;
-      font-size: 1rem;
-      line-height: 1.45;
-    }
-    .hero__trust {
-      max-width: 20rem;
-      padding: 0;
-      border: 0;
-      background: transparent;
-      -webkit-backdrop-filter: none;
-      backdrop-filter: none;
-      font-size: 0.74rem;
-      line-height: 1.35;
-    }
-    .hero__cta {
-      width: min(100%, 20rem);
-      flex-direction: column;
-      gap: 0.55rem;
-      margin-top: 0.25rem;
-    }
-    .hero__cta :global(.btn) {
-      width: 100%;
-      min-height: 50px;
-      padding-inline: 1rem;
-      white-space: normal;
-      text-align: center;
+    100% {
+      opacity: 0;
+      transform: translate3d(-50%, -50%, 0) scale(1.55);
+      filter: blur(70px);
     }
   }
-  @media (max-width: 380px) {
-    .hero__title {
-      max-width: 12.5ch;
-      font-size: 2.38rem;
+  @keyframes hero-intro-statement {
+    0% {
+      opacity: 0;
+      filter: blur(12px);
+      transform: translate3d(-50%, -50%, 0) scale(0.94);
     }
-    .hero__subtitle {
-      font-size: 0.96rem;
+    28%,
+    60% {
+      opacity: 1;
+      filter: blur(0);
+      transform: translate3d(-50%, -50%, 0) scale(1.01);
+    }
+    100% {
+      opacity: 0;
+      filter: blur(14px);
+      transform: translate3d(-50%, -50%, 0) scale(1.06);
+    }
+  }
+  @keyframes hero-reveal {
+    from {
+      opacity: 0;
+      filter: blur(10px);
+      transform: translate3d(0, 18px, 0);
+    }
+    to {
+      opacity: 1;
+      filter: blur(0);
+      transform: translate3d(0, 0, 0);
     }
   }
   /* Secondary CTA → light outline so it reads on the dark footage. */
@@ -582,15 +642,85 @@ const heroMobile = await getImage({
     border-color: var(--on-ink) !important;
     background: color-mix(in srgb, var(--on-ink) 14%, transparent) !important;
   }
-  @media (min-width: 920px) {
-    .hero__layout {
-      grid-template-columns: minmax(0, 1fr);
-      max-width: 48rem;
+  /* Hero CTAs → monochrome white pill (no amber within the hero frame). */
+  :global(.hero .btn--primary) {
+    color: #111110 !important;
+    box-shadow: none !important;
+  }
+  :global(.hero .btn--primary .btn__bg) {
+    background: #ffffff !important;
+    filter: none !important;
+  }
+  :global(.hero .btn--primary:hover) {
+    box-shadow: none !important;
+  }
+  :global(.hero .btn--primary:hover .btn__bg) {
+    background: #e9e7e2 !important;
+    filter: none !important;
+  }
+  /* Scroll indicator — sol-alt, yatay çizgi + etiket (Monopo Saigon imzası). */
+  .hero__scroll {
+    display: none;
+  }
+  @media (min-width: 768px) {
+    .hero__scroll {
+      position: absolute;
+      left: var(--container-pad);
+      bottom: 1.75rem;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      color: color-mix(in srgb, var(--on-ink) 50%, transparent);
+      font-family: var(--font-utility);
+      font-size: 0.66rem;
+      font-weight: 400;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+    .hero__scroll-line {
+      width: 3rem;
+      height: 1px;
+      background: color-mix(in srgb, var(--on-ink) 42%, transparent);
     }
   }
-  @media (max-width: 919.98px) {
-    .hero__layout {
-      justify-items: start;
+  /* Mobile */
+  @media (max-width: 520px) {
+    .hero__center {
+      gap: 1.2rem;
+    }
+    .hero__title {
+      font-size: clamp(2.5rem, 12vw, 3.6rem);
+      line-height: 0.90;
+    }
+    .hero__title-br {
+      display: none;
+    }
+    .hero__tagline {
+      font-size: 0.93rem;
+      line-height: 1.6;
+    }
+    .hero__cta {
+      width: min(100%, 22rem);
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+    .hero__cta :global(.btn) {
+      width: 100%;
+      min-height: 50px;
+      padding-inline: 1rem;
+      white-space: normal;
+      text-align: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__center {
+      opacity: 1;
+      filter: none;
+      transform: none;
+      animation: none;
     }
   }
 

@@ -101,6 +101,10 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
         on font-display:swap (CLS is 0, so the swap costs no layout shift). */}
     {preloadImage && <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />}
     <link rel="preload" as="font" type="font/woff2" href="/fonts/fraunces-latin-standard-normal.woff2" crossorigin />
+    {/* Space Grotesk (UI/buttons/eyebrows) — preload both subsets so above-the-fold
+        labels (incl. Turkish İ/ş in latin-ext) don't swap in late on first load. */}
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk-latin-wght-normal.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk-latin-ext-wght-normal.woff2" crossorigin />
 
     <!-- Open Graph -->
     <meta property="og:type" content={ogType} />

@@ -5,6 +5,12 @@
 # ── Default charset (send UTF-8 in the HTTP Content-Type header) ──────────
 AddDefaultCharset UTF-8
 
+# ── Correct media MIME types (host serves .webm/.mp4 as text/plain otherwise) ─
+<IfModule mod_mime.c>
+  AddType video/webm .webm
+  AddType video/mp4 .mp4
+</IfModule>
+
 # ── Canonical host + HTTPS ────────────────────────────────────────────────
 RewriteEngine On
 # www → non-www (also upgrades to HTTPS in the same hop)
@@ -66,4 +72,8 @@ ErrorDocument 404 /404.html
   Header set X-Frame-Options "SAMEORIGIN"
   Header set Referrer-Policy "strict-origin-when-cross-origin"
   Header set Strict-Transport-Security "max-age=31536000; includeSubDomains" "expr=%{HTTPS} == 'on'"
+  # Cache media by extension (MIME-independent) so repeat visits reuse the hero loop.
+  <FilesMatch "\.(webm|mp4)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
 </IfModule>
