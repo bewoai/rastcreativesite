@@ -1,0 +1,296 @@
+backend:
+  name: github
+  repo: bewoai/rastcreativesite
+  branch: main
+  base_url: https://api.netlify.com
+  auth_endpoint: auth
+
+local_backend: true
+publish_mode: editorial_workflow
+
+site_url: https://rastcreative.com
+display_url: https://rastcreative.com
+site_domain: vocal-capybara-3732a8.netlify.app
+logo_url: /logo-black.svg
+
+media_folder: public/uploads/general
+public_folder: /uploads/general
+
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: "-"
+
+collections:
+  - name: projects
+    label: Projeler
+    label_singular: Proje
+    description: "Proje kartlari ve video sayfalari. Taslak aktifse sitede yayinlanmaz."
+    folder: src/content/projects
+    create: true
+    extension: md
+    format: frontmatter
+    identifier_field: title
+    summary: "{{title}} - {{client}} - {{category}}"
+    preview_path: "projeler/{{slug}}"
+    sortable_fields: [order, title, client, year]
+    view_filters:
+      - label: "Musteri: Adatip Hastanesi"
+        field: client
+        pattern: "Adatıp Hastanesi"
+      - label: "Musteri: Altoteks"
+        field: client
+        pattern: "Altoteks"
+      - label: "Musteri: Aytas Home"
+        field: client
+        pattern: "Aytaş Home"
+      - label: "Musteri: Buyapi"
+        field: client
+        pattern: "Buyapı"
+      - label: "Musteri: Canex"
+        field: client
+        pattern: "Canex"
+      - label: "Musteri: Chint Power"
+        field: client
+        pattern: "Chint Power"
+      - label: "Musteri: Federal"
+        field: client
+        pattern: "Federal"
+      - label: "Musteri: Isitan"
+        field: client
+        pattern: "Isıtan"
+      - label: "Musteri: Mavi Vatan"
+        field: client
+        pattern: "Mavi Vatan"
+      - label: "Musteri: Meteors Shipping"
+        field: client
+        pattern: "Meteors Shipping"
+      - label: "Musteri: Op. Dr. Duygu Cebecik Ozmus"
+        field: client
+        pattern: "Op. Dr. Duygu Cebecik Özmüş"
+      - label: "Musteri: Rosa Coffee"
+        field: client
+        pattern: "Rosa Coffee"
+      - label: "Musteri: ThermoWay"
+        field: client
+        pattern: "ThermoWay"
+    media_folder: ../../../public/uploads/projects
+    public_folder: /uploads/projects
+    editor:
+      preview: false
+    fields:
+      - label: Baslik
+        name: title
+        widget: string
+      - label: Kategori
+        name: category
+        widget: select
+        options:
+          - Reklam
+          - Marka Hikayesi
+          - Ürün
+          - Kurumsal
+          - Medikal
+          - Sosyal Medya
+      - label: Musteri / Marka
+        name: client
+        widget: string
+        required: false
+      - label: Yil
+        name: year
+        widget: number
+        value_type: int
+        required: false
+      - label: Yayin tarihi
+        name: publishDate
+        widget: datetime
+        format: YYYY-MM-DD
+        date_format: DD.MM.YYYY
+        time_format: false
+        required: false
+        hint: "VideoObject uploadDate bu tarihten uretilir. Video sayfalarinda bos birakmayin."
+      - label: Ozet
+        name: summary
+        widget: text
+        required: false
+      - label: Kapak gorseli
+        name: poster
+        widget: image
+        required: true
+        hint: "Yatay kartlar icin 16:9, dikey Reels icin YouTube kapak URL'si veya yuklenen gorsel kullanilabilir."
+      - label: Kapak alt metni
+        name: posterAlt
+        widget: string
+        required: false
+      - label: YouTube ID
+        name: youtubeId
+        widget: string
+        required: false
+      - label: Vimeo ID
+        name: vimeoId
+        widget: string
+        required: false
+      - label: Dis baglanti
+        name: externalUrl
+        widget: string
+        required: false
+      - label: Dikey video
+        name: vertical
+        widget: boolean
+        default: false
+        required: false
+      - label: Kisa onizleme videosu
+        name: preview
+        widget: string
+        required: false
+        hint: "Ornek: /videos/proje-preview.mp4"
+      - label: Sure etiketi
+        name: duration
+        widget: string
+        required: false
+        hint: "Ornek: 01:24"
+      - label: Ana sayfada one cikar
+        name: featured
+        widget: boolean
+        default: false
+        required: false
+      - label: Sira
+        name: order
+        widget: number
+        value_type: int
+        default: 0
+      - label: Taslak
+        name: draft
+        widget: boolean
+        default: false
+        required: false
+      - label: Icerik
+        name: body
+        widget: markdown
+        required: false
+
+  - name: blog
+    label: Blog
+    label_singular: Blog Yazisi
+    description: "Blog yazilarini buradan ekleyin. Taslak aktifse sitede yayinlanmaz."
+    folder: src/content/blog
+    create: true
+    extension: md
+    format: frontmatter
+    identifier_field: title
+    summary: "{{title}} - {{pubDate}}"
+    preview_path: "blog/{{slug}}"
+    sortable_fields: [pubDate, title, author]
+    media_folder: ../../assets/uploads/blog
+    public_folder: ../../assets/uploads/blog
+    editor:
+      preview: false
+    fields:
+      - label: Baslik
+        name: title
+        widget: string
+      - label: Meta aciklama
+        name: description
+        widget: text
+      - label: Yazar
+        name: author
+        widget: string
+        default: "Berat Degirmenci"
+      - label: Yayin tarihi
+        name: pubDate
+        widget: datetime
+        format: YYYY-MM-DD
+        date_format: DD.MM.YYYY
+        time_format: false
+      - label: Guncelleme tarihi
+        name: updatedDate
+        widget: datetime
+        format: YYYY-MM-DD
+        date_format: DD.MM.YYYY
+        time_format: false
+        required: false
+      - label: Kapak gorseli
+        name: cover
+        widget: image
+        required: false
+        allow_multiple: false
+        choose_url: false
+        media_library:
+          config:
+            max_file_size: 1048576
+        hint: "En fazla 1 MB. Oneri: WebP/JPG, 1600px genislik, 200-700 KB."
+      - label: Kapak alt metni
+        name: coverAlt
+        widget: string
+        required: false
+      - label: Etiketler
+        name: tags
+        widget: list
+        required: false
+      - label: Taslak
+        name: draft
+        widget: boolean
+        default: false
+        required: false
+      - label: Icerik
+        name: body
+        widget: markdown
+        required: false
+        editor_components: [image, code-block]
+        hint: "Metin icine gorsel eklemek icin editor toolbar'indaki image secenegini kullanin. Blog ici gorseller en fazla 1 MB olmali; onerilen 200-700 KB."
+
+  - name: services
+    label: Hizmetler
+    label_singular: Hizmet
+    folder: src/content/services
+    create: true
+    extension: md
+    format: frontmatter
+    identifier_field: title
+    summary: "{{title}}"
+    editor:
+      preview: false
+    fields:
+      - label: Baslik
+        name: title
+        widget: string
+      - label: Kisa ozet
+        name: summary
+        widget: text
+      - label: Ozellikler
+        name: features
+        widget: list
+        required: false
+      - label: Sira
+        name: order
+        widget: number
+        value_type: int
+        default: 0
+      - label: Icerik
+        name: body
+        widget: markdown
+        required: false
+
+  - name: faq
+    label: SSS
+    label_singular: Soru
+    folder: src/content/faq
+    create: true
+    extension: md
+    format: frontmatter
+    identifier_field: question
+    summary: "{{order}} - {{question}}"
+    editor:
+      preview: false
+    fields:
+      - label: Soru
+        name: question
+        widget: string
+      - label: Sira
+        name: order
+        widget: number
+        value_type: int
+        default: 0
+      - label: Cevap
+        name: body
+        widget: markdown
