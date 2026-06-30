@@ -20,9 +20,10 @@ const d = entry.data;
 const fmt = (date: Date) =>
   date.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" });
 
-// Absolute cover URL for the article rich result (Google recommends an image).
-const coverForSchema = d.cover
-  ? new URL((await getImage({ src: d.cover, format: "webp", width: 1200 })).src, SITE.url).href
+// Absolute cover URL — used for the social card (og/twitter) and the BlogPosting
+// rich result. JPEG for universal OG compatibility (LinkedIn/Facebook).
+const ogImage = d.cover
+  ? new URL((await getImage({ src: d.cover, format: "jpeg", width: 1200 })).src, SITE.url).href
   : undefined;
 
 const blogPosting = {
@@ -30,7 +31,7 @@ const blogPosting = {
   "@type": "BlogPosting",
   headline: d.title,
   description: d.description,
-  ...(coverForSchema ? { image: coverForSchema } : {}),
+  ...(ogImage ? { image: ogImage } : {}),
   datePublished: d.pubDate.toISOString(),
   ...(d.updatedDate ? { dateModified: d.updatedDate.toISOString() } : {}),
   author: { "@type": "Person", name: d.author },
@@ -48,7 +49,7 @@ const pageJsonLd = [
 ];
 ---
 
-<BaseLayout title={d.title} description={d.description} ogType="article" jsonLd={pageJsonLd}>
+<BaseLayout title={d.title} description={d.description} image={ogImage} ogType="article" jsonLd={pageJsonLd}>
   <Section width="narrow">
     <a href="/blog" class="back">← Tüm yazılar</a>
 

@@ -352,6 +352,12 @@
     50% { opacity: 0; }
   }
 
+  /* Pause heavy hero animations when scrolled out of view (JS toggles is-paused). */
+  .liquid-anim.is-paused .liquid-anim__blob,
+  .liquid-anim.is-paused .liquid-anim__light-beam {
+    animation-play-state: paused;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .liquid-anim__blob,
     .liquid-anim__light-beam,
@@ -385,14 +391,51 @@
 </style>
 
 <script>
-  // Simple mouse move listener to update cursor interactive gradients
-  const root = document.querySelector('.liquid-anim') as HTMLElement;
-  if (root && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
-    window.addEventListener('mousemove', (e) => {
-      const x = ((e.clientX / window.innerWidth) * 100).toFixed(2);
-      const y = ((e.clientY / window.innerHeight) * 100).toFixed(2);
-      root.style.setProperty('--liquid-mx', `${x}%`);
-      root.style.setProperty('--liquid-my', `${y}%`);
-    }, { passive: true });
+  const root = document.querySelector<HTMLElement>('.liquid-anim');
+  if (root) {
+    // Pause the hero's continuous animations once it scrolls out of view —
+    // saves CPU/battery with zero visual change while it is on screen.
+    const svgs = root.querySelectorAll('svg');
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            const visible = entry.isIntersecting;
+            root.classList.toggle('is-paused', !visible);
+            svgs.forEach((s) => {
+              try {
+                visible ? s.unpauseAnimations() : s.pauseAnimations();
+              } catch (e) {}
+            });
+          }
+        },
+        { threshold: 0 },
+      );
+      io.observe(root);
+    }
+
+    // rAF-throttled cursor parallax: one style write per frame, not per event.
+    if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+      let mx = 50;
+      let my = 48;
+      let ticking = false;
+      const apply = () => {
+        root.style.setProperty('--liquid-mx', `${mx}%`);
+        root.style.setProperty('--liquid-my', `${my}%`);
+        ticking = false;
+      };
+      window.addEventListener(
+        'mousemove',
+        (e) => {
+          mx = (e.clientX / window.innerWidth) * 100;
+          my = (e.clientY / window.innerHeight) * 100;
+          if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(apply);
+          }
+        },
+        { passive: true },
+      );
+    }
   }
 </script>

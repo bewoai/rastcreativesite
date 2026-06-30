@@ -57,6 +57,34 @@ const useCases = [
   "Podcast ve uzman içerikleri",
 ];
 
+// What actually drives the price — factual factors, no invented numbers (GEO-friendly).
+const priceFactors = [
+  {
+    t: "Çekim süresi",
+    d: "Yarım gün, tam gün veya çok günlü çekim — sahadaki süre bütçenin ana belirleyicisidir.",
+  },
+  {
+    t: "Ekip ve ekipman",
+    d: "Kamera, ışık, ses, gimbal ve gerektiğinde drone; ekip büyüklüğü projenin kapsamıyla değişir.",
+  },
+  {
+    t: "Lokasyon ve ulaşım",
+    d: "Serdivan dışı çekimlerde mesafe, ulaşım ve gerekirse çekim izni planlamaya dahil edilir.",
+  },
+  {
+    t: "Teslim sayısı ve süre",
+    d: "Tek ana film mi yoksa yatay + dikey + kısa reklam varyasyonları mı; çıktı sayısı kurgu yükünü belirler.",
+  },
+  {
+    t: "Kurgu ve post kapsamı",
+    d: "Renk düzenleme, ses, altyazı, motion/grafik ve revizyon turu sayısı süreye yansır.",
+  },
+  {
+    t: "Özel ihtiyaçlar",
+    d: "Drone, seslendirme, özel set veya animasyon gibi ek ihtiyaçlar ayrıca planlanır.",
+  },
+];
+
 // Concise, answer-first FAQ — useful for visitors and AI summaries (GEO).
 const faqs = [
   {
@@ -208,6 +236,28 @@ const pageJsonLd = [
   </Section>
 
   <Section width="narrow" space="tight">
+    <SectionHeading eyebrow="Bütçe">
+      Fiyatı ne belirler?
+      <Fragment slot="intro">
+        <p>
+          Sabit bir fiyat listesi yerine, projenize özel net teklifi ücretsiz ön görüşmede
+          çıkarıyoruz. Bütçeyi belirleyen başlıca faktörler şunlar:
+        </p>
+      </Fragment>
+    </SectionHeading>
+    <ul class="price-factors">
+      {
+        priceFactors.map((f) => (
+          <li data-reveal>
+            <h3>{f.t}</h3>
+            <p>{f.d}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section width="narrow" space="tight">
     <SectionHeading eyebrow="Sık sorulanlar">Hizmetler hakkında sık sorulanlar</SectionHeading>
     <dl class="faq">
       {
@@ -252,6 +302,33 @@ const pageJsonLd = [
     margin: 0;
     color: var(--ink-soft);
     line-height: var(--leading-body);
+  }
+  .price-factors {
+    list-style: none;
+    margin: 2rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .price-factors li {
+    padding: 1.1rem 0 0;
+    border-top: 1px solid var(--line);
+  }
+  .price-factors h3 {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+  .price-factors p {
+    margin: 0.5rem 0 0;
+    color: var(--ink-soft);
+    line-height: 1.58;
+  }
+  @media (min-width: 768px) {
+    .price-factors {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.35rem;
+    }
   }
   .svc-banner {
     display: block;
