@@ -20,7 +20,7 @@ Bence burada en büyük yanılgı şu: Sosyal medya videosunu sadece “güzel g
 
 Güzel görüntü önemli, evet. Ama tek başına yeterli değil. Çünkü Instagram, TikTok ya da YouTube Shorts tarafında insan videonuzu izlemek zorunda değil. Önüne düşüyor, bir saniye bakıyor ve devam edip etmeyeceğine karar veriyor.
 
-O yüzden sosyal medya videosunda mesele sadece çekim yapmak değil; ilk saniyeden itibaren doğru şeyi göstermek, doğru sırayla anlatmak ve izleyicinin neden devam etmesi gerektiğini hissettirmek.
+O yüzden [sosyal medya videosunda](/sosyal-medya-icerigi/sakarya) mesele sadece çekim yapmak değil; ilk saniyeden itibaren doğru şeyi göstermek, doğru sırayla anlatmak ve izleyicinin neden devam etmesi gerektiğini hissettirmek.
 
 ## İlk saniye videonun kaderini belirler
 

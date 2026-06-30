@@ -69,7 +69,7 @@ Meta reklamlarında kreatif, reklamın motorudur. Aynı hedef kitleye aynı büt
 
 Google tarafında da metin önemlidir. Arama yapan kişi birkaç seçenek görür ve en net, en güven veren başlığa tıklar. “Profesyonel video çekimi” gibi genel bir cümle yerine, kişinin aradığı ihtiyaca yakın bir mesaj daha iyi çalışır.
 
-Bu noktada prodüksiyon tecrübemizin avantajını görüyoruz. Çünkü reklam için üretilen görsel ya da video sadece güzel durmamalı; ilk saniyede derdi anlatmalı, markayı güvenilir göstermeli ve kişiyi doğru aksiyona taşımalı.
+Bu noktada prodüksiyon tecrübemizin avantajını görüyoruz. Çünkü [reklam için üretilen görsel ya da video](/reklam-filmi/sakarya) sadece güzel durmamalı; ilk saniyede derdi anlatmalı, markayı güvenilir göstermeli ve kişiyi doğru aksiyona taşımalı.
 
 Yani kreatif dediğimiz şey süs değil. Reklamın dönüşüm ihtimalini doğrudan etkileyen ana parçalardan biri.
 

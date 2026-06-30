@@ -28,4 +28,4 @@ Açık olalım: web sitenizdeki tanıtım filmi, fuar ekranındaki gösterim ya 
 
 ## Özet
 
-Sosyal medya için içerik üretirken ilk sorduğumuz şey şu oluyor: "Bu, telefonda akarken durdurur mu?" Cevap evetse, gerisi gelir. Aklınızda bir seri ya da düzenli içerik varsa, nasıl bir ritim kuracağımızı bir ön görüşmede konuşalım.
+[Sosyal medya için içerik](/sosyal-medya-icerigi/sakarya) üretirken ilk sorduğumuz şey şu oluyor: "Bu, telefonda akarken durdurur mu?" Cevap evetse, gerisi gelir. Aklınızda bir seri ya da düzenli içerik varsa, nasıl bir ritim kuracağımızı bir ön görüşmede konuşalım.

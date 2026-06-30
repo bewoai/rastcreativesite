@@ -25,7 +25,7 @@ tags:
   - Rast Creative
 draft: false
 ---
-Bir işletmeyi anlatmanın en güçlü yolu artık sadece iyi bir logo, şık bir tabela ya da güzel hazırlanmış birkaç fotoğraf değil. İnsanlar bir markayı tanımadan önce onu görmek, hissetmek ve güvenmek istiyor. İşte video içerik tam olarak burada devreye giriyor.
+Bir işletmeyi anlatmanın en güçlü yolu artık sadece iyi bir logo, şık bir tabela ya da güzel hazırlanmış birkaç fotoğraf değil. İnsanlar bir markayı tanımadan önce onu görmek, hissetmek ve güvenmek istiyor. İşte [video içerik](/video-cekimi/sakarya) tam olarak burada devreye giriyor.
 
 Bugün Sakarya’da bir kafe, mobilya mağazası, klinik, davet salonu, eğitim kurumu ya da hizmet veren herhangi bir işletme için sosyal medya yalnızca paylaşım yapılan bir alan değil; potansiyel müşterinin karar verdiği ilk temas noktası haline geldi. Bir kişi sizi Google’da aradığında, Instagram profilinize baktığında ya da reklamınıza denk geldiğinde aslında şunu merak ediyor:
 

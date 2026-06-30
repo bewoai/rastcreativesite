@@ -12,7 +12,7 @@ draft: false
 
 ## Drone ne zaman gerçekten değer katar?
 
-Havadan çekim, **ölçeği** ve **konumu** anlatmakta eşsizdir. Bir fabrikanın ne kadar büyük olduğunu, bir tesisin araziye nasıl yayıldığını, bir otelin göle ne kadar yakın oturduğunu yerden anlatamazsınız; yukarıdan tek karede anlarsınız. Sakarya özelinde bu çok işimize yarıyor: Sapanca Gölü çevresindeki tesisler, Karasu sahili, Hendek ve Erenler'deki sanayi alanları havadan gerçekten etkileyici duruyor. Bir de sahneler arası geçişlerde drone, filme akıcılık katar.
+[Havadan çekim](/drone-cekimi/sakarya), **ölçeği** ve **konumu** anlatmakta eşsizdir. Bir fabrikanın ne kadar büyük olduğunu, bir tesisin araziye nasıl yayıldığını, bir otelin göle ne kadar yakın oturduğunu yerden anlatamazsınız; yukarıdan tek karede anlarsınız. Sakarya özelinde bu çok işimize yarıyor: Sapanca Gölü çevresindeki tesisler, Karasu sahili, Hendek ve Erenler'deki sanayi alanları havadan gerçekten etkileyici duruyor. Bir de sahneler arası geçişlerde drone, filme akıcılık katar.
 
 ## Ne zaman gereksiz?
 
