@@ -252,6 +252,33 @@ export const SEO_LOCATIONS: readonly SeoLocation[] = [
 export const getLocation = (slug: string) =>
   SEO_LOCATIONS.find((l) => l.slug === slug);
 
+/**
+ * SEO tiering for the programmatic [hizmet]/[konum] matrix.
+ *
+ * `primary` = major centres with real demand / work done — these stay
+ * `index, follow`. Everything else is emitted as `noindex, follow`: the page
+ * still exists and passes internal link equity, but is kept out of the index
+ * to avoid doorway/thin-content risk across 130+ near-duplicate URLs.
+ *
+ * Note this is a different axis from `core` (which is purely geographic): e.g.
+ * Akyazı is core but secondary, İzmit is non-core but primary.
+ */
+export const PRIMARY_LOCATION_SLUGS: ReadonlySet<string> = new Set([
+  "sakarya",
+  "serdivan",
+  "adapazari",
+  "arifiye",
+  "erenler",
+  "hendek",
+  "sapanca",
+  "kocaeli",
+  "izmit",
+  "gebze",
+]);
+
+export const isPrimaryLocation = (slug: string): boolean =>
+  PRIMARY_LOCATION_SLUGS.has(slug);
+
 export const AREA_INDEX_LOCATION_SLUGS: readonly string[] = [
   "sakarya",
   "serdivan",

@@ -13,8 +13,14 @@ interface Props {
   image?: string;
   /** og:type — "website" (default) or "article" for project detail pages. */
   ogType?: "website" | "article";
-  /** Set true to keep a page out of search indexes (e.g. /dev, 404). */
+  /** Set true to keep a page out of search indexes (e.g. /dev, 404). Emits "noindex, nofollow". */
   noindex?: boolean;
+  /**
+   * Explicit robots directive — overrides `noindex`. Use for tiered pages that
+   * should stay out of the index but keep passing link equity, e.g.
+   * "noindex, follow" on secondary programmatic location pages.
+   */
+  robots?: string;
   /** Render without nav + footer chrome. */
   bare?: boolean;
   /** schema.org JSON-LD object(s) emitted into <head>. */
@@ -29,6 +35,7 @@ const {
   image,
   ogType = "website",
   noindex = false,
+  robots,
   bare = false,
   jsonLd,
   preloadImage,
@@ -76,7 +83,9 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {(robots ?? (noindex ? "noindex, nofollow" : undefined)) && (
+      <meta name="robots" content={robots ?? "noindex, nofollow"} />
+    )}
 
     {/* Blog RSS feed discovery */}
     <link

@@ -8,7 +8,7 @@ import ProjectCard from "../../components/ProjectCard.astro";
 import { PRIMARY_CTA, CONTACT, SITE } from "../../consts";
 import { breadcrumb, faqPage, BUSINESS_ID } from "../../lib/schema";
 import { SEO_SERVICES, getService, type SeoService } from "../../data/seo-services";
-import { SEO_LOCATIONS, getLocation, type SeoLocation } from "../../data/locations";
+import { SEO_LOCATIONS, getLocation, isPrimaryLocation, type SeoLocation } from "../../data/locations";
 import { getServiceAudience } from "../../data/service-audience";
 import { getCollection } from "astro:content";
 
@@ -34,6 +34,11 @@ const pageHeading = `${location.name} ${service.name}`;
 const faqHeading = `${location.name} ${service.name} hakkında`;
 const path = `/${service.slug}/${location.slug}`;
 const description = `${location.name} ${service.name.toLowerCase()} — ${service.tagline}. Rast Creative Studio, ${location.loc} sinema standardında prodüksiyon sunar. Ücretsiz ön görüşme.`;
+
+// Programmatic location tiering: primary centres stay indexed; secondary
+// districts are kept out of the index but still pass link equity
+// ("noindex, follow") so they don't read as doorway/thin content.
+const robots = isPrimaryLocation(location.slug) ? undefined : "noindex, follow";
 
 // City/service-specific FAQ — distinct text per page (anti-doorway).
 const firstSentence = location.blurb.split(". ")[0] + ".";
@@ -132,7 +137,7 @@ const projectsItemList =
 if (projectsItemList) jsonLd.push(projectsItemList);
 ---
 
-<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+<BaseLayout title={title} description={description} jsonLd={jsonLd} robots={robots}>
   <Section width="narrow">
     <a href={`/${service.slug}`} class="back">← Tüm {service.name} bölgeleri</a>
     <SectionHeading as="h1" eyebrow={`${location.province} · ${service.name}`}>
@@ -185,9 +190,7 @@ if (projectsItemList) jsonLd.push(projectsItemList);
           {location.name} ve çevresinde {service.name.toLowerCase()} işlerimiz
           <Fragment slot="intro">
             <p>
-              Bu sayfayı yalnızca anahtar kelime için değil, gerçek üretim
-              tecrübemizi göstermek için hazırlıyoruz. Aşağıda {location.name} ve
-              çevresinde ürettiğimiz işlerden bir seçki var.
+              {location.name} ve çevresinde ürettiğimiz işlerden bir seçki.
             </p>
           </Fragment>
         </SectionHeading>
