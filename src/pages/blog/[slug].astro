@@ -33,7 +33,10 @@ const blogPosting = {
   description: d.description,
   ...(ogImage ? { image: ogImage } : {}),
   datePublished: d.pubDate.toISOString(),
-  ...(d.updatedDate ? { dateModified: d.updatedDate.toISOString() } : {}),
+  // Always emit dateModified — AI-search/GEO surfaces read it as a freshness
+  // signal. Falls back to pubDate when the post hasn't been revised (honest:
+  // "not modified since published"), and tracks updatedDate once it is set.
+  dateModified: (d.updatedDate ?? d.pubDate).toISOString(),
   author: { "@type": "Person", name: d.author },
   publisher: { "@type": "Organization", name: SITE.name },
   mainEntityOfPage: new URL(`/blog/${entry.id}`, SITE.url).href,
@@ -49,7 +52,7 @@ const pageJsonLd = [
 ];
 ---
 
-<BaseLayout title={d.title} description={d.description} image={ogImage} ogType="article" jsonLd={pageJsonLd}>
+<BaseLayout title={d.seoTitle ?? d.title} description={d.description} image={ogImage} ogType="article" jsonLd={pageJsonLd}>
   <Section width="narrow">
     <a href="/blog" class="back">← Tüm yazılar</a>
 
@@ -61,6 +64,17 @@ const pageJsonLd = [
           <span class="article__author">{d.author}</span>
           <span aria-hidden="true">·</span>
           <time datetime={d.pubDate.toISOString()}>{fmt(d.pubDate)}</time>
+          {
+            d.updatedDate && d.updatedDate.getTime() !== d.pubDate.getTime() && (
+              <>
+                <span aria-hidden="true">·</span>
+                <span class="article__updated">
+                  Güncellendi:{" "}
+                  <time datetime={d.updatedDate.toISOString()}>{fmt(d.updatedDate)}</time>
+                </span>
+              </>
+            )
+          }
         </p>
       </header>
       {

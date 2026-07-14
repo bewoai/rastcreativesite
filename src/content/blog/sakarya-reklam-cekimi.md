@@ -1,5 +1,6 @@
 ---
 title: "Sakarya Reklam Çekimi: Markanızı Geleceğe Taşıyan Sinematik Çözümler"
+seoTitle: "Sakarya Reklam Filmi Çekimi"
 description: "Sakarya reklam çekiminde strateji, hikâye ve estetiği nasıl birleştiriyoruz? Mekân seçimi, teknik standartlar ve fikirden yayına 5 adımlık prodüksiyon sürecimiz."
 pubDate: 2026-06-23
 cover: ../../assets/photos/studio-lighting.jpg

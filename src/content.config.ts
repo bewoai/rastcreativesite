@@ -65,6 +65,10 @@ const blog = defineCollection({
   schema: ({ image }) =>
     z.object({
       title: z.string(),
+      // Optional shorter <title> for SERP/social. The visible H1 always uses
+      // `title`; when the full title + brand suffix would exceed ~60 chars and
+      // truncate in results, set a concise `seoTitle` (keyword front-loaded).
+      seoTitle: z.string().optional(),
       description: z.string(),
       author: z.string().default("Berat Değirmenci"),
       pubDate: z.coerce.date(),

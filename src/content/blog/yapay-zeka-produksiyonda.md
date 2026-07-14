@@ -1,5 +1,6 @@
 ---
 title: Yapay zekayı prodüksiyonda nasıl kullanıyoruz? (Ve neyi asla ona bırakmıyoruz)
+seoTitle: "Prodüksiyonda Yapay Zeka Kullanımı"
 description: Yapay zeka video ve fotoğraf üretiminde gerçekten işe yarıyor —
   doğru yerde kullanıldığında. Rast Creative'de AI'yı bir asistan olarak nasıl
   kullandığımızı ve hangi kararları neden hâlâ insana bıraktığımızı dürüstçe

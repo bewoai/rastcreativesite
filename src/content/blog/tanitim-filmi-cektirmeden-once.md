@@ -1,5 +1,6 @@
 ---
 title: "Tanıtım filmi çektirmeden önce bilmenizi istediğimiz birkaç şey"
+seoTitle: "Tanıtım Filmi Çektirmeden Önce"
 description: "Sakarya'da yıllardır tanıtım filmi çekiyoruz. Süreç nasıl işliyor, maliyeti gerçekte ne belirliyor, siz neyi hazırlamalısınız — sette öğrendiklerimizi dürüstçe anlattık."
 pubDate: 2026-06-06
 cover: ../../assets/photos/film-crew-red-camera.jpg

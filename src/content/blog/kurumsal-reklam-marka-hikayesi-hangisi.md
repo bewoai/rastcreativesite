@@ -1,5 +1,6 @@
 ---
 title: "Kurumsal film mi, reklam filmi mi, marka hikâyesi mi? Hangisi size göre"
+seoTitle: "Reklam Filmi mi, Marka Hikâyesi mi?"
 description: "Bu üç format sık karıştırılır ama amaçları farklıdır. Kurumsal tanıtım, reklam filmi ve marka hikâyesi arasındaki farkı ve markanız için hangisinin doğru olduğunu sade bir dille anlattık."
 pubDate: 2026-06-15
 cover: ../../assets/photos/creative-branding-team.jpg

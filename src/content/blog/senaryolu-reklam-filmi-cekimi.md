@@ -1,5 +1,6 @@
 ---
 title: "Senaryolu Reklam Filmi Çekimi: Markanız İçin Stratejik Hikâye Anlatımı"
+seoTitle: "Senaryolu Reklam Filmi Çekimi"
 description: "Senaryolu reklam filmi neden daha çok iş yapar? Hook, AIDA, hedef kitle ve fikirden ekrana iş akışını; Sakarya'da marka olmanın yollarıyla birlikte yazdık."
 pubDate: 2026-06-22
 cover: ../../assets/photos/crew-onset.jpg

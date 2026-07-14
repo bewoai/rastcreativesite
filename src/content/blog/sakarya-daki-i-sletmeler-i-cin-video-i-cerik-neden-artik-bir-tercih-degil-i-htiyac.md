@@ -1,6 +1,7 @@
 ---
 title: Sakarya’daki İşletmeler İçin Video İçerik Neden Artık Bir Tercih Değil,
   İhtiyaç?
+seoTitle: "Sakarya İşletmeleri İçin Video İçerik"
 description: Sakarya’daki işletmeler için video içerik neden önemli? Sosyal
   medya, reklam ve marka güveni açısından profesyonel video üretiminin etkisini
   keşfedin.
