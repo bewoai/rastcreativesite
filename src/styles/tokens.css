@@ -19,6 +19,7 @@
   --ink: #111110; /* headings + body text                     */
   --ink-soft: #4a4845; /* secondary text                           */
   --line: #e5e2dc; /* hairlines, card borders                  */
+  --line-strong: #c9bdae; /* stronger border for inputs/checkboxes    */
   --amber: #e25303; /* "Rast Amber" — signature accent (fills/CTA bg) */
   --amber-deep: #b84203; /* amber hover / active                     */
   /* Amber used AS TEXT/icon on light surfaces. #E25303 on --paper is only
@@ -79,6 +80,20 @@
   --dur: 280ms;
   --reveal-shift: 8px; /* scroll-reveal fade + rise distance */
 
+  /* Live Set: logo entry, slate header and cinematic reveals. */
+  --ls-ease-reveal: cubic-bezier(0.22, 1, 0.36, 1);
+  --ls-dur-reveal: 0.7s;
+  --ls-dur-entry-draw: 2200ms;
+  --ls-dur-entry-iris: 620ms;
+  --ls-dur-entry-mobile: 2350ms;
+  --ls-dur-entry-expose: 2600ms;
+  --ls-dur-entry-fade: 700ms;
+  --ls-dur-scene-flip: 200ms;
+  --ls-blur-focus-pull: 6px;
+  --ls-stagger-frame: 70ms;
+  --ls-progress-hue-start: 30;
+  --ls-progress-hue-end: 200;
+
   /* ---- Focus ------------------------------------------------------- */
   --focus-ring: 0 0 0 3px color-mix(in srgb, var(--amber) 45%, transparent);
 }
@@ -90,6 +105,7 @@ html[data-theme="dark"] {
   --ink: #f4eee5;
   --ink-soft: #c9bdae;
   --line: #383027;
+  --line-strong: #6b5d49;
   --amber: #e25303;
   --amber-deep: #f07828;
   --amber-text: #f08a43;

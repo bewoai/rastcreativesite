@@ -37,6 +37,7 @@ const whatsappHref = waLink();
       }
     </ul>
     <Button href={PRIMARY_CTA.href} class="nav__cta">{PRIMARY_CTA.label}</Button>
+    <span class="nav__progress" data-nav-progress aria-hidden="true"></span>
     <ThemeToggle class="nav__theme" />
   </nav>
 </header>
@@ -108,6 +109,8 @@ const whatsappHref = waLink();
   }
   .nav__pill {
     pointer-events: auto;
+    position: relative;
+    overflow: hidden;
     display: flex;
     align-items: center;
     gap: clamp(0.5rem, 1.5vw, 1.25rem);
@@ -519,9 +522,13 @@ const whatsappHref = waLink();
   const updateChrome = () => {
     const currentY = Math.max(0, window.scrollY);
     const delta = currentY - lastScrollY;
+    const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    const progress = Math.min(currentY / maxScroll, 1);
 
     if (nav) {
       nav.classList.toggle("is-scrolled", desktopQuery.matches && currentY > 8);
+      nav.style.setProperty("--scroll-progress", progress.toFixed(4));
+      nav.style.setProperty("--scroll-progress-hue", String(Math.round(30 + (200 - 30) * progress)));
     }
 
     if (tabbar && tabbarFab) {

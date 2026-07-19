@@ -129,7 +129,7 @@ const pageJsonLd = [
 ];
 ---
 
-<BaseLayout jsonLd={pageJsonLd}>
+<BaseLayout jsonLd={pageJsonLd} entryAnimation>
   {/* 1 — Hero (sinematik merkezi tablo; Monopo Saigon esinli) */}
   <VideoHero flush fadeBottom class="hero" height="min(100svh, 900px)">
     <LiquidHeroAnimation />
@@ -138,7 +138,7 @@ const pageJsonLd = [
       <p class="hero__introline" aria-hidden="true">Doğru kare, doğru hikaye.</p>
       <div class="hero__center">
         <p class="hero__eyebrow">SAKARYA · SİNEMATİK VİDEO PRODÜKSİYON</p>
-        <h1 class="hero__title">Sakarya Video Çekimi<br class="hero__title-br" />ve Prodüksiyon</h1>
+        <h1 class="hero__title">Sakarya Video Çekimi<br class="hero__title-br" /> ve Prodüksiyon</h1>
         <p class="hero__tagline">
           Markanız için reklam filmi, tanıtım filmi ve sosyal medya videoları üretiyoruz.
           Sakarya merkezli prodüksiyon ekibimizle fikrinizi sinematik bir hikâyeye dönüştürüyoruz.
@@ -151,7 +151,7 @@ const pageJsonLd = [
             Projelerimizi İzleyin
           </Button>
         </div>
-        <p class="hero__meta">13+ marka · 33+ içerik · Sakarya merkezli prodüksiyon ekibi</p>
+        <p class="hero__meta">{heroTrust}</p>
       </div>
     </div>
     <div class="hero__scroll" aria-hidden="true">
@@ -249,7 +249,7 @@ const pageJsonLd = [
       <SectionHeading eyebrow="Sahne 02 · Seçili İşler">Son işlerimizden seçmeler</SectionHeading>
       <Button href="/projeler" variant="secondary" arrow class="head-row__cta">Tümünü gör</Button>
     </div>
-    <div class="grid-cards" data-daily-projects data-daily-count={dailyProjectCount}>
+    <div class="grid-cards" data-reveal="frame-advance" data-daily-projects data-daily-count={dailyProjectCount}>
       {
         dailyProjects.map((p, index) => (
           <div class="daily-project" data-daily-project data-project-index={index}>
@@ -265,6 +265,7 @@ const pageJsonLd = [
               vertical={p.data.vertical}
               preview={p.data.preview}
               summary={p.data.summary}
+              class="card--balanced"
             />
           </div>
         ))
@@ -282,7 +283,7 @@ const pageJsonLd = [
 
   {/* 3.5 — İstatistik barı */}
   <Section space="tight">
-    <ul class="stats" data-reveal aria-label="Rakamlarla Rast Creative">
+    <ul class="stats" data-reveal="odometer" aria-label="Rakamlarla Rast Creative">
       {
         stats.map((s) => (
           <li class="stats__item">
@@ -303,7 +304,7 @@ const pageJsonLd = [
         <p>Fikirden teslime; strateji, prodüksiyon ve post-prodüksiyonu tek elden yürütürüz.</p>
       </Fragment>
     </SectionHeading>
-    <div class="grid-services">
+    <div class="grid-services" data-reveal="frame-advance">
       {
         services.map((s, i) => (
           <ServiceCard
@@ -330,7 +331,7 @@ const pageJsonLd = [
   </Section>
 
   <Section width="narrow" space="tight">
-    <div class="seo-copy" data-reveal>
+    <div class="seo-copy" data-reveal="focus-pull">
       <h2>Sakarya'da video çekimi nasıl planlanır?</h2>
       <p>
         Rast Creative Studio, Sakarya ve Serdivan merkezli işletmeler için video çekimi
@@ -374,6 +375,7 @@ const pageJsonLd = [
       sizes="(min-width: 1100px) 1040px, 92vw"
       loading="lazy"
       class="why__photo"
+      data-reveal="exposure-fade"
     />
     <ul class="why">
       {
@@ -396,7 +398,7 @@ const pageJsonLd = [
         <p>Net bir akış: ön görüşmeden teslime kadar her aşamada yanınızdayız.</p>
       </Fragment>
     </SectionHeading>
-    <ol class="steps" data-reveal>
+    <ol class="steps" data-reveal="frame-advance">
       {
         steps.map((s) => (
           <li class="steps__item">
@@ -436,7 +438,7 @@ const pageJsonLd = [
             Tüm yazılar
           </Button>
         </div>
-        <div class="grid-cards">
+        <div class="grid-cards" data-reveal="frame-advance">
           {blogPosts.map((p) => (
             <BlogCard
               href={`/blog/${p.id}`}
@@ -716,6 +718,11 @@ const pageJsonLd = [
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .hero__intro-glow,
+    .hero__introline {
+      opacity: 0;
+      animation: none;
+    }
     .hero__center {
       opacity: 1;
       filter: none;
@@ -742,13 +749,17 @@ const pageJsonLd = [
     gap: 1.5rem;
   }
   .daily-project {
+    display: flex;
     min-width: 0;
   }
   .daily-project:nth-child(n + 4) {
     display: none;
   }
   .daily-project.is-active {
-    display: block;
+    display: flex;
+  }
+  .daily-project > :global(.card) {
+    width: 100%;
   }
   .daily-project.is-inactive {
     display: none;
@@ -1024,10 +1035,36 @@ const pageJsonLd = [
       };
     };
 
+    let equalizeFrame = 0;
+    const equalizeProjectCards = () => {
+      if (equalizeFrame) window.cancelAnimationFrame(equalizeFrame);
+      equalizeFrame = window.requestAnimationFrame(() => {
+        equalizeFrame = 0;
+        const activeCards = cards
+          .filter((card) => !card.classList.contains("is-inactive"))
+          .map((card) => card.querySelector<HTMLElement>(".card"))
+          .filter((card): card is HTMLElement => !!card);
+
+        activeCards.forEach((card) => {
+          card.style.minHeight = "";
+        });
+
+        if (activeCards.length < 2) return;
+
+        const maxHeight = Math.max(...activeCards.map((card) => card.offsetHeight));
+        activeCards.forEach((card) => {
+          card.style.minHeight = `${Math.ceil(maxHeight)}px`;
+        });
+      });
+    };
+
     let currentDateKey = "";
     const applyDailyProjects = () => {
       const dateKey = istanbulDateKey();
-      if (dateKey === currentDateKey) return;
+      if (dateKey === currentDateKey) {
+        equalizeProjectCards();
+        return;
+      }
       currentDateKey = dateKey;
 
       const random = nextRandom(seedFromString(dateKey));
@@ -1045,9 +1082,12 @@ const pageJsonLd = [
         card.classList.toggle("is-inactive", !active);
         if (active) card.style.order = String(order);
       });
+      equalizeProjectCards();
     };
 
     applyDailyProjects();
+    window.addEventListener("load", equalizeProjectCards, { once: true });
+    window.addEventListener("resize", equalizeProjectCards, { passive: true });
     window.setInterval(applyDailyProjects, 60_000);
   }
 </script>

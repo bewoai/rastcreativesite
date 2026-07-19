@@ -3,7 +3,7 @@ import "../styles/global.css";
 import { SITE, GA4_MEASUREMENT_ID } from "../consts";
 import GlassNav from "../components/GlassNav.astro";
 import Footer from "../components/Footer.astro";
-import Clapperboard from "../components/Clapperboard.astro";
+import EntryOverlay from "../components/EntryOverlay.astro";
 
 interface Props {
   /** Page title; omit on the home page to use the full default title. */
@@ -27,6 +27,8 @@ interface Props {
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   /** Preload an above-the-fold LCP image (e.g. the hero). */
   preloadImage?: string;
+  /** Homepage-only Live Set entry animation overlay. */
+  entryAnimation?: boolean;
 }
 
 const {
@@ -39,6 +41,7 @@ const {
   bare = false,
   jsonLd,
   preloadImage,
+  entryAnimation = false,
 } = Astro.props;
 
 const jsonLdItems = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
@@ -56,9 +59,22 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
 
-    <script is:inline>
+    <script is:inline define:vars={{ entryAnimation }}>
       try {
-        document.documentElement.classList.add("js");
+        const root = document.documentElement;
+        root.classList.add("js");
+
+        if (entryAnimation) {
+          const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+          let entryPlayed = false;
+          try {
+            entryPlayed = sessionStorage.getItem("rc_entry_played") === "1";
+          } catch (e) {
+            entryPlayed = false;
+          }
+          if (!reduceMotion && !entryPlayed) root.classList.add("entry-pending");
+        }
+
         const savedTheme = localStorage.getItem("rc_theme");
         const theme =
           savedTheme === "light" || savedTheme === "dark"
@@ -66,7 +82,7 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
             : matchMedia("(prefers-color-scheme: dark)").matches
               ? "dark"
               : "light";
-        document.documentElement.dataset.theme = theme;
+        root.dataset.theme = theme;
       } catch (e) {
         document.documentElement.classList.add("js");
         document.documentElement.dataset.theme = "light";
@@ -264,7 +280,7 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
     >
       İçeriğe geç
     </a>
-    {!bare && <Clapperboard />}
+    {!bare && entryAnimation && <EntryOverlay />}
     {!bare && <GlassNav />}
     <main id="main">
       <slot />
@@ -277,8 +293,45 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
         const revealEls = document.querySelectorAll<HTMLElement>("[data-reveal]:not(.is-revealed)");
         if (!revealEls.length) return;
 
+        const animateOdometer = (root: HTMLElement) => {
+          if (root.dataset.odometerStarted === "true") return;
+          root.dataset.odometerStarted = "true";
+
+          const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+          root.querySelectorAll<HTMLElement>(".stats__n").forEach((el) => {
+            const value = (el.textContent ?? "").trim();
+            const match = value.match(/^(\d+)(.*)$/);
+            if (!match) return;
+
+            const target = Number(match[1]);
+            const suffix = match[2] ?? "";
+            if (!Number.isFinite(target)) return;
+            if (reduceMotion) {
+              el.textContent = value;
+              return;
+            }
+
+            const duration = 900;
+            const start = performance.now();
+            const tick = (now: number) => {
+              const progress = Math.min((now - start) / duration, 1);
+              const eased = 1 - Math.pow(1 - progress, 3);
+              el.textContent = `${Math.round(target * eased)}${suffix}`;
+              if (progress < 1) requestAnimationFrame(tick);
+              else el.textContent = value;
+            };
+            el.textContent = `0${suffix}`;
+            requestAnimationFrame(tick);
+          });
+        };
+
+        const reveal = (el: HTMLElement) => {
+          el.classList.add("is-revealed");
+          if (el.dataset.reveal === "odometer") animateOdometer(el);
+        };
+
         if (!("IntersectionObserver" in window)) {
-          revealEls.forEach((el) => el.classList.add("is-revealed"));
+          revealEls.forEach(reveal);
           return;
         }
 
@@ -286,7 +339,7 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
           (entries) => {
             for (const entry of entries) {
               if (entry.isIntersecting) {
-                entry.target.classList.add("is-revealed");
+                reveal(entry.target as HTMLElement);
                 io.unobserve(entry.target);
               }
             }

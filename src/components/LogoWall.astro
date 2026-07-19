@@ -58,6 +58,7 @@ const logos = [
             densities={[1.5, 2]}
             quality={72}
             loading="lazy"
+            decoding="async"
             draggable={false}
             class:list={["logo-chip__img", { "logo-chip__img--big": l.big }]}
           />
@@ -74,6 +75,7 @@ const logos = [
             densities={[1.5, 2]}
             quality={72}
             loading="lazy"
+            decoding="async"
             draggable={false}
             class:list={["logo-chip__img", { "logo-chip__img--big": l.big }]}
           />
@@ -95,8 +97,8 @@ const logos = [
     -webkit-user-select: none;
     -webkit-touch-callout: none;
     /* Soft fade at both edges so chips slide in/out instead of cutting off. */
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
   }
   .marquee::-webkit-scrollbar {
     display: none;
@@ -130,18 +132,19 @@ const logos = [
     padding: 0.9rem 1.1rem;
     min-height: 5.6rem;
     background: #ffffff;
-    border: 1px solid var(--line);
+    border: 1px solid color-mix(in srgb, var(--line) 88%, var(--ink) 12%);
     border-radius: var(--radius-card);
     user-select: none;
     -webkit-user-select: none;
     -webkit-user-drag: none;
+    box-shadow: 0 8px 26px -18px color-mix(in srgb, var(--ink) 20%, transparent);
     transition:
       box-shadow var(--dur-fast, 0.2s) var(--ease-out, ease),
       border-color var(--dur-fast, 0.2s) var(--ease-out, ease);
   }
   .logo-chip--dark {
-    background: var(--ink);
-    border-color: color-mix(in srgb, #ffffff 12%, transparent);
+    background: color-mix(in srgb, var(--ink) 92%, #000000);
+    border-color: color-mix(in srgb, #ffffff 22%, transparent);
   }
   .logo-chip__img {
     width: auto;

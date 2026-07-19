@@ -45,7 +45,6 @@ const cardPoster = ytThumbToWebp(poster, "card");
   class:list={["card", className]}
   target={isExternal ? "_blank" : undefined}
   rel={isExternal ? "noopener noreferrer" : undefined}
-  data-reveal
 >
   <div
     class:list={["card__media", { "card__media--vertical": vertical }]}
@@ -182,6 +181,19 @@ const cardPoster = ytThumbToWebp(poster, "card");
     object-fit: cover;
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.16);
   }
+  .card--balanced .card__media--vertical .card__poster {
+    width: 100%;
+    max-width: none;
+    object-fit: cover;
+    box-shadow: none;
+  }
+  .card--balanced .card__media--vertical .card__video {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    transform: none;
+  }
   .card:hover .card__poster {
     transform: scale(1.04);
   }
@@ -214,6 +226,9 @@ const cardPoster = ytThumbToWebp(poster, "card");
   }
   .card:hover .card__media--vertical .card__video.is-playing {
     transform: translateX(-50%) scale(1.04);
+  }
+  .card--balanced:hover .card__media--vertical .card__video.is-playing {
+    transform: scale(1.04);
   }
 
   .card__timecode {
@@ -248,6 +263,15 @@ const cardPoster = ytThumbToWebp(poster, "card");
     flex-direction: column;
     gap: 0.45rem;
     padding: 1rem 1.1rem 1.2rem;
+  }
+  .card--balanced {
+    height: 100%;
+  }
+  .card--balanced .card__body {
+    flex: 1;
+  }
+  .card--balanced .card__cta {
+    margin-top: auto;
   }
   .card__title {
     margin: 0;
