@@ -1,8 +1,7 @@
 ---
 title: "E-ticarette ürün çekimi: fotoğraf mı, video mu?"
-description: Online satışta görsel, satış elemanınızın yerini tutuyor. Ürün
-  fotoğrafı ile ürün videosunun nerede işe yaradığını ve e-ticaret için doğru
-  kombinasyonu Sakarya'daki çekim deneyimimizle anlattık.
+seoTitle: "Ürün Çekimi: Fotoğraf mı, Video mu?"
+description: "Online satışta görsel, satış elemanınızın yerini tutar. Ürün fotoğrafı ile videosunun nerede işe yaradığını çekim deneyimimizle anlattık."
 author: Berat Değirmenci
 pubDate: 2026-06-15
 cover: ../../assets/uploads/blog/chatgpt-image-20-haz-2026-21_19_16.webp

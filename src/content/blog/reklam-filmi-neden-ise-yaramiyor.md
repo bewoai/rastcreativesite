@@ -1,6 +1,7 @@
 ---
 title: "Reklam filminiz neden işe yaramıyor olabilir?"
-description: "Pahalı ama satışa dönmeyen reklamların ortak hatalarını ve bir reklam filmini gerçekten 'çalışır' kılan şeyleri Sakarya'da kamera arkasında öğrendiğimiz kadarıyla dürüstçe yazdık."
+seoTitle: "Reklam Filmi Neden İşe Yaramıyor?"
+description: "Pahalı ama satışa dönmeyen reklamların ortak hatalarını ve bir reklam filmini gerçekten 'çalışır' kılan şeyleri kamera arkasından dürüstçe yazdık."
 pubDate: 2026-06-15
 cover: ../../assets/photos/camera-closeup.jpg
 coverAlt: "Sinema kamerası lensi yakın plan — reklam filmi prodüksiyonu"

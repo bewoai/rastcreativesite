@@ -1,5 +1,6 @@
 ---
 title: Etkili Meta ve Google Ads reklamı nasıl kurulur?
+seoTitle: "Meta ve Google Ads Reklamı Kurulumu"
 description: Google'da öne çıkmak, Meta'da müşteri kazanmak ve sıcak müşteriyi
   doğru teklife taşımak için reklamı nasıl düşündüğümüzü kendi dilimle anlattım.
 author: Berat Değirmenci

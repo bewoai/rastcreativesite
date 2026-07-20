@@ -1,5 +1,6 @@
 ---
 title: Sosyal medya videosu neden izlenmiyor? Dürüst bir cevap.
+seoTitle: "Sosyal Medya Videosu Neden İzlenmez?"
 description: Sosyal medya videosu sadece güzel görünmekle izlenmez. İlk saniye,
   mesaj, kurgu ve kullanım amacını Rast Creative deneyimiyle anlattık.
 author: Berat Degirmenci

@@ -1,6 +1,7 @@
 ---
 title: "Fabrikanızı en iyi anlatan film nasıl çekilir?"
-description: "Sakarya, Kocaeli ve Gebze hattındaki sanayi tesisleri için tanıtım filmi çekiyoruz. Bir fabrikayı kameranın önünde 'büyük ve güvenilir' gösteren şeyleri sette öğrendiğimiz kadarıyla anlattık."
+seoTitle: "Fabrika Tanıtım Filmi Nasıl Çekilir?"
+description: "Sakarya, Kocaeli ve Gebze hattındaki sanayi tesisleri için tanıtım filmi çekiyoruz. Bir fabrikayı 'büyük ve güvenilir' gösteren şeyleri anlattık."
 pubDate: 2026-06-15
 cover: ../../assets/photos/camera-crane.jpg
 coverAlt: "Vinç üzerinde sinema kamerası — sanayi tesisi tanıtım filmi çekimi"

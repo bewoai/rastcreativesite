@@ -1,8 +1,7 @@
 ---
 title: Video çektirmek değil, içerik sistemi kurmak
-description: Bir çekim gününü sadece tek bir video teslimi gibi görmek yerine,
-  markanın aylarca kullanabileceği bir içerik sistemine çevirmek mümkün. Rast
-  Creative'de projelere neden böyle baktığımızı kendi dilimle anlattım.
+seoTitle: "Video Değil, İçerik Sistemi Kurmak"
+description: "Bir çekim gününü tek bir video teslimi gibi görmek yerine markanın aylarca kullanacağı bir içerik sistemine çevirmek mümkün. Nasıl baktığımızı anlattım."
 author: Berat Değirmenci
 pubDate: 2026-06-19
 cover: ../../assets/uploads/blog/chatgpt-image-20-haz-2026-21_31_59.webp

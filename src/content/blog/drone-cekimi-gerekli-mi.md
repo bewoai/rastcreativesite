@@ -1,6 +1,7 @@
 ---
 title: "Drone çekimi gerçekten gerekli mi? Dürüst bir cevap"
-description: "Drone etkileyici ama her projede şart değil. Havadan çekimin gerçekten değer kattığı yerleri ve sadece 'gösteriş' olduğu durumları Sakarya'daki deneyimimizle anlattık."
+seoTitle: "Drone Çekimi Gerçekten Gerekli mi?"
+description: "Drone etkileyici ama her projede şart değil. Havadan çekimin gerçekten değer kattığı yerleri Sakarya'daki deneyimimizle dürüstçe anlattık."
 pubDate: 2026-06-13
 cover: ../../assets/photos/aerial-drone-landscape.jpg
 coverAlt: "Havadan drone ile çekilmiş kıvrımlı yol ve tarım arazileri"
