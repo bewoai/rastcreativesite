@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Federal Kurumsal Tanitim Filmi Kapagi</title>
+  <desc id="desc">Federal markasi icin kirmizi ve beyaz tonlarda hazirlanmis kurumsal video kapagi.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fbfbf8"/>
+      <stop offset="0.55" stop-color="#f5f0ea"/>
+      <stop offset="1" stop-color="#e7ded3"/>
+    </linearGradient>
+    <linearGradient id="red" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e31b23"/>
+      <stop offset="1" stop-color="#a60000"/>
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="26" stdDeviation="28" flood-color="#210000" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <g opacity="0.14">
+    <path d="M1120-120 1720 480 480 1720-120 1120Z" fill="#d94a22"/>
+    <path d="M980-60 1660 620" stroke="#d94a22" stroke-width="10"/>
+    <path d="M840 80 1520 760" stroke="#d94a22" stroke-width="10"/>
+    <path d="M700 220 1380 900" stroke="#d94a22" stroke-width="10"/>
+  </g>
+  <g transform="translate(146 122)">
+    <rect x="0" y="0" width="1308" height="656" rx="42" fill="#fffaf4" opacity="0.76" filter="url(#softShadow)"/>
+    <rect x="0" y="0" width="1308" height="656" rx="42" fill="none" stroke="#ffffff" stroke-opacity="0.72" stroke-width="2"/>
+  </g>
+  <g transform="translate(230 248)" filter="url(#softShadow)">
+    <polygon points="138,0 276,138 138,276 0,138" fill="url(#red)"/>
+    <rect x="78" y="76" width="122" height="28" rx="4" fill="#fff"/>
+    <rect x="78" y="76" width="28" height="122" rx="4" fill="#fff"/>
+    <rect x="78" y="126" width="92" height="28" rx="4" fill="#fff"/>
+  </g>
+  <g transform="translate(560 280)">
+    <text x="0" y="116" fill="#cf0000" font-family="Arial Black, Impact, sans-serif" font-size="132" font-weight="900" letter-spacing="-3">FEDERAL</text>
+    <text x="4" y="188" fill="#14110f" font-family="Inter, Arial, sans-serif" font-size="38" font-weight="700" letter-spacing="10">KURUMSAL TANITIM FILMI</text>
+    <line x1="4" y1="242" x2="650" y2="242" stroke="#d74816" stroke-width="3"/>
+    <text x="4" y="304" fill="#4d4540" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="500">Sinematik marka anlatimi ve guven veren kurumsal goruntu.</text>
+  </g>
+  <g transform="translate(230 704)">
+    <text x="0" y="0" fill="#d74816" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="800" letter-spacing="8">RAST CREATIVE STUDIO</text>
+    <text x="0" y="42" fill="#14110f" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="600">Sakarya merkezli video produksiyon</text>
+  </g>
+</svg>
