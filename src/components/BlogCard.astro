@@ -16,9 +16,14 @@ interface Props {
   datetime: string;
   cover?: ImageMetadata;
   coverAlt?: string;
+  /** Heading level for the card title so the surrounding page keeps a valid
+   * H1 → H2 → H3 order. Homepage lists cards under an H2 (default h3); the
+   * /blog index lists them directly under the page H1, so it passes "h2". */
+  titleTag?: "h2" | "h3";
 }
 
-const { href, title, description, date, datetime, cover, coverAlt } = Astro.props;
+const { href, title, description, date, datetime, cover, coverAlt, titleTag = "h3" } = Astro.props;
+const TitleTag = titleTag;
 ---
 
 <a href={href} class="bcard" data-reveal>
@@ -38,7 +43,7 @@ const { href, title, description, date, datetime, cover, coverAlt } = Astro.prop
   }
   <div class="bcard__body">
     <time class="bcard__date" datetime={datetime}>{date}</time>
-    <h3 class="bcard__title">{title}</h3>
+    <TitleTag class="bcard__title">{title}</TitleTag>
     {description && <p class="bcard__desc">{description}</p>}
     <span class="bcard__more">Oku →</span>
   </div>
