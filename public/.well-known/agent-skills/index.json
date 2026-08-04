@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "rastcreative-discovery",
+      "type": "skill-md",
+      "description": "Discover Rast Creative Studio services, portfolio pages, public contact channels, and machine-readable site metadata.",
+      "url": "https://rastcreative.com/.well-known/agent-skills/rastcreative-discovery/SKILL.md",
+      "digest": "sha256:f43a0fee2c605d7d831f42a6c2ada7b0dfecdbbf15ffbc00ba5d70b452375fa4"
+    }
+  ]
+}

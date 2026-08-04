@@ -4,6 +4,7 @@ import { SITE, GA4_MEASUREMENT_ID } from "../consts";
 import GlassNav from "../components/GlassNav.astro";
 import Footer from "../components/Footer.astro";
 import EntryOverlay from "../components/EntryOverlay.astro";
+import WebMcpTools from "../components/WebMcpTools.astro";
 
 interface Props {
   /** Page title; omit on the home page to use the full default title. */
@@ -286,6 +287,7 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
       <slot />
     </main>
     {!bare && <Footer />}
+    <WebMcpTools />
 
     <script>
       const initReveal = () => {

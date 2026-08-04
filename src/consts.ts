@@ -88,28 +88,11 @@ export const CONTACT = {
   whatsapp: "905438382404", // for wa.me links
 } as const;
 
-/**
- * WhatsApp quick-quote deep links (roadmap §2 — primary channel for the 35+
- * audience). Newlines survive URL-encoding as %0A and render in WhatsApp's
- * compose box, so the visitor lands on a ready-to-fill quote request rather
- * than an empty chat. Helpers return `null` when no number is set, so callers
- * can fall back / hide the button.
- */
-export const WHATSAPP_QUOTE_MESSAGE = [
-  "Merhaba Rast Creative 👋",
-  "",
-  "Bir proje için teklif almak istiyorum:",
-  "",
-  "• Proje türü: ",
-  "• Tahmini tarih: ",
-  "• Lokasyon: ",
-  "• Kısaca: ",
-].join("\n");
-
-/** Build a wa.me link with a prefilled message (defaults to the quote template). */
-export function waLink(message: string = WHATSAPP_QUOTE_MESSAGE): string | null {
-  return CONTACT.whatsapp
-    ? `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`
+/** Build a wa.me link only from a validated, non-empty message. */
+export function waLink(message: string): string | null {
+  const cleanMessage = message.trim();
+  return CONTACT.whatsapp && cleanMessage
+    ? `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(cleanMessage)}`
     : null;
 }
 

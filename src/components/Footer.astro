@@ -2,10 +2,10 @@
 import Logo from "./Logo.astro";
 import Icon from "./Icon.astro";
 import Eyebrow from "./Eyebrow.astro";
-import { NAV, SOCIAL, CONTACT, SITE, waLink } from "../consts";
+import { NAV, SOCIAL, CONTACT, SITE } from "../consts";
 
 const year = new Date().getFullYear();
-const whatsappHref = waLink();
+const whatsappFormHref = "/iletisim#teklif-formu";
 ---
 
 <footer class="footer">
@@ -81,18 +81,11 @@ const whatsappHref = waLink();
           }
         </li>
         {
-          whatsappHref && (
-            <li>
-              <a
-                href={whatsappHref}
-                class="footer__link footer__link--icon"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Icon name="whatsapp" size={18} /> WhatsApp
-              </a>
-            </li>
-          )
+          <li>
+            <a href={whatsappFormHref} class="footer__link footer__link--icon">
+              <Icon name="whatsapp" size={18} /> WhatsApp teklif formu
+            </a>
+          </li>
         }
       </ul>
     </div>

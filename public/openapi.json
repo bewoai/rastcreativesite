@@ -1,0 +1,80 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Rast Creative Public Site Information API",
+    "version": "1.0.0",
+    "description": "Public, read-only metadata for discovering Rast Creative Studio services and contact channels. No authentication is required."
+  },
+  "servers": [{ "url": "https://rastcreative.com" }],
+  "paths": {
+    "/api/site.json": {
+      "get": {
+        "operationId": "getSiteInformation",
+        "summary": "Get studio, service and contact information",
+        "responses": {
+          "200": {
+            "description": "Public site information",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SiteInformation" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/status.json": {
+      "get": {
+        "operationId": "getDiscoveryStatus",
+        "summary": "Get the status scope of static discovery resources",
+        "responses": {
+          "200": {
+            "description": "Discovery resource status",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Status" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Service": {
+        "type": "object",
+        "required": ["name", "url"],
+        "properties": {
+          "name": { "type": "string" },
+          "url": { "type": "string", "format": "uri" }
+        }
+      },
+      "SiteInformation": {
+        "type": "object",
+        "required": ["name", "url", "language", "services", "contact"],
+        "properties": {
+          "name": { "type": "string" },
+          "url": { "type": "string", "format": "uri" },
+          "language": { "type": "string" },
+          "description": { "type": "string" },
+          "location": { "type": "object", "additionalProperties": { "type": "string" } },
+          "services": { "type": "array", "items": { "$ref": "#/components/schemas/Service" } },
+          "contact": { "type": "object", "additionalProperties": { "type": "string" } },
+          "projects": { "type": "string", "format": "uri" },
+          "blog": { "type": "string", "format": "uri" }
+        }
+      },
+      "Status": {
+        "type": "object",
+        "required": ["status", "service", "scope"],
+        "properties": {
+          "status": { "type": "string", "enum": ["operational"] },
+          "service": { "type": "string" },
+          "scope": { "type": "string" },
+          "documentation": { "type": "string", "format": "uri" }
+        }
+      }
+    }
+  }
+}

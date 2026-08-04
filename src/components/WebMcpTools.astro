@@ -1,0 +1,91 @@
+<script>
+  type ToolDefinition = {
+    name: string;
+    title?: string;
+    description: string;
+    inputSchema?: Record<string, unknown>;
+    execute: (input: Record<string, unknown>) => Promise<unknown>;
+    annotations?: { readOnlyHint?: boolean; untrustedContentHint?: boolean };
+  };
+
+  type ModelContextLike = {
+    registerTool: (
+      tool: ToolDefinition,
+      options?: { signal?: AbortSignal },
+    ) => Promise<void>;
+  };
+
+  const documentContext = (document as Document & { modelContext?: ModelContextLike }).modelContext;
+  const navigatorContext = (navigator as Navigator & { modelContext?: ModelContextLike }).modelContext;
+  const modelContext = documentContext ?? navigatorContext;
+
+  if (modelContext?.registerTool) {
+    const controller = new AbortController();
+    const options = { signal: controller.signal };
+
+    const tools: ToolDefinition[] = [
+      {
+        name: "get_rastcreative_services",
+        title: "Rast Creative hizmetlerini listele",
+        description: "Rast Creative Studio tarafından yayımlanan hizmetleri ve resmi sayfa adreslerini döndürür. Salt okunurdur.",
+        inputSchema: { type: "object", properties: {}, additionalProperties: false },
+        annotations: { readOnlyHint: true, untrustedContentHint: false },
+        execute: async () => {
+          const response = await fetch("/api/site.json", { headers: { Accept: "application/json" } });
+          if (!response.ok) throw new Error("Hizmet bilgileri alınamadı.");
+          const data = await response.json();
+          return { services: data.services, source: "https://rastcreative.com/api/site.json" };
+        },
+      },
+      {
+        name: "get_rastcreative_contact",
+        title: "Rast Creative iletişim bilgilerini getir",
+        description: "Stüdyonun yayımlanmış iletişim kanallarını ve iletişim sayfasını döndürür. Mesaj göndermez ve form doldurmaz.",
+        inputSchema: { type: "object", properties: {}, additionalProperties: false },
+        annotations: { readOnlyHint: true, untrustedContentHint: false },
+        execute: async () => {
+          const response = await fetch("/api/site.json", { headers: { Accept: "application/json" } });
+          if (!response.ok) throw new Error("İletişim bilgileri alınamadı.");
+          const data = await response.json();
+          return { contact: data.contact, source: "https://rastcreative.com/api/site.json" };
+        },
+      },
+      {
+        name: "get_rastcreative_page_url",
+        title: "Rast Creative sayfa adresini bul",
+        description: "İstenen ana bölümün resmi URL'sini döndürür. Sayfada gezinmez ve herhangi bir işlem başlatmaz.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            page: {
+              type: "string",
+              enum: ["home", "services", "projects", "blog", "about", "contact"],
+              description: "Bulunacak ana site bölümü.",
+            },
+          },
+          required: ["page"],
+          additionalProperties: false,
+        },
+        annotations: { readOnlyHint: true, untrustedContentHint: false },
+        execute: async ({ page }) => {
+          const paths: Record<string, string> = {
+            home: "/",
+            services: "/hizmetler",
+            projects: "/projeler",
+            blog: "/blog",
+            about: "/hakkimizda",
+            contact: "/iletisim",
+          };
+          if (typeof page !== "string" || !(page in paths)) throw new Error("Geçersiz sayfa adı.");
+          return { page, url: new URL(paths[page], window.location.origin).href };
+        },
+      },
+    ];
+
+    Promise.all(tools.map((tool) => modelContext.registerTool(tool, options))).catch(() => {
+      controller.abort();
+    });
+
+    window.addEventListener("pagehide", () => controller.abort(), { once: true });
+  }
+</script>

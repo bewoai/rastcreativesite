@@ -1,0 +1,43 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Agent ve API Dokümantasyonu"
+  description="Rast Creative Studio'nun herkese açık, salt-okunur site bilgisi API'si ve agent keşif kaynakları."
+>
+  <section class="section-shell py-24 sm:py-32">
+    <div class="mx-auto max-w-3xl">
+      <p class="eyebrow">Agent discovery</p>
+      <h1 class="mt-4 font-display text-4xl sm:text-6xl">Agent ve API Dokümantasyonu</h1>
+      <p class="mt-6 text-lg leading-8 text-ink-muted">
+        Bu kaynaklar, Rast Creative Studio hizmetlerini ve herkese açık iletişim kanallarını
+        makine tarafından okunabilir biçimde sunar. Uç noktalar salt okunurdur ve kimlik
+        doğrulama gerektirmez.
+      </p>
+
+      <div class="prose mt-12 max-w-none">
+        <h2>Uç noktalar</h2>
+        <ul>
+          <li><code>GET /api/site.json</code> — stüdyo, hizmet ve iletişim bilgileri</li>
+          <li><code>GET /api/status.json</code> — statik keşif kaynaklarının kapsam durumu</li>
+          <li><code>GET /.well-known/api-catalog</code> — RFC 9727 API kataloğu</li>
+          <li><code>GET /openapi.json</code> — OpenAPI 3.1 tanımı</li>
+          <li><code>GET /.well-known/agent-skills/index.json</code> — Agent Skills keşif indeksi</li>
+        </ul>
+
+        <h2>İçerik pazarlığı</h2>
+        <p>
+          HTML sayfaları varsayılan olarak tarayıcı görünümünü döndürür. Bir istemci
+          <code>Accept: text/markdown</code> gönderdiğinde aynı sayfanın Markdown temsili döner.
+        </p>
+
+        <h2>Kimlik doğrulama</h2>
+        <p>
+          Korunan bir API veya hesap sistemi bulunmaz. OAuth, API anahtarı ve agent kaydı
+          desteklenmez. Ayrıntılar <a href="/auth.md">auth.md</a> belgesindedir.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

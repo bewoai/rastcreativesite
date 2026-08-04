@@ -3,7 +3,7 @@ import Logo from "./Logo.astro";
 import Button from "./Button.astro";
 import Icon from "./Icon.astro";
 import ThemeToggle from "./ThemeToggle.astro";
-import { NAV, PRIMARY_CTA, waLink } from "../consts";
+import { NAV, PRIMARY_CTA } from "../consts";
 
 // Active-route detection (ignore trailing slash).
 const path = Astro.url.pathname.replace(/\/+$/, "") || "/";
@@ -13,8 +13,8 @@ const isActive = (href: string) =>
 // Mobile tab-bar mirrors the full nav + Home for thumb-reach parity.
 const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
 
-// WhatsApp quick-action, surfaced in the condensed tab-bar (null → hidden).
-const whatsappHref = waLink();
+// Global WhatsApp shortcuts route through the validated quote form.
+const whatsappFormHref = "/iletisim#teklif-formu";
 ---
 
 {/* Desktop: floating glass pill */}
@@ -71,22 +71,18 @@ const whatsappHref = waLink();
     }
   </ul>
   {
-    whatsappHref && (
-      <a
-        class="tabbar__wa"
-        href={whatsappHref}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="WhatsApp'tan yazın"
-        aria-hidden="true"
-        tabindex="-1"
-        data-cta-location="mobile_tabbar"
-        data-tabbar-wa
-      >
-        <Icon name="whatsapp" size={20} class="tabbar__wa-icon" />
-        <span>WhatsApp</span>
-      </a>
-    )
+    <a
+      class="tabbar__wa"
+      href={whatsappFormHref}
+      aria-label="WhatsApp teklif formuna git"
+      aria-hidden="true"
+      tabindex="-1"
+      data-cta-location="mobile_tabbar"
+      data-tabbar-wa
+    >
+      <Icon name="whatsapp" size={20} class="tabbar__wa-icon" />
+      <span>WhatsApp</span>
+    </a>
   }
   <button
     class="tabbar__fab"
