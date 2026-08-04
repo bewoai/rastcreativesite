@@ -97,7 +97,7 @@ ErrorDocument 404 /404.html
   # RFC 8288 / RFC 9727 discovery links. Files matches the resolved homepage
   # index.html after Apache's DirectoryIndex handling.
   <Files "index.html">
-    Header set Link "</.well-known/api-catalog>; rel=\"api-catalog\"; type=\"application/linkset+json\", </openapi.json>; rel=\"service-desc\"; type=\"application/vnd.oai.openapi+json\", </agent-docs>; rel=\"service-doc\"; type=\"text/html\", </.well-known/agent-skills/index.json>; rel=\"describedby\"; type=\"application/json\", </llms.txt>; rel=\"describedby\"; type=\"text/markdown\""
+    Header set Link "</.well-known/api-catalog>; rel=api-catalog, </openapi.json>; rel=service-desc, </agent-docs>; rel=service-doc, </.well-known/agent-skills/index.json>; rel=describedby, </llms.txt>; rel=describedby"
   </Files>
 
   <Files "api-catalog">
