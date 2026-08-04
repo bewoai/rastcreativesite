@@ -9,6 +9,20 @@ AddDefaultCharset UTF-8
 <IfModule mod_mime.c>
   AddType video/webm .webm
   AddType video/mp4 .mp4
+  AddType application/json .json
+
+  <Files "api-catalog">
+    ForceType application/linkset+json
+  </Files>
+  <Files "openapi.json">
+    ForceType application/vnd.oai.openapi+json
+  </Files>
+  <FilesMatch "(SKILL|auth)\.md$">
+    ForceType text/markdown
+  </FilesMatch>
+  <Files "llms.txt">
+    ForceType text/markdown
+  </Files>
 </IfModule>
 
 # ── Canonical host + HTTPS ────────────────────────────────────────────────
@@ -19,6 +33,12 @@ RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
 # Force HTTPS for the bare domain
 RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# ── Markdown for agents ──────────────────────────────────────────────────
+# Browsers keep receiving HTML. Agents asking for Markdown on the homepage
+# receive the curated llms.txt representation instead.
+RewriteCond %{HTTP:Accept} text/markdown [NC]
+RewriteRule ^$ /llms.txt [L]
 
 # ── Block VCS / hidden files (Hostinger's Git deploy leaves a .git here) ──
 RewriteRule (^|/)\.(git|github|vscode|gitignore|gitattributes) - [F,L]
@@ -72,6 +92,34 @@ ErrorDocument 404 /404.html
   Header set X-Frame-Options "SAMEORIGIN"
   Header set Referrer-Policy "strict-origin-when-cross-origin"
   Header set Strict-Transport-Security "max-age=31536000; includeSubDomains" "expr=%{HTTPS} == 'on'"
+  Header merge Vary "Accept"
+
+  # RFC 8288 / RFC 9727 discovery links. Files matches the resolved homepage
+  # index.html after Apache's DirectoryIndex handling.
+  <Files "index.html">
+    Header set Link "</.well-known/api-catalog>; rel=\"api-catalog\"; type=\"application/linkset+json\", </openapi.json>; rel=\"service-desc\"; type=\"application/vnd.oai.openapi+json\", </agent-docs>; rel=\"service-doc\"; type=\"text/html\", </.well-known/agent-skills/index.json>; rel=\"describedby\"; type=\"application/json\", </llms.txt>; rel=\"describedby\"; type=\"text/markdown\""
+  </Files>
+
+  <Files "api-catalog">
+    Header set Content-Type "application/linkset+json; profile=\"https://www.rfc-editor.org/info/rfc9727\""
+    Header set Access-Control-Allow-Origin "*"
+  </Files>
+  <Files "openapi.json">
+    Header set Content-Type "application/vnd.oai.openapi+json; version=3.1"
+    Header set Access-Control-Allow-Origin "*"
+  </Files>
+  <FilesMatch "(index\.json|site\.json|status\.json)$">
+    Header set Access-Control-Allow-Origin "*"
+  </FilesMatch>
+  <FilesMatch "(SKILL|auth)\.md$">
+    Header set Content-Type "text/markdown; charset=UTF-8"
+    Header set Access-Control-Allow-Origin "*"
+  </FilesMatch>
+  <Files "llms.txt">
+    Header set Content-Type "text/markdown; charset=UTF-8"
+    Header set x-markdown-tokens "255"
+  </Files>
+
   # Cache media by extension (MIME-independent) so repeat visits reuse the hero loop.
   <FilesMatch "\.(webm|mp4)$">
     Header set Cache-Control "public, max-age=2592000"
