@@ -48,4 +48,4 @@ Karar veremiyorsanız şu sırayı kullanabilirsiniz:
 
 Reels mi, tanıtım filmi mi sorusunun tek bir cevabı yok. Önemli olan videoyu çekmeden önce nerede kullanılacağını, kimin izleyeceğini ve izledikten sonra ne yapmasını istediğinizi netleştirmek. [Rast Creative Studio](https://rastcreative.com) olarak çekimi yalnızca kamera kurulacak bir gün gibi değil, markanın farklı mecralarda kullanacağı bir içerik sistemi gibi planlıyoruz.
 
-İhtiyacınızı birlikte netleştirmek için [ücretsiz ön görüşme](/iletisim) talebi bırakabilirsiniz.
+İhtiyacınızı birlikte netleştirmek için [bize projenizden bahsedin](/iletisim).

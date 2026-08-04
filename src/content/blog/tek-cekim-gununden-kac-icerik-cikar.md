@@ -61,4 +61,4 @@ Bu hazırlıklar basit görünür ama bir çekim gününde en çok zaman kazand�
 
 Bir çekim gününden kaç içerik çıkacağını baştan söylemek yerine, hangi içeriklerin hangi ihtiyacı karşılayacağını planlamak gerekir. Doğru kurgu ile tek bir prodüksiyon; web sitesi, sosyal medya, reklam ve satış iletişimi için uzun süre kullanılabilecek bir içerik kaynağına dönüşebilir.
 
-Markanız için böyle bir çekim akışı düşünüyorsanız [ücretsiz ön görüşme](/iletisim) ile başlayabiliriz.
+Markanız için böyle bir çekim akışı düşünüyorsanız [bize projenizden bahsedin](/iletisim) ile başlayabiliriz.

@@ -58,7 +58,7 @@ export const NAV: readonly NavItem[] = [
 
 /** The single conversion CTA used across the site (roadmap §2). */
 export const PRIMARY_CTA = {
-  label: "Ücretsiz Ön Görüşme",
+  label: "Bize projenizden bahsedin",
   href: "/iletisim",
 } as const;
 
@@ -107,7 +107,7 @@ export const COPY = {
     "Markanız için reklam filmi, tanıtım filmi ve sosyal medya videoları üretiyoruz. Sinematik görüntü, doğru hikâye ve güçlü kurgu ile dijital yüzünüzü daha profesyonel hale getiriyoruz.",
   // Note: the hero trust line ("X+ marka · Y+ içerik …") is built dynamically
   // in index.astro from real content counts, so it is not hard-coded here.
-  heroSecondaryCta: "Projelerimizi İzleyin",
+  heroSecondaryCta: "Projelerimizi inceleyin",
   aboutIntro:
     "Yolculuğumuz boyunca farklı sektörlerden markaların dijital hikâyelerini yönettik. Ekibimizin geçmişindeki bu deneyim, bugün Rast Creative Studio çatısı altında sunduğumuz vizyonun temelini oluşturuyor.",
 } as const;

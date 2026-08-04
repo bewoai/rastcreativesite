@@ -33,7 +33,7 @@ const title = `${location.name} ${service.name}`;
 const pageHeading = `${location.name} ${service.name}`;
 const faqHeading = `${location.name} ${service.name} hakkında`;
 const path = `/${service.slug}/${location.slug}`;
-const description = `${location.name} ${service.name.toLowerCase()} — ${service.tagline}. ${location.loc} sinema standardında prodüksiyon. Ücretsiz ön görüşme.`;
+const description = `${location.name} ${service.name.toLowerCase()} — ${service.tagline}. ${location.loc} sinema standardında prodüksiyon. Projenizi anlatın, birlikte planlayalım.`;
 
 // Programmatic location tiering: primary centres stay indexed; secondary
 // districts are kept out of the index but still pass link equity
@@ -45,7 +45,7 @@ const firstSentence = location.blurb.split(". ")[0] + ".";
 const faqs = [
   {
     question: `${location.name} ${service.name.toLowerCase()} fiyatı ne kadar?`,
-    answer: `${location.name} için ${service.name.toLowerCase()} ücreti; çekim süresine, ekip ve ekipmana, teslim edilecek video/foto sayısına göre belirlenir. ${location.loc} ihtiyacınızı ücretsiz ön görüşmede netleştirip net bir teklif sunuyoruz.`,
+    answer: `${location.name} için ${service.name.toLowerCase()} ücreti; çekim süresine, ekip ve ekipmana, teslim edilecek video/foto sayısına göre belirlenir. ${location.loc} ihtiyacınızı ilk görüşmede netleştirip net bir teklif sunuyoruz.`,
   },
   {
     question: `${location.loc} çekime ne kadar sürede gelebiliyorsunuz?`,
