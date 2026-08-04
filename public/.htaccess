@@ -111,6 +111,10 @@ ErrorDocument 404 /404.html
   <FilesMatch "(index\.json|site\.json|status\.json)$">
     Header set Access-Control-Allow-Origin "*"
   </FilesMatch>
+  <FilesMatch "(services|projects|locations|faq)\.json$">
+    Header set Content-Type "application/json; charset=UTF-8"
+    Header set Access-Control-Allow-Origin "*"
+  </FilesMatch>
   <FilesMatch "(SKILL|auth)\.md$">
     Header set Content-Type "text/markdown; charset=UTF-8"
     Header set Access-Control-Allow-Origin "*"
@@ -118,6 +122,9 @@ ErrorDocument 404 /404.html
   <Files "llms.txt">
     Header set Content-Type "text/markdown; charset=UTF-8"
     Header set x-markdown-tokens "255"
+  </Files>
+  <Files "llms-full.txt">
+    Header set Content-Type "text/markdown; charset=UTF-8"
   </Files>
 
   # Cache media by extension (MIME-independent) so repeat visits reuse the hero loop.

@@ -22,5 +22,11 @@
     "phone": "+905438382404"
   },
   "projects": "https://rastcreative.com/projeler",
-  "blog": "https://rastcreative.com/blog"
+  "blog": "https://rastcreative.com/blog",
+  "apis": {
+    "services": "https://rastcreative.com/api/services.json",
+    "projects": "https://rastcreative.com/api/projects.json",
+    "locations": "https://rastcreative.com/api/locations.json",
+    "faq": "https://rastcreative.com/api/faq.json"
+  }
 }

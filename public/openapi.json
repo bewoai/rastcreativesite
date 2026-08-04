@@ -38,6 +38,70 @@
           }
         }
       }
+    },
+    "/api/services.json": {
+      "get": {
+        "operationId": "listServices",
+        "summary": "List Rast Creative services",
+        "responses": {
+          "200": {
+            "description": "Public service catalog",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServicesResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/projects.json": {
+      "get": {
+        "operationId": "listProjects",
+        "summary": "List published portfolio projects",
+        "responses": {
+          "200": {
+            "description": "Public portfolio index",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ProjectsResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/locations.json": {
+      "get": {
+        "operationId": "listServiceAreas",
+        "summary": "List service areas",
+        "responses": {
+          "200": {
+            "description": "Public service area index",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/LocationsResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/faq.json": {
+      "get": {
+        "operationId": "listFrequentlyAskedQuestions",
+        "summary": "List common project questions and answers",
+        "responses": {
+          "200": {
+            "description": "Public FAQ index",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/FaqResponse" }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -73,6 +137,44 @@
           "service": { "type": "string" },
           "scope": { "type": "string" },
           "documentation": { "type": "string", "format": "uri" }
+        }
+      },
+      "ServicesResponse": {
+        "type": "object",
+        "required": ["name", "services"],
+        "properties": {
+          "name": { "type": "string" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "services": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
+        }
+      },
+      "ProjectsResponse": {
+        "type": "object",
+        "required": ["name", "count", "projects"],
+        "properties": {
+          "name": { "type": "string" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "count": { "type": "integer" },
+          "projects": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
+        }
+      },
+      "LocationsResponse": {
+        "type": "object",
+        "required": ["name", "locations"],
+        "properties": {
+          "name": { "type": "string" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "primaryLocation": { "type": "string" },
+          "locations": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
+        }
+      },
+      "FaqResponse": {
+        "type": "object",
+        "required": ["name", "questions"],
+        "properties": {
+          "name": { "type": "string" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "questions": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
         }
       }
     }
