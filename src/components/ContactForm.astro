@@ -1,6 +1,5 @@
 ---
 import Button from "./Button.astro";
-import Icon from "./Icon.astro";
 import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
 ---
 
@@ -73,23 +72,16 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
     <textarea id="cf-message" name="message" rows="5" minlength="10" required></textarea>
   </div>
 
-  <label class="consent">
-    <input type="checkbox" name="kvkk" value="onaylandi" required />
-    <span>
-      <a href="/kvkk" target="_blank" rel="noopener">KVKK Aydınlatma Metni</a>'ni
-      okudum; kişisel verilerimin iletişim amacıyla işlenmesine ve belirtilen
-      kapsamda aktarılmasına açık rıza veriyorum.
-      <span class="req" aria-hidden="true">*</span>
-    </span>
-  </label>
+  <p class="consent-note">
+    Formu göndererek <a href="/kvkk" target="_blank" rel="noopener">KVKK Aydınlatma
+    Metni</a>'ni okuduğunuzu ve kişisel verilerinizin iletişim amacıyla işlenmesine
+    izin verdiğinizi kabul etmiş sayılırsınız.
+  </p>
 
   <div class="cform__status" data-status role="status" aria-live="polite"></div>
 
   <div class="cform__actions">
-    <Button type="submit" size="lg" class="cform__submit">E-posta ile Gönder</Button>
-    <button type="button" class="cform__wa" data-wa-send>
-      <Icon name="whatsapp" size={20} /> WhatsApp'tan Gönder
-    </button>
+    <Button type="submit" size="lg" class="cform__submit">Gönder</Button>
   </div>
 </form>
 
@@ -164,50 +156,15 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
   textarea:user-invalid {
     border-color: #b42318;
   }
-  .consent {
-    position: relative;
-    display: grid;
-    grid-template-columns: var(--tap-min) 1fr;
-    align-items: start;
-    gap: 0.6rem;
-    min-height: var(--tap-min);
-    padding-block: 0.35rem;
+  .consent-note {
+    margin: 0;
     font-family: var(--font-body);
     font-weight: 400;
-    font-size: 0.92rem;
+    font-size: 0.85rem;
     color: var(--ink-soft);
     line-height: 1.5;
-    cursor: pointer;
   }
-  .consent::before {
-    content: "";
-    width: 1.25rem;
-    height: 1.25rem;
-    margin-top: 0.4rem;
-    border: 1.5px solid var(--line-strong);
-    border-radius: 4px;
-    background: var(--paper);
-  }
-  .consent:has(input:checked)::before {
-    background: var(--amber);
-    border-color: var(--amber);
-    box-shadow: inset 0 0 0 4px var(--paper);
-  }
-  .consent:has(input:focus-visible)::before {
-    outline: 2px solid var(--amber);
-    outline-offset: 3px;
-  }
-  .consent input {
-    position: absolute;
-    inset: 0 auto auto 0;
-    width: var(--tap-min);
-    height: var(--tap-min);
-    margin: 0;
-    opacity: 0;
-    accent-color: var(--amber);
-    cursor: pointer;
-  }
-  .consent a {
+  .consent-note a {
     color: var(--amber-text);
     text-decoration: underline;
     text-underline-offset: 2px;
@@ -232,37 +189,6 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
     gap: 0.8rem;
     align-items: stretch;
   }
-  .cform__wa {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    min-height: 56px;
-    padding: 0.95rem 1.6rem;
-    border: 0;
-    border-radius: var(--radius-pill);
-    background: #25d366;
-    color: #fff;
-    font-family: var(--font-utility);
-    font-size: 1.05rem;
-    font-weight: 500;
-    cursor: pointer;
-    touch-action: manipulation;
-    transition:
-      transform var(--dur-fast) var(--ease-out),
-      box-shadow var(--dur) var(--ease-out);
-  }
-  .cform__wa:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 10px 26px -8px rgba(37, 211, 102, 0.5);
-  }
-  .cform__wa:active {
-    transform: scale(0.98);
-  }
-  .cform__wa:focus-visible {
-    outline: 3px solid var(--ink);
-    outline-offset: 3px;
-  }
   @media (min-width: 560px) {
     .cform__row {
       grid-template-columns: 1fr 1fr;
@@ -271,8 +197,6 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
 </style>
 
 <script>
-  import { waLink } from "../consts";
-
   type RcTrack = (
     eventName: string,
     eventParams?: Record<string, unknown>,
@@ -312,7 +236,7 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
       }
 
       if (!form.checkValidity()) {
-        setStatus("WhatsApp mesajını hazırlamak için yıldızlı alanların tamamını doldurun.", "err");
+        setStatus("Göndermek için yıldızlı alanların tamamını doldurun.", "err");
         form.reportValidity();
         return false;
       }
@@ -357,40 +281,13 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
             },
           );
         } else {
-          setStatus(
-            json.message ?? "Gönderilemedi. Lütfen tekrar deneyin ya da alttaki WhatsApp seçeneğini kullanın.",
-            "err",
-          );
+          setStatus(json.message ?? "Gönderilemedi. Lütfen tekrar deneyin.", "err");
         }
       } catch {
-        setStatus("Bağlantı hatası. Lütfen tekrar deneyin ya da alttaki WhatsApp seçeneğini kullanın.", "err");
+        setStatus("Bağlantı hatası. Lütfen tekrar deneyin.", "err");
       } finally {
         if (submit) submit.disabled = false;
       }
-    });
-
-    // "WhatsApp'tan Gönder" — build a structured message from the same fields
-    // and open WhatsApp with it prefilled (the visitor taps send in their app).
-    const waBtn = form.querySelector<HTMLButtonElement>("[data-wa-send]");
-    waBtn?.addEventListener("click", () => {
-      if (!validateForm()) return;
-      const get = (sel: string) =>
-        form.querySelector<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(sel);
-      const val = (sel: string) => get(sel)?.value.trim() ?? "";
-      const lines = ["Yeni teklif talebi — rastcreative.com", "", `Ad: ${val("#cf-name")}`];
-      if (val("#cf-company")) lines.push(`Firma: ${val("#cf-company")}`);
-      lines.push(`Telefon: ${val("#cf-phone")}`);
-      lines.push(`E-posta: ${val("#cf-email")}`);
-      lines.push(`Proje türü: ${val("#cf-project")}`);
-      lines.push(`Mesaj: ${val("#cf-message")}`);
-      const url = waLink(lines.join("\n"));
-      if (!url) return;
-      setStatus("WhatsApp açılıyor — mesajı göndermek için WhatsApp'ta 'Gönder'e basın.", "ok");
-      trackEvent("contact_whatsapp_click", {
-        event_category: "contact",
-        event_label: "whatsapp_form",
-      });
-      window.open(url, "_blank", "noopener");
     });
   }
 </script>
