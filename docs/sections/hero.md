@@ -57,6 +57,7 @@ Kartların kendi `data-reveal` attribute'u kullanılmaz; grid container `data-re
 
 ## Son doğrulama
 
+- 2026-08-10: Hero'daki "Doğru kare, doğru hikaye." intro cümlesi (`.hero__introline`) ve ona eşlik eden amber intro glow (`.hero__intro-glow`) kaldırıldı. Neden: `.hero__center` artık ilk paint'te görünür olduğu için 2.55s'lik intro katmanı H1/CTA bloğunun üzerine binip çakışıyordu. İlgili `hero-intro-statement` / `hero-intro-glow` keyframe'leri ve reduced-motion istisnaları da temizlendi. Hero artık tek fazlı: entry overlay → merkez blok reveal. `astro build` başarılı (211 sayfa); dev sunucusunda DOM'da introline/glow kalmadığı ve konsolun temiz olduğu doğrulandı.
 - 2026-07-15: Astro dev sunucusundaki `/_image` 500 hatasının dış kabuktan kalıtılan `NODE_ENV=production` nedeniyle oluştuğu doğrulandı. `npm run dev`, `NODE_ENV=development` değerini açıkça ayarlayacak şekilde güncellendi; `<Image>`, `<Picture>` ve `getImage()` responsive optimizasyon akışı korunarak Chromium'da tüm görsel yanıtları hatasız yüklendi.
 - 2026-07-15: Hero güven satırı proje koleksiyonundaki gerçek marka/içerik sayılarına bağlandı; H1 DOM metni `Sakarya Video Çekimi ve Prodüksiyon` olarak düzeltildi. Desktop ve 390px mobil Chromium testlerinde metin, CTA'lar ve satır kırılımı doğrulandı; yatay taşma görülmedi.
 - 2026-07-15: Reduced-motion fallback'i dekoratif intro glow/statement animasyonlarını açıkça `none` yapacak şekilde sağlamlaştırıldı. Chromium testinde entry overlay kaldırıldı, hero/CTA ilk anda görünür kaldı ve reveal transform/opacity fallback'leri doğrulandı.

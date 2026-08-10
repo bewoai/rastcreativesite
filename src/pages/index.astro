@@ -134,8 +134,6 @@ const pageJsonLd = [
   <VideoHero flush fadeBottom class="hero" height="min(100svh, 900px)">
     <LiquidHeroAnimation />
     <div class="hero__layout">
-      <span class="hero__intro-glow" aria-hidden="true"></span>
-      <p class="hero__introline" aria-hidden="true">Doğru kare, doğru hikaye.</p>
       <div class="hero__center">
         <p class="hero__eyebrow">SAKARYA · SİNEMATİK VİDEO PRODÜKSİYON</p>
         <h1 class="hero__title">Sakarya Video Çekimi<br class="hero__title-br" /> ve Prodüksiyon</h1>
@@ -482,45 +480,7 @@ const pageJsonLd = [
     place-items: center;
     min-height: inherit;
   }
-  /* ---- Intro statement (first phase) ---- */
-  .hero__intro-glow {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate3d(-50%, -50%, 0) scale(0.7);
-    width: min(44rem, 95vw);
-    aspect-ratio: 1;
-    border-radius: 999px;
-    background: radial-gradient(circle, rgba(226, 83, 3, 0.45) 0%, rgba(255, 176, 92, 0.14) 38%, transparent 70%);
-    filter: blur(50px);
-    opacity: 0;
-    z-index: 3;
-    pointer-events: none;
-    animation: hero-intro-glow 2.55s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-  .hero__introline {
-    position: absolute;
-    inset-inline: 50% auto;
-    top: 50%;
-    width: min(88vw, 48rem);
-    margin: 0;
-    color: var(--on-ink);
-    font-family: var(--font-display);
-    font-size: clamp(2.6rem, 7.5vw, 5.2rem);
-    font-weight: 480;
-    line-height: 1.05;
-    letter-spacing: -0.025em;
-    text-align: center;
-    text-wrap: balance;
-    opacity: 0;
-    filter: blur(8px);
-    transform: translate3d(-50%, -50%, 0) scale(0.94);
-    animation: hero-intro-statement 2.55s cubic-bezier(0.16, 1, 0.3, 1) both;
-    pointer-events: none;
-    z-index: 5;
-    text-shadow: 0 0 40px rgba(255, 176, 92, 0.15);
-  }
-  /* ---- Centered hero block (second phase) ---- */
+  /* ---- Centered hero block ---- */
   .hero__center {
     display: flex;
     flex-direction: column;
@@ -604,42 +564,6 @@ const pageJsonLd = [
   @keyframes hero-content-reveal {
     from { opacity: 0; transform: translate3d(0, 10px, 0); }
     to { opacity: 1; transform: translate3d(0, 0, 0); }
-  }
-  @keyframes hero-intro-glow {
-    0% {
-      opacity: 0;
-      transform: translate3d(-50%, -50%, 0) scale(0.7);
-      filter: blur(60px);
-    }
-    30%,
-    58% {
-      opacity: 0.95;
-      transform: translate3d(-50%, -50%, 0) scale(1.15);
-      filter: blur(40px);
-    }
-    100% {
-      opacity: 0;
-      transform: translate3d(-50%, -50%, 0) scale(1.55);
-      filter: blur(70px);
-    }
-  }
-  @keyframes hero-intro-statement {
-    0% {
-      opacity: 0;
-      filter: blur(12px);
-      transform: translate3d(-50%, -50%, 0) scale(0.94);
-    }
-    28%,
-    60% {
-      opacity: 1;
-      filter: blur(0);
-      transform: translate3d(-50%, -50%, 0) scale(1.01);
-    }
-    100% {
-      opacity: 0;
-      filter: blur(14px);
-      transform: translate3d(-50%, -50%, 0) scale(1.06);
-    }
   }
   @keyframes hero-reveal {
     from {
@@ -736,11 +660,6 @@ const pageJsonLd = [
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero__intro-glow,
-    .hero__introline {
-      opacity: 0;
-      animation: none;
-    }
     .hero__center {
       opacity: 1;
       filter: none;
