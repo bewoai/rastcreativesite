@@ -28,5 +28,8 @@ Op. Dr. Duygu Cebecik Özmüş ile hazırlanan medikal bilgilendirme serisinin i
 - [Gebelikte Banyoda Neleri Değiştirmelisin? #3](https://www.youtube.com/watch?v=TKPtNmIqPdU)
 - [Gebelikte Banyoda Neleri Değiştirmelisin? Part 2 #4](https://www.youtube.com/watch?v=PvfloN7wu0g)
 - [Gebelik Nasıl Oluşur? İlk Haftalarda Gelişim ve Belirtiler](https://www.youtube.com/watch?v=6Fi4zTQkljg)
+- [Gebeliğin 6-10. Haftasında Neler Olur?](https://www.youtube.com/watch?v=V3YfLnFhUpg)
+- [Gebeliğin 10-14. Haftasında Neler Olur?](https://www.youtube.com/watch?v=Q0yVYh1QLb0)
+- [İkili Test mi Fetal DNA Testi mi?](https://www.youtube.com/watch?v=HUpVPJK47_s)
 
 **Teslim:** YouTube için 16:9 yatay video serisi.
