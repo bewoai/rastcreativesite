@@ -59,6 +59,9 @@ export const NAV: readonly NavItem[] = [
 /** The single conversion CTA used across the site (roadmap §2). */
 export const PRIMARY_CTA = {
   label: "Bize projenizden bahsedin",
+  /** Short form for tight surfaces (the nav pill), where the full sentence
+   *  made the button ~246px wide and let it dominate the hero. */
+  shortLabel: "Proje Başlat",
   href: "/iletisim",
 } as const;
 

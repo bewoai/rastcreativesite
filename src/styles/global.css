@@ -55,13 +55,15 @@
     max-width: 100%;
   }
 
-  /* Display face is reserved for h1–h2 (roadmap 1.3). */
+  /* Display voice = grotesk at weight, tightened optically. A sans needs more
+     weight and more negative tracking than the serif it replaced to hold the
+     same presence at display size. */
   h1,
   h2 {
     font-family: var(--font-display);
-    font-weight: 480;
+    font-weight: 650;
     line-height: var(--leading-tight);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.03em;
     text-wrap: balance;
   }
   h1 {

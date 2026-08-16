@@ -99,16 +99,6 @@ const styleVars = `--vhero-h:${height}; --vhero-scrim:${scrim}%`;
     )
   }
   <div class="vhero__scrim" aria-hidden="true"></div>
-  
-  <!-- Viewfinder UI overlay (Production cues) -->
-  <div class="vhero__viewport-ui" aria-hidden="true">
-    <span class="vhero__corner vhero__corner--bl"></span>
-    <span class="vhero__corner vhero__corner--br"></span>
-    <div class="vhero__metadata">
-      <span class="vhero__rec"><span class="vhero__rec-dot"></span>REC</span>
-      <span class="vhero__timecode" id="intro-timecode">TC 00:00:00:00</span>
-    </div>
-  </div>
 
   <div class="vhero__inner">
     <slot />
@@ -204,8 +194,10 @@ const styleVars = `--vhero-h:${height}; --vhero-scrim:${scrim}%`;
     .vhero--flush {
       margin-top: -5.5rem;
     }
+    /* The breathing room above the content is a custom property so a page can
+       tune it without fighting this component's specificity. */
     .vhero--flush .vhero__inner {
-      padding-top: calc(5.5rem + clamp(2.5rem, 7vw, 4.5rem));
+      padding-top: calc(5.5rem + var(--vhero-lead, clamp(2.5rem, 7vw, 4.5rem)));
     }
   }
   @media (max-width: 767.98px) {
@@ -238,70 +230,6 @@ const styleVars = `--vhero-h:${height}; --vhero-scrim:${scrim}%`;
     }
   }
 
-  /* Viewfinder UI overlay */
-  .vhero__viewport-ui {
-    position: absolute;
-    inset: var(--container-pad);
-    pointer-events: none;
-    z-index: 1; /* above background layers, below content */
-  }
-
-  .vhero__corner {
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.18); /* 18% white - very subtle corner markers */
-    pointer-events: none;
-  }
-
-  .vhero__corner--bl { bottom: -1px; left: -1px; border-right: 0; border-top: 0; }
-  .vhero__corner--br { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
-
-  .vhero__metadata {
-    position: absolute;
-    bottom: 1.25rem;
-    right: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-    font-family: var(--font-utility);
-    font-size: 0.72rem;
-    color: rgba(255, 255, 255, 0.95); /* 95% white */
-    letter-spacing: 0.08em;
-  }
-
-  .vhero__rec {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-weight: 700;
-  }
-
-  .vhero__rec-dot {
-    width: 7px;
-    height: 7px;
-    background-color: #ef4444;
-    border-radius: 50%;
-    animation: rec-pulse 1s steps(2, start) infinite;
-  }
-
-  @keyframes rec-pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .vhero__rec-dot {
-      animation: none;
-    }
-  }
-
-  /* Adjust for mobile viewport spacing */
-  @media (max-width: 768px) {
-    .vhero__viewport-ui {
-      inset: 1rem;
-    }
-  }
 </style>
 
 <script>
@@ -317,32 +245,4 @@ const styleVars = `--vhero-h:${height}; --vhero-scrim:${scrim}%`;
     if (document.readyState === "complete") start();
     else window.addEventListener("load", start, { once: true });
   });
-
-  // Update timecode dynamically at 25 fps
-  const tcElement = document.getElementById('intro-timecode');
-  if (tcElement) {
-    let frames = 0;
-    let seconds = 0;
-    let minutes = 4; // Start at 00:04:12:00
-    let hours = 0;
-
-    const pad = (n: number) => String(n).padStart(2, '0');
-
-    window.setInterval(() => {
-      frames += 1;
-      if (frames >= 25) {
-        frames = 0;
-        seconds += 1;
-        if (seconds >= 60) {
-          seconds = 0;
-          minutes += 1;
-          if (minutes >= 60) {
-            minutes = 0;
-            hours += 1;
-          }
-        }
-      }
-      tcElement.textContent = `TC ${pad(hours)}:${pad(minutes)}:${pad(seconds)}:${pad(frames)}`;
-    }, 40); // 25 fps
-  }
 </script>

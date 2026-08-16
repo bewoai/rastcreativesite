@@ -126,8 +126,11 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
     {/* Preload only the LCP image so it gets the connection first; fonts rely
         on font-display:swap (CLS is 0, so the swap costs no layout shift). */}
     {preloadImage && <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />}
-    <link rel="preload" as="font" type="font/woff2" href="/fonts/fraunces-latin-standard-normal.woff2" crossorigin />
-    {/* Space Grotesk (UI/buttons/eyebrows) — preload both subsets so above-the-fold
+    {/* Inter carries BOTH body and display, so its two subsets are the
+        headline font too — preload them or the h1 swaps in late. */}
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin-wght-normal.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin-ext-wght-normal.woff2" crossorigin />
+    {/* Space Grotesk (UI/buttons/metadata) — preload both subsets so above-the-fold
         labels (incl. Turkish İ/ş in latin-ext) don't swap in late on first load. */}
     <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk-latin-wght-normal.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk-latin-ext-wght-normal.woff2" crossorigin />
@@ -275,6 +278,23 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
   </head>
 
   <body>
+    <!--
+      THESIS: Good work watches itself — so the hero states the belief and shows none of
+      the work; it puts the visitor inside Rast's world instead. Refuses both the agency
+      keyword headline and the portfolio-showcase hero.
+      OWN-WORLD: Near-black ground (#060505) lit by three slow low-contrast pools; one
+      grotesk (Inter) carrying both display and body; dark translucent glass at 4–8% white
+      with 13% hairlines; amber (#e25303) only as a functional accent, never as a field.
+      STORY: A Sakarya business owner reads the claim, feels the studio's world around it,
+      and moves down to the work or across to the contact page.
+      FIRST VIEWPORT: One screen exactly (100svh). Manifesto h1 left at up to 8.25rem,
+      weight 560, lede and two CTAs beneath it, all on one 81px gutter; the production
+      process as a solar system on the right — Rast logo at its core and four glass
+      satellites for Fikir, Prodüksiyon, Post and Teslim; no project and no link; foot
+      rule with disciplines and the scroll cue.
+      FORM: Pinned client brief (Rast-Creative-Hero-Tasarim-Brifi.md) + reference comp —
+      no concept roll; the brief specifies palette, scale, and motion budget outright.
+    -->
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-[var(--radius-sm)] focus:bg-ink focus:px-4 focus:py-2 focus:font-utility focus:text-paper"

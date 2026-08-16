@@ -1,0 +1,209 @@
+---
+/**
+ * Hero atmosphere — one system, three layers (motion brief §6).
+ *
+ *  A · Dark field   : near-black ground with three very low-contrast light
+ *                     pools drifting on 16–24s loops. Nothing reads as an
+ *                     object; it reads as a room with light in it.
+ *  B · Depth/texture: a single static grain tile at low opacity, killing the
+ *                     banding that large radial gradients produce on 8-bit
+ *                     panels. Not animated — animated grain is a battery tax.
+ *  C · Interaction  : pointer nudges the pools by at most 10px. The page never
+ *                     chases the cursor; it only admits that it has depth.
+ *
+ * Everything is transform/opacity only, sits behind content at z-index -1, and
+ * stops completely under prefers-reduced-motion / Save-Data.
+ */
+---
+
+<div class="atmo" aria-hidden="true" data-atmosphere>
+  <span class="atmo__pool atmo__pool--warm"></span>
+  <span class="atmo__pool atmo__pool--cool"></span>
+  <span class="atmo__pool atmo__pool--key"></span>
+  <span class="atmo__grain"></span>
+  <span class="atmo__vignette"></span>
+</div>
+
+<style>
+  .atmo {
+    --mx: 0;
+    --my: 0;
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    background: #060505;
+    pointer-events: none;
+  }
+
+  .atmo__pool {
+    position: absolute;
+    border-radius: 50%;
+    /* The blur is what turns a gradient into light. Without it the pools read
+       as flat discs at the edges on wide screens. */
+    filter: blur(40px);
+    will-change: transform;
+  }
+
+  /* Key light — the warm one, carrying the brand's amber at a fraction of its
+     saturation. This is the only place amber appears at scale in the hero. */
+  .atmo__pool--key {
+    top: -18%;
+    left: 38%;
+    width: min(70rem, 96vw);
+    aspect-ratio: 1.25;
+    background: radial-gradient(
+      circle at 50% 50%,
+      color-mix(in srgb, var(--amber) 26%, transparent),
+      transparent 62%
+    );
+    opacity: 0.5;
+    transform: translate3d(calc(var(--mx) * 10px), calc(var(--my) * 8px), 0);
+    animation: atmo-key 22s var(--ease-inout, ease-in-out) infinite alternate;
+  }
+
+  /* Fill — a wide, almost colourless wash that lifts the lower-left so the
+     headline never sits on dead black. */
+  .atmo__pool--warm {
+    bottom: -30%;
+    left: -14%;
+    width: min(58rem, 90vw);
+    aspect-ratio: 1.4;
+    background: radial-gradient(
+      circle at 50% 50%,
+      color-mix(in srgb, #b8763f 16%, transparent),
+      transparent 66%
+    );
+    opacity: 0.42;
+    transform: translate3d(calc(var(--mx) * -6px), calc(var(--my) * -5px), 0);
+    animation: atmo-warm 18s var(--ease-inout, ease-in-out) infinite alternate;
+  }
+
+  /* Rim — a cold counter-light behind the card cluster. Colour contrast, not
+     colour: it exists so the warm side reads as warm. */
+  .atmo__pool--cool {
+    top: 26%;
+    right: -16%;
+    width: min(44rem, 82vw);
+    aspect-ratio: 1;
+    background: radial-gradient(
+      circle at 50% 50%,
+      color-mix(in srgb, #4a6f86 18%, transparent),
+      transparent 64%
+    );
+    opacity: 0.36;
+    transform: translate3d(calc(var(--mx) * 8px), calc(var(--my) * -6px), 0);
+    animation: atmo-cool 26s var(--ease-inout, ease-in-out) infinite alternate;
+  }
+
+  /* Layer B — static grain. feTurbulence baked into a data URI so it costs one
+     tiny inline asset and zero requests. */
+  .atmo__grain {
+    position: absolute;
+    inset: -100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.085;
+    mix-blend-mode: overlay;
+  }
+
+  /* Holds the corners down so the composition has edges. Deliberately light:
+     at 0.55 it buried the orbit object this layer sits behind. */
+  .atmo__vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      82% 74% at 46% 46%,
+      transparent 48%,
+      rgba(0, 0, 0, 0.32) 100%
+    );
+  }
+
+  /* Long, low-frequency drift. Amplitude stays under 4% of the pool size so no
+     single frame ever announces itself. */
+  @keyframes atmo-key {
+    from { transform: translate3d(calc(var(--mx) * 10px), calc(var(--my) * 8px), 0) scale(1); }
+    to   { transform: translate3d(calc(var(--mx) * 10px + 3.5%), calc(var(--my) * 8px + 2%), 0) scale(1.08); }
+  }
+  @keyframes atmo-warm {
+    from { transform: translate3d(calc(var(--mx) * -6px), calc(var(--my) * -5px), 0) scale(1.06); }
+    to   { transform: translate3d(calc(var(--mx) * -6px - 3%), calc(var(--my) * -5px - 2.5%), 0) scale(1); }
+  }
+  @keyframes atmo-cool {
+    from { transform: translate3d(calc(var(--mx) * 8px), calc(var(--my) * -6px), 0) scale(1); }
+    to   { transform: translate3d(calc(var(--mx) * 8px - 2.5%), calc(var(--my) * -6px + 3%), 0) scale(1.1); }
+  }
+
+  /* Mobile: the pools are the same system at a smaller amplitude, and the
+     pointer layer is meaningless on touch — the script never binds it. */
+  @media (max-width: 767.98px) {
+    .atmo__pool {
+      filter: blur(30px);
+    }
+    .atmo__grain {
+      opacity: 0.07;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .atmo__pool {
+      animation: none;
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  // Layer C — pointer parallax. Writes two unitless custom properties on a rAF
+  // tick; CSS owns every actual transform. Desktop + fine pointer only.
+  document.querySelectorAll<HTMLElement>("[data-atmosphere]").forEach((atmo) => {
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const fine = matchMedia("(pointer: fine)").matches;
+    const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } })
+      .connection?.saveData;
+    if (reduce || !fine || saveData) return;
+
+    const host = atmo.parentElement ?? atmo;
+    let targetX = 0;
+    let targetY = 0;
+    let x = 0;
+    let y = 0;
+    let running = false;
+
+    const render = () => {
+      // Ease toward the pointer so a fast flick glides instead of snapping.
+      x += (targetX - x) * 0.06;
+      y += (targetY - y) * 0.06;
+      atmo.style.setProperty("--mx", x.toFixed(4));
+      atmo.style.setProperty("--my", y.toFixed(4));
+      if (Math.abs(targetX - x) > 0.001 || Math.abs(targetY - y) > 0.001) {
+        requestAnimationFrame(render);
+      } else {
+        running = false;
+      }
+    };
+
+    const kick = () => {
+      if (running) return;
+      running = true;
+      requestAnimationFrame(render);
+    };
+
+    host.addEventListener(
+      "pointermove",
+      (event) => {
+        const rect = host.getBoundingClientRect();
+        // -1 … 1 from the centre of the hero.
+        targetX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        targetY = ((event.clientY - rect.top) / rect.height) * 2 - 1;
+        kick();
+      },
+      { passive: true },
+    );
+
+    host.addEventListener("pointerleave", () => {
+      targetX = 0;
+      targetY = 0;
+      kick();
+    });
+  });
+</script>

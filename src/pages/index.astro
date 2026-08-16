@@ -12,11 +12,13 @@ import ServiceCard from "../components/ServiceCard.astro";
 import AccordionItem from "../components/AccordionItem.astro";
 import LogoWall from "../components/LogoWall.astro";
 import VideoHero from "../components/VideoHero.astro";
-import LiquidHeroAnimation from "../components/LiquidHeroAnimation.astro";
+import HeroAtmosphere from "../components/HeroAtmosphere.astro";
+import HeroSolarSystem from "../components/HeroSolarSystem.astro";
 import HeroShowreel3D from "../components/HeroShowreel3D.astro";
+import Icon from "../components/Icon.astro";
 import AreaIndex from "../components/AreaIndex.astro";
 import BlogCard from "../components/BlogCard.astro";
-import { COPY, PRIMARY_CTA, CONTACT } from "../consts";
+import { PRIMARY_CTA, CONTACT } from "../consts";
 import { localBusiness, organization, webSite, faqPage, toPlainText } from "../lib/schema";
 import { groupByBrand } from "../lib/brands";
 import { SEO_SERVICES } from "../data/seo-services";
@@ -44,9 +46,7 @@ const fmtBlogDate = (d: Date) =>
 
 // Quick credibility numbers — derived from real content so they stay accurate.
 const brandCount = groupByBrand(projects).length;
-// Hero trust line — built from the same real counts as the stats bar below so
-// the two never disagree (no hand-maintained numbers going stale).
-const heroTrust = `${brandCount}+ marka · ${projects.length}+ içerik · Sakarya merkezli prodüksiyon ekibi`;
+
 const stats = [
   {
     n: `${brandCount}+`,
@@ -130,31 +130,44 @@ const pageJsonLd = [
 ---
 
 <BaseLayout jsonLd={pageJsonLd} entryAnimation>
-  {/* 1 — Hero (sinematik merkezi tablo; Monopo Saigon esinli) */}
-  <VideoHero flush fadeBottom class="hero" height="min(100svh, 900px)">
-    <LiquidHeroAnimation />
+  {/* 1 — Hero: the studio's belief on the left, its world on the right.
+       No project, cover or showreel here by design — selected work lives in
+       its own section below. */}
+  <VideoHero flush fadeBottom class="hero" height="100svh">
+    <HeroAtmosphere />
     <div class="hero__layout">
-      <div class="hero__center">
-        <p class="hero__eyebrow">SAKARYA · SİNEMATİK VİDEO PRODÜKSİYON</p>
-        <h1 class="hero__title">Sakarya Video Çekimi<br class="hero__title-br" /> ve Prodüksiyon</h1>
-        <p class="hero__tagline">
-          Markanız için reklam filmi, tanıtım filmi ve sosyal medya videoları üretiyoruz.
-          Sakarya merkezli prodüksiyon ekibimizle fikrinizi sinematik bir hikâyeye dönüştürüyoruz.
+      <div class="hero__say">
+        {/* Forced break: left to itself the box wraps "İyi iş kendini /
+            izletir.", splitting the phrase. "kendini izletir." measures 607px
+            against the 680px cap, so it always fits on its own line. */}
+        <h1 class="hero__title">İyi iş<br />kendini izletir.</h1>
+        <p class="hero__lede">
+          Sakarya merkezli prodüksiyon stüdyosu.
+          <span>Fikirleri, izlemeye değer işlere dönüştürüyoruz.</span>
         </p>
         <div class="hero__cta">
-          <Button href={PRIMARY_CTA.href} size="lg" arrow data-cta-location="hero">
-            {PRIMARY_CTA.label}
+          {/* ↘ moves you down this page; ↗ leaves for another one. */}
+          <Button href="#secili-isler" size="lg" arrow class="hero__go" data-cta-location="hero">
+            İşleri Gör
           </Button>
-          <Button href="/projeler" variant="secondary" size="lg" class="hero__ghost" data-cta-location="hero">
-            {COPY.heroSecondaryCta}
-          </Button>
+          <a href={PRIMARY_CTA.href} class="hero__link" data-cta-location="hero">
+            Bir Proje Başlatalım
+            <Icon name="arrow-up-right" size={17} class="hero__link-ic" />
+          </a>
         </div>
-        <p class="hero__meta">{heroTrust}</p>
+      </div>
+
+      <div class="hero__show">
+        <HeroSolarSystem />
       </div>
     </div>
-    <div class="hero__scroll" aria-hidden="true">
-      <span class="hero__scroll-line"></span>
-      Keşfet
+
+    <div class="hero__foot">
+      <p class="hero__disciplines">Film / Fotoğraf / İçerik / AI</p>
+      <a href="#secili-isler" class="hero__scroll" data-cta-location="hero">
+        Scroll to explore
+        <Icon name="arrow-right" size={15} class="hero__scroll-ic" />
+      </a>
     </div>
   </VideoHero>
 
@@ -468,205 +481,336 @@ const pageJsonLd = [
   :global(.hero) {
     background: #050403 !important;
   }
+  /* The hero is exactly one viewport and never scrolls internally. */
+  :global(.hero) {
+    height: 100svh;
+    min-height: 680px;
+  }
+  /* Rebalanced: heavy enough on the LEFT to hold the headline's contrast,
+     light on the RIGHT so the orbit object is actually visible. The old
+     symmetric scrim buried the scene it was supposed to sit on. */
   :global(.hero .vhero__scrim) {
     display: block !important;
     background:
-      radial-gradient(70% 54% at 50% 48%, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.50) 70%),
-      linear-gradient(180deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.78)) !important;
+      radial-gradient(
+        65% 70% at 72% 44%,
+        rgba(0, 0, 0, 0.03) 0%,
+        rgba(0, 0, 0, 0.18) 55%,
+        rgba(0, 0, 0, 0.58) 100%
+      ),
+      linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.44) 0%,
+        rgba(0, 0, 0, 0.08) 58%,
+        rgba(0, 0, 0, 0.16) 100%
+      ) !important;
   }
-  .hero__layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    place-items: center;
-    min-height: inherit;
+  /* One column, one gutter: the headline, lede, CTAs and the foot rule all
+     start on the same line because they now share a single flex container
+     instead of the foot being positioned against the section edge. */
+  :global(.hero) {
+    /* The shared hero lead reserves ~90px of slack above the content, more
+       than the 60px nav pill needs; it is what pushed the foot rule out of
+       the first viewport. Clear the nav, then stop. */
+    --vhero-lead: clamp(1.25rem, 4vh, 3rem);
   }
-  /* ---- Centered hero block ---- */
-  .hero__center {
+  :global(.hero .vhero__inner) {
     display: flex;
     flex-direction: column;
+    height: 100%;
+    padding-bottom: 1.6rem;
+  }
+  /* Below the desktop breakpoint a fixed tab bar owns the bottom ~70px of the
+     screen; without this the foot rule renders behind it. */
+  @media (max-width: 979.98px) {
+    :global(.hero .vhero__inner) {
+      padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0px));
+    }
+  }
+  /* Two columns: what we believe, and how the studio turns an idea into a
+     finished production. The headline owns the left; the process orbits right. */
+  /* VideoHero's .vhero__inner already supplies the container width and gutter;
+     this only adds the column split and clearance for the foot rule. */
+  .hero__layout {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(22rem, 36rem);
     align-items: center;
-    text-align: center;
-    gap: 1.8rem;
+    gap: clamp(1.5rem, 3vw, 3rem);
     width: 100%;
-    max-width: 58rem;
-    padding-inline: var(--container-pad);
     position: relative;
     z-index: 2;
-    /* Keep the actions available on the first paint. The entry overlay already
-       supplies the cinematic reveal; delaying this whole block made the
-       secondary project link appear empty or late on a cold load. */
+  }
+
+  .hero__say {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    /* Content is present on first paint; the entry overlay carries the reveal. */
     opacity: 1;
-    filter: none;
     transform: none;
   }
-  .hero__eyebrow {
-    margin: 0;
-    color: color-mix(in srgb, var(--on-ink) 50%, transparent);
-    font-family: var(--font-utility);
-    font-size: 0.72rem;
-    font-weight: 400;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-  }
-  /* Monumental display matching the site's default serif style (Fraunces weight 480). */
+
+  /* The one monumental element on the page. Optical tracking is tighter than
+     the global h1 because this runs 2–3× larger than any other heading. */
+  /* The single dominant object on the screen. Larger, lighter and tighter
+     than the global h1: at this size extra weight reads heavy and default
+     tracking reads loose, so both move the opposite way. Capped at 680px so
+     it stacks into a monumental block instead of a wide banner. */
   .hero__title {
     margin: 0;
-    color: var(--on-ink);
+    max-width: 680px;
+    color: #f1f1ef;
     font-family: var(--font-display);
-    font-weight: 480;
-    font-size: clamp(2.5rem, 8vw, 6.2rem);
-    line-height: 1.02;
-    letter-spacing: -0.025em;
-    text-wrap: balance;
+    font-weight: 560;
+    font-size: clamp(2.75rem, 8.2vw, 8.25rem);
+    line-height: 0.88;
+    letter-spacing: -0.055em;
+    text-wrap: initial;
   }
-  .hero__title-br {
-    display: block;
-  }
-  .hero__tagline {
+
+  .hero__lede {
     margin: 0;
-    max-width: 54rem;
-    color: color-mix(in srgb, var(--on-ink) 68%, transparent);
-    font-family: var(--font-body);
-    font-size: clamp(0.95rem, 2vw, 1.1rem);
-    font-weight: 400;
-    line-height: 1.65;
+    max-width: 430px;
+    color: rgba(241, 241, 239, 0.58);
+    font-size: clamp(0.95rem, 1.15vw, 1.0625rem);
+    line-height: 1.5;
   }
+  /* Second sentence carries the promise → brighter than the locator line. */
+  .hero__lede span {
+    display: block;
+    color: rgba(241, 241, 239, 0.78);
+  }
+
   .hero__cta {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.85rem;
-    margin-top: 0.2rem;
+    align-items: center;
+    gap: 0.9rem 1.6rem;
+    margin-top: 0.4rem;
   }
-  /* Tiny trust meta-line beneath CTAs. */
-  .hero__meta {
-    margin: 0;
-    margin-top: -0.4rem;
-    color: color-mix(in srgb, var(--on-ink) 54%, transparent);
-    font-family: var(--font-utility);
-    font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+
+  /* Primary: a soft-cornered light surface rather than a full SaaS pill.
+     Its arrow points down-right — it moves you down the page, not away. */
+  :global(.hero__go) {
+    min-height: 52px;
+    padding-inline: 26px;
+    border-radius: 17px;
   }
-  .hero__center > :not(.hero__cta) {
-    animation: hero-content-reveal 0.7s var(--ease-out) both;
+  :global(.hero__go .btn__bg) {
+    border-radius: 17px;
   }
-  .hero__eyebrow { animation-delay: 0.08s; }
-  .hero__title { animation-delay: 0.14s; }
-  .hero__tagline { animation-delay: 0.2s; }
-  .hero__meta { animation-delay: 0.34s; }
-  .hero__cta {
-    opacity: 1;
-    filter: none;
-    transform: none;
+  :global(.hero__go .btn__arrow) {
+    transform: rotate(45deg);
   }
-  @keyframes hero-content-reveal {
-    from { opacity: 0; transform: translate3d(0, 10px, 0); }
-    to { opacity: 1; transform: translate3d(0, 0, 0); }
+  :global(.hero__go:hover .btn__arrow) {
+    transform: rotate(45deg) translate(3px, 3px);
   }
-  @keyframes hero-reveal {
-    from {
-      opacity: 0;
-      filter: blur(10px);
-      transform: translate3d(0, 18px, 0);
-    }
-    to {
-      opacity: 1;
-      filter: blur(0);
-      transform: translate3d(0, 0, 0);
-    }
-  }
-  /* Secondary CTA → light outline so it reads on the dark footage. */
-  :global(.hero__ghost) {
-    color: var(--on-ink) !important;
-    border-color: color-mix(in srgb, var(--on-ink) 50%, transparent) !important;
-  }
-  :global(.hero__ghost:hover) {
-    border-color: var(--on-ink) !important;
-    background: color-mix(in srgb, var(--on-ink) 14%, transparent) !important;
-  }
-  /* Hero CTAs → monochrome white pill (no amber within the hero frame). */
   :global(.hero .btn--primary) {
     color: #111110 !important;
     box-shadow: none !important;
   }
   :global(.hero .btn--primary .btn__bg) {
-    background: #ffffff !important;
+    background: #f1f1ef !important;
     filter: none !important;
   }
   :global(.hero .btn--primary:hover) {
     box-shadow: none !important;
   }
   :global(.hero .btn--primary:hover .btn__bg) {
-    background: #e9e7e2 !important;
+    background: #ffffff !important;
     filter: none !important;
   }
-  /* Scroll indicator — sol-alt, yatay çizgi + etiket (Monopo Saigon imzası). */
+
+  /* Secondary: a text link with a rule that draws itself on intent —
+     deliberately lighter in weight than the primary. */
+  .hero__link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    /* A text link still has to be a 48px target for a thumb. */
+    min-height: var(--tap-min);
+    gap: 0.45rem;
+    padding-block: 0.3rem;
+    color: rgba(241, 241, 239, 0.68);
+    font-family: var(--font-utility);
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .hero__link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    /* Anchored to the text, not to the (taller) tap target's bottom edge. */
+    top: calc(50% + 0.85em);
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur) var(--ease-out);
+  }
+  .hero__link:hover,
+  .hero__link:focus-visible {
+    color: #ffffff;
+  }
+  .hero__link:hover::after,
+  .hero__link:focus-visible::after {
+    transform: scaleX(1);
+  }
+  /* :global — these target the <svg> rendered inside <Icon />, which sits
+     outside this component's style scope. */
+  :global(.hero__link-ic) {
+    transition: transform var(--dur) var(--ease-out);
+  }
+  .hero__link:hover :global(.hero__link-ic),
+  .hero__link:focus-visible :global(.hero__link-ic) {
+    transform: translateX(4px);
+  }
+
+  .hero__show {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    min-height: 0;
+  }
+
+  /* ---- Foot rule: what we make, and where the page goes next.
+     In flow, as the last child of .vhero__inner, so it shares the headline's
+     exact left edge instead of being measured from the section edge. ---- */
+  .hero__foot {
+    position: relative;
+    z-index: 2;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: var(--font-utility);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+  }
+  .hero__disciplines {
+    margin: 0;
+    color: rgba(241, 241, 239, 0.62);
+  }
   .hero__scroll {
-    display: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: rgba(241, 241, 239, 0.55);
+    text-transform: uppercase;
+    transition: color var(--dur-fast) var(--ease-out);
   }
-  @media (min-width: 768px) {
-    .hero__scroll {
-      position: absolute;
-      left: var(--container-pad);
-      bottom: 1.75rem;
-      z-index: 2;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.7rem;
-      color: color-mix(in srgb, var(--on-ink) 50%, transparent);
-      font-family: var(--font-utility);
-      font-size: 0.66rem;
-      font-weight: 400;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      pointer-events: none;
+  .hero__scroll:hover,
+  .hero__scroll:focus-visible {
+    color: #f1f1ef;
+  }
+  :global(.hero__scroll-ic) {
+    transform: rotate(90deg);
+    transition: transform var(--dur) var(--ease-out);
+  }
+  .hero__scroll:hover :global(.hero__scroll-ic),
+  .hero__scroll:focus-visible :global(.hero__scroll-ic) {
+    transform: rotate(90deg) translateX(3px);
+  }
+
+  /* ---- One authored entrance: the hero settles, it does not assemble ---- */
+  .hero__say > *,
+  .hero__show,
+  .hero__foot {
+    animation: hero-settle 900ms var(--ease-out) both;
+  }
+  .hero__title { animation-delay: 0.06s; }
+  .hero__lede { animation-delay: 0.16s; }
+  .hero__cta { animation-delay: 0.26s; }
+  .hero__show { animation-delay: 0.2s; }
+  .hero__foot { animation-delay: 0.4s; }
+  @keyframes hero-settle {
+    from { opacity: 0; transform: translate3d(0, 14px, 0); filter: blur(6px); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); filter: blur(0); }
+  }
+
+  /* ---- Tablet & below: one column. The process system stops being a column
+     and becomes an absolute backdrop behind the message. ---- */
+  @media (max-width: 979.98px) {
+    .hero__layout {
+      grid-template-columns: minmax(0, 1fr);
+      align-content: center;
+      gap: 0;
     }
-    .hero__scroll-line {
-      width: 3rem;
-      height: 1px;
-      background: color-mix(in srgb, var(--on-ink) 42%, transparent);
+    /* The orbit is absolutely positioned at this width, so its grid cell must
+       not reserve any height of its own. */
+    .hero__show {
+      display: contents;
+    }
+    .hero__foot {
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
     }
   }
-  /* Mobile */
-  @media (max-width: 520px) {
-    .hero__center {
-      gap: 1.2rem;
+
+  /* Short desktop screens (laptops around 1280×620–700): shrink the headline
+     and the rhythm rather than clip, since the hero is a fixed 100svh box.
+     Must come after the base .hero__title rule — same specificity, so order
+     decides. */
+  @media (min-width: 980px) and (max-height: 700px) {
+    .hero__title {
+      font-size: clamp(2.5rem, 5.6vw, 4.5rem);
+    }
+    .hero__say {
+      gap: 1rem;
+    }
+  }
+  /* Below this there is no honest way to fit a monumental headline into one
+     screen — let the hero grow and the page scroll instead of cropping it. */
+  @media (max-height: 560px) {
+    :global(.hero) {
+      height: auto;
+      min-height: 100svh;
+    }
+    :global(.hero .vhero__inner) {
+      height: auto;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .hero__say {
+      gap: 1.15rem;
     }
     .hero__title {
-      font-size: clamp(2.5rem, 12vw, 3.6rem);
-      line-height: 0.90;
+      font-size: clamp(2.5rem, 13vw, 3.6rem);
+      line-height: 0.92;
+      letter-spacing: -0.04em;
     }
-    .hero__title-br {
-      display: none;
-    }
-    .hero__tagline {
-      font-size: 0.93rem;
-      line-height: 1.6;
+    .hero__lede {
+      font-size: 0.95rem;
+      max-width: 30ch;
     }
     .hero__cta {
-      width: min(100%, 22rem);
-      flex-direction: column;
-      gap: 0.55rem;
+      gap: 0.85rem 1.1rem;
     }
-    .hero__cta :global(.btn) {
-      width: 100%;
-      min-height: 50px;
-      padding-inline: 1rem;
-      white-space: normal;
-      text-align: center;
+    /* The disciplines line is the hero's least load-bearing text; below this
+       width the scroll cue alone frames the composition. */
+    .hero__disciplines {
+      display: none;
+    }
+    .hero__foot {
+      justify-content: flex-start;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero__center {
-      opacity: 1;
-      filter: none;
-      transform: none;
-      animation: none;
-    }
-    .hero__center > :not(.hero__cta) {
+    .hero__say > *,
+    .hero__show,
+    .hero__foot {
       animation: none;
     }
   }

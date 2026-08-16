@@ -30,10 +30,14 @@
   --on-ink: #faf9f6; /* text/icons on intentional dark bands       */
 
   /* ---- Type families (1.3) ---------------------------------------- */
-  --font-display: "Fraunces Variable", Georgia, "Times New Roman", serif;
-  /* Inter (body) + Space Grotesk (utility) are self-hosted, subset, swap-loaded.
-     System fonts stay as the fallback so first paint is instant and the swap is
-     a near-metric match (minimal CLS). */
+  /* Display and body share one grotesk (Inter). The display voice comes from
+     weight + negative tracking at size, not from a second family — so the
+     headline face costs zero extra bytes and the page speaks one language. */
+  --font-display: "Inter Variable", system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  /* Inter (body/display) + Space Grotesk (utility) are self-hosted, subset,
+     swap-loaded. System fonts stay as the fallback so first paint is instant
+     and the swap is a near-metric match (minimal CLS). */
   --font-body: "Inter Variable", system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
   --font-utility: "Space Grotesk Variable", system-ui, -apple-system, "Segoe UI",

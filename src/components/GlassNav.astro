@@ -36,10 +36,11 @@ const whatsappFormHref = "/iletisim#teklif-formu";
         ))
       }
     </ul>
-    <Button href={PRIMARY_CTA.href} class="nav__cta">{PRIMARY_CTA.label}</Button>
+    <Button href={PRIMARY_CTA.href} class="nav__cta" arrow>{PRIMARY_CTA.shortLabel}</Button>
     <span class="nav__progress" data-nav-progress aria-hidden="true"></span>
-    <ThemeToggle class="nav__theme" />
   </nav>
+  {/* Keep theme access without making it part of the primary navigation pill. */}
+  <ThemeToggle class="nav__theme" />
 </header>
 
 {/* Mobile: compact brand/theme controls without a full-width bar */}
@@ -109,9 +110,12 @@ const whatsappFormHref = "/iletisim#teklif-formu";
     overflow: hidden;
     display: flex;
     align-items: center;
-    gap: clamp(0.5rem, 1.5vw, 1.25rem);
-    max-width: calc(100% - 2rem);
-    padding: 0.4rem 0.5rem 0.4rem 1.1rem;
+    /* Compact by design: the old pill ran ~838×63 and read as an app chrome
+       bar competing with the hero. */
+    gap: clamp(0.4rem, 1vw, 0.75rem);
+    max-width: min(760px, calc(100% - 2rem));
+    min-height: 56px;
+    padding: 0.3rem 0.4rem 0.3rem 1.1rem;
     /* Liquid glass: translucent so the blur reads, with a top-light sheen. */
     background: linear-gradient(
       180deg,
@@ -144,10 +148,10 @@ const whatsappFormHref = "/iletisim#teklif-formu";
     display: inline-flex;
     align-items: center;
     min-height: var(--tap-min);
-    padding: 0 0.9rem;
+    padding: 0 0.75rem;
     border-radius: var(--radius-pill);
     font-family: var(--font-utility);
-    font-size: 0.92rem;
+    font-size: 0.845rem;
     font-weight: 500;
     color: var(--ink);
     touch-action: manipulation;
@@ -166,11 +170,37 @@ const whatsappFormHref = "/iletisim#teklif-formu";
   .nav__link[aria-current="page"] {
     color: var(--amber-text);
   }
-  .nav__cta {
-    margin-left: 0.25rem;
+  :global(.nav__cta) {
+    margin-left: 0.15rem;
+    padding-inline: 1.15rem;
+    font-size: 0.845rem;
+    color: #111110 !important;
+    box-shadow: 0 8px 24px -16px rgba(0, 0, 0, 0.5) !important;
   }
+  :global(.nav__cta.btn--primary .btn__bg) {
+    background: rgba(241, 241, 239, 0.94) !important;
+    filter: none !important;
+  }
+  :global(.nav__cta.btn--primary:hover) {
+    box-shadow: 0 10px 28px -17px rgba(0, 0, 0, 0.58) !important;
+  }
+  :global(.nav__cta.btn--primary:hover .btn__bg) {
+    background: #ffffff !important;
+    filter: none !important;
+  }
+  :global(.nav__cta.btn--primary)::after {
+    display: none;
+  }
+  /* The toggle stays available, but lives outside the navigation surface so
+     the pill reads as navigation rather than as an application toolbar. */
   :global(.nav__theme) {
-    margin-left: -0.15rem;
+    pointer-events: auto;
+    opacity: 0.48;
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+  :global(.nav__theme:hover),
+  :global(.nav__theme:focus-visible) {
+    opacity: 1;
   }
 
   .nav.is-scrolled .nav__pill {
@@ -214,7 +244,9 @@ const whatsappFormHref = "/iletisim#teklif-formu";
   @media (min-width: 768px) {
     .nav {
       display: flex;
+      align-items: center;
       justify-content: center;
+      gap: 0.55rem;
       position: fixed;
       inset: 0 0 auto 0;
       z-index: 50;
