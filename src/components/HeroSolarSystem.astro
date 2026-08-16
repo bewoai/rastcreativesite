@@ -452,22 +452,58 @@ const stages = [
 
   @media (max-width: 979.98px) {
     .solar {
-      position: absolute;
-      top: 10%;
-      right: -22%;
-      width: min(82vw, 34rem);
-      opacity: 0.48;
-      z-index: 0;
+      position: relative;
+      top: auto;
+      right: auto;
+      width: min(76vw, 20rem);
+      max-height: 100%;
+      opacity: 0.74;
+      z-index: 1;
     }
     .solar__label,
     .solar__caption,
     .solar__track--flow,
-    .solar__stage--production,
-    .solar__stage--post,
-    .solar__stage--delivery {
+    .solar__signal {
       display: none;
     }
-    .solar__stage--idea { opacity: 0.7; }
+    .solar__stage {
+      width: 5.4rem;
+      height: 4.4rem;
+    }
+    .solar__stage--idea { --planet-size: 3.05rem; }
+    .solar__stage--production { --planet-size: 3.75rem; }
+    .solar__stage--post { --planet-size: 3.3rem; }
+    .solar__stage--delivery { --planet-size: 3.15rem; }
+    .solar__core {
+      width: clamp(4.5rem, 21%, 5.25rem);
+    }
+    .solar__glow {
+      inset: 18% 8% 16%;
+      filter: blur(20px);
+    }
+  }
+
+  @media (max-width: 420px) {
+    .solar {
+      width: min(74vw, 17.5rem);
+    }
+    .solar__stage {
+      width: 4.8rem;
+      height: 3.9rem;
+    }
+    .solar__stage--idea { --planet-size: 2.75rem; }
+    .solar__stage--production { --planet-size: 3.35rem; }
+    .solar__stage--post { --planet-size: 3rem; }
+    .solar__stage--delivery { --planet-size: 2.85rem; }
+    .solar__core {
+      width: 4.4rem;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .solar {
+      width: min(68vw, 14.5rem);
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -60,8 +60,11 @@ Hareketin amacı dekorasyon değil, üretim döngüsünü görünür kılmaktır
 ## Responsive davranış
 
 - Desktop’ta hero iki kolonludur; güneş sistemi sağ kolonda `576px` genişliğe kadar büyür.
-- Tablet ve mobilde sistem arka plan katmanına dönüşür.
-- Küçük ekranlarda yalnızca fikir küresi korunur; diğer etiket ve aşamalar metinle rekabet etmemesi için gizlenir.
+- Tablet ve mobilde güneş sistemi başlığın üzerinde, kendine ait kompakt bir satıra geçer; metnin arkasına atılmaz.
+- Dört üretim aşamasının sembolü mobilde de korunur. Yalnızca küçük pill etiketleri, sinyal noktaları ve dekoratif caption gizlenir.
+- Mobil küreler ve merkez logo ekran genişliğine göre küçülür; yörünge sistemi `320px`, dar telefonlarda `280px` üst sınırında tutulur.
+- `420px` ve `380px` altında küre, başlık, CTA ve dikey ritim için ek sıkıştırma kuralları uygulanır.
+- `380px × 620px` altındaki çok kısa cihazlarda, sabit mobil navigasyonla çakışmaması için dekoratif alt meta/scroll satırı kaldırılır; iki CTA korunur.
 - Hero içeriği kısa ekranlarda kırpılmak yerine sayfanın doğal biçimde uzamasına izin verir.
 
 ## Erişilebilirlik ve performans
