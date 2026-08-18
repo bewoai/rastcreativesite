@@ -1,0 +1,32 @@
+{
+  "name": "Rast Creative Studio",
+  "url": "https://rastcreative.com",
+  "language": "tr",
+  "description": "Sakarya merkezli video prodüksiyon ve yaratıcı içerik stüdyosu.",
+  "location": {
+    "city": "Serdivan",
+    "region": "Sakarya",
+    "country": "TR"
+  },
+  "services": [
+    { "name": "Video Çekimi", "url": "https://rastcreative.com/video-cekimi" },
+    { "name": "Tanıtım Filmi", "url": "https://rastcreative.com/tanitim-filmi" },
+    { "name": "Reklam Filmi", "url": "https://rastcreative.com/reklam-filmi" },
+    { "name": "Drone Çekimi", "url": "https://rastcreative.com/drone-cekimi" },
+    { "name": "Sosyal Medya İçeriği", "url": "https://rastcreative.com/sosyal-medya-icerigi" },
+    { "name": "Ürün ve Mekân Çekimi", "url": "https://rastcreative.com/urun-mekan-cekimi" }
+  ],
+  "contact": {
+    "page": "https://rastcreative.com/iletisim",
+    "email": "studio@rastcreative.com",
+    "phone": "+905438382404"
+  },
+  "projects": "https://rastcreative.com/projeler",
+  "blog": "https://rastcreative.com/blog",
+  "apis": {
+    "services": "https://rastcreative.com/api/services.json",
+    "projects": "https://rastcreative.com/api/projects.json",
+    "locations": "https://rastcreative.com/api/locations.json",
+    "faq": "https://rastcreative.com/api/faq.json"
+  }
+}

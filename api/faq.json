@@ -1,0 +1,42 @@
+{
+  "name": "Rast Creative Studio",
+  "updatedAt": "2026-08-18T12:36:15.803Z",
+  "questions": [
+    {
+      "id": "01-teslim-suresi",
+      "question": "Bir proje ne kadar sürede teslim edilir?",
+      "answer": "Sinematik projelerimiz, kapsamına göre genellikle **2 ila 4 hafta** arasında\ntamamlanır. Kesin takvimi, ön görüşmede projenin kapsamına göre birlikte\nbelirleriz.",
+      "url": "https://rastcreative.com/hizmetler#01-teslim-suresi"
+    },
+    {
+      "id": "02-ekip-katilimi",
+      "question": "Çekim ve kurgu süreçlerinde ekibiniz birebir yer alıyor mu?",
+      "answer": "Evet. Ön görüşmeden çekime, kurgudan teslime kadar süreci Rast Creative ekibi\nbirebir yürütür. Böylece markanızın dili baştan sona tutarlı kalır.",
+      "url": "https://rastcreative.com/hizmetler#02-ekip-katilimi"
+    },
+    {
+      "id": "03-revizyon",
+      "question": "Teslim sonrası revizyon hakkım var mı?",
+      "answer": "Evet. Her projede teslim öncesi geri bildirim ve revizyon turları planlanır.\nRevizyon kapsamı ve sayısı, ön görüşmede proje planına göre netleştirilir.",
+      "url": "https://rastcreative.com/hizmetler#03-revizyon"
+    },
+    {
+      "id": "04-sektorler",
+      "question": "Hangi sektörlere hizmet veriyorsunuz?",
+      "answer": "Reklam, marka hikâyesi, ürün, kurumsal ve medikal alanlarda çalışıyoruz.\nÖzellikle KOBİ'ler ve medikal sektörle çalışma deneyimimiz güçlü.",
+      "url": "https://rastcreative.com/hizmetler#04-sektorler"
+    },
+    {
+      "id": "05-fiyatlandirma",
+      "question": "Fiyatlandırma nasıl çalışıyor?",
+      "answer": "Her proje kapsamına özel fiyatlanır. İlk görüşmede ihtiyaçlarınızı\ndinler, kapsamı netleştirir ve size net bir teklif sunarız.",
+      "url": "https://rastcreative.com/hizmetler#05-fiyatlandirma"
+    },
+    {
+      "id": "06-nasil-baslariz",
+      "question": "Süreç nasıl başlıyor?",
+      "answer": "Projenizi anlattığınız ilk görüşmeyle başlıyoruz. İhtiyacınızı dinler, size uygun\nformatı, kapsamı ve takvimi birlikte belirleriz.",
+      "url": "https://rastcreative.com/hizmetler#06-nasil-baslariz"
+    }
+  ]
+}

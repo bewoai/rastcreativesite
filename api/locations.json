@@ -1,0 +1,315 @@
+{
+  "name": "Rast Creative Studio",
+  "updatedAt": "2026-08-18T12:36:15.805Z",
+  "primaryLocation": "Serdivan, Sakarya",
+  "locations": [
+    {
+      "slug": "sakarya",
+      "name": "Sakarya",
+      "province": "Sakarya",
+      "core": true,
+      "description": "Stüdyomuzun merkezi Serdivan'da; Sakarya'nın her ilçesine aynı gün ulaşıp çekim yapabiliyoruz. Adapazarı, Serdivan, Arifiye, Hendek ve Sapanca başta olmak üzere ilin sanayi tesislerini, mağazalarını, sağlık kuruluşlarını ve doğal dokusunu yakından tanıyoruz. Sakarya'da çekim izni, sahne akışı ve teslim takvimini baştan netleştirir; yerel ekip avantajıyla hem maliyeti hem de organizasyon yükünü azaltırız.",
+      "nearby": [
+        "serdivan",
+        "adapazari",
+        "sapanca",
+        "kocaeli"
+      ],
+      "url": "https://rastcreative.com/video-cekimi/sakarya"
+    },
+    {
+      "slug": "serdivan",
+      "name": "Serdivan",
+      "province": "Sakarya",
+      "core": true,
+      "description": "Stüdyomuz Serdivan'da olduğu için burada kurulum süresi sıfıra yakın — randevudan kısa süre sonra sette oluruz. AVM, üniversite ve yeni iş merkezleriyle Serdivan markalar için canlı bir vitrin.",
+      "nearby": [
+        "adapazari",
+        "sakarya",
+        "erenler",
+        "sapanca"
+      ],
+      "url": "https://rastcreative.com/video-cekimi/serdivan"
+    },
+    {
+      "slug": "adapazari",
+      "name": "Adapazarı",
+      "province": "Sakarya",
+      "core": true,
+      "description": "Sakarya'nın merkez ilçesi Adapazarı'nın ticaret ve sanayi yoğunluğunu iyi tanıyoruz. İşletme, mağaza ve fabrika çekimlerinde lojistik avantajımız sayesinde hızlı planlama yapıyoruz.",
+      "nearby": [
+        "serdivan",
+        "erenler",
+        "sakarya",
+        "hendek"
+      ],
+      "url": "https://rastcreative.com/video-cekimi/adapazari"
+    },
+    {
+      "slug": "arifiye",
+      "name": "Arifiye",
+      "province": "Sakarya",
+      "core": true,
+      "description": "Arifiye, ulaşım aksları ve sanayi bağlantılarıyla kurumsal çekimler için güçlü bir merkez. Fabrika, showroom ve lojistik alan çekimlerinde Serdivan'dan hızlı kurulum yapabiliyoruz.",
+      "nearby": [
+        "serdivan",
+        "adapazari",
+        "sapanca",
+        "erenler"
+      ],
+      "url": "https://rastcreative.com/video-cekimi/arifiye"
+    },
+    {
+      "slug": "erenler",
+      "name": "Erenler",
+      "province": "Sakarya",
+      "core": true,
+      "description": "Erenler'in organize sanayi ve üretim tesisleri tanıtım ve drone çekimi için ideal. Bölgedeki imalatçı markalarla çalışma tecrübemiz var.",
+      "nearby": [
+        "adapazari",
+        "serdivan",
+        "hendek",
+        "sakarya"
+      ],
+      "url": "https://rastcreative.com/video-cekimi/erenler"
+    },
+    {
+      "slug": "hendek",
+      "name": "Hendek",
+      "province": "Sakarya",
+      "core": true,
+      "description": "Hendek'in sanayi bölgesi ve geniş üretim alanları, havadan çekimde etkileyici kareler verir. Tesis tanıtımları için sık çalıştığımız bir ilçe.",
+      "nearby": [
+        "akyazi",
+        "adapazari",
+        "sapanca",
+        "duzce"
+      ],
+      "url": "https://rastcreative.com/video-cekimi/hendek"
+    },
+    {
+      "slug": "akyazi",
+      "name": "Akyazı",
+      "province": "Sakarya",
+      "core": true,
+      "description": "Akyazı'nın termal tesisleri, doğası ve tarımsal işletmeleri görsel açıdan zengin bir çekim ortamı sunar. Turizm ve üretim odaklı tanıtımlarda deneyimliyiz.",
+      "nearby": [
+        "hendek",
+        "adapazari",
+        "sapanca",
+        "sakarya"
+      ],
+      "url": "https://rastcreative.com/video-cekimi/akyazi"
+    },
+    {
+      "slug": "sapanca",
+      "name": "Sapanca",
+      "province": "Sakarya",
+      "core": true,
+      "description": "Sapanca Gölü ve çevresindeki butik oteller, bungalovlar ve etkinlik mekanları için sinematik tanıtım üretiyoruz. Doğal ışığın en güzel olduğu saatleri bölgede iyi biliyoruz.",
+      "nearby": [
+        "serdivan",
+        "sakarya",
+        "adapazari",
+        "kocaeli"
+      ],
+      "url": "https://rastcreative.com/video-cekimi/sapanca"
+    },
+    {
+      "slug": "karasu",
+      "name": "Karasu",
+      "province": "Sakarya",
+      "core": true,
+      "description": "Karasu sahil hattı, liman çevresi ve turizm işletmeleriyle özellikle drone ve tanıtım filmi için etkileyici planlar verir. Yaz sezonu, etkinlik ve tesis tanıtımlarında bölgeyi aktif kullanıyoruz.",
+      "nearby": [
+        "ferizli",
+        "hendek",
+        "adapazari",
+        "duzce"
+      ],
+      "url": "https://rastcreative.com/video-cekimi/karasu"
+    },
+    {
+      "slug": "ferizli",
+      "name": "Ferizli",
+      "province": "Sakarya",
+      "core": true,
+      "description": "Ferizli'nin üretim ve sanayi hattı, tesis tanıtımı ve havadan çekim için düzenli planlanabilecek bir bölge. Sakarya merkezden kısa sürede ulaşıp küçük ve orta ölçekli işletmeler için ekonomik çekim günü kuruyoruz.",
+      "nearby": [
+        "karasu",
+        "hendek",
+        "adapazari",
+        "sakarya"
+      ],
+      "url": "https://rastcreative.com/video-cekimi/ferizli"
+    },
+    {
+      "slug": "geyve",
+      "name": "Geyve",
+      "province": "Sakarya",
+      "core": true,
+      "description": "Geyve'nin doğal dokusu, tarımsal üretim alanları ve yol manzaraları marka hikayesi anlatımı için güçlü bir arka plan oluşturur. Ürün, mekan ve turizm odaklı çekimlerde bölgenin atmosferinden yararlanıyoruz.",
+      "nearby": [
+        "pamukova",
+        "arifiye",
+        "sapanca",
+        "bilecik"
+      ],
+      "url": "https://rastcreative.com/video-cekimi/geyve"
+    },
+    {
+      "slug": "pamukova",
+      "name": "Pamukova",
+      "province": "Sakarya",
+      "core": true,
+      "description": "Pamukova, tarım, üretim ve açık alan çekimleri için geniş ve ferah sahneler sunar. Drone, ürün ve marka hikayesi projelerinde gün ışığını doğru saatlerde planlayarak temiz görüntüler üretiyoruz.",
+      "nearby": [
+        "geyve",
+        "bilecik",
+        "sapanca",
+        "sakarya"
+      ],
+      "url": "https://rastcreative.com/video-cekimi/pamukova"
+    },
+    {
+      "slug": "kocaeli",
+      "name": "Kocaeli",
+      "province": "Kocaeli",
+      "core": false,
+      "description": "Sakarya'ya komşu Kocaeli, yoğun sanayi ve lojistik yapısıyla kurumsal video talebinin yüksek olduğu bir il. İzmit ve Gebze hattındaki fabrikalara kısa sürede ulaşıyoruz.",
+      "nearby": [
+        "izmit",
+        "gebze",
+        "sakarya",
+        "sapanca"
+      ],
+      "url": "https://rastcreative.com/video-cekimi/kocaeli"
+    },
+    {
+      "slug": "izmit",
+      "name": "İzmit",
+      "province": "Kocaeli",
+      "core": false,
+      "description": "Kocaeli'nin merkezi İzmit, körfez manzarası ve sanayi tesisleriyle tanıtım çekimleri için güçlü bir zemin. Kurumsal ve endüstriyel projelerde aktif çalışıyoruz.",
+      "nearby": [
+        "kocaeli",
+        "gebze",
+        "sakarya",
+        "serdivan"
+      ],
+      "url": "https://rastcreative.com/video-cekimi/izmit"
+    },
+    {
+      "slug": "kartepe",
+      "name": "Kartepe",
+      "province": "Kocaeli",
+      "core": false,
+      "description": "Kartepe, turizm tesisleri, doğa rotaları ve Kocaeli sanayi hattına yakınlığıyla çok yönlü bir çekim bölgesi. Otel, etkinlik ve marka tanıtımlarında hem havadan hem yerden sinematik planlar kuruyoruz.",
+      "nearby": [
+        "izmit",
+        "basiskele",
+        "sapanca",
+        "sakarya"
+      ],
+      "url": "https://rastcreative.com/video-cekimi/kartepe"
+    },
+    {
+      "slug": "basiskele",
+      "name": "Başiskele",
+      "province": "Kocaeli",
+      "core": false,
+      "description": "Başiskele, körfez çevresi ve gelişen ticari alanlarıyla kurumsal video ve sosyal medya içerikleri için uygun bir hat. Sakarya çıkışlı ekiple bölgeye proje bazlı çekim günü planlıyoruz.",
+      "nearby": [
+        "izmit",
+        "kartepe",
+        "golcuk",
+        "kocaeli"
+      ],
+      "url": "https://rastcreative.com/video-cekimi/basiskele"
+    },
+    {
+      "slug": "golcuk",
+      "name": "Gölcük",
+      "province": "Kocaeli",
+      "core": false,
+      "description": "Gölcük, sanayi, denizcilik ve yerel işletme çekimleri için güçlü görsel çeşitlilik sunar. Kurumsal tanıtım ve sosyal medya üretimlerinde bölgenin sahil ve üretim karakterini birlikte değerlendiriyoruz.",
+      "nearby": [
+        "basiskele",
+        "izmit",
+        "kartepe",
+        "kocaeli"
+      ],
+      "url": "https://rastcreative.com/video-cekimi/golcuk"
+    },
+    {
+      "slug": "gebze",
+      "name": "Gebze",
+      "province": "Kocaeli",
+      "core": false,
+      "description": "Gebze'nin organize sanayi bölgeleri Türkiye'nin en yoğun üretim merkezlerinden. Fabrika tanıtımı ve havadan tesis çekiminde bölgeye düzenli gidiyoruz.",
+      "nearby": [
+        "izmit",
+        "kocaeli",
+        "sakarya",
+        "serdivan"
+      ],
+      "url": "https://rastcreative.com/video-cekimi/gebze"
+    },
+    {
+      "slug": "darica",
+      "name": "Darıca",
+      "province": "Kocaeli",
+      "core": false,
+      "description": "Darıca, Gebze hattına yakınlığı ve yoğun ticari dokusuyla marka ve sosyal medya içerikleri için hareketli bir çekim alanı. Kısa format videolarda işletmenin günlük akışını temiz ve anlaşılır bir dile çeviriyoruz.",
+      "nearby": [
+        "gebze",
+        "izmit",
+        "kocaeli",
+        "sakarya"
+      ],
+      "url": "https://rastcreative.com/video-cekimi/darica"
+    },
+    {
+      "slug": "duzce",
+      "name": "Düzce",
+      "province": "Düzce",
+      "core": false,
+      "description": "Düzce'nin üretim tesisleri ve doğal alanları, hem kurumsal hem turizm odaklı çekimlere uygun. Sakarya'dan kısa mesafede olduğu için ekonomik planlama yapıyoruz.",
+      "nearby": [
+        "hendek",
+        "akyazi",
+        "bolu",
+        "sakarya"
+      ],
+      "url": "https://rastcreative.com/video-cekimi/duzce"
+    },
+    {
+      "slug": "bolu",
+      "name": "Bolu",
+      "province": "Bolu",
+      "core": false,
+      "description": "Bolu'nun otelleri, yaylaları ve doğa turizmi drone ve tanıtım filmi için zengin bir sahne sunar. Turizm işletmeleri için sinematik içerik üretiyoruz.",
+      "nearby": [
+        "duzce",
+        "akyazi",
+        "sakarya",
+        "bilecik"
+      ],
+      "url": "https://rastcreative.com/video-cekimi/bolu"
+    },
+    {
+      "slug": "bilecik",
+      "name": "Bilecik",
+      "province": "Bilecik",
+      "core": false,
+      "description": "Bilecik'in tarihi dokusu ve sanayi yatırımları, marka hikâyesi ve tanıtım için ilgi çekici bir kontrast yaratır. Bölgedeki işletmelere proje bazlı destek veriyoruz.",
+      "nearby": [
+        "bolu",
+        "sakarya",
+        "adapazari",
+        "duzce"
+      ],
+      "url": "https://rastcreative.com/video-cekimi/bilecik"
+    }
+  ]
+}

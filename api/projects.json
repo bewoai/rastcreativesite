@@ -1,0 +1,615 @@
+{
+  "name": "Rast Creative Studio",
+  "updatedAt": "2026-08-18T12:36:15.809Z",
+  "count": 38,
+  "projects": [
+    {
+      "id": "gebelikte-banyoda-neleri-degistirmelisin-part-1-3",
+      "title": "Gebelikte Banyoda Neleri Değiştirmelisin? Part 1 #3",
+      "category": "Medikal",
+      "client": "Op. Dr. Duygu Cebecik Özmüş",
+      "sector": null,
+      "projectType": null,
+      "year": 2026,
+      "summary": "Gebelikte banyoda ve cilt bakımında neleri değiştirmen gerekiyor?",
+      "url": "https://rastcreative.com/projeler/gebelikte-banyoda-neleri-degistirmelisin-part-1-3",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "TKPtNmIqPdU",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "altoteks-tanitim-filmi",
+      "title": "Altoteks 4K Tanıtım Filmi",
+      "category": "Kurumsal",
+      "client": "Altoteks",
+      "sector": "Tekstil / sanayi ve imalat",
+      "projectType": "Kurumsal tanıtım filmi",
+      "year": 2024,
+      "summary": "Altoteks için sinematik kurumsal tanıtım filmi.",
+      "url": "https://rastcreative.com/projeler/altoteks-tanitim-filmi",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "x3sRWLtLVKM",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "chint-power-milas-urun-tanitimi",
+      "title": "Chint Power Milas Ürün Tanıtımı",
+      "category": "Ürün",
+      "client": "Chint Power",
+      "sector": null,
+      "projectType": null,
+      "year": 2024,
+      "summary": "Chint Power Milas projesi için 4K ürün tanıtım videosu.",
+      "url": "https://rastcreative.com/projeler/chint-power-milas-urun-tanitimi",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "HebW055kzaU",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "federal-reklam-filmi",
+      "title": "Federal Kurumsal Tanıtım Filmi",
+      "category": "Kurumsal",
+      "client": "Federal",
+      "sector": null,
+      "projectType": null,
+      "year": 2024,
+      "summary": "Federal markası için hazırlanan kurumsal tanıtım filmi.",
+      "url": "https://rastcreative.com/projeler/federal-reklam-filmi",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "96lsUMsBhy4",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "meteors-shipping-tanitim-filmi",
+      "title": "Meteors Shipping 4K Tanıtım Filmi",
+      "category": "Kurumsal",
+      "client": "Meteors Shipping",
+      "sector": "Denizcilik / lojistik",
+      "projectType": "Kurumsal tanıtım filmi",
+      "year": 2024,
+      "summary": "Meteors Shipping için kurumsal tanıtım filmi.",
+      "url": "https://rastcreative.com/projeler/meteors-shipping-tanitim-filmi",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "2DSMTNiYz0M",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "canex-tanitim-filmi",
+      "title": "Canex 4K Tanıtım Filmi",
+      "category": "Kurumsal",
+      "client": "Canex",
+      "sector": "Endüstriyel imalat / metal",
+      "projectType": "Kurumsal tanıtım filmi",
+      "year": 2024,
+      "summary": "Canex markası için 4K kurumsal tanıtım filmi.",
+      "url": "https://rastcreative.com/projeler/canex-tanitim-filmi",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "yo7qdhu4mlg",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "mavi-vatan-gemi-insa",
+      "title": "Mavi Vatan Gemi İnşa — Transfer Süreci",
+      "category": "Kurumsal",
+      "client": "Mavi Vatan",
+      "sector": "Ağır sanayi / gemi inşa",
+      "projectType": "Operasyonel süreç belgeseli",
+      "year": 2024,
+      "summary": "Mavi Vatan Gemi İnşa Atölyesi transfer süreci tanıtım filmi.",
+      "url": "https://rastcreative.com/projeler/mavi-vatan-gemi-insa",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "kMjFDnWHdYs",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "gebelik-ilk-7-gun",
+      "title": "Gebelik: İlk 7 Gün (Bölüm 1)",
+      "category": "Medikal",
+      "client": "Op. Dr. Duygu Cebecik Özmüş",
+      "sector": "Sağlık / kadın hastalıkları ve doğum",
+      "projectType": "YouTube medikal içerik serisi",
+      "year": 2026,
+      "summary": "Op. Dr. Duygu Cebecik Özmüş için medikal içerik serisi.",
+      "url": "https://rastcreative.com/projeler/gebelik-ilk-7-gun",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "BRwrTj7VuAY",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "gebelikte-mutfak",
+      "title": "Gebelikte Mutfakta Neleri Değiştirmelisin?",
+      "category": "Medikal",
+      "client": "Op. Dr. Duygu Cebecik Özmüş",
+      "sector": null,
+      "projectType": null,
+      "year": 2024,
+      "summary": "Op. Dr. Duygu Cebecik Özmüş medikal içerik serisi #2.",
+      "url": "https://rastcreative.com/projeler/gebelikte-mutfak",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "fjJt4ANqGw0",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "gebelikte-banyoda-neleri-degistirmelisin-part-2-4",
+      "title": "Gebelikte Banyoda Neleri Değiştirmelisin? Part 2 #4",
+      "category": "Medikal",
+      "client": "Op. Dr. Duygu Cebecik Özmüş",
+      "sector": "Sağlık / kadın hastalıkları ve doğum",
+      "projectType": "YouTube medikal içerik serisi",
+      "year": 2026,
+      "summary": "Gebelikte banyo ve cilt bakımı serisinin ikinci bölümü — Op. Dr. Duygu Cebecik Özmüş medikal içerik serisi #4.",
+      "url": "https://rastcreative.com/projeler/gebelikte-banyoda-neleri-degistirmelisin-part-2-4",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "PvfloN7wu0g",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "gebelik-nasil-olusur-ilk-haftalar",
+      "title": "Gebelik Nasıl Oluşur? İlk Haftalarda Gelişim ve Belirtiler",
+      "category": "Medikal",
+      "client": "Op. Dr. Duygu Cebecik Özmüş",
+      "sector": "Sağlık / kadın hastalıkları ve doğum",
+      "projectType": "YouTube medikal içerik serisi",
+      "year": 2026,
+      "summary": "Gebeliğin nasıl oluştuğu, ilk haftalardaki gelişim ve belirtiler — Op. Dr. Duygu Cebecik Özmüş medikal içerik serisi #5.",
+      "url": "https://rastcreative.com/projeler/gebelik-nasil-olusur-ilk-haftalar",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "6Fi4zTQkljg",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "gebelik-6-10-hafta",
+      "title": "Gebeliğin 6-10. Haftasında Neler Olur?",
+      "category": "Medikal",
+      "client": "Op. Dr. Duygu Cebecik Özmüş",
+      "sector": "Sağlık / kadın hastalıkları ve doğum",
+      "projectType": "YouTube medikal içerik serisi",
+      "year": 2026,
+      "summary": "Bebeğin gelişimi ve annedeki değişimler — Op. Dr. Duygu Cebecik Özmüş medikal içerik serisi #6.",
+      "url": "https://rastcreative.com/projeler/gebelik-6-10-hafta",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "V3YfLnFhUpg",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "gebelik-10-14-hafta",
+      "title": "Gebeliğin 10-14. Haftasında Neler Olur?",
+      "category": "Medikal",
+      "client": "Op. Dr. Duygu Cebecik Özmüş",
+      "sector": "Sağlık / kadın hastalıkları ve doğum",
+      "projectType": "YouTube medikal içerik serisi",
+      "year": 2026,
+      "summary": "Bebeğin gelişimi ve annede görülen değişimler — Op. Dr. Duygu Cebecik Özmüş medikal içerik serisi #7.",
+      "url": "https://rastcreative.com/projeler/gebelik-10-14-hafta",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "Q0yVYh1QLb0",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "ikili-test-mi-fetal-dna-testi-mi",
+      "title": "İkili Test mi Fetal DNA Testi mi?",
+      "category": "Medikal",
+      "client": "Op. Dr. Duygu Cebecik Özmüş",
+      "sector": "Sağlık / kadın hastalıkları ve doğum",
+      "projectType": "YouTube medikal içerik serisi",
+      "year": 2026,
+      "summary": "Gebelikte genetik tarama ne zaman yapılır? — Op. Dr. Duygu Cebecik Özmüş medikal içerik serisi #8.",
+      "url": "https://rastcreative.com/projeler/ikili-test-mi-fetal-dna-testi-mi",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "HUpVPJK47_s",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "rosa-coffee-sosyal-icerik",
+      "title": "Rosa Coffee — Sosyal İçerik",
+      "category": "Sosyal Medya",
+      "client": "Rosa Coffee",
+      "sector": "Gıda / kahve / kafe",
+      "projectType": "Sosyal medya içeriği",
+      "year": 2025,
+      "summary": "Rosa Coffee için dikey sosyal medya içeriği.",
+      "url": "https://rastcreative.com/projeler/rosa-coffee-sosyal-icerik",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "8YCa8-1pGro",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "buyapi-sosyal-icerik-1",
+      "title": "Buyapı — Sosyal İçerik",
+      "category": "Sosyal Medya",
+      "client": "Buyapı",
+      "sector": "İnşaat / mimarlık / gayrimenkul",
+      "projectType": "Proje tanıtım içeriği",
+      "year": 2025,
+      "summary": "Buyapı için dikey sosyal medya içeriği.",
+      "url": "https://rastcreative.com/projeler/buyapi-sosyal-icerik-1",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "8ze42tjjhZg",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "thermoway-edit-3",
+      "title": "ThermoWay — Sosyal İçerik #3",
+      "category": "Sosyal Medya",
+      "client": "ThermoWay",
+      "sector": null,
+      "projectType": null,
+      "year": 2025,
+      "summary": "ThermoWay için dikey sosyal medya kurgusu.",
+      "url": "https://rastcreative.com/projeler/thermoway-edit-3",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "GJPESVKhJzg",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "isitan-edit-1",
+      "title": "Isı-Tan — Sosyal İçerik #1",
+      "category": "Sosyal Medya",
+      "client": "Isıtan",
+      "sector": "Endüstriyel ısıtma sistemleri / imalat",
+      "projectType": "Kurgu / edit videosu",
+      "year": 2025,
+      "summary": "Isıtan için dikey sosyal medya kurgusu.",
+      "url": "https://rastcreative.com/projeler/isitan-edit-1",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "LiaCxph8j-g",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "thermoway-edit-2",
+      "title": "ThermoWay — Sosyal İçerik #2",
+      "category": "Sosyal Medya",
+      "client": "ThermoWay",
+      "sector": null,
+      "projectType": null,
+      "year": 2025,
+      "summary": "ThermoWay için dikey sosyal medya kurgusu.",
+      "url": "https://rastcreative.com/projeler/thermoway-edit-2",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "Snsols3cTEA",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "buyapi-sosyal-icerik-2",
+      "title": "Buyapı — Sosyal İçerik #2",
+      "category": "Sosyal Medya",
+      "client": "Buyapı",
+      "sector": null,
+      "projectType": null,
+      "year": 2025,
+      "summary": "Buyapı için dikey sosyal medya içeriği.",
+      "url": "https://rastcreative.com/projeler/buyapi-sosyal-icerik-2",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "ww3HmYMOvS4",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "thermoway-edit-1",
+      "title": "ThermoWay — Sosyal İçerik #1",
+      "category": "Sosyal Medya",
+      "client": "ThermoWay",
+      "sector": "Endüstriyel ısıtma ve soğutma sistemleri",
+      "projectType": "Kurgu / edit videosu",
+      "year": 2025,
+      "summary": "ThermoWay için dikey sosyal medya kurgusu.",
+      "url": "https://rastcreative.com/projeler/thermoway-edit-1",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "JnIajHHQ9rM",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "adatip-sosyal-icerik",
+      "title": "Adatıp Hastanesi — Sosyal İçerik",
+      "category": "Sosyal Medya",
+      "client": "Adatıp Hastanesi",
+      "sector": null,
+      "projectType": null,
+      "year": 2025,
+      "summary": "Adatıp Hastanesi için dikey sosyal medya içeriği.",
+      "url": "https://rastcreative.com/projeler/adatip-sosyal-icerik",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "gNi2I-iuw7g",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "adatip-saglikli-hafta-sonu",
+      "title": "Sağlıklı Hafta Sonu",
+      "category": "Sosyal Medya",
+      "client": "Adatıp Hastanesi",
+      "sector": null,
+      "projectType": null,
+      "year": 2025,
+      "summary": "Adatıp Hastanesi için sağlıklı hafta sonu dileği temalı dikey sosyal medya içeriği.",
+      "url": "https://rastcreative.com/projeler/adatip-saglikli-hafta-sonu",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "gvOc6DPv0G0",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "aytas-home-sosyal-medya",
+      "title": "Aytaş Home — Sosyal Medya Yönetimi",
+      "category": "Sosyal Medya",
+      "client": "Aytaş Home",
+      "sector": null,
+      "projectType": null,
+      "year": 2025,
+      "summary": "Aytaş Home Outlet için sosyal medya içerik üretimi ve hesap yönetimi.",
+      "url": "https://rastcreative.com/projeler/aytas-home-sosyal-medya",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": null,
+        "externalUrl": "https://www.instagram.com/aytashomeoutlet/"
+      }
+    },
+    {
+      "id": "aytas-home-reels-01",
+      "title": "Aytaş Home — Reels 01",
+      "category": "Sosyal Medya",
+      "client": "Aytaş Home",
+      "sector": "Mobilya & ev tekstili / perakende",
+      "projectType": "Sosyal medya video prodüksiyonu",
+      "year": 2025,
+      "summary": "Aytaş Home için hazırlanan dikey sosyal medya video içeriği.",
+      "url": "https://rastcreative.com/projeler/aytas-home-reels-01",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "enR8F0gvKU8",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "aytas-home-reels-02",
+      "title": "Aytaş Home — Reels 02",
+      "category": "Sosyal Medya",
+      "client": "Aytaş Home",
+      "sector": null,
+      "projectType": null,
+      "year": 2025,
+      "summary": "Aytaş Home için hazırlanan kısa format dikey video.",
+      "url": "https://rastcreative.com/projeler/aytas-home-reels-02",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "fgQlZ8pVudQ",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "aytas-home-reels-03",
+      "title": "Aytaş Home — Reels 03",
+      "category": "Sosyal Medya",
+      "client": "Aytaş Home",
+      "sector": null,
+      "projectType": null,
+      "year": 2025,
+      "summary": "Aytaş Home sosyal medya hesapları için dikey video prodüksiyonu.",
+      "url": "https://rastcreative.com/projeler/aytas-home-reels-03",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "1n-pbpFGTNk",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "aytas-home-reels-04",
+      "title": "Aytaş Home — Reels 04",
+      "category": "Sosyal Medya",
+      "client": "Aytaş Home",
+      "sector": null,
+      "projectType": null,
+      "year": 2025,
+      "summary": "Aytaş Home için kısa video ve sosyal medya içerik üretimi.",
+      "url": "https://rastcreative.com/projeler/aytas-home-reels-04",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "LTuUOPdr4hM",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "aytas-home-reels-05",
+      "title": "Aytaş Home — Reels 05",
+      "category": "Sosyal Medya",
+      "client": "Aytaş Home",
+      "sector": null,
+      "projectType": null,
+      "year": 2025,
+      "summary": "Aytaş Home markası için hazırlanmış Reels/Shorts video içeriği.",
+      "url": "https://rastcreative.com/projeler/aytas-home-reels-05",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "5fez512eV7g",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "aytas-home-reels-06",
+      "title": "Aytaş Home — Reels 06",
+      "category": "Sosyal Medya",
+      "client": "Aytaş Home",
+      "sector": null,
+      "projectType": null,
+      "year": 2025,
+      "summary": "Aytaş Home için hazırlanan sosyal medya dikey video çalışması.",
+      "url": "https://rastcreative.com/projeler/aytas-home-reels-06",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "253ONu5OZB4",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "adatip-her-hayalin-bir-baslangici",
+      "title": "Her Hayalin Bir Başlangıcı Vardır",
+      "category": "Sosyal Medya",
+      "client": "Adatıp Hastanesi",
+      "sector": null,
+      "projectType": null,
+      "year": 2025,
+      "summary": "Adatıp Hastanesi için marka mesajı temalı dikey sosyal medya içeriği.",
+      "url": "https://rastcreative.com/projeler/adatip-her-hayalin-bir-baslangici",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "9bLFImyTAdU",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "adatip-18-mart-canakkale-zaferi",
+      "title": "18 Mart Çanakkale Zaferi",
+      "category": "Sosyal Medya",
+      "client": "Adatıp Hastanesi",
+      "sector": null,
+      "projectType": null,
+      "year": 2025,
+      "summary": "Adatıp Hastanesi için 18 Mart Çanakkale Zaferi ve Şehitleri Anma Günü'ne özel dikey içerik.",
+      "url": "https://rastcreative.com/projeler/adatip-18-mart-canakkale-zaferi",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "ck18oos4w1A",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "adatip-14-mart-tip-bayrami",
+      "title": "14 Mart Tıp Bayramı",
+      "category": "Sosyal Medya",
+      "client": "Adatıp Hastanesi",
+      "sector": null,
+      "projectType": null,
+      "year": 2025,
+      "summary": "Adatıp Hastanesi için 14 Mart Tıp Bayramı'na özel dikey sosyal medya içeriği.",
+      "url": "https://rastcreative.com/projeler/adatip-14-mart-tip-bayrami",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "AoIsORRPGSI",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "adatip-sevgililer-gunu",
+      "title": "Sevgililer Günü",
+      "category": "Sosyal Medya",
+      "client": "Adatıp Hastanesi",
+      "sector": null,
+      "projectType": null,
+      "year": 2025,
+      "summary": "Adatıp Hastanesi için Sevgililer Günü'ne özel dikey sosyal medya içeriği.",
+      "url": "https://rastcreative.com/projeler/adatip-sevgililer-gunu",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "pP-CMGd7iaQ",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "adatip-cilt-kanseri-farkindalik",
+      "title": "Cilt Kanseri Farkındalık Ayı",
+      "category": "Sosyal Medya",
+      "client": "Adatıp Hastanesi",
+      "sector": null,
+      "projectType": null,
+      "year": 2025,
+      "summary": "Adatıp Hastanesi için 1-31 Mayıs Cilt Kanseri Farkındalık Ayı temalı dikey içerik.",
+      "url": "https://rastcreative.com/projeler/adatip-cilt-kanseri-farkindalik",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "2yKw_Jxwvrg",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "adatip-29-ekim-cumhuriyet-bayrami",
+      "title": "29 Ekim Cumhuriyet Bayramı",
+      "category": "Sosyal Medya",
+      "client": "Adatıp Hastanesi",
+      "sector": null,
+      "projectType": null,
+      "year": 2025,
+      "summary": "Adatıp Hastanesi için 29 Ekim Cumhuriyet Bayramı'na özel dikey sosyal medya içeriği.",
+      "url": "https://rastcreative.com/projeler/adatip-29-ekim-cumhuriyet-bayrami",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "HnQol4oRpbY",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "adatip-gelecek-bugunden-basliyor",
+      "title": "Adatıp'ta Gelecek Bugünden Başlıyor",
+      "category": "Sosyal Medya",
+      "client": "Adatıp Hastanesi",
+      "sector": null,
+      "projectType": null,
+      "year": 2025,
+      "summary": "Adatıp Hastanesi için vizyon ve gelecek temalı dikey sosyal medya içeriği.",
+      "url": "https://rastcreative.com/projeler/adatip-gelecek-bugunden-basliyor",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "MbNmlRtUPQc",
+        "externalUrl": null
+      }
+    },
+    {
+      "id": "adatip-radyoterapi-sureci",
+      "title": "Radyoterapi Süreci — Uzm. Dr. Atınç Aksu",
+      "category": "Sosyal Medya",
+      "client": "Adatıp Hastanesi",
+      "sector": null,
+      "projectType": null,
+      "year": 2025,
+      "summary": "Radyasyon Onkolojisi Uzmanı Uzm. Dr. Atınç Aksu radyoterapi sürecini anlatıyor.",
+      "url": "https://rastcreative.com/projeler/adatip-radyoterapi-sureci",
+      "media": {
+        "vimeoId": null,
+        "youtubeId": "pc2yzaWsGfk",
+        "externalUrl": null
+      }
+    }
+  ]
+}

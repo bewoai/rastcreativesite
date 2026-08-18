@@ -1,0 +1,182 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Rast Creative Public Site Information API",
+    "version": "1.0.0",
+    "description": "Public, read-only metadata for discovering Rast Creative Studio services and contact channels. No authentication is required."
+  },
+  "servers": [{ "url": "https://rastcreative.com" }],
+  "paths": {
+    "/api/site.json": {
+      "get": {
+        "operationId": "getSiteInformation",
+        "summary": "Get studio, service and contact information",
+        "responses": {
+          "200": {
+            "description": "Public site information",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SiteInformation" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/status.json": {
+      "get": {
+        "operationId": "getDiscoveryStatus",
+        "summary": "Get the status scope of static discovery resources",
+        "responses": {
+          "200": {
+            "description": "Discovery resource status",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Status" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/services.json": {
+      "get": {
+        "operationId": "listServices",
+        "summary": "List Rast Creative services",
+        "responses": {
+          "200": {
+            "description": "Public service catalog",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServicesResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/projects.json": {
+      "get": {
+        "operationId": "listProjects",
+        "summary": "List published portfolio projects",
+        "responses": {
+          "200": {
+            "description": "Public portfolio index",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ProjectsResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/locations.json": {
+      "get": {
+        "operationId": "listServiceAreas",
+        "summary": "List service areas",
+        "responses": {
+          "200": {
+            "description": "Public service area index",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/LocationsResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/faq.json": {
+      "get": {
+        "operationId": "listFrequentlyAskedQuestions",
+        "summary": "List common project questions and answers",
+        "responses": {
+          "200": {
+            "description": "Public FAQ index",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/FaqResponse" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Service": {
+        "type": "object",
+        "required": ["name", "url"],
+        "properties": {
+          "name": { "type": "string" },
+          "url": { "type": "string", "format": "uri" }
+        }
+      },
+      "SiteInformation": {
+        "type": "object",
+        "required": ["name", "url", "language", "services", "contact"],
+        "properties": {
+          "name": { "type": "string" },
+          "url": { "type": "string", "format": "uri" },
+          "language": { "type": "string" },
+          "description": { "type": "string" },
+          "location": { "type": "object", "additionalProperties": { "type": "string" } },
+          "services": { "type": "array", "items": { "$ref": "#/components/schemas/Service" } },
+          "contact": { "type": "object", "additionalProperties": { "type": "string" } },
+          "projects": { "type": "string", "format": "uri" },
+          "blog": { "type": "string", "format": "uri" }
+        }
+      },
+      "Status": {
+        "type": "object",
+        "required": ["status", "service", "scope"],
+        "properties": {
+          "status": { "type": "string", "enum": ["operational"] },
+          "service": { "type": "string" },
+          "scope": { "type": "string" },
+          "documentation": { "type": "string", "format": "uri" }
+        }
+      },
+      "ServicesResponse": {
+        "type": "object",
+        "required": ["name", "services"],
+        "properties": {
+          "name": { "type": "string" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "services": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
+        }
+      },
+      "ProjectsResponse": {
+        "type": "object",
+        "required": ["name", "count", "projects"],
+        "properties": {
+          "name": { "type": "string" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "count": { "type": "integer" },
+          "projects": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
+        }
+      },
+      "LocationsResponse": {
+        "type": "object",
+        "required": ["name", "locations"],
+        "properties": {
+          "name": { "type": "string" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "primaryLocation": { "type": "string" },
+          "locations": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
+        }
+      },
+      "FaqResponse": {
+        "type": "object",
+        "required": ["name", "questions"],
+        "properties": {
+          "name": { "type": "string" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "questions": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
+        }
+      }
+    }
+  }
+}

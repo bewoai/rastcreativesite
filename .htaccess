@@ -1,0 +1,134 @@
+# Rast Creative Studio — Hostinger .htaccess
+# 301 redirects from old Framer URLs to new Astro routes.
+# Error document for clean 404 handling.
+
+# ── Default charset (send UTF-8 in the HTTP Content-Type header) ──────────
+AddDefaultCharset UTF-8
+
+# ── Correct media MIME types (host serves .webm/.mp4 as text/plain otherwise) ─
+<IfModule mod_mime.c>
+  AddType video/webm .webm
+  AddType video/mp4 .mp4
+  AddType application/json .json
+
+  <Files "api-catalog">
+    ForceType application/linkset+json
+  </Files>
+  <Files "openapi.json">
+    ForceType application/vnd.oai.openapi+json
+  </Files>
+  <FilesMatch "(SKILL|auth)\.md$">
+    ForceType text/markdown
+  </FilesMatch>
+  <Files "llms.txt">
+    ForceType text/markdown
+  </Files>
+</IfModule>
+
+# ── Canonical host + HTTPS ────────────────────────────────────────────────
+RewriteEngine On
+# www → non-www (also upgrades to HTTPS in the same hop)
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+# Force HTTPS for the bare domain
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# ── Markdown for agents ──────────────────────────────────────────────────
+# Browsers keep receiving HTML. Agents asking for Markdown on the homepage
+# receive the curated llms.txt representation instead.
+RewriteCond %{HTTP:Accept} text/markdown [NC]
+RewriteRule ^$ /llms.txt [L]
+
+# ── Block VCS / hidden files (Hostinger's Git deploy leaves a .git here) ──
+RewriteRule (^|/)\.(git|github|vscode|gitignore|gitattributes) - [F,L]
+
+# ── Remove trailing slash (match Astro's trailingSlash: 'ignore' default) ─
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+# ── Old Framer → New Astro 301 Redirects ──────────────────────────────────
+Redirect 301 /projelerimiz /projeler
+Redirect 301 /hizmetlerimiz /hizmetler
+Redirect 301 /hakkimizda-1 /hakkimizda
+Redirect 301 /iletisim-1 /iletisim
+
+# ── Custom 404 ────────────────────────────────────────────────────────────
+ErrorDocument 404 /404.html
+
+# ── Cache control for static assets ──────────────────────────────────────
+<IfModule mod_expires.c>
+  ExpiresActive On
+  # Fonts — immutable, long cache
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType font/woff "access plus 1 year"
+  # Images
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType image/webp "access plus 1 month"
+  ExpiresByType image/avif "access plus 1 month"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/jpeg "access plus 1 month"
+  # CSS & JS (hashed by Astro build, so long cache is safe)
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  # Videos are not fingerprinted, so keep the cache useful but safely refreshable.
+  ExpiresByType video/webm "access plus 1 month"
+  ExpiresByType video/mp4 "access plus 1 month"
+  # HTML — short cache (content updates)
+  ExpiresByType text/html "access plus 10 minutes"
+</IfModule>
+
+# ── Gzip/Brotli compression ──────────────────────────────────────────────
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+  AddOutputFilterByType DEFLATE font/woff2
+</IfModule>
+
+# ── Security headers ─────────────────────────────────────────────────────
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set Strict-Transport-Security "max-age=31536000; includeSubDomains" "expr=%{HTTPS} == 'on'"
+  Header merge Vary "Accept"
+
+  # RFC 8288 / RFC 9727 discovery links. Files matches the resolved homepage
+  # index.html after Apache's DirectoryIndex handling.
+  <Files "index.html">
+    Header set Link "</.well-known/api-catalog>; rel=api-catalog, </openapi.json>; rel=service-desc, </agent-docs>; rel=service-doc, </.well-known/agent-skills/index.json>; rel=describedby, </llms.txt>; rel=describedby"
+  </Files>
+
+  <Files "api-catalog">
+    Header set Content-Type "application/linkset+json; profile=\"https://www.rfc-editor.org/info/rfc9727\""
+    Header set Access-Control-Allow-Origin "*"
+  </Files>
+  <Files "openapi.json">
+    Header set Content-Type "application/vnd.oai.openapi+json; version=3.1"
+    Header set Access-Control-Allow-Origin "*"
+  </Files>
+  <FilesMatch "(index\.json|site\.json|status\.json)$">
+    Header set Access-Control-Allow-Origin "*"
+  </FilesMatch>
+  <FilesMatch "(services|projects|locations|faq)\.json$">
+    Header set Content-Type "application/json; charset=UTF-8"
+    Header set Access-Control-Allow-Origin "*"
+  </FilesMatch>
+  <FilesMatch "(SKILL|auth)\.md$">
+    Header set Content-Type "text/markdown; charset=UTF-8"
+    Header set Access-Control-Allow-Origin "*"
+  </FilesMatch>
+  <Files "llms.txt">
+    Header set Content-Type "text/markdown; charset=UTF-8"
+    Header set x-markdown-tokens "255"
+  </Files>
+  <Files "llms-full.txt">
+    Header set Content-Type "text/markdown; charset=UTF-8"
+  </Files>
+
+  # Cache media by extension (MIME-independent) so repeat visits reuse the hero loop.
+  <FilesMatch "\.(webm|mp4)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+</IfModule>
