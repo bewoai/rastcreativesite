@@ -170,10 +170,6 @@ const pageJsonLd = [
 
     <div class="hero__foot">
       <p class="hero__disciplines">Film / Fotoğraf / İçerik / AI</p>
-      <a href="#secili-isler" class="hero__scroll" data-cta-location="hero">
-        Scroll to explore
-        <Icon name="arrow-right" size={15} class="hero__scroll-ic" />
-      </a>
     </div>
   </VideoHero>
 
@@ -723,27 +719,6 @@ const pageJsonLd = [
     margin: 0;
     color: rgba(241, 241, 239, 0.62);
   }
-  .hero__scroll {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.55rem;
-    color: rgba(241, 241, 239, 0.55);
-    text-transform: uppercase;
-    transition: color var(--dur-fast) var(--ease-out);
-  }
-  .hero__scroll:hover,
-  .hero__scroll:focus-visible {
-    color: #f1f1ef;
-  }
-  :global(.hero__scroll-ic) {
-    transform: rotate(90deg);
-    transition: transform var(--dur) var(--ease-out);
-  }
-  .hero__scroll:hover :global(.hero__scroll-ic),
-  .hero__scroll:focus-visible :global(.hero__scroll-ic) {
-    transform: rotate(90deg) translateX(3px);
-  }
-
   /* ---- One authored entrance: the hero settles, it does not assemble ---- */
   .hero__say > *,
   .hero__show,
