@@ -49,6 +49,18 @@
       played = false;
     }
 
+    /*
+     * Paid visits skip the entry sequence. The head bootstrap in BaseLayout
+     * sets `rc_paid_visit` before this component runs, so we only need to
+     * read the flag here and bail out.
+     */
+    let paidVisit = false;
+    try {
+      paidVisit = sessionStorage.getItem("rc_paid_visit") === "1";
+    } catch {
+      paidVisit = false;
+    }
+
     const markPlayed = () => {
       try {
         sessionStorage.setItem(storageKey, "1");
@@ -57,7 +69,7 @@
       }
     };
 
-    if (reduceMotion || played) {
+    if (reduceMotion || played || paidVisit) {
       root.classList.remove("entry-pending");
       overlay.remove();
     } else {

@@ -73,7 +73,43 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
           } catch (e) {
             entryPlayed = false;
           }
-          if (!reduceMotion && !entryPlayed) root.classList.add("entry-pending");
+
+          /*
+           * Paid traffic skips the entry animation.
+           *
+           * Ad visitors arrive with intent and a cost attached; holding the
+           * first paint behind a ~3.3s exposure sequence loses them before
+           * they ever see the page. Organic visitors still get the full
+           * brand moment. Once flagged, the skip sticks for the session so
+           * internal navigation stays consistent.
+           */
+          let paidVisit = false;
+          try {
+            const PAID_PARAMS = [
+              "gclid",
+              "gbraid",
+              "wbraid",
+              "gad_source",
+              "gclsrc",
+              "utm_source",
+              "utm_medium",
+              "utm_campaign",
+              "msclkid",
+              "fbclid",
+              "ttclid",
+            ];
+            const params = new URLSearchParams(location.search);
+            paidVisit =
+              sessionStorage.getItem("rc_paid_visit") === "1" ||
+              PAID_PARAMS.some((key) => params.has(key));
+            if (paidVisit) sessionStorage.setItem("rc_paid_visit", "1");
+          } catch (e) {
+            paidVisit = false;
+          }
+
+          if (!reduceMotion && !entryPlayed && !paidVisit) {
+            root.classList.add("entry-pending");
+          }
         }
 
         const savedTheme = localStorage.getItem("rc_theme");

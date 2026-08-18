@@ -3,7 +3,7 @@ import Logo from "./Logo.astro";
 import Button from "./Button.astro";
 import Icon from "./Icon.astro";
 import ThemeToggle from "./ThemeToggle.astro";
-import { NAV, PRIMARY_CTA } from "../consts";
+import { NAV, PRIMARY_CTA, WHATSAPP_CTA_HREF } from "../consts";
 
 // Active-route detection (ignore trailing slash).
 const path = Astro.url.pathname.replace(/\/+$/, "") || "/";
@@ -13,8 +13,15 @@ const isActive = (href: string) =>
 // Mobile tab-bar mirrors the full nav + Home for thumb-reach parity.
 const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
 
-// Global WhatsApp shortcuts route through the validated quote form.
-const whatsappFormHref = "/iletisim#teklif-formu";
+/*
+ * The tab-bar WhatsApp shortcut opens WhatsApp directly.
+ *
+ * It previously routed to the quote form, which meant a button labelled
+ * "WhatsApp" never opened a conversation — the tap was still recorded as
+ * contact_whatsapp_click, so the analytics showed contacts that never
+ * happened. Falls back to the form only if no number is configured.
+ */
+const whatsappHref = WHATSAPP_CTA_HREF ?? "/iletisim#teklif-formu";
 ---
 
 {/* Desktop: floating glass pill */}
@@ -74,8 +81,8 @@ const whatsappFormHref = "/iletisim#teklif-formu";
   {
     <a
       class="tabbar__wa"
-      href={whatsappFormHref}
-      aria-label="WhatsApp teklif formuna git"
+      href={whatsappHref}
+      aria-label="WhatsApp'tan teklif iste"
       aria-hidden="true"
       tabindex="-1"
       data-cta-location="mobile_tabbar"

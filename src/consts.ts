@@ -100,6 +100,19 @@ export function waLink(message: string): string | null {
 }
 
 /**
+ * Prefilled opener for global WhatsApp shortcuts (nav tab-bar, footer).
+ *
+ * Pre-filling the first message removes the "what do I even write" pause and
+ * tells us on arrival what the person wants, so the reply can be useful
+ * immediately.
+ */
+export const WHATSAPP_CTA_MESSAGE =
+  "Merhaba, video çekimi için teklif almak istiyorum.";
+
+/** Ready-to-use WhatsApp href for the global shortcuts; null if unconfigured. */
+export const WHATSAPP_CTA_HREF = waLink(WHATSAPP_CTA_MESSAGE);
+
+/**
  * Migrated marketing copy (roadmap §2 + old site rastcreative.com).
  * `heroTitle` is the slogan the roadmap says to keep; `heroSubtitle`/`aboutIntro`
  * come from the old site (aboutIntro lightly cleaned — confirm wording with client).

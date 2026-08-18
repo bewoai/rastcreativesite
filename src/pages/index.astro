@@ -146,12 +146,18 @@ const pageJsonLd = [
           <span>Fikirleri, izlemeye değer işlere dönüştürüyoruz.</span>
         </p>
         <div class="hero__cta">
-          {/* ↘ moves you down this page; ↗ leaves for another one. */}
-          <Button href="#secili-isler" size="lg" arrow class="hero__go" data-cta-location="hero">
-            İşleri Gör
+          {/* ↗ leaves for the quote page; ↘ moves you down this one. */}
+          <Button
+            href={PRIMARY_CTA.href}
+            size="lg"
+            arrow
+            class="hero__go hero__go--away"
+            data-cta-location="hero"
+          >
+            {PRIMARY_CTA.shortLabel}
           </Button>
-          <a href={PRIMARY_CTA.href} class="hero__link" data-cta-location="hero">
-            Bir Proje Başlatalım
+          <a href="#secili-isler" class="hero__link hero__link--down" data-cta-location="hero">
+            İşleri Gör
             <Icon name="arrow-up-right" size={17} class="hero__link-ic" />
           </a>
         </div>
@@ -608,6 +614,14 @@ const pageJsonLd = [
   :global(.hero__go:hover .btn__arrow) {
     transform: rotate(45deg) translate(3px, 3px);
   }
+  /* The primary action now leaves for the quote page, so its arrow points
+     straight ahead instead of down into the page. */
+  :global(.hero__go--away .btn__arrow) {
+    transform: none;
+  }
+  :global(.hero__go--away:hover .btn__arrow) {
+    transform: translateX(3px);
+  }
   :global(.hero .btn--primary) {
     color: #111110 !important;
     box-shadow: none !important;
@@ -669,6 +683,14 @@ const pageJsonLd = [
   .hero__link:hover :global(.hero__link-ic),
   .hero__link:focus-visible :global(.hero__link-ic) {
     transform: translateX(4px);
+  }
+  /* The secondary link scrolls down this page, so the arrow turns to match. */
+  .hero__link--down :global(.hero__link-ic) {
+    transform: rotate(90deg);
+  }
+  .hero__link--down:hover :global(.hero__link-ic),
+  .hero__link--down:focus-visible :global(.hero__link-ic) {
+    transform: rotate(90deg) translateX(4px);
   }
 
   .hero__show {

@@ -2,10 +2,12 @@
 import Logo from "./Logo.astro";
 import Icon from "./Icon.astro";
 import Eyebrow from "./Eyebrow.astro";
-import { NAV, SOCIAL, CONTACT, SITE } from "../consts";
+import { NAV, SOCIAL, CONTACT, SITE, WHATSAPP_CTA_HREF } from "../consts";
 
 const year = new Date().getFullYear();
-const whatsappFormHref = "/iletisim#teklif-formu";
+
+/* Opens WhatsApp directly; falls back to the form if no number is set. */
+const whatsappHref = WHATSAPP_CTA_HREF ?? "/iletisim#teklif-formu";
 ---
 
 <footer class="footer">
@@ -82,8 +84,8 @@ const whatsappFormHref = "/iletisim#teklif-formu";
         </li>
         {
           <li>
-            <a href={whatsappFormHref} class="footer__link footer__link--icon">
-              <Icon name="whatsapp" size={18} /> WhatsApp teklif formu
+            <a href={whatsappHref} class="footer__link footer__link--icon">
+              <Icon name="whatsapp" size={18} /> WhatsApp'tan yazın
             </a>
           </li>
         }
