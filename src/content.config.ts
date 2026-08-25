@@ -35,6 +35,10 @@ const projects = defineCollection({
     featured: z.boolean().default(false), // surfaces in homepage "Seçili işler"
     order: z.number().default(0),
     draft: z.boolean().default(false),
+    // Unlisted: page still builds and stays reachable by direct URL, but is
+    // excluded from every listing (homepage, /projeler, kategori, marka,
+    // logo wall) and gets `noindex` — see [slug].astro and astro.config.mjs.
+    hidden: z.boolean().default(false),
   }),
 });
 

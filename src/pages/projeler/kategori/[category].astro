@@ -9,7 +9,9 @@ import { groupByBrand, brandHref } from "../../../lib/brands";
 import { PROJECT_CATEGORIES } from "../../../consts";
 
 export async function getStaticPaths() {
-  const all = (await getCollection("projects")).filter((p) => !p.data.draft);
+  const all = (await getCollection("projects")).filter(
+    (p) => !p.data.draft && !p.data.hidden,
+  );
   const brands = groupByBrand(all);
   return PROJECT_CATEGORIES.map((c) => ({
     params: { category: c.slug },

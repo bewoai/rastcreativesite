@@ -11,6 +11,7 @@ publishDate: "2026-06-15"
 featured: false
 order: 21
 posterAlt: "Adatıp Hastanesi Mayıs Cilt Kanseri Farkındalık Ayı dikey sosyal medya videosu kapağı"
+hidden: true
 ---
 
 1-31 Mayıs Cilt Kanseri Farkındalık Ayı kapsamında hazırlanan bilgilendirici içerik. Adatıp Hastanesi'nin sosyal medya hesapları için dikey (9:16) Reels/Shorts formatında üretildi; erken farkındalık ve korunma mesajını anlaşılır bir dille aktarır.

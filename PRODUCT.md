@@ -14,10 +14,9 @@ sorumluları: dükkan, firma, fabrika, hastane ve bireysel müşteriler. Ağırl
 markam için iyi iş çıkarır mı?" sorusunu birkaç saniyede yanıtlamak, sonra fiyat/kapsam
 konuşmak için iletişime geçmek.
 
-Sektör dağılımı portföyden doğrulanabilir: sanayi/üretim (Altoteks, Canex, ThermoWay,
-Isıtan, Chint Power), medikal (Adatıp Hastanesi, Op. Dr. Duygu Cebecik Özmüş),
-lojistik/denizcilik (Meteors Shipping, Mavi Vatan), inşaat (Buyapı), perakende
-(Aytaş Home, Rosa Coffee).
+Sektör dağılımı portföyden doğrulanabilir: sanayi/üretim (Altoteks, Canex, Chint Power),
+medikal (Adatıp Hastanesi, Op. Dr. Duygu Cebecik Özmüş), lojistik/denizcilik
+(Meteors Shipping, Mavi Vatan), perakende (Aytaş Home).
 
 ## Product Purpose
 

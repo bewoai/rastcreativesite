@@ -11,6 +11,7 @@ publishDate: "2026-06-15"
 featured: false
 order: 24
 posterAlt: "Adatıp Hastanesi Radyasyon Onkolojisi Uzmanı Uzm. Dr. Atınç Aksu radyoterapi bilgilendirme dikey videosu kapağı"
+hidden: true
 ---
 
 Adatıp Hastanesi Radyasyon Onkolojisi Uzmanı Uzm. Dr. Atınç Aksu'nun radyoterapi sürecini hastalara sade bir dille anlattığı bilgilendirici içerik. Markanın sosyal medya hesapları için dikey (9:16) Reels/Shorts formatında hazırlandı; uzman görüşüyle hasta bilgilendirmesini öne çıkarır.

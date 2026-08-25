@@ -27,7 +27,9 @@ import { AREA_INDEX_LOCATION_SLUGS, SEO_LOCATIONS } from "../data/locations";
 const byOrder = (a: { data: { order: number } }, b: { data: { order: number } }) =>
   a.data.order - b.data.order;
 
-const projects = (await getCollection("projects")).filter((p) => !p.data.draft);
+const projects = (await getCollection("projects")).filter(
+  (p) => !p.data.draft && !p.data.hidden,
+);
 const dailyProjectCount = 3;
 const dailyProjects = [...projects].sort(byOrder);
 const services = (await getCollection("services")).sort(byOrder);

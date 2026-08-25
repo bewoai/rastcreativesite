@@ -39,6 +39,12 @@ const NOINDEX_LOCATION_PATHS = new Set(
 const isNoindexLocationPage = (page) =>
   NOINDEX_LOCATION_PATHS.has(new URL(page).pathname.replace(/\/$/, ''));
 
+// Unlisted project pages (content.hidden: true, e.g. Adatıp) stay reachable
+// by direct URL with a `noindex` meta tag, but must not appear in the
+// sitemap either — sitemap should only list pages we want indexed/found.
+const isHiddenProjectPage = (page) =>
+  new URL(page).pathname.startsWith('/projeler/adatip-');
+
 // https://astro.build/config
 export default defineConfig({
   // Canonical origin — used for canonical URLs, OG tags and (Faz 5) sitemap.
@@ -60,7 +66,8 @@ export default defineConfig({
   integrations: [
     sitemap({
       // keep the temporary component gallery + noindex location pages out
-      filter: (page) => !page.includes('/dev') && !isNoindexLocationPage(page),
+      filter: (page) =>
+        !page.includes('/dev') && !isNoindexLocationPage(page) && !isHiddenProjectPage(page),
     }),
   ]
 });

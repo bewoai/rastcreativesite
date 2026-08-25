@@ -104,7 +104,7 @@ const serviceProjectCategories: Record<string, string[]> = {
 };
 
 const allProjects = (await getCollection("projects"))
-  .filter((p) => !p.data.draft)
+  .filter((p) => !p.data.draft && !p.data.hidden)
   .sort((a, b) => a.data.order - b.data.order);
 const relatedCategories = serviceProjectCategories[service.slug] ?? [];
 // Up to 6 projects, one per client/brand so the proof reel stays varied.

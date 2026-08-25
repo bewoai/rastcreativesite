@@ -12,6 +12,7 @@ featured: false
 order: 15
 posterAlt: "Sakarya Adatıp Hastanesi için hazırlanan dikey sosyal medya Reels/Shorts video kapağı"
 duration: "00:45"
+hidden: true
 ---
 
 Adatıp Hastanesi için üretilen dikey sosyal medya içeriği.

@@ -9,7 +9,9 @@ import { breadcrumb } from "../../../lib/schema";
 import { groupByBrand } from "../../../lib/brands";
 
 export async function getStaticPaths() {
-  const projects = (await getCollection("projects")).filter((p) => !p.data.draft);
+  const projects = (await getCollection("projects")).filter(
+    (p) => !p.data.draft && !p.data.hidden,
+  );
   // Only brands with more than one video need their own folder page.
   return groupByBrand(projects)
     .filter((b) => b.count > 1)

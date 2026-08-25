@@ -5,7 +5,7 @@ import { apiResponse } from "../../lib/api-response";
 
 export const GET: APIRoute = async () => {
   const projects = (await getCollection("projects"))
-    .filter((project) => !project.data.draft)
+    .filter((project) => !project.data.draft && !project.data.hidden)
     .sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0))
     .map((project) => ({
       id: project.id,

@@ -22,7 +22,9 @@ const pageTitle = "Hakkımızda | Sakarya Video Prodüksiyon Ekibi";
 const pageDescription =
   "Rast Creative Studio, Sakarya merkezli video prodüksiyon ekibi. Tanıtım filmi, sosyal medya videosu, podcast prodüksiyonu, kurgu ve dijital reklam süreçlerini birlikte planlarız.";
 
-const projects = (await getCollection("projects")).filter((p) => !p.data.draft);
+const projects = (await getCollection("projects")).filter(
+  (p) => !p.data.draft && !p.data.hidden,
+);
 const brandCount = groupByBrand(projects).length;
 
 const approach = [

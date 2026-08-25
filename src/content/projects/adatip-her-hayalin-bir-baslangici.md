@@ -11,6 +11,7 @@ publishDate: "2026-06-15"
 featured: false
 order: 17
 posterAlt: "Adatıp Hastanesi 'her hayalin bir başlangıcı vardır' temalı dikey sosyal medya videosu kapağı"
+hidden: true
 ---
 
 "Her hayalin bir başlangıcı vardır" mesajı etrafında kurgulanan, ilham veren kısa formatlı marka iletişimi içeriği. Adatıp Hastanesi'nin sosyal medya kanalları için dikey (9:16) formatta üretildi; markanın umut ve yeni başlangıç temasını öne çıkarır.
