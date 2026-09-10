@@ -10,7 +10,7 @@ import dronePlan from "../assets/photos/drone-aerial-road.webp";
 // reduced-motion / no-JS. The video itself loads only when scrolled into view.
 const boardPoster = await getImage({
   src: brandFilm,
-  width: 720,
+  width: 480, // Optimized for mobile viewport CWV (rendered at ~369px on mobile)
   format: "webp",
   quality: 72,
 });
