@@ -1182,21 +1182,27 @@ const pageJsonLd = [
     const equalizeProjectCards = () => {
       if (equalizeFrame) window.cancelAnimationFrame(equalizeFrame);
       equalizeFrame = window.requestAnimationFrame(() => {
-        equalizeFrame = 0;
         const activeCards = cards
           .filter((card) => !card.classList.contains("is-inactive"))
           .map((card) => card.querySelector<HTMLElement>(".card"))
           .filter((card): card is HTMLElement => !!card);
 
+        // Frame 1: clear heights — browser recalculates layout before next frame
         activeCards.forEach((card) => {
           card.style.minHeight = "";
         });
 
-        if (activeCards.length < 2) return;
+        if (activeCards.length < 2) { equalizeFrame = 0; return; }
 
-        const maxHeight = Math.max(...activeCards.map((card) => card.offsetHeight));
-        activeCards.forEach((card) => {
-          card.style.minHeight = `${Math.ceil(maxHeight)}px`;
+        // Frame 2: read after layout settles, then write (no forced reflow)
+        equalizeFrame = window.requestAnimationFrame(() => {
+          equalizeFrame = 0;
+          const maxHeight = Math.max(
+            ...activeCards.map((card) => card.offsetHeight),
+          );
+          activeCards.forEach((card) => {
+            card.style.minHeight = `${Math.ceil(maxHeight)}px`;
+          });
         });
       });
     };
