@@ -22,8 +22,8 @@ interface Props {
 }
 const { service } = Astro.props as Props;
 
-const title = `${service.name} Hizmeti`;
-const description = `${service.name} — ${service.tagline}. Sakarya ve çevre illerde Rast Creative Studio ile ${service.name.toLowerCase()}. Hizmet bölgelerini görün.`;
+const title = `${service.name} ${service.seoTitleSuffix}`;
+const description = `${service.name} — ${service.tagline}. Sakarya ve çevre illerde Rast Creative Studio ile ${service.name.toLocaleLowerCase('tr')}. Hizmet bölgelerini görün.`;
 
 const coreLocations = SEO_LOCATIONS.filter((l) => l.core);
 const nearbyLocations = SEO_LOCATIONS.filter((l) => !l.core);
@@ -46,7 +46,7 @@ const serviceDeliverables = [
 const jsonLd = [
   breadcrumb([
     { name: "Ana Sayfa", path: "/" },
-    { name: service.name, path: `/${service.slug}` },
+    { name: service.name, path: `/${service.slug}/` },
   ]),
   {
     "@context": "https://schema.org",
@@ -119,7 +119,7 @@ const jsonLd = [
       {
         coreLocations.map((l) => (
           <li>
-            <a href={`/${service.slug}/${l.slug}`}>
+            <a href={`/${service.slug}/${l.slug}/`}>
               {l.name} {service.name}
               <Icon name="arrow-up-right" size={14} />
             </a>
@@ -133,7 +133,7 @@ const jsonLd = [
       {
         nearbyLocations.map((l) => (
           <li>
-            <a href={`/${service.slug}/${l.slug}`}>
+            <a href={`/${service.slug}/${l.slug}/`}>
               {l.name} {service.name}
               <Icon name="arrow-up-right" size={14} />
             </a>
@@ -149,7 +149,7 @@ const jsonLd = [
       {
         SEO_SERVICES.filter((s) => s.slug !== service.slug).map((s) => (
           <li>
-            <a href={`/${s.slug}`}>
+            <a href={`/${s.slug}/`}>
               {s.name}
               <Icon name="arrow-up-right" size={14} />
             </a>

@@ -13,7 +13,7 @@ Bölgemiz sanayinin kalbi. Sakarya'nın organize sanayi alanları, Kocaeli ve Ge
 
 ## Önce ölçek, sonra detay
 
-Bir tesisin en güçlü kozu büyüklüğüdür — ama bunu yerden anlatamazsınız. İşte [drone çekimi](/drone-cekimi) tam da burada devreye giriyor: tesisin araziye nasıl yayıldığını, lojistik sahasını, üretim hacmini tek bir havadan planla anlatırsınız. Sonra içeri giriyoruz; üretim bandının ritmi, kıvılcımlar, robot kolların hareketi yakın planda çekildiğinde fabrika bir anda "yaşayan" bir yere dönüşüyor. Ölçek güven verir, detay ise işçiliği anlatır — ikisi bir arada olmalı.
+Bir tesisin en güçlü kozu büyüklüğüdür — ama bunu yerden anlatamazsınız. İşte [drone çekimi](/drone-cekimi/) tam da burada devreye giriyor: tesisin araziye nasıl yayıldığını, lojistik sahasını, üretim hacmini tek bir havadan planla anlatırsınız. Sonra içeri giriyoruz; üretim bandının ritmi, kıvılcımlar, robot kolların hareketi yakın planda çekildiğinde fabrika bir anda "yaşayan" bir yere dönüşüyor. Ölçek güven verir, detay ise işçiliği anlatır — ikisi bir arada olmalı.
 
 ## Işık, fabrikanın en zor sınavı
 
@@ -25,8 +25,8 @@ Bir tesisin en ikna edici görüntüsü, parlak makineler değil; işini bilen i
 
 ## Tek çekim, birçok kullanım
 
-Sanayi müşterilerimize hep şunu öneriyoruz: aynı çekimden birden çok şey çıkaralım. Web sitesi için 2 dakikalık ana film, fuar standı için sessiz döngü versiyon, [sosyal medya için dikey kısa kesitler](/blog/sosyal-medya-videosu-neden-dikey), bir de ihracat sunumları için altyazılı/çok dilli versiyon. Bir kez doğru çekildiğinde, o görüntüler yıllarca işinize yarıyor.
+Sanayi müşterilerimize hep şunu öneriyoruz: aynı çekimden birden çok şey çıkaralım. Web sitesi için 2 dakikalık ana film, fuar standı için sessiz döngü versiyon, [sosyal medya için dikey kısa kesitler](/blog/sosyal-medya-videosu-neden-dikey/), bir de ihracat sunumları için altyazılı/çok dilli versiyon. Bir kez doğru çekildiğinde, o görüntüler yıllarca işinize yarıyor.
 
 ## Nereden başlamalı?
 
-İster [Kocaeli](/tanitim-filmi/kocaeli), ister [Gebze](/tanitim-filmi/gebze), ister [Sakarya'daki tesisiniz](/video-cekimi/sakarya) olsun — yaptığımız ilk şey tesise gelip birlikte bir tur atmak oluyor. Çoğu zaman siz farkında bile olmadan, en etkileyici karenin nerede olduğunu o turda buluyoruz. Tesisinizi anlatmaya hazırsanız, bir [ön görüşmede](/iletisim) kahvenizi içip planı birlikte çıkaralım.
+İster [Kocaeli](/tanitim-filmi/kocaeli/), ister [Gebze](/tanitim-filmi/gebze/), ister [Sakarya'daki tesisiniz](/video-cekimi/sakarya/) olsun — yaptığımız ilk şey tesise gelip birlikte bir tur atmak oluyor. Çoğu zaman siz farkında bile olmadan, en etkileyici karenin nerede olduğunu o turda buluyoruz. Tesisinizi anlatmaya hazırsanız, bir [ön görüşmede](/iletisim/) kahvenizi içip planı birlikte çıkaralım.

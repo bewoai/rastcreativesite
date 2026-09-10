@@ -39,14 +39,14 @@ const blogPosting = {
   dateModified: (d.updatedDate ?? d.pubDate).toISOString(),
   author: { "@type": "Person", name: d.author },
   publisher: { "@type": "Organization", name: SITE.name },
-  mainEntityOfPage: new URL(`/blog/${entry.id}`, SITE.url).href,
+  mainEntityOfPage: new URL(`/blog/${entry.id}/`, SITE.url).href,
 };
 
 const pageJsonLd = [
   breadcrumb([
     { name: "Ana Sayfa", path: "/" },
-    { name: "Blog", path: "/blog" },
-    { name: d.title, path: `/blog/${entry.id}` },
+    { name: "Blog", path: "/blog/" },
+    { name: d.title, path: `/blog/${entry.id}/` },
   ]),
   blogPosting,
 ];
@@ -54,7 +54,7 @@ const pageJsonLd = [
 
 <BaseLayout title={d.seoTitle ?? d.title} description={d.description} image={ogImage} ogType="article" jsonLd={pageJsonLd}>
   <Section width="narrow">
-    <a href="/blog" class="back">← Tüm yazılar</a>
+    <a href="/blog/" class="back">← Tüm yazılar</a>
 
     <article class="article">
       <header class="article__head">

@@ -23,13 +23,13 @@ Bir Reklam Filmi Nedir? sorusuna verilecek en temel cevap, bir markanın mesajı
 
 ### Reklam Filmi Türleri: Amacınıza Uygun Formatı Seçmek
 
-Her markanın ihtiyacı ve her platformun dili farklıdır. Doğru formatı seçmek, yatırımınızın karşılığını almanız için kritiktir. Rast Creative Studio olarak projelerimizi şu üç ana kategoride şekillendiriyoruz:
+Her markanın ihtiyacı ve her platformun dili farklıdır. Doğru formatı seçmek, yatırımınızın karşılığını almanız için kritiktir. [Rast Creative Studio'nun sunduğu hizmetler](/hizmetler/) kapsamında projelerimizi şu üç ana kategoride şekillendiriyoruz:
 
-- **Marka İmaj Filmleri:** Şirketinizin vizyonunu, değerlerini ve hikâyesini anlatarak hedef kitlenizde güven inşa eder. Prestij odaklıdır ve markanızın kimliğini sağlamlaştırır.
+- **[Kurumsal Tanıtım Filmleri](/tanitim-filmi/):** Şirketinizin vizyonunu, değerlerini ve hikâyesini anlatarak hedef kitlenizde güven inşa eder. Prestij odaklıdır ve markanızın kimliğini sağlamlaştırır. (Ayrıca havadan destekleyici sahneler için [drone çekimi](/drone-cekimi/) gücünden faydalanıyoruz.)
 
-- **Ürün Odaklı Reklamlar:** Ürünün teknik özelliklerini, kullanım kolaylığını ve sağladığı faydaları sinematik bir dille ön plana çıkarır. Doğrudan satış odaklıdır.
+- **[Ürün ve Mekan Odaklı Reklamlar](/urun-mekan-cekimi/):** Ürünün teknik özelliklerini, kullanım kolaylığını ve mekanın ferahlığını sinematik bir dille ön plana çıkarır. Doğrudan satış odaklıdır.
 
-- **Sosyal Medya Reklamları:** İlk 3 saniyede dikkati yakalamayı hedefleyen, dikey formatlı ve dinamik kurgulu içeriklerdir. TikTok ve Instagram gibi mecralarda yüksek etkileşim için tasarlanır.
+- **[Sosyal Medya Reklamları ve Reels](/sosyal-medya-icerigi/):** İlk 3 saniyede dikkati yakalamayı hedefleyen, dikey formatlı ve dinamik kurgulu içeriklerdir. TikTok ve Instagram gibi mecralarda yüksek etkileşim için tasarlanır. Daha fazla fikir için [sosyal medya videosu neden izlenmiyor?](/blog/sosyal-medya-videosu-neden-izlenmiyor-durust-bir-cevap/) başlıklı yazımızı inceleyebilirsiniz.
 
 ### Sinematik Kalitenin Marka Algısına Etkisi
 
@@ -49,7 +49,7 @@ Her şey bir fikirle başlar ancak her fikir iyi bir filme dönüşmez. Pre-prod
 
 ### Prodüksiyon: Set Günü ve Çekim Disiplini
 
-Set günü, aylarca süren planlamanın gerçeğe dönüştüğü andır. Set yönetimi ve zaman planlamasına sadık kalarak, her karenin hedeflenen estetik standartlarda olmasını sağlıyoruz. Drone ve hava çekimi teknolojileriyle markanıza geniş bir perspektif kazandırırken, kristal netliğinde ses kaydıyla izleyici deneyimini en üst seviyeye taşıyoruz. Eğer markanızın hikâyesini bu profesyonel standartlarla anlatmak isterseniz, [reklam ve marka filmi](/reklam-filmi) çözümlerimizi inceleyerek ilk adımı atabilirsiniz.
+Set günü, aylarca süren planlamanın gerçeğe dönüştüğü andır. Set yönetimi ve zaman planlamasına sadık kalarak, her karenin hedeflenen estetik standartlarda olmasını sağlıyoruz. Drone ve hava çekimi teknolojileriyle markanıza geniş bir perspektif kazandırırken, kristal netliğinde ses kaydıyla izleyici deneyimini en üst seviyeye taşıyoruz. Eğer markanızın hikâyesini bu profesyonel standartlarla anlatmak isterseniz, [reklam ve marka filmi](/reklam-filmi/) çözümlerimizi inceleyerek ilk adımı atabilirsiniz.
 
 Rast Creative Studio olarak, her projeyi kendi içinde benzersiz bir sanat eseri ve stratejik bir araç olarak görüyoruz. Teknik mükemmeliyete duyduğumuz güvenle, markanızın ihtiyacı olan sinematik dili inşa ediyoruz. Disiplinli çalışma modelimiz sayesinde belirsizliğe yer bırakmıyor, nihai sonuca odaklanan profesyonel bir iş akışı sunuyoruz.
 
@@ -77,7 +77,7 @@ Kaliteli görsel içeriğin en büyük avantajı, uzun ömürlü olmasıdır. Bi
 
 ### Bütçenizi Nasıl Planlamalısınız?
 
-Başarılı bir bütçe yönetimi için öncelikleri belirlemek kritiktir. Çoğu zaman pahalı ekipmanlardan ziyade, güçlü bir senaryo ve doğru yönetmen vizyonu projenin başarısını belirler. Bütçe planlaması yaparken şu noktalara odaklanmak belirsizlikleri ortadan kaldırır:
+Başarılı bir bütçe yönetimi için öncelikleri belirlemek kritiktir. [Video çekimi fiyatı neye göre belirlenir?](/blog/video-cekimi-fiyati-neye-gore-belirlenir/) yazımızda da detaylarıyla bahsettiğimiz gibi, çoğu zaman pahalı ekipmanlardan ziyade, güçlü bir senaryo ve doğru yönetmen vizyonu projenin başarısını belirler. Bütçe planlaması yaparken şu noktalara odaklanmak belirsizlikleri ortadan kaldırır:
 
 - **Senaryo ve Strateji:** Mesajın netliği, prodüksiyonun her aşamasındaki gereksiz masrafları önler.
 
@@ -87,7 +87,7 @@ Başarılı bir bütçe yönetimi için öncelikleri belirlemek kritiktir. Çoğ
 
 ### Video İçeriklerin Satışlara Etkisi
 
-İstatistikler, video içeriğin ikna gücünü net bir şekilde gösteriyor. Yapılan araştırmalara göre, web sitelerinde yer alan ürün videoları dönüşüm oranlarını %80 oranında artırabiliyor. Sosyal medya algoritmaları da video içerikleri, metin veya görsel tabanlı içeriklere göre daha fazla öne çıkararak organik erişiminizi güçlendiriyor. Bu durum, markanızın hem reklamla hem de organik yollarla daha geniş kitlelere ulaşmasını sağlar. Markanızın satış potansiyelini artırmak ve profesyonel bir çözümle tanışmak için [projeniz için özel fiyat teklifi alın](/iletisim) ve sinematik dönüşümü başlatın.
+İstatistikler, video içeriğin ikna gücünü net bir şekilde gösteriyor. Yapılan araştırmalara göre, web sitelerinde yer alan ürün videoları dönüşüm oranlarını %80 oranında artırabiliyor. Sosyal medya algoritmaları da video içerikleri, metin veya görsel tabanlı içeriklere göre daha fazla öne çıkararak organik erişiminizi güçlendiriyor. Bu durum, markanızın hem reklamla hem de organik yollarla daha geniş kitlelere ulaşmasını sağlar. Markanızın satış potansiyelini artırmak ve profesyonel bir çözümle tanışmak için [projeniz için özel fiyat teklifi alın](/iletisim/) ve sinematik dönüşümü başlatın.
 
 Sonuç odaklı bir yaklaşımla, her kareyi markanızın büyüme stratejisine entegre ediyoruz. Yatırımınızın karşılığını somut verilerle ve artan marka prestijiyle almanız için süreçleri şeffaf ve metodik bir şekilde yönetiyoruz. Profesyonel bir içerik, sadece bugün değil, markanızın dijital hafızasında kalıcı bir değer olarak yerini alır.
 
@@ -103,7 +103,7 @@ Yerel bir ajansla çalışmanın en somut faydası, hızlı iletişim ve anlık 
 
 ### Rast Creative Studio'nun Sinematik Vizyonu
 
-Bizim için her **reklam filmi**, teknik bir görevden ziyade markanızın hikâyesini anlatan bir sanat eseridir. Modern ekipman parkurumuz, 4K/6K çekim kapasitemiz ve ileri seviye post-prodüksiyon yetkinliğimizle, Sakarya'dan çıkan projeleri dünya standartlarına taşıyoruz. Sadece görüntü kaydetmiyoruz; markanız için uzun vadeli bir içerik stratejisi kurguluyoruz. Bugüne kadar başarıyla tamamladığımız kurumsal ve medikal tanıtım filmleri, disiplinli çalışma prensibimizin ve estetik kaygılarımızın birer yansımasıdır. [Sakarya'daki markanızı dijitalin yıldızı yapmaya hazır mısınız? Bizimle iletişime geçin.](/iletisim)
+Bizim için her **reklam filmi**, teknik bir görevden ziyade markanızın hikâyesini anlatan bir sanat eseridir. Modern ekipman parkurumuz, 4K/6K çekim kapasitemiz ve ileri seviye post-prodüksiyon yetkinliğimizle, Sakarya'dan çıkan projeleri dünya standartlarına taşıyoruz. Sadece görüntü kaydetmiyoruz; markanız için uzun vadeli bir içerik stratejisi kurguluyoruz. Bugüne kadar başarıyla tamamladığımız kurumsal ve medikal tanıtım filmleri, disiplinli çalışma prensibimizin ve estetik kaygılarımızın birer yansımasıdır. Çalışmalarımızın kalitesini görmek için [projelerimizi inceleyebilir](/projeler/) veya markanızı dijitalin yıldızı yapmak için [bizimle iletişime geçebilirsiniz](/iletisim/).
 
 Stratejik planlama ve yaratıcı prodüksiyonun birleştiği noktada, markanızın yatırım getirisini (ROI) maksimize ediyoruz. Belirsizliğe yer bırakmayan, her aşaması kontrol altında tutulan profesyonel iş akışımızla tanışın. Rast Creative Studio olarak, markanızı sadece görünür kılmakla kalmıyor, iz bırakan bir sinematik kimliğe kavuşturuyoruz.
 
@@ -113,7 +113,7 @@ Profesyonel bir **reklam filmi**, markanızın dijital dünyadaki en güçlü ve
 
 Sakarya'nın öncü kreatif video ajansı olarak, sinema standardında 4K/6K prodüksiyon kapasitemiz ve uzman post-prodüksiyon yetkinliğimizle markanızı zirveye taşımaya hazırız. Stratejik içerik planlama yaklaşımımız sayesinde, her kareyi markanızın büyüme hedeflerine hizmet edecek şekilde işliyoruz. Belirsizliği ortadan kaldıran metodik iş akışımızla, vizyonunuzu yüksek kaliteli bir gerçeğe dönüştürmek için yanınızdayız.
 
-**[Markanız İçin Sinematik Bir Hikâye Yazalım - Rast Creative Studio](/iletisim)**
+**[Markanız İçin Sinematik Bir Hikâye Yazalım - Rast Creative Studio](/iletisim/)**
 
 Markanızın hikâyesini dijitalin yeni standartlarıyla anlatmak, rakiplerinizden keskin bir çizgiyle ayrışmanın en etkili yoludur. Gelin, bu yaratıcı yolculuğa birlikte çıkalım ve markanızın potansiyelini tüm dünyaya sinematik bir dille gösterelim.
 

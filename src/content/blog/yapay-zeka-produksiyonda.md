@@ -29,22 +29,22 @@ Bizim için kural basit: **yapay zeka "iyi görüneni" üretir, doğru olanı in
 
 Kamera kapandıktan sonra yapay zeka bize en çok kurgu masasında yardım ediyor:
 
-- **Transkript ve altyazı:** Saatlerce süren çekimi otomatik metne döküyoruz; doğru anı bulmak ve [çok dilli altyazı](/blog/tanitim-filmi-cektirmeden-once) çıkarmak çok hızlanıyor.
+- **Transkript ve altyazı:** Saatlerce süren çekimi otomatik metne döküyoruz; doğru anı bulmak ve [çok dilli altyazı](/blog/tanitim-filmi-cektirmeden-once/) çıkarmak çok hızlanıyor.
 - **Ses temizliği:** Sette kaçan rüzgâr, uğultu, eko — bunları temizlemek eskiden ayrı bir uğraştı.
 - **Restorasyon ve upscale:** Düşük çözünürlüklü ya da eski bir görüntüyü kullanılabilir hâle getirmek.
-- **Arka plan ve nesne temizleme:** Karede istemediğimiz bir detayı kaldırmak; özellikle [ürün ve mekan çekimlerinde](/urun-mekan-cekimi) işimizi kolaylaştırıyor.
+- **Arka plan ve nesne temizleme:** Karede istemediğimiz bir detayı kaldırmak; özellikle [ürün ve mekan çekimlerinde](/urun-mekan-cekimi/) işimizi kolaylaştırıyor.
 - **Renk ön-ayarları:** Color grading'e sıfırdan değil, iyi bir başlangıç noktasından başlamak.
 
 Bunların hiçbiri "AI yaptı, biz baktık" değil. Her birinin çıktısını tek tek kontrol ediyoruz; çünkü model bazen kendinden emin bir şekilde yanlış yapar.
 
 ## Sosyal medyada ölçek
 
-[Sosyal medya için dikey içerik](/blog/sosyal-medya-videosu-neden-dikey) üretirken bir çekimden onlarca format ve varyasyon çıkmamız gerekiyor. Kapak alternatifleri, farklı en-boy oranları, hızlı denemeler... AI burada bize hız ve hacim kazandırıyor. Markanın düzenli içerik akışını ayakta tutmak, kalite kaybetmeden ancak böyle mümkün oluyor.
+[Sosyal medya için dikey içerik](/blog/sosyal-medya-videosu-neden-dikey/) üretirken bir çekimden onlarca format ve varyasyon çıkmamız gerekiyor. Kapak alternatifleri, farklı en-boy oranları, hızlı denemeler... AI burada bize hız ve hacim kazandırıyor. Markanın düzenli içerik akışını ayakta tutmak, kalite kaybetmeden ancak böyle mümkün oluyor.
 
 ## Neyi asla AI'ya bırakmıyoruz
 
-Gerçek çekimi. Bir insanın yüzündeki gerçek ifadeyi, bir fabrikanın gerçek ölçeğini, bir markanın gerçek mekânını. Tamamen yapay üretilmiş "sahte" görüntülerle iş yapmıyoruz — özellikle medikal ve kurumsal işlerde bu bir güven meselesi. İzleyici gerçekle sahteyi sandığınızdan iyi ayırt ediyor; bir [reklam neden işe yaramıyorsa](/blog/reklam-filmi-neden-ise-yaramiyor) çoğu zaman sebebi o "sahtelik" hissidir. Bizim işimiz markanızı olduğundan iyi göstermek değil, en doğru hâliyle göstermek.
+Gerçek çekimi. Bir insanın yüzündeki gerçek ifadeyi, bir fabrikanın gerçek ölçeğini, bir markanın gerçek mekânını. Tamamen yapay üretilmiş "sahte" görüntülerle iş yapmıyoruz — özellikle medikal ve kurumsal işlerde bu bir güven meselesi. İzleyici gerçekle sahteyi sandığınızdan iyi ayırt ediyor; bir [reklam neden işe yaramıyorsa](/blog/reklam-filmi-neden-ise-yaramiyor/) çoğu zaman sebebi o "sahtelik" hissidir. Bizim işimiz markanızı olduğundan iyi göstermek değil, en doğru hâliyle göstermek.
 
 ## Sonuç olarak
 
-Yapay zeka bizi daha hızlı, daha esnek ve bazı işlerde daha hesaplı yaptı — ama daha iyi yapan şey hâlâ insan kararı. Aracı seven ama işin kontrolünü bırakmayan bir stüdyoyuz. Aklınızda bir proje varsa, bunu en verimli nasıl üretiriz — nerede AI'dan faydalanır, neyi gerçek çekeriz — bir [ön görüşmede](/iletisim) birlikte konuşalım.
+Yapay zeka bizi daha hızlı, daha esnek ve bazı işlerde daha hesaplı yaptı — ama daha iyi yapan şey hâlâ insan kararı. Aracı seven ama işin kontrolünü bırakmayan bir stüdyoyuz. Aklınızda bir proje varsa, bunu en verimli nasıl üretiriz — nerede AI'dan faydalanır, neyi gerçek çekeriz — bir [ön görüşmede](/iletisim/) birlikte konuşalım.

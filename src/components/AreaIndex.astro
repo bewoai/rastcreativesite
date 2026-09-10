@@ -55,7 +55,7 @@ const previewLocationNames = (items: readonly SeoLocation[]) =>
 
           <div class="area-card__body">
             <p>{service.tagline}</p>
-            <a class="area-card__hub" href={`/${service.slug}`}>
+            <a class="area-card__hub" href={`/${service.slug}/`}>
               {service.name} ana sayfası
               <Icon name="arrow-up-right" size={13} />
             </a>
@@ -63,10 +63,10 @@ const previewLocationNames = (items: readonly SeoLocation[]) =>
               {locations.map((location) => (
                 <li>
                   <a
-                    href={`/${service.slug}/${location.slug}`}
-                    title={`${service.name} — ${location.name}`}
+                    href={`/${service.slug}/${location.slug}/`}
+                    title={`${location.name} ${service.name} hizmeti`}
                   >
-                    {location.name}
+                    {location.name} {service.name}
                   </a>
                 </li>
               ))}

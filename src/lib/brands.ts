@@ -74,7 +74,7 @@ export function groupByBrand(projects: Project[]): Brand[] {
 export function brandHref(b: Brand): string {
   if (b.count === 1) {
     const p = b.projects[0];
-    return p.data.externalUrl ?? `/projeler/${p.id}`;
+    return p.data.externalUrl ?? `/projeler/${p.id}/`;
   }
-  return `/projeler/marka/${b.slug}`;
+  return `/projeler/marka/${b.slug}/`;
 }

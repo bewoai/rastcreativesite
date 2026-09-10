@@ -13,7 +13,7 @@ export const GET: APIRoute = async () => {
       features: service.data.features,
       // Services are grouped on the canonical services page; the collection id
       // is still exposed above for agents that need a stable identifier.
-      url: `${SITE.url}/hizmetler#${service.id}`,
+      url: `${SITE.url}/hizmetler/#${service.id}`,
     }));
 
   return apiResponse({

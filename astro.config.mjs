@@ -5,40 +5,6 @@ import tailwindcss from '@tailwindcss/vite';
 
 import sitemap from '@astrojs/sitemap';
 
-// Secondary programmatic location pages are emitted as `noindex, follow`
-// (see PRIMARY_LOCATION_SLUGS in src/data/locations.ts), so they must stay out
-// of the sitemap too — a sitemap should only list indexable URLs.
-// Keep these two lists in sync with src/data/seo-services.ts and locations.ts.
-const SERVICE_SLUGS = [
-  'video-cekimi',
-  'drone-cekimi',
-  'tanitim-filmi',
-  'reklam-filmi',
-  'sosyal-medya-icerigi',
-  'urun-mekan-cekimi',
-];
-const SECONDARY_LOCATION_SLUGS = [
-  'akyazi',
-  'karasu',
-  'ferizli',
-  'geyve',
-  'pamukova',
-  'kartepe',
-  'basiskele',
-  'golcuk',
-  'darica',
-  'duzce',
-  'bolu',
-  'bilecik',
-];
-const NOINDEX_LOCATION_PATHS = new Set(
-  SERVICE_SLUGS.flatMap((service) =>
-    SECONDARY_LOCATION_SLUGS.map((location) => `/${service}/${location}`),
-  ),
-);
-const isNoindexLocationPage = (page) =>
-  NOINDEX_LOCATION_PATHS.has(new URL(page).pathname.replace(/\/$/, ''));
-
 // Unlisted project pages (content.hidden: true, e.g. Adatıp) stay reachable
 // by direct URL with a `noindex` meta tag, but must not appear in the
 // sitemap either — sitemap should only list pages we want indexed/found.
@@ -49,6 +15,8 @@ const isHiddenProjectPage = (page) =>
 export default defineConfig({
   // Canonical origin — used for canonical URLs, OG tags and (Faz 5) sitemap.
   site: 'https://rastcreative.com',
+
+  trailingSlash: 'always',
 
   devToolbar: {
     enabled: false,
@@ -65,9 +33,9 @@ export default defineConfig({
 
   integrations: [
     sitemap({
-      // keep the temporary component gallery + noindex location pages out
-      filter: (page) =>
-        !page.includes('/dev') && !isNoindexLocationPage(page) && !isHiddenProjectPage(page),
+      // Keep the temporary component gallery and hidden/noindex projects out.
+      // All service × location pages are indexable after the content-quality pass.
+      filter: (page) => !page.includes('/dev') && !isHiddenProjectPage(page),
     }),
   ]
 });

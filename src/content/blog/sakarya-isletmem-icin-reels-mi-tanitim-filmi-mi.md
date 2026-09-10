@@ -21,7 +21,7 @@ Biri diğerinin kısa hâli değildir. Aynı çekim gününde ikisini birlikte p
 
 İlk temas noktanız Instagram veya TikTok ise Reels ile başlamak mantıklı olabilir. İnsanların sizi keşfetmesini, ekibinizi tanımasını ve hizmetinizin günlük hayattaki karşılığını görmesini sağlar.
 
-Bir müşteri sizinle çalışmayı düşündüğünde web sitenize, teklif dosyanıza veya YouTube kanalınıza yönlenecekse tanıtım filmi daha güçlü bir ana içerik olur. O film daha sonra Reels, reklam kesiti ve web sitesi videosu için kaynak hâline de gelebilir. [Sakarya'da video çekimi](/video-cekimi/sakarya) planlarken bu kullanım alanlarını baştan konuşmamızın nedeni bu.
+Bir müşteri sizinle çalışmayı düşündüğünde web sitenize, teklif dosyanıza veya YouTube kanalınıza yönlenecekse tanıtım filmi daha güçlü bir ana içerik olur. O film daha sonra Reels, reklam kesiti ve web sitesi videosu için kaynak hâline de gelebilir. [Sakarya'da video çekimi](/video-cekimi/sakarya/) planlarken bu kullanım alanlarını baştan konuşmamızın nedeni bu.
 
 ## Bir çekimden hem tanıtım filmi hem Reels çıkar mı?
 
@@ -48,4 +48,4 @@ Karar veremiyorsanız şu sırayı kullanabilirsiniz:
 
 Reels mi, tanıtım filmi mi sorusunun tek bir cevabı yok. Önemli olan videoyu çekmeden önce nerede kullanılacağını, kimin izleyeceğini ve izledikten sonra ne yapmasını istediğinizi netleştirmek. [Rast Creative Studio](https://rastcreative.com) olarak çekimi yalnızca kamera kurulacak bir gün gibi değil, markanın farklı mecralarda kullanacağı bir içerik sistemi gibi planlıyoruz.
 
-İhtiyacınızı birlikte netleştirmek için [bize projenizden bahsedin](/iletisim).
+İhtiyacınızı birlikte netleştirmek için [bize projenizden bahsedin](/iletisim/).

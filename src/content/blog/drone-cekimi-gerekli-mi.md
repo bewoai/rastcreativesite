@@ -13,7 +13,7 @@ draft: false
 
 ## Drone ne zaman gerçekten değer katar?
 
-[Havadan çekim](/drone-cekimi/sakarya), **ölçeği** ve **konumu** anlatmakta eşsizdir. Bir fabrikanın ne kadar büyük olduğunu, bir tesisin araziye nasıl yayıldığını, bir otelin göle ne kadar yakın oturduğunu yerden anlatamazsınız; yukarıdan tek karede anlarsınız. Sakarya özelinde bu çok işimize yarıyor: Sapanca Gölü çevresindeki tesisler, Karasu sahili, Hendek ve Erenler'deki sanayi alanları havadan gerçekten etkileyici duruyor. Bir de sahneler arası geçişlerde drone, filme akıcılık katar.
+[Havadan çekim](/drone-cekimi/sakarya/), **ölçeği** ve **konumu** anlatmakta eşsizdir. Bir fabrikanın ne kadar büyük olduğunu, bir tesisin araziye nasıl yayıldığını, bir otelin göle ne kadar yakın oturduğunu yerden anlatamazsınız; yukarıdan tek karede anlarsınız. Sakarya özelinde bu çok işimize yarıyor: Sapanca Gölü çevresindeki tesisler, Karasu sahili, Hendek ve Erenler'deki sanayi alanları havadan gerçekten etkileyici duruyor. Bir de sahneler arası geçişlerde drone, filme akıcılık katar.
 
 ## Ne zaman gereksiz?
 
@@ -25,4 +25,4 @@ Drone romantik değil, teknik bir iş. Bazı bölgelerde uçuş **izni** gerekir
 
 ## Özet
 
-Drone bir amaç değil, araç. Hikâyeyi güçlendiriyorsa bayılarak uçururuz; katmıyorsa dürüstçe "bu projede gerekmez" deriz. Tanıtım filminin geri kalan sürecini merak ediyorsanız, [şu yazıda](/blog/tanitim-filmi-cektirmeden-once) baştan sona anlatmıştık. Aklınızdaki proje için havadan çekim mantıklı mı, bir ön görüşmede birlikte bakalım.
+Drone bir amaç değil, araç. Hikâyeyi güçlendiriyorsa bayılarak uçururuz; katmıyorsa dürüstçe "bu projede gerekmez" deriz. Tanıtım filminin geri kalan sürecini merak ediyorsanız, [şu yazıda](/blog/tanitim-filmi-cektirmeden-once/) baştan sona anlatmıştık. Aklınızdaki proje için havadan çekim mantıklı mı, bir ön görüşmede birlikte bakalım.

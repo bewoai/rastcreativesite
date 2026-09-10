@@ -9,7 +9,7 @@ tags: ["ürün çekimi", "ürün fotoğrafı", "e-ticaret", "Sakarya"]
 draft: false
 ---
 
-Bir ürünü internette satarken elinizde tek bir kozunuz var: görseli. Müşteri ürünü tutamıyor, koklayamıyor, deneyemiyor — sadece bakıyor. O yüzden ürün fotoğrafı "güzel bir resim" değil, aslında sessiz bir satış elemanıdır. [Sakarya'da ürün ve mekan çekimi](/urun-mekan-cekimi/sakarya) tarafında yıllardır bunu görüyoruz: aynı ürün, doğru çekildiğinde bambaşka bir marka gibi duruyor.
+Bir ürünü internette satarken elinizde tek bir kozunuz var: görseli. Müşteri ürünü tutamıyor, koklayamıyor, deneyemiyor — sadece bakıyor. O yüzden ürün fotoğrafı "güzel bir resim" değil, aslında sessiz bir satış elemanıdır. [Sakarya'da ürün ve mekan çekimi](/urun-mekan-cekimi/sakarya/) tarafında yıllardır bunu görüyoruz: aynı ürün, doğru çekildiğinde bambaşka bir marka gibi duruyor.
 
 ## İyi bir ürün fotoğrafı neyi değiştirir?
 
@@ -17,7 +17,7 @@ Basit ama sık gözden kaçan bir şey: güven. Temiz, net, doğru ışıkta çe
 
 ## Fotoğraf mı, video mu?
 
-İkisi farklı iş yapar. Fotoğraf; ürün sayfasında, kataloğda, reklamda ürünü net gösterir. Video ise ürünü hareket hâlinde, kullanımda anlatır — özellikle sosyal medyada. Çoğu markaya "ikisini birden, tek çekimde" öneriyoruz; çünkü ürünler zaten sette, ışık zaten kurulu. Bu ayrımı daha detaylı konuştuğumuz [e-ticarette fotoğraf mı video mu yazımıza](/blog/eticaret-urun-cekimi-foto-mu-video-mu) da göz atabilirsiniz.
+İkisi farklı iş yapar. Fotoğraf; ürün sayfasında, kataloğda, reklamda ürünü net gösterir. Video ise ürünü hareket hâlinde, kullanımda anlatır — özellikle sosyal medyada. Çoğu markaya "ikisini birden, tek çekimde" öneriyoruz; çünkü ürünler zaten sette, ışık zaten kurulu. Bu ayrımı daha detaylı konuştuğumuz [e-ticarette fotoğraf mı video mu yazımıza](/blog/eticaret-urun-cekimi-foto-mu-video-mu/) da göz atabilirsiniz.
 
 ## Neye dikkat ediyoruz?
 

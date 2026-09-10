@@ -10,7 +10,7 @@ import dronePlan from "../assets/photos/drone-aerial-road.webp";
 // reduced-motion / no-JS. The video itself loads only when scrolled into view.
 const boardPoster = await getImage({
   src: brandFilm,
-  width: 720,
+  width: 480, // Optimized for mobile viewport CWV (rendered at ~369px on mobile)
   format: "webp",
   quality: 72,
 });
@@ -1028,12 +1028,14 @@ const boardPoster = await getImage({
     let pinTop = 0;
     let stickyHeight = 0;
     let scrollRange = 1;
+    let storyTop = 0;
 
     const measure = () => {
       viewport = window.innerHeight || 1;
       pinTop = window.innerWidth < 980 ? 0 : Math.min(102, Math.max(74, viewport * 0.08));
       stickyHeight = Math.max(1, viewport - pinTop, sticky?.scrollHeight ?? viewport);
       scrollRange = Math.max(1, story.scrollHeight - viewport);
+      storyTop = window.scrollY + story.getBoundingClientRect().top;
       story.style.setProperty("--pin-top", `${pinTop}px`);
     };
 
@@ -1042,14 +1044,16 @@ const boardPoster = await getImage({
     let running = false;
 
     const readTarget = () => {
-      const rect = story.getBoundingClientRect();
+      const rectTop = storyTop - window.scrollY;
+      const rectBottom = rectTop + story.scrollHeight;
+
       if (sticky) {
-        const isPinned = rect.top <= pinTop && rect.bottom > pinTop + stickyHeight;
-        const isAfter = rect.bottom <= pinTop + stickyHeight;
+        const isPinned = rectTop <= pinTop && rectBottom > pinTop + stickyHeight;
+        const isAfter = rectBottom <= pinTop + stickyHeight;
         story.classList.toggle("is-pinned", isPinned);
         story.classList.toggle("is-after", isAfter);
       }
-      target = clamp((pinTop - rect.top) / scrollRange);
+      target = clamp((pinTop - rectTop) / scrollRange);
     };
 
     // rAF loop eases `current` toward `target` (lerp) so fast scrolls glide

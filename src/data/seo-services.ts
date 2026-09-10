@@ -16,6 +16,8 @@ export interface SeoService {
   slug: string;
   /** Display name, e.g. "Drone Çekimi". */
   name: string;
+  /** SEO Title suffix for commercial intent. */
+  seoTitleSuffix: string;
   /** One-line tagline shown under the H1. */
   tagline: string;
   /** Service-unique opening paragraph (city name is appended in the page). */
@@ -30,6 +32,7 @@ export const SEO_SERVICES: readonly SeoService[] = [
   {
     slug: "video-cekimi",
     name: "Video Çekimi",
+    seoTitleSuffix: "ve Prodüksiyon Ajansı",
     tagline: "Markanız için profesyonel çekim, kurgu ve teslim",
     intro:
       "Video çekimi, bir işletmenin kendini dijitalde en hızlı ve en güçlü anlatma yollarından biridir. Rast Creative Studio olarak tanıtım filmi, sosyal medya videosu, etkinlik kaydı, ürün ve kurumsal video ihtiyaçlarını tek bir çekim planında toplarız; senaryo, kamera, ışık, ses, kurgu ve renk düzenleme süreçlerini baştan sona aynı ekip yürütür. Çekimi yalnızca güzel görüntü almak için değil, markanın web sitesinde, sosyal medyasında ve reklamlarında gerçekten kullanabileceği bir içerik havuzu oluşturmak için planlarız; böylece aynı prodüksiyondan yatay ana film, dikey Reels/Shorts ve kısa reklam kurguları birlikte çıkar.",
@@ -58,7 +61,8 @@ export const SEO_SERVICES: readonly SeoService[] = [
   {
     slug: "drone-cekimi",
     name: "Drone Çekimi",
-    tagline: "Havadan sinematik görüntüler ve FPV hareketleri",
+    seoTitleSuffix: "ve Havadan Görselleştirme",
+    tagline: "Tesis ve arazileriniz için havadan sinematik 4K drone çekimi",
     intro:
       "Tesisinizi, sahanızı ya da etkinliğinizi havadan gösteren görüntüler, markanıza ölçek ve prestij katar. Lisanslı pilotlarımız ve sinema kararındaki drone'larımızla 4K ve RAW formatında, stabilize ve renk düzenlenmiş kareler üretiyoruz.",
     benefits: [
@@ -80,7 +84,8 @@ export const SEO_SERVICES: readonly SeoService[] = [
   {
     slug: "tanitim-filmi",
     name: "Tanıtım Filmi",
-    tagline: "Kurumunuzu anlatan, akılda kalan kısa film",
+    seoTitleSuffix: "ve Reklam Prodüksiyonu",
+    tagline: "Şirketinizi en iyi anlatan, kurumsal tanıtım filmi profesyonel çekimi",
     intro:
       "İyi bir tanıtım filmi, müşteriniz sizi tanımadan önce markanızı hissettirir. Senaryodan kurguya tek elden çalışır; tesisinizi, ekibinizi ve üretim sürecinizi sinematik bir anlatıya dönüştürürüz.",
     benefits: [
@@ -102,6 +107,7 @@ export const SEO_SERVICES: readonly SeoService[] = [
   {
     slug: "reklam-filmi",
     name: "Reklam Filmi",
+    seoTitleSuffix: "Çekimi ve Prodüksiyon",
     tagline: "Satışa dönüşen kreatif reklam prodüksiyonu",
     intro:
       "Reklam filmi, bir ürünü değil bir hissi satar. Kreatif fikir, oyuncu yönetimi ve sinema standardında görüntüyle, dijital ve TV mecralarında dikkat çeken reklamlar üretiyoruz.",
@@ -123,8 +129,9 @@ export const SEO_SERVICES: readonly SeoService[] = [
   },
   {
     slug: "sosyal-medya-icerigi",
-    name: "Sosyal Medya İçeriği",
-    tagline: "Reels, Shorts ve dikey video üretimi",
+    name: "Sosyal Medya Yönetimi",
+    seoTitleSuffix: "Ajansı ve Video Çekimi",
+    tagline: "Markanız için stratejik içerik üretimi, Reels çekimi ve aylık yönetim",
     intro:
       "Sosyal medyada düzenli ve kaliteli içerik, takipçiyi müşteriye çevirir. Markanız için aylık içerik planı kurar; dikey video, Reels ve Shorts'u çekimden paylaşıma hazır teslim ederiz.",
     benefits: [
@@ -146,7 +153,8 @@ export const SEO_SERVICES: readonly SeoService[] = [
   {
     slug: "urun-mekan-cekimi",
     name: "Ürün & Mekan Çekimi",
-    tagline: "Ürün, katalog ve iç-dış mekan fotoğrafı",
+    seoTitleSuffix: "Fotoğraf ve Video Prodüksiyonu",
+    tagline: "Markanız için profesyonel e-ticaret, ürün ve mekan fotoğraf çekimi",
     intro:
       "Online satışta ve sunumlarda fark, görselin kalitesinden başlar. Ürünlerinizi stüdyo ışığında, mekanlarınızı ise doğru kompozisyonla; e-ticaret, katalog ve web sitesi için temiz ve tutarlı görsellere çeviririz.",
     benefits: [

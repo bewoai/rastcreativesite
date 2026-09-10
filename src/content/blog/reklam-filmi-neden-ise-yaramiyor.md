@@ -9,7 +9,7 @@ tags: ["reklam filmi", "kreatif", "pazarlama", "Sakarya"]
 draft: false
 ---
 
-Bazen güzel çekilmiş, pahalı görünen bir reklam filmi izliyorsunuz ama aklınızda hiçbir şey kalmıyor. Marka adını bile hatırlamıyorsunuz. İşin acı tarafı: o filme ciddi para harcanmış olabilir. [Reklam filmi](/reklam-filmi) "güzel görünmek" değil, "iş yapmak" için çekilir. Peki neden bu kadar çok reklam işe yaramıyor? En sık gördüğümüz hataları yazdık.
+Bazen güzel çekilmiş, pahalı görünen bir reklam filmi izliyorsunuz ama aklınızda hiçbir şey kalmıyor. Marka adını bile hatırlamıyorsunuz. İşin acı tarafı: o filme ciddi para harcanmış olabilir. [Reklam filmi](/reklam-filmi/) "güzel görünmek" değil, "iş yapmak" için çekilir. Peki neden bu kadar çok reklam işe yaramıyor? En sık gördüğümüz hataları yazdık.
 
 ## Hata 1: Her şeyi anlatmaya çalışmak
 
@@ -17,7 +17,7 @@ En yaygın tuzak bu. Marka, 60 saniyeye tüm ürünlerini, tüm avantajlarını,
 
 ## Hata 2: Ürünü değil, hissi satmayı unutmak
 
-İnsanlar özellik satın almaz, his satın alır. Matkabı değil, deldiği deliği; arabayı değil, verdiği özgürlüğü ister. Sadece ürünün üstünlüklerini sıralayan reklam, kataloğun sesli hâli olur. Oysa aynı ürünü bir duyguya bağladığınızda — güven, gurur, rahatlık — izleyici kendini hikâyenin içinde bulur. Bu arada bunu [marka hikâyesi filmiyle karıştırmamak](/blog/kurumsal-reklam-marka-hikayesi-hangisi) lazım; ikisi akraba ama işleri farklı.
+İnsanlar özellik satın almaz, his satın alır. Matkabı değil, deldiği deliği; arabayı değil, verdiği özgürlüğü ister. Sadece ürünün üstünlüklerini sıralayan reklam, kataloğun sesli hâli olur. Oysa aynı ürünü bir duyguya bağladığınızda — güven, gurur, rahatlık — izleyici kendini hikâyenin içinde bulur. Bu arada bunu [marka hikâyesi filmiyle karıştırmamak](/blog/kurumsal-reklam-marka-hikayesi-hangisi/) lazım; ikisi akraba ama işleri farklı.
 
 ## Hata 3: İlk 3 saniyeyi harcamak
 
@@ -25,7 +25,7 @@ En yaygın tuzak bu. Marka, 60 saniyeye tüm ürünlerini, tüm avantajlarını,
 
 ## Hata 4: Mecrayı düşünmeden çekmek
 
-Aynı reklam TV'de, YouTube ön-reklamında, Instagram Reels'te ve fuar ekranında aynı işi görmez. Yatay çekilmiş bir film telefonda küçücük kalır; sessiz izlenen bir mecrada altyazısız reklam boşa gider. Biz çekimi baştan planlarken "bu nerede oynayacak?" diye soruyoruz — aynı çekimden [farklı mecralara doğru versiyonları](/reklam-filmi/sakarya) çıkaracak şekilde.
+Aynı reklam TV'de, YouTube ön-reklamında, Instagram Reels'te ve fuar ekranında aynı işi görmez. Yatay çekilmiş bir film telefonda küçücük kalır; sessiz izlenen bir mecrada altyazısız reklam boşa gider. Biz çekimi baştan planlarken "bu nerede oynayacak?" diye soruyoruz — aynı çekimden [farklı mecralara doğru versiyonları](/reklam-filmi/sakarya/) çıkaracak şekilde.
 
 ## Peki "çalışan" reklam neye benzer?
 
@@ -33,4 +33,4 @@ Net bir fikri vardır, tek şey söyler, bir his bırakır, ilk saniyede yakalar
 
 ## Bir fikriniz mi var?
 
-Aklınızda bir ürün, bir kampanya ya da sadece "bir reklam çektirsek" fikri varsa, işin en keyifli yeri burada başlıyor. Sakarya'dayız; bir [ön görüşmede](/iletisim) ne satmak istediğinizi dinleyelim, fikri birlikte netleştirelim — gerisini kamera halleder.
+Aklınızda bir ürün, bir kampanya ya da sadece "bir reklam çektirsek" fikri varsa, işin en keyifli yeri burada başlıyor. Sakarya'dayız; bir [ön görüşmede](/iletisim/) ne satmak istediğinizi dinleyelim, fikri birlikte netleştirelim — gerisini kamera halleder.
