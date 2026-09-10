@@ -7,7 +7,7 @@ export const SITE = {
   name: "Rast Creative Studio",
   shortName: "Rast Creative",
   /** Home-page <title>. Inner pages pass their own `title` to BaseLayout. */
-  defaultTitle: "Sakarya Video Çekimi ve Prodüksiyon — Rast Creative Studio",
+  defaultTitle: "Rast Creative Studio | Sakarya Video Prodüksiyon ve Kreatif Ajans",
   /** `%s` is replaced by the page title on inner pages. */
   titleTemplate: "%s — Rast Creative Studio",
   description:
@@ -50,10 +50,10 @@ export interface NavItem {
 
 /** Primary section links (desktop pill center + footer). */
 export const NAV: readonly NavItem[] = [
-  { label: "Projeler", href: "/projeler", icon: "projects" },
-  { label: "Hizmetler", href: "/hizmetler", icon: "services" },
-  { label: "Hakkımızda", href: "/hakkimizda", icon: "about" },
-  { label: "İletişim", href: "/iletisim", icon: "contact" },
+  { label: "Projeler", href: "/projeler/", icon: "projects" },
+  { label: "Hizmetler", href: "/hizmetler/", icon: "services" },
+  { label: "Hakkımızda", href: "/hakkimizda/", icon: "about" },
+  { label: "İletişim", href: "/iletisim/", icon: "contact" },
 ];
 
 /** The single conversion CTA used across the site (roadmap §2). */
@@ -62,7 +62,7 @@ export const PRIMARY_CTA = {
   /** Short form for tight surfaces (the nav pill), where the full sentence
    *  made the button ~246px wide and let it dominate the hero. */
   shortLabel: "Proje Başlat",
-  href: "/iletisim",
+  href: "/iletisim/",
 } as const;
 
 /**

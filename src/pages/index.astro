@@ -142,10 +142,10 @@ const pageJsonLd = [
         {/* Forced break: left to itself the box wraps "İyi iş kendini /
             izletir.", splitting the phrase. "kendini izletir." measures 607px
             against the 680px cap, so it always fits on its own line. */}
-        <h1 class="hero__title">İyi iş<br />kendini izletir.</h1>
+        <h1 class="hero__title">Rast Creative Studio</h1>
         <p class="hero__lede">
-          Sakarya merkezli prodüksiyon stüdyosu.
-          <span>Fikirleri, izlemeye değer işlere dönüştürüyoruz.</span>
+          Sakarya video prodüksiyon ve kreatif içerik ajansı.
+          <span>Markanızı anlatan nitelikli işler üretiyoruz.</span>
         </p>
         <div class="hero__cta">
           {/* ↗ leaves for the quote page; ↘ moves you down this one. */}
@@ -262,14 +262,14 @@ const pageJsonLd = [
   <Section id="secili-isler">
     <div class="head-row">
       <SectionHeading eyebrow="Sahne 02 · Seçili İşler">Son işlerimizden seçmeler</SectionHeading>
-      <Button href="/projeler" variant="secondary" arrow class="head-row__cta">Tümünü gör</Button>
+      <Button href="/projeler/" variant="secondary" arrow class="head-row__cta">Tümünü gör</Button>
     </div>
     <div class="grid-cards" data-reveal="frame-advance" data-daily-projects data-daily-count={dailyProjectCount}>
       {
         dailyProjects.map((p, index) => (
           <div class="daily-project" data-daily-project data-project-index={index}>
             <ProjectCard
-              href={p.data.externalUrl ?? `/projeler/${p.id}`}
+              href={p.data.externalUrl ?? `/projeler/${p.id}/`}
               title={p.data.title}
               category={p.data.category}
               poster={p.data.poster}
@@ -323,7 +323,7 @@ const pageJsonLd = [
       {
         services.map((s, i) => (
           <ServiceCard
-            href={`/hizmetler#${s.id}`}
+            href={`/hizmetler/#${s.id}`}
             index={i + 1}
             title={s.data.title}
             summary={s.data.summary}
@@ -449,14 +449,14 @@ const pageJsonLd = [
       <Section id="blog" space="tight">
         <div class="head-row">
           <SectionHeading eyebrow="Sahne 07 · Günlük">Son yazılar</SectionHeading>
-          <Button href="/blog" variant="secondary" arrow class="head-row__cta">
+          <Button href="/blog/" variant="secondary" arrow class="head-row__cta">
             Tüm yazılar
           </Button>
         </div>
         <div class="grid-cards" data-reveal="frame-advance">
           {blogPosts.map((p) => (
             <BlogCard
-              href={`/blog/${p.id}`}
+              href={`/blog/${p.id}/`}
               title={p.data.title}
               description={p.data.description}
               date={fmtBlogDate(p.data.pubDate)}
