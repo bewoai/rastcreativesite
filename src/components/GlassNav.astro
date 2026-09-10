@@ -5,10 +5,16 @@ import Icon from "./Icon.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 import { NAV, PRIMARY_CTA, WHATSAPP_CTA_HREF } from "../consts";
 
-// Active-route detection (ignore trailing slash).
-const path = Astro.url.pathname.replace(/\/+$/, "") || "/";
-const isActive = (href: string) =>
-  href === "/" ? path === "/" : path === href || path.startsWith(href + "/");
+// Active-route detection compares canonical routes without changing rendered hrefs.
+const routeKey = (value: string) => value.replace(/\/+$/, "") || "/";
+const path = routeKey(Astro.url.pathname);
+const isActive = (href: string) => {
+  const hrefPath = routeKey(href);
+
+  return hrefPath === "/"
+    ? path === "/"
+    : path === hrefPath || path.startsWith(`${hrefPath}/`);
+};
 
 // Mobile tab-bar mirrors the full nav + Home for thumb-reach parity.
 const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
@@ -21,7 +27,7 @@ const tabs = [{ label: "Ana sayfa", href: "/", icon: "home" as const }, ...NAV];
  * contact_whatsapp_click, so the analytics showed contacts that never
  * happened. Falls back to the form only if no number is configured.
  */
-const whatsappHref = WHATSAPP_CTA_HREF ?? "/iletisim#teklif-formu";
+const whatsappHref = WHATSAPP_CTA_HREF ?? "/iletisim/#teklif-formu";
 ---
 
 {/* Desktop: floating glass pill */}
@@ -577,6 +583,15 @@ const whatsappHref = WHATSAPP_CTA_HREF ?? "/iletisim#teklif-formu";
 
   let ticking = false;
   let lastScrollY = Math.max(0, window.scrollY);
+  let docHeight = document.documentElement.scrollHeight;
+
+  // Cache documentHeight using ResizeObserver instead of reading on scroll.
+  const ro = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      docHeight = document.documentElement.scrollHeight;
+    }
+  });
+  ro.observe(document.body);
 
   const setTabbarCondensed = (condensed: boolean) => {
     if (!tabbar || !tabbarFab) return;
@@ -594,7 +609,7 @@ const whatsappHref = WHATSAPP_CTA_HREF ?? "/iletisim#teklif-formu";
   const updateChrome = () => {
     const currentY = Math.max(0, window.scrollY);
     const delta = currentY - lastScrollY;
-    const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    const maxScroll = Math.max(1, docHeight - window.innerHeight);
     const progress = Math.min(currentY / maxScroll, 1);
 
     if (nav) {
@@ -607,9 +622,8 @@ const whatsappHref = WHATSAPP_CTA_HREF ?? "/iletisim#teklif-formu";
       if (!mobileQuery.matches) {
         setTabbarCondensed(false);
       } else {
-        const documentHeight = document.documentElement.scrollHeight;
         const nearTop = currentY < 96;
-        const nearBottom = window.innerHeight + currentY >= documentHeight - 120;
+        const nearBottom = window.innerHeight + currentY >= docHeight - 120;
 
         if (nearTop || nearBottom || delta < -10) {
           setTabbarCondensed(false);

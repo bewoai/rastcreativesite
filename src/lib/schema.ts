@@ -64,6 +64,7 @@ export const localBusiness = {
   logo: abs("/logo-black.svg"),
   telephone: CONTACT.phoneIntl,
   email: CONTACT.email,
+  priceRange: "₺₺₺",
   inLanguage: "tr",
   address: {
     "@type": "PostalAddress",

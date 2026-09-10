@@ -15,13 +15,13 @@ const fmt = (d: Date) =>
 
 const crumbs = breadcrumb([
   { name: "Ana Sayfa", path: "/" },
-  { name: "Blog", path: "/blog" },
+  { name: "Blog", path: "/blog/" },
 ]);
 ---
 
 <BaseLayout
-  title="Blog"
-  description="Sakarya'da video prodüksiyon üzerine notlar: tanıtım filmi süreci, maliyeti, sosyal medya ve drone çekimi — Rast Creative Studio."
+  title="Blog | Video Prodüksiyon ve Video İçerik Pazarlaması"
+  description="Video prodüksiyon, tanıtım filmi yapımı, sosyal medya için dikey içerik stratejileri ve reklam filmi süreçleri üzerine stüdyo blogumuz."
   jsonLd={crumbs}
 >
   <Section width="narrow">
@@ -39,7 +39,7 @@ const crumbs = breadcrumb([
         <div class="post-grid">
           {posts.map((p) => (
             <BlogCard
-              href={`/blog/${p.id}`}
+              href={`/blog/${p.id}/`}
               title={p.data.title}
               description={p.data.description}
               date={fmt(p.data.pubDate)}

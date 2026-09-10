@@ -29,7 +29,7 @@ interface Props {
 const { service, location } = Astro.props as Props;
 const audience = getServiceAudience(service.slug);
 
-const title = `${location.name} ${service.name}`;
+const title = `${location.name} ${service.name} ${service.seoTitleSuffix}`;
 const pageHeading = `${location.name} ${service.name}`;
 const faqHeading = `${location.name} ${service.name} hakkında`;
 const path = `/${service.slug}/${location.slug}/`;
@@ -182,7 +182,7 @@ if (projectsItemList) jsonLd.push(projectsItemList);
     relatedProjects.length > 0 && (
       <Section width="narrow" space="tight">
         <SectionHeading eyebrow="Gerçek işler">
-          Bölgede tamamladığımız son {service.name.toLocaleLowerCase('tr')} işleri
+          Tamamladığımız son {service.name.toLocaleLowerCase('tr')} projeleri
           <Fragment slot="intro">
             <p>
               Farklı sektörler için ürettiğimiz profesyonel işlerden bir seçki.
