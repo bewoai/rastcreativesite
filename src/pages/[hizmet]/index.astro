@@ -23,7 +23,7 @@ interface Props {
 const { service } = Astro.props as Props;
 
 const title = `${service.name} Hizmeti`;
-const description = `${service.name} — ${service.tagline}. Sakarya ve çevre illerde Rast Creative Studio ile ${service.name.toLowerCase()}. Hizmet bölgelerini görün.`;
+const description = `${service.name} — ${service.tagline}. Sakarya ve çevre illerde Rast Creative Studio ile ${service.name.toLocaleLowerCase('tr')}. Hizmet bölgelerini görün.`;
 
 const coreLocations = SEO_LOCATIONS.filter((l) => l.core);
 const nearbyLocations = SEO_LOCATIONS.filter((l) => !l.core);
