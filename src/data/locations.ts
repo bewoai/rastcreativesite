@@ -74,7 +74,7 @@ export const SEO_LOCATIONS: readonly SeoLocation[] = [
     province: "Sakarya",
     core: true,
     blurb:
-      "Erenler'in organize sanayi ve üretim tesisleri tanıtım ve drone çekimi için ideal. Bölgedeki imalatçı markalarla çalışma tecrübemiz var.",
+      "Erenler'in organize sanayi ve üretim tesisleri, kurumsal içerik üretimi için ideal. Bölgedeki imalatçı markalarla çalışma tecrübemiz var.",
     nearby: ["adapazari", "serdivan", "hendek", "sakarya"],
   },
   {
@@ -84,7 +84,7 @@ export const SEO_LOCATIONS: readonly SeoLocation[] = [
     province: "Sakarya",
     core: true,
     blurb:
-      "Hendek'in sanayi bölgesi ve geniş üretim alanları, havadan çekimde etkileyici kareler verir. Tesis tanıtımları için sık çalıştığımız bir ilçe.",
+      "Hendek'in sanayi bölgesi ve geniş üretim alanları, güçlü kurumsal içerikler için etkileyici bir zemin oluşturur. Tesis tanıtımları için sık çalıştığımız bir ilçe.",
     nearby: ["akyazi", "adapazari", "sapanca", "duzce"],
   },
   {
@@ -114,7 +114,7 @@ export const SEO_LOCATIONS: readonly SeoLocation[] = [
     province: "Sakarya",
     core: true,
     blurb:
-      "Karasu sahil hattı, liman çevresi ve turizm işletmeleriyle özellikle drone ve tanıtım filmi için etkileyici planlar verir. Yaz sezonu, etkinlik ve tesis tanıtımlarında bölgeyi aktif kullanıyoruz.",
+      "Karasu sahil hattı, liman çevresi ve turizm işletmeleriyle çekim projelerinde görsel zenginliği yüksek planlar verir. Yaz sezonu, etkinlik ve tesis tanıtımlarında bölgeyi aktif kullanıyoruz.",
     nearby: ["ferizli", "hendek", "adapazari", "duzce"],
   },
   {
@@ -124,7 +124,7 @@ export const SEO_LOCATIONS: readonly SeoLocation[] = [
     province: "Sakarya",
     core: true,
     blurb:
-      "Ferizli'nin üretim ve sanayi hattı, tesis tanıtımı ve havadan çekim için düzenli planlanabilecek bir bölge. Sakarya merkezden kısa sürede ulaşıp küçük ve orta ölçekli işletmeler için ekonomik çekim günü kuruyoruz.",
+      "Ferizli'nin üretim ve sanayi hattı, tesis iletişimleri ve kurumsal prodüksiyonlar için düzenli planlanabilecek bir bölge. Sakarya merkezden kısa sürede ulaşıp küçük ve orta ölçekli işletmeler için ekonomik çekim günü kuruyoruz.",
     nearby: ["karasu", "hendek", "adapazari", "sakarya"],
   },
   {
@@ -134,7 +134,7 @@ export const SEO_LOCATIONS: readonly SeoLocation[] = [
     province: "Sakarya",
     core: true,
     blurb:
-      "Geyve'nin doğal dokusu, tarımsal üretim alanları ve yol manzaraları marka hikayesi anlatımı için güçlü bir arka plan oluşturur. Ürün, mekan ve turizm odaklı çekimlerde bölgenin atmosferinden yararlanıyoruz.",
+      "Geyve'nin doğal dokusu, tarımsal üretim alanları ve yol manzaraları görsel projeler için güçlü bir arka plan oluşturur. Ürün, mekan ve turizm odaklı çekimlerde bölgenin atmosferinden yararlanıyoruz.",
     nearby: ["pamukova", "arifiye", "sapanca", "bilecik"],
   },
   {
@@ -144,7 +144,7 @@ export const SEO_LOCATIONS: readonly SeoLocation[] = [
     province: "Sakarya",
     core: true,
     blurb:
-      "Pamukova, tarım, üretim ve açık alan çekimleri için geniş ve ferah sahneler sunar. Drone, ürün ve marka hikayesi projelerinde gün ışığını doğru saatlerde planlayarak temiz görüntüler üretiyoruz.",
+      "Pamukova, tarım, üretim ve açık alan çekimleri için geniş ve ferah sahneler sunar. Üretim ve marka odaklı projelerde gün ışığını doğru saatlerde planlayarak temiz görüntüler üretiyoruz.",
     nearby: ["geyve", "bilecik", "sapanca", "sakarya"],
   },
   {
@@ -204,7 +204,7 @@ export const SEO_LOCATIONS: readonly SeoLocation[] = [
     province: "Kocaeli",
     core: false,
     blurb:
-      "Gebze'nin organize sanayi bölgeleri Türkiye'nin en yoğun üretim merkezlerinden. Fabrika tanıtımı ve havadan tesis çekiminde bölgeye düzenli gidiyoruz.",
+      "Gebze'nin organize sanayi bölgeleri Türkiye'nin en yoğun üretim merkezlerinden. Sanayi odaklı prodüksiyon ve tesis projelerinde bölgeye düzenli gidiyoruz.",
     nearby: ["izmit", "kocaeli", "sakarya", "serdivan"],
   },
   {
@@ -224,7 +224,7 @@ export const SEO_LOCATIONS: readonly SeoLocation[] = [
     province: "Düzce",
     core: false,
     blurb:
-      "Düzce'nin üretim tesisleri ve doğal alanları, hem kurumsal hem turizm odaklı çekimlere uygun. Sakarya'dan kısa mesafede olduğu için ekonomik planlama yapıyoruz.",
+      "Düzce'nin üretim tesisleri ve doğal alanları, hem kurumsal hem turizm odaklı çekimlere ideal bir yapı oluşturuyor. Sakarya'dan kısa mesafede olduğu için ekonomik planlama yapıyoruz.",
     nearby: ["hendek", "akyazi", "bolu", "sakarya"],
   },
   {
@@ -234,7 +234,7 @@ export const SEO_LOCATIONS: readonly SeoLocation[] = [
     province: "Bolu",
     core: false,
     blurb:
-      "Bolu'nun otelleri, yaylaları ve doğa turizmi drone ve tanıtım filmi için zengin bir sahne sunar. Turizm işletmeleri için sinematik içerik üretiyoruz.",
+      "Bolu'nun otelleri, yaylaları ve doğa turizmi görsel projeler için zengin bir sahne sunar. Turizm işletmeleri için sinematik içerik üretiyoruz.",
     nearby: ["duzce", "akyazi", "sakarya", "bilecik"],
   },
   {
@@ -252,32 +252,6 @@ export const SEO_LOCATIONS: readonly SeoLocation[] = [
 export const getLocation = (slug: string) =>
   SEO_LOCATIONS.find((l) => l.slug === slug);
 
-/**
- * SEO tiering for the programmatic [hizmet]/[konum] matrix.
- *
- * `primary` = major centres with real demand / work done — these stay
- * `index, follow`. Everything else is emitted as `noindex, follow`: the page
- * still exists and passes internal link equity, but is kept out of the index
- * to avoid doorway/thin-content risk across 130+ near-duplicate URLs.
- *
- * Note this is a different axis from `core` (which is purely geographic): e.g.
- * Akyazı is core but secondary, İzmit is non-core but primary.
- */
-export const PRIMARY_LOCATION_SLUGS: ReadonlySet<string> = new Set([
-  "sakarya",
-  "serdivan",
-  "adapazari",
-  "arifiye",
-  "erenler",
-  "hendek",
-  "sapanca",
-  "kocaeli",
-  "izmit",
-  "gebze",
-]);
-
-export const isPrimaryLocation = (slug: string): boolean =>
-  PRIMARY_LOCATION_SLUGS.has(slug);
 
 export const AREA_INDEX_LOCATION_SLUGS: readonly string[] = [
   "sakarya",

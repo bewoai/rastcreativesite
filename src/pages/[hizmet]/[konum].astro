@@ -8,7 +8,7 @@ import ProjectCard from "../../components/ProjectCard.astro";
 import { PRIMARY_CTA, CONTACT, SITE } from "../../consts";
 import { breadcrumb, faqPage, BUSINESS_ID } from "../../lib/schema";
 import { SEO_SERVICES, getService, type SeoService } from "../../data/seo-services";
-import { SEO_LOCATIONS, getLocation, isPrimaryLocation, type SeoLocation } from "../../data/locations";
+import { SEO_LOCATIONS, getLocation, type SeoLocation } from "../../data/locations";
 import { getServiceAudience } from "../../data/service-audience";
 import { getCollection } from "astro:content";
 
@@ -32,13 +32,8 @@ const audience = getServiceAudience(service.slug);
 const title = `${location.name} ${service.name}`;
 const pageHeading = `${location.name} ${service.name}`;
 const faqHeading = `${location.name} ${service.name} hakkında`;
-const path = `/${service.slug}/${location.slug}`;
+const path = `/${service.slug}/${location.slug}/`;
 const description = `${location.name} ${service.name.toLocaleLowerCase('tr')} — ${service.tagline}. ${location.loc} sinema standardında prodüksiyon. Projenizi anlatın, birlikte planlayalım.`;
-
-// Programmatic location tiering: primary centres stay indexed; secondary
-// districts are kept out of the index but still pass link equity
-// ("noindex, follow") so they don't read as doorway/thin content.
-const robots = isPrimaryLocation(location.slug) ? undefined : "noindex, follow";
 
 // City/service-specific FAQ — distinct text per page (anti-doorway).
 const firstSentence = location.blurb.split(". ")[0] + ".";
@@ -72,7 +67,7 @@ const faqs = [
 const jsonLd = [
   breadcrumb([
     { name: "Ana Sayfa", path: "/" },
-    { name: service.name, path: `/${service.slug}` },
+    { name: service.name, path: `/${service.slug}/` },
     { name: location.name, path },
   ]),
   {
@@ -129,7 +124,7 @@ const projectsItemList =
         itemListElement: relatedProjects.map((p, i) => ({
           "@type": "ListItem",
           position: i + 1,
-          url: new URL(p.data.externalUrl ?? `/projeler/${p.id}`, SITE.url).href,
+          url: new URL(p.data.externalUrl ?? `/projeler/${p.id}/`, SITE.url).href,
           name: p.data.title,
         })),
       }
@@ -137,9 +132,9 @@ const projectsItemList =
 if (projectsItemList) jsonLd.push(projectsItemList);
 ---
 
-<BaseLayout title={title} description={description} jsonLd={jsonLd} robots={robots}>
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
   <Section width="narrow">
-    <a href={`/${service.slug}`} class="back">← Tüm {service.name} bölgeleri</a>
+    <a href={`/${service.slug}/`} class="back">← Tüm {service.name} bölgeleri</a>
     <SectionHeading as="h1" eyebrow={`${location.province} · ${service.name}`}>
       {pageHeading}
       <Fragment slot="intro">
@@ -187,10 +182,10 @@ if (projectsItemList) jsonLd.push(projectsItemList);
     relatedProjects.length > 0 && (
       <Section width="narrow" space="tight">
         <SectionHeading eyebrow="Gerçek işler">
-          {location.name} ve çevresinde {service.name.toLocaleLowerCase('tr')} işlerimiz
+          Bölgede tamamladığımız son {service.name.toLocaleLowerCase('tr')} işleri
           <Fragment slot="intro">
             <p>
-              {location.name} ve çevresinde ürettiğimiz işlerden bir seçki.
+              Farklı sektörler için ürettiğimiz profesyonel işlerden bir seçki.
             </p>
           </Fragment>
         </SectionHeading>
@@ -240,7 +235,7 @@ if (projectsItemList) jsonLd.push(projectsItemList);
           {
             nearby.map((l) => (
               <li>
-                <a href={`/${service.slug}/${l.slug}`}>
+                <a href={`/${service.slug}/${l.slug}/`}>
                   {l.name} {service.name}
                   <Icon name="arrow-up-right" size={14} />
                 </a>
@@ -255,7 +250,7 @@ if (projectsItemList) jsonLd.push(projectsItemList);
           {
             otherServices.map((s) => (
               <li>
-                <a href={`/${s.slug}/${location.slug}`}>
+                <a href={`/${s.slug}/${location.slug}/`}>
                   {location.name} {s.name}
                   <Icon name="arrow-up-right" size={14} />
                 </a>
