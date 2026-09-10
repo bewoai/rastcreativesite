@@ -45,7 +45,7 @@ export const GET: APIRoute = async () => {
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
     <title>${escapeXml(SITE.name)} — Günlük</title>
-    <link>${SITE.url}/blog</link>
+    <link>${SITE.url}/blog/</link>
     <description>${escapeXml(SITE.description)}</description>
     <language>${SITE.lang}</language>
     <atom:link href="${SITE.url}/rss.xml" rel="self" type="application/rss+xml" />

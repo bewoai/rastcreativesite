@@ -88,8 +88,8 @@ const videoObject =
 const pageJsonLd = [
   breadcrumb([
     { name: "Ana Sayfa", path: "/" },
-    { name: "Projeler", path: "/projeler" },
-    { name: d.title, path: `/projeler/${entry.id}` },
+    { name: "Projeler", path: "/projeler/" },
+    { name: d.title, path: `/projeler/${entry.id}/` },
   ]),
   ...(videoObject ? [videoObject] : []),
 ];
@@ -104,7 +104,7 @@ const pageJsonLd = [
   noindex={d.hidden}
 >
   <Section>
-    <a href="/projeler" class="back">
+    <a href="/projeler/" class="back">
       <Icon name="arrow-right" size={18} class="back__ic" />
       Tüm projeler
     </a>
@@ -174,7 +174,7 @@ const pageJsonLd = [
       </div>
       <div class="proj-cta__actions">
         <Button href={PRIMARY_CTA.href} arrow>{PRIMARY_CTA.label}</Button>
-        <a href="/projeler" class="proj-cta__link">Diğer işleri incele</a>
+        <a href="/projeler/" class="proj-cta__link">Diğer işleri incele</a>
       </div>
     </aside>
   </Section>
@@ -188,7 +188,7 @@ const pageJsonLd = [
         <div class="related">
           {related.map((p) => (
             <ProjectCard
-              href={`/projeler/${p.id}`}
+              href={`/projeler/${p.id}/`}
               title={p.data.title}
               category={p.data.category}
               poster={p.data.poster}

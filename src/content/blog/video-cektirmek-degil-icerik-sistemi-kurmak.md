@@ -45,11 +45,11 @@ Doğru planlanan bir çekim gününün verimi çok yükselir. Bazen tek bir gün
 
 Bu, “her şeyi aceleyle sıkıştıralım” demek değil. Tam tersi. Sete girmeden önce neye ihtiyacımız olduğunu bilirsek, günü daha temiz yönetiriz. Kamera neyi neden çektiğini bilir. Kurgu masasında da elimizde sadece güzel görüntüler değil, işe yarayan malzeme olur.
 
-Benim gözümde [profesyonel prodüksiyonun](/video-cekimi/sakarya) farkı biraz burada başlıyor. Sadece iyi kamera kullanmakta değil; çekilen her planın sonradan ne işe yarayacağını bilmekte.
+Benim gözümde [profesyonel prodüksiyonun](/video-cekimi/sakarya/) farkı biraz burada başlıyor. Sadece iyi kamera kullanmakta değil; çekilen her planın sonradan ne işe yarayacağını bilmekte.
 
 ## Sosyal medya ayrı bir iş gibi düşünülmeli
 
-Birçok marka sosyal medyayı hâlâ ana filmin kırpılmış hali gibi görüyor. Oysa dikey içerik kendi dili olan ayrı bir format. İnsan telefonda izliyor, çoğu zaman sesi kapalı izliyor, çok hızlı karar veriyor. Bu yüzden [sosyal medya videosu](/blog/sosyal-medya-videosu-neden-dikey) için tempo, kadraj ve ilk saniye baştan düşünülmeli.
+Birçok marka sosyal medyayı hâlâ ana filmin kırpılmış hali gibi görüyor. Oysa dikey içerik kendi dili olan ayrı bir format. İnsan telefonda izliyor, çoğu zaman sesi kapalı izliyor, çok hızlı karar veriyor. Bu yüzden [sosyal medya videosu](/blog/sosyal-medya-videosu-neden-dikey/) için tempo, kadraj ve ilk saniye baştan düşünülmeli.
 
 Yatay çekilmiş bir tanıtım filminden sonradan dikey Reels çıkarmaya çalışmak bazen olur, bazen de görüntüyü bozar. Başarılı olması için çekim anında buna alan bırakmak gerekir. Oyuncunun ya da ürünün kadrajdaki yeri, boşluklar, hareket yönü, altyazının geleceği alan... Bunlar küçük detay gibi görünür ama sonucu direkt etkiler.
 

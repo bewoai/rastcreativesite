@@ -22,8 +22,8 @@ const { brand } = Astro.props;
 
 const crumbs = breadcrumb([
   { name: "Ana Sayfa", path: "/" },
-  { name: "Projeler", path: "/projeler" },
-  { name: brand.name, path: `/projeler/marka/${brand.slug}` },
+  { name: "Projeler", path: "/projeler/" },
+  { name: brand.name, path: `/projeler/marka/${brand.slug}/` },
 ]);
 ---
 
@@ -35,7 +35,7 @@ const crumbs = breadcrumb([
   jsonLd={crumbs}
 >
   <Section>
-    <a href="/projeler" class="back">← Tüm projeler</a>
+    <a href="/projeler/" class="back">← Tüm projeler</a>
     <SectionHeading eyebrow={`${brand.category} · ${brand.count} içerik`}>
       {brand.name}
     </SectionHeading>
@@ -44,7 +44,7 @@ const crumbs = breadcrumb([
       {
         brand.projects.map((p) => (
           <ProjectCard
-            href={p.data.externalUrl ?? `/projeler/${p.id}`}
+            href={p.data.externalUrl ?? `/projeler/${p.id}/`}
             title={p.data.title}
             category={p.data.category}
             poster={p.data.poster}

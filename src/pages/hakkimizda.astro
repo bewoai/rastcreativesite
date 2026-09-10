@@ -15,7 +15,7 @@ import beratPhoto from "../assets/photos/berat-degirmenci.png";
 
 const crumbs = breadcrumb([
   { name: "Ana Sayfa", path: "/" },
-  { name: "Hakkımızda", path: "/hakkimizda" },
+  { name: "Hakkımızda", path: "/hakkimizda/" },
 ]);
 
 const pageTitle = "Hakkımızda | Sakarya Video Prodüksiyon Ekibi";
@@ -134,8 +134,8 @@ const pageJsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "AboutPage",
-    "@id": `${SITE.url}/hakkimizda#webpage`,
-    url: `${SITE.url}/hakkimizda`,
+    "@id": `${SITE.url}/hakkimizda/#webpage`,
+    url: `${SITE.url}/hakkimizda/`,
     name: pageTitle,
     description: pageDescription,
     inLanguage: SITE.lang,
@@ -196,7 +196,7 @@ const pageJsonLd = [
         </p>
         <div class="hero-actions" aria-label="Hakkımızda hızlı bağlantılar">
           <Button href={PRIMARY_CTA.href} arrow>{PRIMARY_CTA.label}</Button>
-          <Button href="/projeler" variant="secondary" arrow>Projelerimizi inceleyin</Button>
+          <Button href="/projeler/" variant="secondary" arrow>Projelerimizi inceleyin</Button>
         </div>
         <ul class="team-stats" aria-label="Rast Creative ekip özeti">
           {

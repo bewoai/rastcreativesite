@@ -49,7 +49,11 @@ const jsonLdItems = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 
 const pageTitle = title ? SITE.titleTemplate.replace("%s", title) : SITE.defaultTitle;
 const pageDescription = description ?? SITE.description;
-const canonical = new URL(Astro.url.pathname, SITE.url).href;
+const pagePath =
+  Astro.url.pathname === "/"
+    ? "/"
+    : `${Astro.url.pathname.replace(/\/+$/, "")}/`;
+const canonical = new URL(pagePath, SITE.url).href;
 const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
 ---
 

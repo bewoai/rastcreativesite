@@ -14,7 +14,7 @@ tags:
 draft: false
 ---
 
-Online satışta müşteri ürünü eline alamıyor, koklayamıyor, deneyemiyor. Elinde tek bir şey var: görsel. O görsel iyiyse ürün "kaliteli" görünüyor, kötüyse en güzel ürün bile rafta kalıyor. Peki [ürün çekiminde](/urun-mekan-cekimi) fotoğraf mı yeter, yoksa video mu şart? Kısa cevap: ikisi farklı işe yarar. Uzun cevabı yazdık.
+Online satışta müşteri ürünü eline alamıyor, koklayamıyor, deneyemiyor. Elinde tek bir şey var: görsel. O görsel iyiyse ürün "kaliteli" görünüyor, kötüyse en güzel ürün bile rafta kalıyor. Peki [ürün çekiminde](/urun-mekan-cekimi/) fotoğraf mı yeter, yoksa video mu şart? Kısa cevap: ikisi farklı işe yarar. Uzun cevabı yazdık.
 
 ## Fotoğraf: kararı verdiren şey
 
@@ -22,7 +22,7 @@ Bir müşteri ürün sayfasına girdiğinde ilk işi fotoğraflara bakmak. Pazar
 
 ## Video: hissi veren şey
 
-Fotoğraf "neye benziyor" sorusuna cevap verir; video "nasıl bir his" sorusuna. Kumaşın dökümü, bir mekanizmanın çalışması, kapağın "klik" sesi, bir kremin sürülüşü... Bunlar fotoğrafta anlatılamaz. Kısa bir ürün videosu — 360° dönüş ya da 15 saniyelik bir kullanım klibi — müşterinin kafasındaki son soru işaretini siler. Üstelik aynı videoyu [sosyal medyada da](/blog/sosyal-medya-videosu-neden-dikey) kullanabilirsiniz; ürün sayfasında ikna eder, Reels'te dikkat çeker.
+Fotoğraf "neye benziyor" sorusuna cevap verir; video "nasıl bir his" sorusuna. Kumaşın dökümü, bir mekanizmanın çalışması, kapağın "klik" sesi, bir kremin sürülüşü... Bunlar fotoğrafta anlatılamaz. Kısa bir ürün videosu — 360° dönüş ya da 15 saniyelik bir kullanım klibi — müşterinin kafasındaki son soru işaretini siler. Üstelik aynı videoyu [sosyal medyada da](/blog/sosyal-medya-videosu-neden-dikey/) kullanabilirsiniz; ürün sayfasında ikna eder, Reels'te dikkat çeker.
 
 ## E-ticaret için doğru kombinasyon
 
@@ -34,4 +34,4 @@ Bize sorarsanız ideal düzen şu: her ürün için birkaç temiz fotoğraf (zor
 
 ## Başlayalım mı?
 
-Sakarya ve çevresinde e-ticaret yapan markalarla bu işi sık yapıyoruz. Ürünleriniz hazırsa, bir [ön görüşmede](/iletisim) kaç ürününüz olduğunu konuşup size en mantıklı çekim planını çıkaralım — gereksiz kareye bütçe harcatmadan.
+Sakarya ve çevresinde e-ticaret yapan markalarla bu işi sık yapıyoruz. Ürünleriniz hazırsa, bir [ön görüşmede](/iletisim/) kaç ürününüz olduğunu konuşup size en mantıklı çekim planını çıkaralım — gereksiz kareye bütçe harcatmadan.

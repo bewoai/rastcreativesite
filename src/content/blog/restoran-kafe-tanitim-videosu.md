@@ -9,7 +9,7 @@ tags: ["mekan çekimi", "restoran", "kafe", "sosyal medya", "Sakarya"]
 draft: false
 ---
 
-Bir restoran ya da kafe için en zor şey, ekranın arkasındaki insana o mekanın "hissini" geçirmektir. Menüde ne yazdığı bir yere kadar önemli; asıl kararı verdiren şey, insanın "burada oturmak isterdim" demesi. İyi bir tanıtım videosu tam olarak bunu yapar. [Sakarya'da mekan ve ürün çekimi](/urun-mekan-cekimi/sakarya) yaparken en çok üstünde durduğumuz şey de bu his.
+Bir restoran ya da kafe için en zor şey, ekranın arkasındaki insana o mekanın "hissini" geçirmektir. Menüde ne yazdığı bir yere kadar önemli; asıl kararı verdiren şey, insanın "burada oturmak isterdim" demesi. İyi bir tanıtım videosu tam olarak bunu yapar. [Sakarya'da mekan ve ürün çekimi](/urun-mekan-cekimi/sakarya/) yaparken en çok üstünde durduğumuz şey de bu his.
 
 ## İnsanlar yemeği değil, "orada olmayı" satın alıyor
 
@@ -17,7 +17,7 @@ Tabağın yakın çekimi elbette iştah açar — buhar tüten bir kahve, kesile
 
 ## Tek video değil, içerik olarak düşünün
 
-Kafe ve restoranların en çok ihtiyaç duyduğu şey, düzenli sosyal medya içeriği. O yüzden mekana bir kez geldiğimizde tek bir "tanıtım filmi" değil, aylarca kullanılabilecek bir malzeme havuzu çekmeyi öneriyoruz: bir ana tanıtım videosu, birkaç kısa dikey Reels, bir de menü için ürün kareleri. Bu mantığı [video çektirmek değil, içerik sistemi kurmak yazımızda](/blog/video-cektirmek-degil-icerik-sistemi-kurmak) uzun uzun anlattık. Sonrasında bu içerikleri [sosyal medya içeriği](/sosyal-medya-icerigi/sakarya) tarafında düzenli yayına çevirmek çok daha kolay oluyor.
+Kafe ve restoranların en çok ihtiyaç duyduğu şey, düzenli sosyal medya içeriği. O yüzden mekana bir kez geldiğimizde tek bir "tanıtım filmi" değil, aylarca kullanılabilecek bir malzeme havuzu çekmeyi öneriyoruz: bir ana tanıtım videosu, birkaç kısa dikey Reels, bir de menü için ürün kareleri. Bu mantığı [video çektirmek değil, içerik sistemi kurmak yazımızda](/blog/video-cektirmek-degil-icerik-sistemi-kurmak/) uzun uzun anlattık. Sonrasında bu içerikleri [sosyal medya içeriği](/sosyal-medya-icerigi/sakarya/) tarafında düzenli yayına çevirmek çok daha kolay oluyor.
 
 ## Çekim gününü doğru seçmek
 

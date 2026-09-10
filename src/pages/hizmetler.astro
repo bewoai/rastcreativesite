@@ -118,7 +118,7 @@ const faqs = [
 const pageJsonLd = [
   breadcrumb([
     { name: "Ana Sayfa", path: "/" },
-    { name: "Hizmetler", path: "/hizmetler" },
+    { name: "Hizmetler", path: "/hizmetler/" },
   ]),
   ...services.map((s) => ({
     "@context": "https://schema.org",
@@ -185,7 +185,7 @@ const pageJsonLd = [
                   ))}
                 </ul>
               )}
-              <a href="/iletisim" class="svc__cta">
+              <a href="/iletisim/" class="svc__cta">
                 Bu hizmet için teklif al
                 <Icon name="arrow-right" size={16} />
               </a>

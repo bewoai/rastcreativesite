@@ -15,4 +15,4 @@ No authentication, OAuth authorization, agent registration, account provisioning
 - API catalog: `GET https://rastcreative.com/.well-known/api-catalog`
 - OpenAPI description: `GET https://rastcreative.com/openapi.json`
 
-All endpoints are read-only. Project enquiries continue through the public contact page at <https://rastcreative.com/iletisim>.
+All endpoints are read-only. Project enquiries continue through the public contact page at <https://rastcreative.com/iletisim/>.

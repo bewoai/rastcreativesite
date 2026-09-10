@@ -9,11 +9,11 @@ tags: ["drone", "emlak", "konut", "gayrimenkul", "Sakarya"]
 draft: false
 ---
 
-Bir ev ya da proje ararken insanlar artık ilk gezmeyi telefonlarından yapıyor. On ilan arasından hangisine gidileceğine, çoğu zaman fotoğraf ve videoya bakarak karar veriyorlar. İşte bu yüzden emlakta görsel, "olsa iyi olur" değil, doğrudan satışı hızlandıran bir araç. [Sakarya'da drone çekimi](/drone-cekimi/sakarya) yaparken en çok gördüğümüz şey de bu: iyi çekilmiş bir konut, ilan havuzunda anında öne çıkıyor.
+Bir ev ya da proje ararken insanlar artık ilk gezmeyi telefonlarından yapıyor. On ilan arasından hangisine gidileceğine, çoğu zaman fotoğraf ve videoya bakarak karar veriyorlar. İşte bu yüzden emlakta görsel, "olsa iyi olur" değil, doğrudan satışı hızlandıran bir araç. [Sakarya'da drone çekimi](/drone-cekimi/sakarya/) yaparken en çok gördüğümüz şey de bu: iyi çekilmiş bir konut, ilan havuzunda anında öne çıkıyor.
 
 ## Drone neyi değiştiriyor?
 
-Bir konutu ya da araziyi anlatmanın en zor kısmı, onun çevresiyle ilişkisini göstermektir. Ev ne kadar büyük, bahçe nereye bakıyor, denize/göle/yola mesafe ne? Bunları yerden çekilen fotoğraflarla anlatmak neredeyse imkânsız. Drone tam burada devreye giriyor: tek bir havadan kayışla, alıcı hem yapıyı hem konumu bir bakışta kavrıyor. Ama dürüst olalım — drone her ilanda şart değil. Bunu ayrıca [drone gerçekten gerekli mi yazımızda](/blog/drone-cekimi-gerekli-mi) konuşmuştuk.
+Bir konutu ya da araziyi anlatmanın en zor kısmı, onun çevresiyle ilişkisini göstermektir. Ev ne kadar büyük, bahçe nereye bakıyor, denize/göle/yola mesafe ne? Bunları yerden çekilen fotoğraflarla anlatmak neredeyse imkânsız. Drone tam burada devreye giriyor: tek bir havadan kayışla, alıcı hem yapıyı hem konumu bir bakışta kavrıyor. Ama dürüst olalım — drone her ilanda şart değil. Bunu ayrıca [drone gerçekten gerekli mi yazımızda](/blog/drone-cekimi-gerekli-mi/) konuşmuştuk.
 
 ## İç mekanı da hikâyeye bağlamak
 

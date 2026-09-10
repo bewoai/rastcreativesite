@@ -23,7 +23,7 @@ Buradaki amaç aynı görüntüyü her yerde tekrar etmek değil; aynı prodüks
 
 İkinci soru hedef kitledir. Bir fabrika filmi ile bir restoran Reels serisinin ritmi aynı olmaz. Üçüncü soru ise teslim takvimidir: Tüm içerikler aynı anda mı yayınlanacak, yoksa birkaç hafta boyunca sırayla mı kullanılacak?
 
-Bu kararlar netleşmeden çekim listesi hazırlanırsa sonradan eksik kadraj, yetersiz detay veya kullanılamayan formatlarla karşılaşmak kolaylaşır. [Sakarya video prodüksiyon](/video-cekimi/sakarya) planlarında bu yüzden çekim gününden önce kullanım alanlarını birlikte netleştiriyoruz.
+Bu kararlar netleşmeden çekim listesi hazırlanırsa sonradan eksik kadraj, yetersiz detay veya kullanılamayan formatlarla karşılaşmak kolaylaşır. [Sakarya video prodüksiyon](/video-cekimi/sakarya/) planlarında bu yüzden çekim gününden önce kullanım alanlarını birlikte netleştiriyoruz.
 
 ## Aynı çekimde hangi içerik türleri üretilebilir?
 
@@ -49,7 +49,7 @@ Plansız çoğaltılırsa düşürebilir. Aynı gün içine gereğinden fazla sa
 
 Teslim listesinde her içeriğin adı, formatı, oranı, süresi ve kullanım yeri yazmalıdır. Yatay ana film, dikey kısa kesit, altyazılı versiyon, sessiz oynatılacak web videosu veya kapak görseli birbirinden ayrı dosyalardır.
 
-Kurgu aşamasında da aynı düzen korunur. [Post-prodüksiyon ve kurgu](/hizmetler) sürecinde renk, ses, altyazı ve grafik kararları içeriklerin yayınlanacağı mecraya göre ele alınır.
+Kurgu aşamasında da aynı düzen korunur. [Post-prodüksiyon ve kurgu](/hizmetler/) sürecinde renk, ses, altyazı ve grafik kararları içeriklerin yayınlanacağı mecraya göre ele alınır.
 
 ## En iyi sonuç için işletme ne hazırlamalı?
 
@@ -61,4 +61,4 @@ Bu hazırlıklar basit görünür ama bir çekim gününde en çok zaman kazand�
 
 Bir çekim gününden kaç içerik çıkacağını baştan söylemek yerine, hangi içeriklerin hangi ihtiyacı karşılayacağını planlamak gerekir. Doğru kurgu ile tek bir prodüksiyon; web sitesi, sosyal medya, reklam ve satış iletişimi için uzun süre kullanılabilecek bir içerik kaynağına dönüşebilir.
 
-Markanız için böyle bir çekim akışı düşünüyorsanız [bize projenizden bahsedin](/iletisim) ile başlayabiliriz.
+Markanız için böyle bir çekim akışı düşünüyorsanız [bize projenizden bahsedin](/iletisim/) ile başlayabiliriz.

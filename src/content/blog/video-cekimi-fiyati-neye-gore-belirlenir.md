@@ -15,7 +15,7 @@ draft: false
 
 Bir dakikalık film için iki saatlik bir çekim de gerekebilir, birkaç ayrı mekânda geçen iki günlük bir prodüksiyon da. Son videonun süresi aynı kalsa bile hazırlık, çekim ve kurgu yükü tamamen değişir.
 
-Bu yüzden “60 saniyelik film” tek başına yeterli bir kapsam değildir. [Tanıtım filmi](/tanitim-filmi/sakarya) web sitesinde mi kullanılacak, fuar ekranında mı oynayacak, yoksa dikey reklam kesitleriyle birlikte mi teslim edilecek? Sağlıklı teklif bu soruların cevabından sonra çıkar.
+Bu yüzden “60 saniyelik film” tek başına yeterli bir kapsam değildir. [Tanıtım filmi](/tanitim-filmi/sakarya/) web sitesinde mi kullanılacak, fuar ekranında mı oynayacak, yoksa dikey reklam kesitleriyle birlikte mi teslim edilecek? Sağlıklı teklif bu soruların cevabından sonra çıkar.
 
 ## Fiyatı en çok hangi kalemler değiştiriyor?
 
@@ -29,7 +29,7 @@ Sonra post-prodüksiyon gelir. Kurgu, renk düzenleme, ses tasarımı, altyazı,
 
 Drone çekimi otomatik olarak her projeye eklenmesi gereken bir kalem değildir. Tesisin ölçeğini, konumunu veya çevresini anlatıyorsa değer katar; kapalı bir mekânda geçen küçük bir ürün çekiminde ise gereksiz olabilir.
 
-Sakarya’daki fabrika, arazi, otel, düğün mekânı veya geniş üretim alanlarında havadan görüntü çoğu zaman bağlamı tek planda kurar. Yine de izin, hava koşulları ve güvenli uçuş planı önceden değerlendirilmelidir. [Sakarya drone çekimi](/drone-cekimi/sakarya) için teklif isterken çekim yerini ve kullanım amacını paylaşmanız bu nedenle önemlidir.
+Sakarya’daki fabrika, arazi, otel, düğün mekânı veya geniş üretim alanlarında havadan görüntü çoğu zaman bağlamı tek planda kurar. Yine de izin, hava koşulları ve güvenli uçuş planı önceden değerlendirilmelidir. [Sakarya drone çekimi](/drone-cekimi/sakarya/) için teklif isterken çekim yerini ve kullanım amacını paylaşmanız bu nedenle önemlidir.
 
 ## Teklif alırken hangi soruları sormalıyım?
 
@@ -56,4 +56,4 @@ Biz kapsamı netleştirmeden kesin rakam söylemeyi doğru bulmuyoruz. Önce ney
 
 Video çekimi fiyatı; süreden çok kapsamla belirlenir. Net bir hedef, gerçekçi bir çekim planı ve açık teslim listesi olduğunda sürprizler azalır, bütçe daha doğru kullanılır.
 
-Projenizin kapsamını konuşmak için [iletişim formundan](/iletisim) kısa bir ön görüşme talebi bırakabilirsiniz.
+Projenizin kapsamını konuşmak için [iletişim formundan](/iletisim/) kısa bir ön görüşme talebi bırakabilirsiniz.

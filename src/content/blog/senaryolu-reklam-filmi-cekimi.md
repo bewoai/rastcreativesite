@@ -35,7 +35,7 @@ Kancadan hemen sonra gelen problem tanımı, hedef kitlenizle duygusal bir bağ 
 
 ### Senaryo Yazımında AIDA Modeli Kullanımı
 
-Pazarlama dünyasının altın kuralı olan AIDA (Dikkat, İlgi, Arzu, Eylem) modeli, senaryo yazımında görsel bir karşılık bulmalıdır. Dikkat aşamasında çarpıcı kamera açıları, ilgi aşamasında akıcı bir kurgu ritmi ve arzu aşamasında ise yüksek kaliteli ürün çekimleri kullanılır. Yazılı metnin sinematik bir dile dönüştürülmesi, markanızın mesajını bilinçaltına işleyen bir deneyim haline getirir. Stratejik olarak kurgulanmış bu aşamalar, izleyiciyi pasif bir gözlemci olmaktan çıkarıp aktif bir müşteriye dönüştürür. Markanızın bu profesyonel dönüşümü için [profesyonel video kurgu ve renk düzenleme](/hizmetler) çözümlerimizle hikâyenizi güçlendiriyoruz.
+Pazarlama dünyasının altın kuralı olan AIDA (Dikkat, İlgi, Arzu, Eylem) modeli, senaryo yazımında görsel bir karşılık bulmalıdır. Dikkat aşamasında çarpıcı kamera açıları, ilgi aşamasında akıcı bir kurgu ritmi ve arzu aşamasında ise yüksek kaliteli ürün çekimleri kullanılır. Yazılı metnin sinematik bir dile dönüştürülmesi, markanızın mesajını bilinçaltına işleyen bir deneyim haline getirir. Stratejik olarak kurgulanmış bu aşamalar, izleyiciyi pasif bir gözlemci olmaktan çıkarıp aktif bir müşteriye dönüştürür. Markanızın bu profesyonel dönüşümü için [profesyonel video kurgu ve renk düzenleme](/hizmetler/) çözümlerimizle hikâyenizi güçlendiriyoruz.
 
 ### Hedef Kitle Analizi ve Ton Belirleme
 
@@ -63,11 +63,11 @@ Sakarya, sanayi ve ticaretin kalbi olsa da, yerel markaların dijital dünyada k
 
 ### Endüstriyel ve Fabrika Çekimlerinde Senaryo
 
-Endüstriyel tesislerinizde sadece dönen çarkları veya çalışan makineleri göstermek artık yeterli değil. Biz, fabrikanızın üretim felsefesini, kalite kontrol disiplinini ve çalışanlarınızın emeğini merkeze alan senaryolar kurguluyoruz. Özellikle ihracat odaklı firmalar için hazırladığımız çok dilli senaryo stratejileri, küresel pazarda profesyonel bir duruş sergilemenizi sağlar. Bu süreçte [drone ve hava çekimi](/drone-cekimi) teknolojilerini senaryo akışına entegre ederek, tesisinizin büyüklüğünü ve operasyonel gücünü sinematik bir perspektifle sunuyoruz. Amacımız, makinelerden ziyade markanızın disiplinini ve vizyonunu anlatmaktır.
+Endüstriyel tesislerinizde sadece dönen çarkları veya çalışan makineleri göstermek artık yeterli değil. Biz, fabrikanızın üretim felsefesini, kalite kontrol disiplinini ve çalışanlarınızın emeğini merkeze alan senaryolar kurguluyoruz. Özellikle ihracat odaklı firmalar için hazırladığımız çok dilli senaryo stratejileri, küresel pazarda profesyonel bir duruş sergilemenizi sağlar. Bu süreçte [drone ve hava çekimi](/drone-cekimi/) teknolojilerini senaryo akışına entegre ederek, tesisinizin büyüklüğünü ve operasyonel gücünü sinematik bir perspektifle sunuyoruz. Amacımız, makinelerden ziyade markanızın disiplinini ve vizyonunu anlatmaktır.
 
 ### Sakarya’daki Hizmet Sektörü İçin Kreatif Çözümler
 
-Hizmet sektöründe güven, her şeyin önündedir. Sakarya’daki tıp merkezleri ve klinikler için kurguladığımız senaryolarda, hasta deneyimlerini ve uzmanlık disiplinini ön plana çıkarıyoruz. Restoran ve kafe işletmeleri için ise sadece yemeği değil, o mekanın atmosferini ve lezzet yolculuğunu hissettiren iştah kabartan kısa reklamlar hazırlıyoruz. Eğitim kurumları için vizyoner ve ilham verici hikâyeler yazarak, ebeveynlerin ve öğrencilerin markanızla duygusal bir bağ kurmasını sağlıyoruz. Yerel rekabette bir adım öne geçmek ve markanızı profesyonel bir hikâye ile taçlandırmak için [reklam ve marka filmi](/reklam-filmi) çözümlerimizi inceleyebilirsiniz.
+Hizmet sektöründe güven, her şeyin önündedir. Sakarya’daki tıp merkezleri ve klinikler için kurguladığımız senaryolarda, hasta deneyimlerini ve uzmanlık disiplinini ön plana çıkarıyoruz. Restoran ve kafe işletmeleri için ise sadece yemeği değil, o mekanın atmosferini ve lezzet yolculuğunu hissettiren iştah kabartan kısa reklamlar hazırlıyoruz. Eğitim kurumları için vizyoner ve ilham verici hikâyeler yazarak, ebeveynlerin ve öğrencilerin markanızla duygusal bir bağ kurmasını sağlıyoruz. Yerel rekabette bir adım öne geçmek ve markanızı profesyonel bir hikâye ile taçlandırmak için [reklam ve marka filmi](/reklam-filmi/) çözümlerimizi inceleyebilirsiniz.
 
 ## Neden Rast Creative Studio ile Çalışmalısınız?
 
@@ -81,7 +81,7 @@ Biz sadece çekim yapmıyoruz; içeriğinizin dijital dünyada başarılı olmas
 
 ### Modern Ekipman ve Uzman Kadro
 
-En son teknoloji sinema kameraları ve gelişmiş post-prodüksiyon altyapımızla projelerinize hayat veriyoruz. Yaratıcı yönetmenlerimiz, profesyonel kurgu editörlerimiz ve renk uzmanlarımız, **senaryolu reklam filmi çekimi** sürecinin her saniyesini titizlikle işler. Teknik donanımımızı uzman kadromuzun vizyonuyla birleştirerek, markanızı ulusal ve uluslararası standartların üzerine taşıyoruz. Estetik ve tekniğin mükemmel uyumuyla, izleyicilerinizde güven uyandıran profesyonel bir imaj inşa ediyoruz. [Hayalinizdeki reklam filmi için Rast Creative Studio ile iletişime geçin!](/iletisim)
+En son teknoloji sinema kameraları ve gelişmiş post-prodüksiyon altyapımızla projelerinize hayat veriyoruz. Yaratıcı yönetmenlerimiz, profesyonel kurgu editörlerimiz ve renk uzmanlarımız, **senaryolu reklam filmi çekimi** sürecinin her saniyesini titizlikle işler. Teknik donanımımızı uzman kadromuzun vizyonuyla birleştirerek, markanızı ulusal ve uluslararası standartların üzerine taşıyoruz. Estetik ve tekniğin mükemmel uyumuyla, izleyicilerinizde güven uyandıran profesyonel bir imaj inşa ediyoruz. [Hayalinizdeki reklam filmi için Rast Creative Studio ile iletişime geçin!](/iletisim/)
 
 ## Geleceğin Marka Hikâyesini Bugün İnşa Edin
 
@@ -89,7 +89,7 @@ Dijital dünyada sadece görünür olmak yetmiyor; akılda kalmak ve güven uyan
 
 Fikirden yayına kadar uçtan uca kreatif danışmanlık ve strateji desteği sunarak, yatırım bütçenizi en verimli şekilde yönetiyoruz. Markanızın vaadini izleyiciyi harekete geçiren sinematik bir deneyime dönüştürmek için disiplinli bir iş akışı benimsiyoruz. Rekabette fark yaratmak ve profesyonel kurumsal kimliğinizi güçlendirmek için doğru zaman şimdidir. Hayallerinizi gerçeğe dönüştüren o çarpıcı kareleri birlikte yakalayalım.
 
-**[Markanızın Hikâyesini Profesyonel Bir Senaryoyla Anlatmak İçin Teklif Alın](/iletisim)**
+**[Markanızın Hikâyesini Profesyonel Bir Senaryoyla Anlatmak İçin Teklif Alın](/iletisim/)**
 
 Sektörünüzdeki en etkileyici hikâyeyi birlikte yazmak için sabırsızlanıyoruz.
 

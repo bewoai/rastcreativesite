@@ -10,7 +10,7 @@ export const GET: APIRoute = async () => {
       id: item.id,
       question: item.data.question,
       answer: item.body?.trim() ?? "",
-      url: `${SITE.url}/hizmetler#${item.id}`,
+      url: `${SITE.url}/hizmetler/#${item.id}`,
     }));
 
   return apiResponse({

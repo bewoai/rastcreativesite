@@ -70,11 +70,11 @@
         execute: async ({ page }) => {
           const paths: Record<string, string> = {
             home: "/",
-            services: "/hizmetler",
-            projects: "/projeler",
-            blog: "/blog",
-            about: "/hakkimizda",
-            contact: "/iletisim",
+            services: "/hizmetler/",
+            projects: "/projeler/",
+            blog: "/blog/",
+            about: "/hakkimizda/",
+            contact: "/iletisim/",
           };
           if (typeof page !== "string" || !(page in paths)) throw new Error("Geçersiz sayfa adı.");
           return { page, url: new URL(paths[page], window.location.origin).href };

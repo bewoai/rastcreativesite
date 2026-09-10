@@ -15,6 +15,6 @@ export const GET: APIRoute = async () =>
       core: location.core,
       description: location.blurb,
       nearby: location.nearby,
-      url: `${SITE.url}/video-cekimi/${location.slug}`,
+      url: `${SITE.url}/video-cekimi/${location.slug}/`,
     })),
   });

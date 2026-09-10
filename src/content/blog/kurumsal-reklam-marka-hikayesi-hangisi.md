@@ -25,8 +25,8 @@ Neden var olduğunuzu anlatır. Ürünü değil, arkasındaki değerleri ve insa
 
 ## Hangisi size göre?
 
-Basit bir filtre: İnsanlar sizi henüz tanımıyorsa ve güven kurmak istiyorsanız **kurumsal**. Belirli bir ürünü/kampanyayı satmak istiyorsanız **reklam**. Markanızla duygusal bir bağ kurmak istiyorsanız **marka hikâyesi**. Çoğu zaman da doğru cevap ikisinin karışımıdır — örneğin bir marka hikâyesi tadında çekilmiş [kurumsal film](/tanitim-filmi/sakarya).
+Basit bir filtre: İnsanlar sizi henüz tanımıyorsa ve güven kurmak istiyorsanız **kurumsal**. Belirli bir ürünü/kampanyayı satmak istiyorsanız **reklam**. Markanızla duygusal bir bağ kurmak istiyorsanız **marka hikâyesi**. Çoğu zaman da doğru cevap ikisinin karışımıdır — örneğin bir marka hikâyesi tadında çekilmiş [kurumsal film](/tanitim-filmi/sakarya/).
 
 ## Özet
 
-Format kararı, çekime başlamadan verilmesi gereken en önemli karar. Doğru seçilince bütçeniz de sonuç da yerini bulur. Emin değilseniz sorun değil; ön görüşmede ne anlatmak istediğinizi konuşur, doğru formatı birlikte seçeriz. Süreç nasıl ilerliyor diye merak ediyorsanız [bu yazıya](/blog/tanitim-filmi-cektirmeden-once) göz atabilirsiniz.
+Format kararı, çekime başlamadan verilmesi gereken en önemli karar. Doğru seçilince bütçeniz de sonuç da yerini bulur. Emin değilseniz sorun değil; ön görüşmede ne anlatmak istediğinizi konuşur, doğru formatı birlikte seçeriz. Süreç nasıl ilerliyor diye merak ediyorsanız [bu yazıya](/blog/tanitim-filmi-cektirmeden-once/) göz atabilirsiniz.
