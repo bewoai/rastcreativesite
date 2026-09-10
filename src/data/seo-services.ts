@@ -58,7 +58,7 @@ export const SEO_SERVICES: readonly SeoService[] = [
   {
     slug: "drone-cekimi",
     name: "Drone Çekimi",
-    tagline: "Havadan sinematik görüntüler ve FPV hareketleri",
+    tagline: "Tesis ve arazileriniz için havadan sinematik 4K drone çekimi",
     intro:
       "Tesisinizi, sahanızı ya da etkinliğinizi havadan gösteren görüntüler, markanıza ölçek ve prestij katar. Lisanslı pilotlarımız ve sinema kararındaki drone'larımızla 4K ve RAW formatında, stabilize ve renk düzenlenmiş kareler üretiyoruz.",
     benefits: [
@@ -80,7 +80,7 @@ export const SEO_SERVICES: readonly SeoService[] = [
   {
     slug: "tanitim-filmi",
     name: "Tanıtım Filmi",
-    tagline: "Kurumunuzu anlatan, akılda kalan kısa film",
+    tagline: "Şirketinizi en iyi anlatan, kurumsal tanıtım filmi profesyonel çekimi",
     intro:
       "İyi bir tanıtım filmi, müşteriniz sizi tanımadan önce markanızı hissettirir. Senaryodan kurguya tek elden çalışır; tesisinizi, ekibinizi ve üretim sürecinizi sinematik bir anlatıya dönüştürürüz.",
     benefits: [
@@ -123,8 +123,8 @@ export const SEO_SERVICES: readonly SeoService[] = [
   },
   {
     slug: "sosyal-medya-icerigi",
-    name: "Sosyal Medya İçeriği",
-    tagline: "Reels, Shorts ve dikey video üretimi",
+    name: "Sosyal Medya Yönetimi",
+    tagline: "Markanız için stratejik içerik üretimi, Reels çekimi ve aylık yönetim",
     intro:
       "Sosyal medyada düzenli ve kaliteli içerik, takipçiyi müşteriye çevirir. Markanız için aylık içerik planı kurar; dikey video, Reels ve Shorts'u çekimden paylaşıma hazır teslim ederiz.",
     benefits: [
@@ -146,7 +146,7 @@ export const SEO_SERVICES: readonly SeoService[] = [
   {
     slug: "urun-mekan-cekimi",
     name: "Ürün & Mekan Çekimi",
-    tagline: "Ürün, katalog ve iç-dış mekan fotoğrafı",
+    tagline: "Markanız için profesyonel e-ticaret, ürün ve mekan fotoğraf çekimi",
     intro:
       "Online satışta ve sunumlarda fark, görselin kalitesinden başlar. Ürünlerinizi stüdyo ışığında, mekanlarınızı ise doğru kompozisyonla; e-ticaret, katalog ve web sitesi için temiz ve tutarlı görsellere çeviririz.",
     benefits: [

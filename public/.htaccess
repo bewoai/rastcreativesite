@@ -25,14 +25,31 @@ AddDefaultCharset UTF-8
   </Files>
 </IfModule>
 
-# ── Canonical host + HTTPS ────────────────────────────────────────────────
+# ── Canonical routes, host and HTTPS ──────────────────────────────────────
 RewriteEngine On
-# www → non-www (also upgrades to HTTPS in the same hop)
-RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
-# Force HTTPS for the bare domain
-RewriteCond %{HTTPS} off
-RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Old Framer routes go straight to their final canonical URLs. The optional
+# slash accepts both legacy variants without creating a second redirect.
+RewriteRule ^projelerimiz/?$ https://rastcreative.com/projeler/ [R=301,L]
+RewriteRule ^hizmetlerimiz/?$ https://rastcreative.com/hizmetler/ [R=301,L]
+RewriteRule ^hakkimizda-1/?$ https://rastcreative.com/hakkimizda/ [R=301,L]
+RewriteRule ^iletisim-1/?$ https://rastcreative.com/iletisim/ [R=301,L]
+
+# Deleted/External-only projects redirect to main projects index
+RewriteRule ^projeler/aytas-home-sosyal-medya/?$ https://rastcreative.com/projeler/ [R=301,L]
+RewriteRule ^projeler/isitan-edit-1/?$ https://rastcreative.com/projeler/ [R=301,L]
+
+# Astro emits HTML pages as physical directories. Canonicalize a slashless
+# page in one hop while also upgrading HTTPS and removing www. Real files,
+# including API/feed/discovery endpoints and assets, never match -d.
+RewriteCond %{REQUEST_URI} !/$
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ https://rastcreative.com%{REQUEST_URI}/ [R=301,L]
+
+# Canonicalize the remaining requests without changing their path shape.
+RewriteCond %{HTTPS} !=on [OR]
+RewriteCond %{HTTP_HOST} !^rastcreative\.com$ [NC]
+RewriteRule ^ https://rastcreative.com%{REQUEST_URI} [R=301,L]
 
 # ── Markdown for agents ──────────────────────────────────────────────────
 # Browsers keep receiving HTML. Agents asking for Markdown on the homepage
@@ -42,16 +59,6 @@ RewriteRule ^$ /llms.txt [L]
 
 # ── Block VCS / hidden files (Hostinger's Git deploy leaves a .git here) ──
 RewriteRule (^|/)\.(git|github|vscode|gitignore|gitattributes) - [F,L]
-
-# ── Remove trailing slash (match Astro's trailingSlash: 'ignore' default) ─
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)/$ /$1 [L,R=301]
-
-# ── Old Framer → New Astro 301 Redirects ──────────────────────────────────
-Redirect 301 /projelerimiz /projeler
-Redirect 301 /hizmetlerimiz /hizmetler
-Redirect 301 /hakkimizda-1 /hakkimizda
-Redirect 301 /iletisim-1 /iletisim
 
 # ── Custom 404 ────────────────────────────────────────────────────────────
 ErrorDocument 404 /404.html
@@ -97,7 +104,7 @@ ErrorDocument 404 /404.html
   # RFC 8288 / RFC 9727 discovery links. Files matches the resolved homepage
   # index.html after Apache's DirectoryIndex handling.
   <Files "index.html">
-    Header set Link "</.well-known/api-catalog>; rel=api-catalog, </openapi.json>; rel=service-desc, </agent-docs>; rel=service-doc, </.well-known/agent-skills/index.json>; rel=describedby, </llms.txt>; rel=describedby"
+    Header set Link "</.well-known/api-catalog>; rel=api-catalog, </openapi.json>; rel=service-desc, </agent-docs/>; rel=service-doc, </.well-known/agent-skills/index.json>; rel=describedby, </llms.txt>; rel=describedby"
   </Files>
 
   <Files "api-catalog">
