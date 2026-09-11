@@ -188,3 +188,15 @@ export function toPlainText(md: string): string {
     .replace(/\s+/g, " ")
     .trim();
 }
+
+/** Person identity node for authors and founders. */
+export function person(name: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": `${SITE.url}#person-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+    name,
+    url: `${SITE.url}/hakkimizda/`,
+    worksFor: { "@id": BUSINESS_ID },
+  };
+}

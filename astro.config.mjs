@@ -35,7 +35,7 @@ export default defineConfig({
     sitemap({
       // Keep the temporary component gallery and hidden/noindex projects out.
       // All service × location pages are indexable after the content-quality pass.
-      filter: (page) => !page.includes('/dev') && !isHiddenProjectPage(page),
+      filter: (page) => !page.includes('/dev') && !page.includes('/tesekkurler') && !isHiddenProjectPage(page),
     }),
   ]
 });

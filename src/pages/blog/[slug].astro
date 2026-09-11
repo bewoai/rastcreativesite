@@ -6,7 +6,7 @@ import Section from "../../components/Section.astro";
 import Eyebrow from "../../components/Eyebrow.astro";
 import Button from "../../components/Button.astro";
 import { SITE, PRIMARY_CTA } from "../../consts";
-import { breadcrumb } from "../../lib/schema";
+import { breadcrumb, person } from "../../lib/schema";
 
 export async function getStaticPaths() {
   const posts = (await getCollection("blog")).filter((p) => !p.data.draft);
@@ -37,7 +37,7 @@ const blogPosting = {
   // signal. Falls back to pubDate when the post hasn't been revised (honest:
   // "not modified since published"), and tracks updatedDate once it is set.
   dateModified: (d.updatedDate ?? d.pubDate).toISOString(),
-  author: { "@type": "Person", name: d.author },
+  author: person(d.author),
   publisher: { "@type": "Organization", name: SITE.name },
   mainEntityOfPage: new URL(`/blog/${entry.id}/`, SITE.url).href,
 };
