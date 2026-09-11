@@ -1,0 +1,18 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Yer tutucu poster">
+  <defs>
+    <radialGradient id="g6" cx="40%" cy="36%" r="85%">
+      <stop offset="0" stop-color="#24221d"/>
+      <stop offset=".55" stop-color="#15140f"/>
+      <stop offset="1" stop-color="#0c0b08"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#g6)"/>
+  <circle cx="520" cy="480" r="360" fill="#E25303" opacity=".10"/>
+  <g stroke="#FAF9F6" stroke-opacity=".8" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M120 200v-60h60"/><path d="M1420 140h60v60"/><path d="M1480 700v60h-60"/><path d="M180 760h-60v-60"/>
+  </g>
+  <circle cx="800" cy="450" r="6" fill="#E25303"/>
+  <text x="124" y="808" fill="#E25303" font-family="monospace" font-size="34" letter-spacing="6">REC ● 01:02:55</text>
+  <text x="1480" y="808" text-anchor="end" fill="#FAF9F6" fill-opacity=".68" font-family="monospace" font-size="30" letter-spacing="4">16:9 · 4K</text>
+  <text x="124" y="150" fill="#FAF9F6" fill-opacity=".55" font-family="sans-serif" font-size="26" letter-spacing="10">MARKA</text>
+</svg>
