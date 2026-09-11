@@ -143,6 +143,9 @@ if (projectsItemList) jsonLd.push(projectsItemList);
     </SectionHeading>
 
     <div class="prose">
+      <div class="geo-summary">
+        <strong>Özet:</strong> Rast Creative Studio, {location.name} ve çevre illerde {service.name.toLocaleLowerCase('tr')} projelerinize (senaryo, çekim, kurgu) ücretsiz ön görüşme ve net fiyat landırmayla anahtar teslim çözüm sunan profesyonel bir ajanstır. Aşağıda inceleyeceğiniz projeler, yetkinliğimizin gerçek referanslarıdır.
+      </div>
       <p>{service.intro}</p>
       <p>{location.blurb}</p>
     </div>
@@ -286,6 +289,18 @@ if (projectsItemList) jsonLd.push(projectsItemList);
   }
   .prose p + p {
     margin-top: 1rem;
+  }
+  .geo-summary {
+    font-size: 1.05rem;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.5rem;
+    background: color-mix(in srgb, var(--amber) 8%, var(--paper));
+    border-left: 3px solid var(--amber);
+    border-radius: 0 var(--radius-card) var(--radius-card) 0;
+    color: var(--ink);
+  }
+  .geo-summary strong {
+    font-weight: 600;
   }
   .benefits {
     list-style: none;
