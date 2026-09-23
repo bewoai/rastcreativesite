@@ -99,3 +99,21 @@ kare (kesintisiz döngü), ses yok. Yukarıdaki promptlar kullanıldı.
 Encode: VP9 CRF 28 / H.264 CRF 22, 24 fps, ses kanalı silindi. Döngü dikişi
 (ilk/son kare PSNR) 33–39 dB, gözle fark edilmiyor. Videolar yalnızca ekrandayken
 oynar; `prefers-reduced-motion` açıksa poster (webp) kalır.
+
+## Bulut geçişi (2026-09-23)
+
+GPT Image 2 ile siyah zeminde bulut şeridi (16:9'a siyahla tamamlanmış), Kling 2.6 ile
+5 sn video. Kling klibi kendiliğinden döngü yapmıyordu (ilk/son kare PSNR 18 dB), bu
+yüzden son 1,2 sn başa çapraz geçişle bağlandı → 3,8 sn dikişsiz döngü. Şerit
+1916×600 kırpıldı, 1600w.
+
+| Dosya | Boyut |
+|---|---|
+| `public/evren/bulut.webm` | ~490 KB |
+| `public/evren/bulut.mp4` | ~586 KB |
+| `public/evren/bulut.webp` (poster) | ~25 KB |
+
+Sitede `mix-blend-mode: screen` ile sisin üstüne biner: siyah yok olur, bulut ışık olarak
+görünür. Bölüm arası 7 geçişin hepsi aynı dosyayı kullanır; yalnızca ekrandaki oynar,
+çift sıradakiler aynalanır. Önemli: kapsayıcı (`.ev-cloud`) stacking context
+oluşturmamalı, yoksa harmanlama izole olur ve siyah görünür.

@@ -67,6 +67,9 @@ const A = {
   dawnPoster: slot("safak.webp"),
   fog: slot("sis.webp"),
   cloud: slot("bulut-seridi.webp"),
+  cloudWebm: slot("bulut.webm"),
+  cloudMp4: slot("bulut.mp4"),
+  cloudPoster: slot("bulut.webp"),
   sun: slot("kure.webp"),
   stops: {
     fikir: [slot("durak-fikir.webp"), slot("durak-fikir-genis.webp")],
@@ -77,6 +80,7 @@ const A = {
 };
 const heroVideo = Boolean(A.heroWebm || A.heroMp4);
 const dawnVideo = Boolean(A.dawnWebm || A.dawnMp4);
+const cloudVideo = Boolean(A.cloudWebm || A.cloudMp4);
 
 /* ---- Content -------------------------------------------------------- */
 const byOrder = (a: { data: { order: number } }, b: { data: { order: number } }) =>
@@ -295,7 +299,14 @@ const year = new Date().getFullYear();
     </section>
 
 
-    <div class="ev-cloud" aria-hidden="true"></div>
+    <div class:list={["ev-cloud", { "has-video": cloudVideo }]} aria-hidden="true">
+      {cloudVideo && (
+        <video data-ambient muted loop playsinline preload="none" poster={A.cloudPoster ?? undefined}>
+          {A.cloudWebm && <source src={A.cloudWebm} type="video/webm" />}
+          {A.cloudMp4 && <source src={A.cloudMp4} type="video/mp4" />}
+        </video>
+      )}
+    </div>
     {/* ───────── 02 · Works ───────── */}
     <section id="isler" class="ev-sec ev-works" aria-labelledby="ev-works-title">
       <header class="ev-head2 ev-head2--center">
@@ -392,7 +403,14 @@ const year = new Date().getFullYear();
     </section>
 
 
-    <div class="ev-cloud" aria-hidden="true"></div>
+    <div class:list={["ev-cloud", { "has-video": cloudVideo }]} aria-hidden="true">
+      {cloudVideo && (
+        <video data-ambient muted loop playsinline preload="none" poster={A.cloudPoster ?? undefined}>
+          {A.cloudWebm && <source src={A.cloudWebm} type="video/webm" />}
+          {A.cloudMp4 && <source src={A.cloudMp4} type="video/mp4" />}
+        </video>
+      )}
+    </div>
     {/* ───────── 03 · The people you talk to ───────── */}
     <section id="ekip" class="ev-sec ev-team" aria-labelledby="ev-team-title">
       <div class="ev-team__say">
@@ -426,7 +444,14 @@ const year = new Date().getFullYear();
     </section>
 
 
-    <div class="ev-cloud" aria-hidden="true"></div>
+    <div class:list={["ev-cloud", { "has-video": cloudVideo }]} aria-hidden="true">
+      {cloudVideo && (
+        <video data-ambient muted loop playsinline preload="none" poster={A.cloudPoster ?? undefined}>
+          {A.cloudWebm && <source src={A.cloudWebm} type="video/webm" />}
+          {A.cloudMp4 && <source src={A.cloudMp4} type="video/mp4" />}
+        </video>
+      )}
+    </div>
     {/* ───────── 04 · Process: four stops around the sun ───────── */}
     <section id="surec" class="ev-sec ev-orbit" aria-labelledby="ev-orbit-title">
       <header class="ev-head2">
@@ -501,7 +526,14 @@ const year = new Date().getFullYear();
     </section>
 
 
-    <div class="ev-cloud" aria-hidden="true"></div>
+    <div class:list={["ev-cloud", { "has-video": cloudVideo }]} aria-hidden="true">
+      {cloudVideo && (
+        <video data-ambient muted loop playsinline preload="none" poster={A.cloudPoster ?? undefined}>
+          {A.cloudWebm && <source src={A.cloudWebm} type="video/webm" />}
+          {A.cloudMp4 && <source src={A.cloudMp4} type="video/mp4" />}
+        </video>
+      )}
+    </div>
     {/* ───────── 05 · Services ───────── */}
     <section id="hizmetler" class="ev-sec ev-svc" aria-labelledby="ev-svc-title">
       <header class="ev-head2">
@@ -530,7 +562,14 @@ const year = new Date().getFullYear();
     </section>
 
 
-    <div class="ev-cloud" aria-hidden="true"></div>
+    <div class:list={["ev-cloud", { "has-video": cloudVideo }]} aria-hidden="true">
+      {cloudVideo && (
+        <video data-ambient muted loop playsinline preload="none" poster={A.cloudPoster ?? undefined}>
+          {A.cloudWebm && <source src={A.cloudWebm} type="video/webm" />}
+          {A.cloudMp4 && <source src={A.cloudMp4} type="video/mp4" />}
+        </video>
+      )}
+    </div>
     {/* ───────── 06 · FAQ: the questions clients actually ask ───────── */}
     <section id="sss" class="ev-sec ev-faq" aria-labelledby="ev-faq-title">
       <header class="ev-head2">
@@ -556,7 +595,14 @@ const year = new Date().getFullYear();
     </section>
 
 
-    <div class="ev-cloud" aria-hidden="true"></div>
+    <div class:list={["ev-cloud", { "has-video": cloudVideo }]} aria-hidden="true">
+      {cloudVideo && (
+        <video data-ambient muted loop playsinline preload="none" poster={A.cloudPoster ?? undefined}>
+          {A.cloudWebm && <source src={A.cloudWebm} type="video/webm" />}
+          {A.cloudMp4 && <source src={A.cloudMp4} type="video/mp4" />}
+        </video>
+      )}
+    </div>
     {/* ───────── Brands ───────── */}
     <section class="ev-sec ev-brands" aria-labelledby="ev-brands-title">
       <header class="ev-head2 ev-head2--center">
@@ -587,7 +633,14 @@ const year = new Date().getFullYear();
     </section>
 
 
-    <div class="ev-cloud" aria-hidden="true"></div>
+    <div class:list={["ev-cloud", { "has-video": cloudVideo }]} aria-hidden="true">
+      {cloudVideo && (
+        <video data-ambient muted loop playsinline preload="none" poster={A.cloudPoster ?? undefined}>
+          {A.cloudWebm && <source src={A.cloudWebm} type="video/webm" />}
+          {A.cloudMp4 && <source src={A.cloudMp4} type="video/mp4" />}
+        </video>
+      )}
+    </div>
     {/* ───────── 07 · Call sheet: the sun rises behind the form ───────── */}
     <section id="on-gorusme" class="ev-sec ev-call" aria-labelledby="ev-call-title" data-call>
       <div class="ev-call__frame">
@@ -2075,16 +2128,42 @@ const year = new Date().getFullYear();
   }
   .ev-cloud {
     position: relative;
-    z-index: 0;
     height: clamp(9rem, 20vw, 16rem);
     margin: calc(clamp(9rem, 20vw, 16rem) / -2) 0;
     overflow: hidden;
     pointer-events: none;
+  }
+  .ev-cloud:not(.has-video) {
+    z-index: 0;
     -webkit-mask-image: linear-gradient(180deg, transparent, #000 38%, #000 62%, transparent);
     mask-image: linear-gradient(180deg, transparent, #000 38%, #000 62%, transparent);
   }
-  .ev-cloud::before,
-  .ev-cloud::after {
+  /* Kling cloud loop on black: `screen` drops the black and lets the cloud
+     light up the fog. The container stays a non-stacking box on purpose —
+     a stacking context would isolate the blend and show the black. */
+  .ev-cloud.has-video {
+    height: clamp(11rem, 26vw, 22rem);
+    margin: calc(clamp(11rem, 26vw, 22rem) / -2) 0;
+  }
+  .ev-cloud video {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: max(100%, 70rem);
+    height: 100%;
+    object-fit: cover;
+    translate: -50% 0;
+    mix-blend-mode: screen;
+    filter: contrast(1.08) saturate(1.1);
+    opacity: 0.95;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  }
+  .ev-cloud.has-video:nth-of-type(even) video {
+    transform: scaleX(-1);
+  }
+  .ev-cloud:not(.has-video)::before,
+  .ev-cloud:not(.has-video)::after {
     content: "";
     position: absolute;
     top: 0;
@@ -2094,12 +2173,12 @@ const year = new Date().getFullYear();
     background: var(--cloud-img, none) 0 50% / auto 100% repeat-x;
     will-change: transform;
   }
-  .ev-cloud::before {
+  .ev-cloud:not(.has-video)::before {
     opacity: 0.9;
     filter: brightness(1.12) contrast(0.9);
     animation: ev-drift 140s linear infinite;
   }
-  .ev-cloud::after {
+  .ev-cloud:not(.has-video)::after {
     opacity: 0.55;
     filter: brightness(1.25) blur(2px);
     background-size: auto 140%;
