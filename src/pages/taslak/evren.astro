@@ -307,12 +307,12 @@ const year = new Date().getFullYear();
       <div class="ev-dolly__clouds" aria-hidden="true">
         {A.cloudPoster && (
           <>
-            <img class="ev-dolly__cloud ev-dolly__cloud--low" src={A.cloudPoster} alt="" width="1600" height="502" loading="lazy" decoding="async" />
-            <img class="ev-dolly__cloud ev-dolly__cloud--high" src={A.cloudPoster} alt="" width="1600" height="502" loading="lazy" decoding="async" />
+            <img class="ev-dolly__cloud ev-dolly__cloud--mid" src={A.cloudPoster} alt="" width="1600" height="502" decoding="async" />
+            <img class="ev-dolly__cloud ev-dolly__cloud--near" src={A.cloudPoster} alt="" width="1600" height="502" decoding="async" />
+            <img class="ev-dolly__cloud ev-dolly__cloud--floor" src={A.cloudPoster} alt="" width="1600" height="502" decoding="async" />
           </>
         )}
       </div>
-      <span class="ev-dolly__fade" aria-hidden="true"></span>
     </section>
     </div>
 
@@ -1301,18 +1301,22 @@ const year = new Date().getFullYear();
     }
   }
 
-  /* ───── Dolly-in ─────
-     --p runs 0 → 1 while the pinned hero scrolls past. The camera pushes
-     toward the sun, the words drift up and dissolve, clouds rush in, a
-     bloom of light, then the hero thins out onto the sky beneath. */
+  /* ───── Dolly-in, then descend ─────
+     --p runs 0 → 1 while the pinned hero scrolls past. Two moves, one shot:
+       A. push-in  (p 0 → .45): the camera closes on the sun, words lift away.
+       B. descend  (p .35 → 1): the camera tilts down — the whole scene rises
+          out of frame, cloud banks come up from below at different speeds
+          (parallax = depth) and pass the lens, and a floor of cloud settles
+          at the bottom; the next section arrives beneath it.
+     --a / --d are the eased progress of each move, computed in CSS. */
   .ev-dolly {
     --p: 0;
+    --a: clamp(0, var(--p) / 0.45, 1);
+    --d: clamp(0, (var(--p) - 0.35) / 0.65, 1);
     position: relative;
-    height: 210svh;
+    height: 230svh;
     margin-top: -4.4rem;
   }
-  /* The pinned hero paints its own fog: `screen` needs something under the
-     clouds, or their black ground shows wherever the footage has thinned. */
   .ev-dolly > .ev-hero {
     position: sticky;
     top: 0;
@@ -1323,33 +1327,38 @@ const year = new Date().getFullYear();
     background:
       radial-gradient(60% 50% at 70% 30%, rgba(255, 222, 190, 0.6), transparent 70%),
       var(--fog);
+    /* As the descent completes, the bottom edge dissolves into the sky so
+       the pinned frame hands over to the next section without a seam. */
+    -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - var(--d) * 30%), transparent);
+    mask-image: linear-gradient(180deg, #000 calc(100% - var(--d) * 30%), transparent);
   }
+  /* Scene: push toward the sun, then tilt down (the frame rises). */
   .ev-dolly .ev-hero__media {
-    scale: calc(1 + var(--p) * 1.9);
     transform-origin: 62% 44%;
-    opacity: clamp(0, (1 - var(--p)) * 4.5, 1);
-    will-change: scale, opacity;
+    scale: calc(1 + var(--a) * 0.9);
+    translate: 0 calc(var(--d) * var(--d) * -62vh);
+    will-change: scale, translate;
   }
   .ev-dolly .ev-hero__wash {
-    opacity: clamp(0, 1 - var(--p) * 2.4, 1);
+    opacity: calc(1 - var(--a));
   }
+  /* Words leave upward, faster than the scene: they are nearer the lens. */
   .ev-dolly .ev-hero__say {
-    opacity: clamp(0, 1 - var(--p) * 3.2, 1);
-    translate: 0 calc(var(--p) * -14vh);
-    filter: blur(calc(var(--p) * 14px));
+    translate: 0 calc(var(--a) * -38vh);
+    opacity: clamp(0, 1 - var(--a) * 1.6, 1);
   }
   .ev-dolly .ev-hud,
   .ev-dolly .ev-hero__whisper,
   .ev-dolly .ev-onair {
-    opacity: clamp(0, 1 - var(--p) * 4.5, 1);
+    translate: 0 calc(var(--a) * -30vh);
+    opacity: clamp(0, 1 - var(--a) * 2.2, 1);
   }
   .ev-dolly[data-deep] .ev-onair {
     pointer-events: none;
   }
   /* No opacity/filter/transform on this box: any of them would isolate the
-     images' `screen` blend and let their black ground show. Fade the images. */
+     images' `screen` blend and let their black ground show. */
   .ev-dolly__clouds {
-    --cloud-a: clamp(0, min((var(--p) - 0.32) * 2.8, (1 - var(--p)) * 5), 1);
     position: absolute;
     inset: 0;
     pointer-events: none;
@@ -1357,42 +1366,46 @@ const year = new Date().getFullYear();
   .ev-dolly__cloud {
     position: absolute;
     left: 50%;
-    width: 150%;
+    top: 100%;
     max-width: none;
     height: auto;
     mix-blend-mode: screen;
-    translate: -50% 0;
-    opacity: var(--cloud-a);
+    filter: brightness(1.25) saturate(1.05);
   }
-  .ev-dolly__cloud--low {
-    bottom: -12%;
-    transform-origin: 50% 100%;
-    scale: calc(1 + var(--p) * 1.4);
+  /* Far bank: slow, rises to mid-frame. */
+  .ev-dolly__cloud--mid {
+    width: 150%;
+    translate: -50% calc(var(--d) * -95vh);
+    opacity: calc(var(--d) * 1.2);
   }
-  .ev-dolly__cloud--high {
-    top: -18%;
-    transform-origin: 50% 0%;
+  /* Near bank: big and fast — it sweeps past the lens and out the top. */
+  .ev-dolly__cloud--near {
+    width: 260%;
+    translate: -46% calc(var(--d) * -210vh);
+    opacity: clamp(0, min(var(--d) * 2.5, (1 - var(--d)) * 3), 1);
     rotate: 180deg;
-    scale: calc(1 + var(--p) * 1.1);
-    opacity: calc(var(--cloud-a) * 0.75);
   }
-  /* A bloom of light as the camera passes the sun. */
-  .ev-dolly__fade {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: radial-gradient(circle at 62% 44%, rgba(255, 246, 232, 0.95), rgba(255, 226, 196, 0.5) 35%, transparent 70%);
-    opacity: clamp(0, min((var(--p) - 0.42) * 4, (0.98 - var(--p)) * 3.5), 0.9);
+  /* Floor: the bank we come to rest above; it meets the next section. */
+  .ev-dolly__cloud--floor {
+    width: 170%;
+    translate: -50% calc(clamp(0, (var(--d) - 0.35) / 0.65, 1) * -62%);
+    opacity: clamp(0, (var(--d) - 0.3) * 2, 1);
   }
   @media (max-width: 760px) {
     .ev-dolly {
-      height: 180svh;
+      height: 200svh;
     }
     .ev-dolly .ev-hero__media {
       transform-origin: 64% 30%;
     }
-    .ev-dolly__fade {
-      background: radial-gradient(circle at 64% 30%, rgba(255, 246, 232, 0.95), rgba(255, 226, 196, 0.5) 35%, transparent 70%);
+    .ev-dolly__cloud--mid {
+      width: 320%;
+    }
+    .ev-dolly__cloud--near {
+      width: 520%;
+    }
+    .ev-dolly__cloud--floor {
+      width: 360%;
     }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -1404,8 +1417,7 @@ const year = new Date().getFullYear();
       height: auto;
       min-height: min(100svh, 58rem);
     }
-    .ev-dolly__clouds,
-    .ev-dolly__fade {
+    .ev-dolly__clouds {
       display: none;
     }
   }

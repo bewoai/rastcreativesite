@@ -124,3 +124,11 @@ kalmalı, biraz animasyon. Arayüz yönü için kullanıcı "Mitik levha"yı se�
 - **Beliriş animasyonları:** bölüm başlıkları, vaka kaydırmalısı, süreç levhaları,
   ekip kartları, hizmetler, SSS maddeleri, marka levhası hücreleri (satır satır), form
   föyü ve footer kademeli belirir; fısıltı ve etiket çizgileri ardından çizilir.
+
+### v6.1 — dolly'nin düzeltilmesi: yaklaş, sonra alçal
+
+İlk dolly "olduğu yerde kaybolup gidiyordu" (kullanıcı). Hareket iki aşamaya ayrıldı:
+A) güneşe yaklaşma (p 0→.45), B) kameranın aşağı eğilip bulutların içinden alçalması
+(p .35→1). B'de sahne kadrajdan yukarı çıkar, üç bulut katmanı farklı hızlarla alttan
+gelip geçer (uzak/yakın/zemin → derinlik), hiçbir şey yerinde solmaz. Sabitlenen
+karenin alt kenarı alçalma bitince göğe erir; "Seçili işler" bulutların altından çıkar.
