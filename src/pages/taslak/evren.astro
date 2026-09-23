@@ -617,31 +617,48 @@ const year = new Date().getFullYear();
         </video>
       )}
     </div>
-    {/* ───────── 07 · Call sheet: the sun rises behind the form ───────── */}
+    {/* ───────── 07 · Call sheet: the sun rises behind the form ─────────
+        A full-bleed dawn stage (like the hero), not a box in a box: the
+        promise and the ways to reach us on the left, the one-sentence form on
+        the right, and the sun on the horizon below. Sending lifts the sun. */}
     <section id="on-gorusme" class="ev-sec ev-call" aria-labelledby="ev-call-title" data-call>
-      <div class="ev-call__frame">
-        <div class="ev-call__dawn" aria-hidden="true">
-          {
-            dawnVideo ? (
-              <video class="ev-call__video" data-ambient muted loop playsinline preload="none" poster={A.dawnPoster ?? undefined}>
-                {A.dawnWebm && <source src={A.dawnWebm} type="video/webm" />}
-                {A.dawnMp4 && <source src={A.dawnMp4} type="video/mp4" />}
-              </video>
-            ) : (
-              A.dawnPoster && <img class="ev-call__video" src={A.dawnPoster} alt="" width="1600" height="900" loading="lazy" />
-            )
-          }
+      <div class="ev-call__dawn" aria-hidden="true">
+        {
+          dawnVideo ? (
+            <video class="ev-call__video" data-ambient muted loop playsinline preload="none" poster={A.dawnPoster ?? undefined}>
+              {A.dawnWebm && <source src={A.dawnWebm} type="video/webm" />}
+              {A.dawnMp4 && <source src={A.dawnMp4} type="video/mp4" />}
+            </video>
+          ) : (
+            A.dawnPoster && <img class="ev-call__video" src={A.dawnPoster} alt="" width="1600" height="900" loading="lazy" />
+          )
+        }
+      </div>
+
+      <div class="ev-call__grid">
+        <div class="ev-call__intro" data-rise>
+          <p class="ev-label"><span class="ev-label__n">VIII</span>Ücretsiz ön görüşme</p>
+          <h2 id="ev-call-title" class="ev-h2">Bize bir cümle <em>yazın.</em></h2>
+          <p class="ev-call__lede">
+            Gerisini telefonda konuşuruz. Fiyat ve kapsam için ilk görüşme ücretsiz.
+          </p>
+
+          <ol class="ev-call__next" aria-label="Sonra ne olur?">
+            <li><span class="ev-call__n">I</span><b>Formu gönderin</b><span>Adınız ve telefonunuz yeter, bir dakika sürer.</span></li>
+            <li><span class="ev-call__n">II</span><b>Sizi arıyoruz</b><span>Kısa bir tanışma: ne anlatmak istiyorsunuz, nerede, ne zaman.</span></li>
+            <li><span class="ev-call__n">III</span><b>Kapsam ve teklif</b><span>Net bir plan ve fiyat. Görüşme ücretsiz, bağlayıcı değil.</span></li>
+          </ol>
+
+          <div class="ev-call__direct">
+            <a class="ev-btn ev-btn--glass" href={whatsappHref} data-cta-location="evren_form_wa">
+              <Icon name="whatsapp" size={18} /> WhatsApp'tan yazın
+            </a>
+            <a class="ev-link" href={`tel:${CONTACT.phoneIntl}`} data-cta-location="evren_form_tel">{CONTACT.phone}</a>
+            <a class="ev-link" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+          </div>
         </div>
 
         <div class="ev-call__sheet ev-glass" data-rise>
-          <header>
-            <p class="ev-label"><span class="ev-label__n">VIII</span>Ücretsiz ön görüşme</p>
-            <h2 id="ev-call-title" class="ev-h2">Bize bir cümle <em>yazın.</em></h2>
-            <p class="ev-call__lede">
-              Gerisini telefonda konuşuruz. Fiyat ve kapsam için ilk görüşme ücretsiz.
-            </p>
-          </header>
-
           <form class="ev-form" action="https://api.web3forms.com/submit" method="POST" data-ev-form>
             <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
             <input type="hidden" name="subject" value="Yeni ön görüşme talebi — rastcreative.com (taslak evren)" />
@@ -649,42 +666,38 @@ const year = new Date().getFullYear();
             <input type="checkbox" name="botcheck" class="ev-sr" tabindex="-1" autocomplete="off" />
 
             <p class="ev-form__line">
-              Merhaba, ben
+              Merhaba, <span class="ev-nw">ben
               <label class="ev-fill">
                 <span class="ev-sr">Adınız soyadınız (zorunlu)</span>
                 <input id="ev-name" name="name" type="text" autocomplete="name" minlength="2" required placeholder="adınız" />
-              </label>,
-              <label class="ev-fill">
+              </label>,</span>
+              <span class="ev-nw"><label class="ev-fill">
                 <span class="ev-sr">Firma (isteğe bağlı)</span>
                 <input id="ev-company" name="company" type="text" autocomplete="organization" placeholder="firmanız" />
               </label>
-              için bir
+              için bir</span>
               <label class="ev-fill ev-fill--select">
                 <span class="ev-sr">Proje türü</span>
                 <select id="ev-type" name="project_type">
                   {projectTypes.map((t) => <option value={t}>{t}</option>)}
                 </select>
               </label>
-              düşünüyoruz. Bana
+              düşünüyoruz. <span class="ev-nw">Bana
               <label class="ev-fill">
                 <span class="ev-sr">Telefon (zorunlu)</span>
                 <input id="ev-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" minlength="10" required placeholder="telefonunuz" />
-              </label>
+              </label></span>
               numarasından ulaşabilirsiniz.
             </p>
 
-            <label class="ev-form__note" for="ev-message">Eklemek istediğiniz bir not var mı? <span>(isteğe bağlı)</span></label>
+            <label class="ev-form__note" for="ev-message">Eklemek istediğiniz bir not <span>(isteğe bağlı)</span></label>
             <textarea id="ev-message" class="ev-form__area" name="message" rows="2" placeholder="Tarih, lokasyon, ne çekilecek…"></textarea>
 
             <div class="ev-form__foot">
-              <button type="submit" class="ev-btn">Föyü gönder <span aria-hidden="true">→</span></button>
-              <a class="ev-btn ev-btn--glass" href={whatsappHref} data-cta-location="evren_form_wa">
-                ya da WhatsApp'tan yazın
-              </a>
-              <a class="ev-link" href={`tel:${CONTACT.phoneIntl}`}>{CONTACT.phone}</a>
+              <button type="submit" class="ev-btn">Gönder, sizi arayalım <span aria-hidden="true">→</span></button>
             </div>
             <p class="ev-form__status" data-ev-status role="status" aria-live="polite"></p>
-            <p class="ev-whisper ev-form__sent" aria-hidden="true">föy elimizde, sizi arıyoruz</p>
+            <p class="ev-whisper ev-form__sent" aria-hidden="true">mesajınız elimizde, sizi arıyoruz</p>
             <p class="ev-form__kvkk">
               Göndererek <a href="/kvkk/">KVKK Aydınlatma Metni</a>'ni okuduğunuzu kabul
               etmiş sayılırsınız. Verileriniz yalnızca size dönüş için kullanılır.
@@ -2182,19 +2195,21 @@ const year = new Date().getFullYear();
   }
 
   /* ───── Call sheet ───── */
-  .ev-call__frame {
-    position: relative;
-    overflow: hidden;
-    padding: clamp(1rem, 4vw, 3.5rem) clamp(0.6rem, 4vw, 3.5rem) clamp(12rem, 24vw, 18rem);
-    border-radius: calc(var(--r) + 0.6rem);
-    isolation: isolate;
-    box-shadow: var(--shade);
+  .ev-call {
+    padding-bottom: clamp(11rem, 20vw, 17rem);
   }
+  /* Full-bleed dawn behind the section, dissolving into the sky above and
+     the footer below; the sun sits on the horizon under the content. */
   .ev-call__dawn {
     position: absolute;
-    inset: 0;
+    inset: 0 auto 0 50%;
     z-index: -1;
-    background: var(--fog);
+    width: 100vw;
+    translate: -50% 0;
+    overflow: hidden;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 22%, #000 78%, transparent);
+    mask-image: linear-gradient(180deg, transparent, #000 22%, #000 78%, transparent);
   }
   .ev-call__video {
     width: 100%;
@@ -2202,31 +2217,98 @@ const year = new Date().getFullYear();
     object-fit: cover;
     object-position: 50% 100%;
     transition:
-      transform 1.4s var(--ease-out),
-      filter 1.4s var(--ease-out);
+      transform 1.6s var(--ease-out),
+      filter 1.6s var(--ease-out);
   }
   .ev-call.is-sent .ev-call__video {
-    transform: translateY(-4%) scale(1.04);
-    filter: brightness(1.08);
+    transform: translateY(-6%) scale(1.05);
+    filter: brightness(1.1);
+  }
+  .ev-call__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 4.4fr) minmax(0, 6fr);
+    align-items: start;
+    gap: clamp(2rem, 5vw, 4.5rem);
+  }
+  .ev-call__intro .ev-h2 {
+    max-width: 9ch;
+  }
+  .ev-call__next {
+    display: grid;
+    gap: 1.1rem;
+    margin: 2rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ev-call__next li {
+    display: grid;
+    grid-template-columns: 2.4rem 1fr;
+    column-gap: 0.4rem;
+  }
+  .ev-call__next b {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  .ev-call__next li > span:last-child {
+    grid-column: 2;
+    color: var(--ink-2);
+    font-size: 0.98rem;
+  }
+  .ev-call__n {
+    grid-row: span 2;
+    padding-top: 0.2rem;
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 600;
+    color: var(--sun-text);
+  }
+  .ev-call__direct {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.8rem 1.3rem;
+    margin-top: 2rem;
   }
   .ev-call__sheet {
-    max-width: 58rem;
-    padding: clamp(1.4rem, 4vw, 3rem);
-    background: rgba(250, 246, 240, 0.62);
+    padding: clamp(1.4rem, 3.4vw, 2.6rem);
+    background: rgba(250, 246, 240, 0.66);
+  }
+  .ev-nw {
+    white-space: nowrap;
+  }
+  /* One column: the form comes right after the promise (the lead first),
+     the steps and direct lines follow. */
+  @media (max-width: 960px) {
+    .ev-call__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0;
+    }
+    .ev-call__intro {
+      display: contents;
+    }
+    .ev-call__intro .ev-h2 {
+      max-width: none;
+    }
+    .ev-call__sheet {
+      order: 1;
+      margin-top: 1.8rem;
+    }
+    .ev-call__next,
+    .ev-call__direct {
+      order: 2;
+    }
   }
   .ev-call__lede {
     margin: 0.9rem 0 0;
     color: var(--ink-2);
   }
-  .ev-form {
-    margin-top: clamp(1.4rem, 3vw, 2.2rem);
-  }
   .ev-form__line {
     margin: 0;
     font-weight: 500;
     font-family: var(--serif);
-    font-size: clamp(1.7rem, 2vw + 1rem, 2.7rem);
-    line-height: 1.55;
+    font-size: clamp(1.3rem, 0.5vw + 1rem, 1.7rem);
+    line-height: 1.75;
   }
   .ev-fill {
     display: inline-block;
@@ -2247,6 +2329,17 @@ const year = new Date().getFullYear();
   }
   .ev-fill input[type="tel"] {
     width: 11ch;
+  }
+  /* Fields hug their placeholder / value so the sentence reads as one. */
+  @supports (field-sizing: content) {
+    .ev-fill input,
+    .ev-fill input[type="tel"] {
+      field-sizing: content;
+      width: auto;
+      min-width: 4ch;
+      max-width: 100%;
+      padding-inline: 0.15rem 0.5rem;
+    }
   }
   .ev-fill--select select {
     width: auto;
@@ -2293,7 +2386,7 @@ const year = new Date().getFullYear();
   }
   .ev-form__area {
     display: block;
-    width: min(100%, 38rem);
+    width: 100%;
     min-height: 4.5rem;
     margin-top: 0.4rem;
     padding: 0.75rem 0.9rem;
@@ -2838,7 +2931,8 @@ const year = new Date().getFullYear();
     const call = root.querySelector<HTMLElement>("[data-call]");
     const form = root.querySelector<HTMLFormElement>("[data-ev-form]");
     const status = root.querySelector<HTMLElement>("[data-ev-status]");
-    form?.querySelectorAll<HTMLInputElement>(".ev-fill input").forEach((input) => {
+    const hug = CSS.supports("field-sizing", "content");
+    if (!hug) form?.querySelectorAll<HTMLInputElement>(".ev-fill input").forEach((input) => {
       input.addEventListener("input", () => {
         input.style.width = `${Math.max(input.type === "tel" ? 11 : 9, input.value.length + 1)}ch`;
       });
@@ -2867,7 +2961,7 @@ const year = new Date().getFullYear();
         const json = await res.json().catch(() => ({}));
         if (res.ok && json.success) {
           form.reset();
-          say("Teşekkürler, föyünüz bize ulaştı.");
+          say("Teşekkürler, mesajınız bize ulaştı.");
           call?.classList.add("is-sent");
           track(
             "lead_form_submit_success",
