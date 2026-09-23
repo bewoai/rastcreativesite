@@ -1,0 +1,1979 @@
+---
+/**
+ * /taslak/evren/ — "Evren" homepage prototype (v2 of the Işık Masası draft).
+ *
+ * A misty, near-monochrome world around one character: the Rast sun, a glowing
+ * sphere. It appears in three scenes — the hero, the centre of the process
+ * orbit, and the dawn behind the call-sheet form. Everything else is quiet.
+ *
+ * Kept from v1 (user feedback): the monitor (now inside the case cards), the
+ * handwritten notes, the one-sentence call sheet. Dropped: the NLE timeline
+ * (not usable) → replaced by four orbit stops.
+ *
+ * Media slots: drop files into public/evren/ and they are picked up at build
+ * (see ASSETS below); until then the sphere is drawn in CSS.
+ * Prompts for those files: docs/sections/evren-gorsel-uretim.md
+ */
+import fs from "node:fs";
+import path from "node:path";
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Logo from "../../components/Logo.astro";
+import LogoWall from "../../components/LogoWall.astro";
+import Icon from "../../components/Icon.astro";
+import {
+  CONTACT,
+  NAV,
+  SOCIAL,
+  SITE,
+  WEB3FORMS_ACCESS_KEY,
+  WHATSAPP_CTA_HREF,
+} from "../../consts";
+import { ytThumbToWebp } from "../../lib/ytimg";
+import { groupByBrand } from "../../lib/brands";
+
+/* ---- Media slots (public/evren/*) ---------------------------------- */
+const slot = (file: string) =>
+  fs.existsSync(path.join(process.cwd(), "public", "evren", file)) ? `/evren/${file}` : null;
+const ASSETS = {
+  heroWebm: slot("hero.webm"),
+  heroMp4: slot("hero.mp4"),
+  heroPoster: slot("hero.webp"),
+  heroMobileWebm: slot("hero-dikey.webm"),
+  heroMobileMp4: slot("hero-dikey.mp4"),
+  heroMobilePoster: slot("hero-dikey.webp"),
+  dawnWebm: slot("safak.webm"),
+  dawnMp4: slot("safak.mp4"),
+  dawnPoster: slot("safak.webp"),
+  stops: {
+    fikir: slot("durak-fikir.webp"),
+    set: slot("durak-set.webp"),
+    kurgu: slot("durak-kurgu.webp"),
+    teslim: slot("durak-teslim.webp"),
+  } as Record<string, string | null>,
+};
+const heroHasVideo = Boolean(ASSETS.heroWebm || ASSETS.heroMp4);
+const dawnHasVideo = Boolean(ASSETS.dawnWebm || ASSETS.dawnMp4);
+
+/* ---- Content -------------------------------------------------------- */
+const byOrder = (a: { data: { order: number } }, b: { data: { order: number } }) =>
+  a.data.order - b.data.order;
+const projects = (await getCollection("projects"))
+  .filter((p) => !p.data.draft && !p.data.hidden)
+  .sort(byOrder);
+const brandCount = groupByBrand(projects).length;
+const cases = projects.filter((p) => p.data.featured);
+
+const services = (await getCollection("services")).sort(byOrder);
+const serviceNotes = ["sete çıkıyoruz", "strateji masası", "kurgu odası"];
+
+// Four orbit stops. Durations mirror the verified "genellikle 2–4 hafta".
+const stops = [
+  {
+    key: "fikir",
+    label: "Fikir",
+    when: "1. hafta",
+    title: "Ön görüşme & plan",
+    text: "İhtiyacınızı dinliyoruz; hangi formatların (web, reklam, Reels) gerekeceğine baştan karar veriyoruz. Çekim günü buna göre planlanır.",
+    note: "burada ücret yok, sadece sohbet",
+    angle: -90,
+  },
+  {
+    key: "set",
+    label: "Set",
+    when: "1–2. hafta",
+    title: "Çekim günü",
+    text: "Yerinde, tek ekip. Ana film, dikey kesitler ve drone planı aynı sette çekilir; tek günden birden çok içerik çıkar.",
+    note: "tek gün, çok içerik",
+    angle: 0,
+  },
+  {
+    key: "kurgu",
+    label: "Kurgu",
+    when: "2–4. hafta",
+    title: "Kurgu, renk, ses",
+    text: "Kurgu, renk düzenleme ve ses tasarımı aynı masada. Revizyonları doğrudan projeyi çeken ekiple konuşursunuz.",
+    note: "muhatabınız değişmez",
+    angle: 90,
+  },
+  {
+    key: "teslim",
+    label: "Teslim",
+    when: "genellikle 2–4 hafta içinde",
+    title: "Teslim",
+    text: "16:9 ana film, 9:16 dikey versiyonlar ve reklam kesitleri: her mecraya hazır dosyalar.",
+    note: "yayına hazır ✓",
+    angle: 180,
+  },
+];
+
+const projectTypes = [
+  "tanıtım filmi",
+  "reklam filmi",
+  "sosyal medya videosu",
+  "drone çekimi",
+  "ürün çekimi",
+  "başka bir şey",
+];
+
+const whatsappHref = WHATSAPP_CTA_HREF ?? "/iletisim/";
+const year = new Date().getFullYear();
+---
+
+<BaseLayout
+  title="Taslak — Evren"
+  description="Rast Creative Studio ana sayfa tasarım taslağı (evren)."
+  noindex
+  bare
+>
+  <div class="ev" data-ev>
+    {/* Film grain over the whole world — one fixed layer, no per-section cost. */}
+    <div class="ev-grain" aria-hidden="true"></div>
+
+    {/* ───────── Header ───────── */}
+    <header class="ev-head">
+      <Logo class="ev-head__logo" />
+      <nav class="ev-head__nav" aria-label="Sayfa içi">
+        <a href="#isler">İşler</a>
+        <a href="#surec">Nasıl çalışırız</a>
+        <a href="#hizmetler">Hizmetler</a>
+        <a href="/hakkimizda/">Biz</a>
+      </nav>
+      <div class="ev-head__act">
+        <a class="ev-round" href={whatsappHref} aria-label="WhatsApp'tan yazın" data-cta-location="evren_header_wa">
+          <Icon name="whatsapp" size={19} />
+        </a>
+        <a class="ev-pill ev-pill--sm" href="#on-gorusme" data-cta-location="evren_header">
+          Ücretsiz ön görüşme
+        </a>
+      </div>
+    </header>
+
+    {/* ───────── 01 · Hero: the Rast sun in fog ───────── */}
+    <section class="ev-hero" aria-labelledby="ev-hero-title">
+      <div class="ev-hero__media" aria-hidden="true">
+        {
+          heroHasVideo ? (
+            <video
+              class="ev-hero__video"
+              data-ambient
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              poster={ASSETS.heroPoster ?? undefined}
+            >
+              {ASSETS.heroMobileWebm && (
+                <source src={ASSETS.heroMobileWebm} type="video/webm" media="(max-width: 700px)" />
+              )}
+              {ASSETS.heroMobileMp4 && (
+                <source src={ASSETS.heroMobileMp4} type="video/mp4" media="(max-width: 700px)" />
+              )}
+              {ASSETS.heroWebm && <source src={ASSETS.heroWebm} type="video/webm" />}
+              {ASSETS.heroMp4 && <source src={ASSETS.heroMp4} type="video/mp4" />}
+            </video>
+          ) : (
+            <span class="ev-orb ev-orb--hero">
+              <span class="ev-orb__rings" />
+            </span>
+          )
+        }
+      </div>
+
+      {/* HUD: ambient labels in the corners. Never information you need. */}
+      <div class="ev-hud" aria-hidden="true">
+        <span class="ev-hud__tl">RAST / 001</span>
+        <span class="ev-hud__side">40°46′N · 30°24′E · SERDİVAN</span>
+        <span class="ev-hud__bl">Film / Fotoğraf / İçerik / AI</span>
+        <span class="ev-hud__bc">↓ kaydır</span>
+        <span class="ev-hud__br">TC <span data-tc>00:00:00:00</span></span>
+      </div>
+
+      <div class="ev-hero__say">
+        <p class="ev-chip"><span class="ev-chip__dot"></span>Video prodüksiyon stüdyosu · Sakarya</p>
+        <h1 id="ev-hero-title" class="ev-hero__title">
+          <span class="ev-hero__dim">İyi iş</span>
+          <span>kendini izletir.</span>
+        </h1>
+        <p class="ev-hero__lede">
+          Reklam filmi, tanıtım filmi ve sosyal medya videolarını fikirden teslime
+          tek ekip olarak üretiyoruz.
+        </p>
+        <div class="ev-hero__cta">
+          <a class="ev-pill" href="#on-gorusme" data-cta-location="evren_hero">
+            Ücretsiz ön görüşme <span aria-hidden="true">→</span>
+          </a>
+          <a class="ev-pill ev-pill--ghost" href="#isler" data-cta-location="evren_hero_works">
+            İşleri izle
+          </a>
+        </div>
+        <p class="ev-hero__proof">
+          <strong>{brandCount}+</strong> marka · <strong>100+</strong> içerik · Sakarya, Kocaeli, Düzce
+        </p>
+      </div>
+      <p class="ev-hand ev-hero__note" aria-hidden="true">iyi ışık, iyi iş ↗</p>
+    </section>
+
+    {/* ───────── 02 · Works: case carousel with a monitor in every card ─────────
+        Native horizontal scroll with snap: swipe, trackpad and keyboard all
+        work without JS; the buttons and dots are a convenience on top. */}
+    <section id="isler" class="ev-sec ev-works" aria-labelledby="ev-works-title">
+      <header class="ev-sec__head ev-sec__head--center">
+        <p class="ev-chip"><span class="ev-chip__n">02</span><span class="ev-chip__dot"></span>Seçili işler</p>
+        <h2 id="ev-works-title" class="ev-h2">Kameranın önünden geçenler</h2>
+        <p class="ev-hand ev-works__aside" aria-hidden="true">hepsi gerçek müşteri işi ✓</p>
+      </header>
+
+      <div class="ev-cases" data-cases>
+        <button type="button" class="ev-cases__arrow ev-cases__arrow--prev" data-cases-prev aria-label="Önceki iş">
+          <span aria-hidden="true">←</span>
+        </button>
+        <ol class="ev-cases__track" data-cases-track tabindex="0" aria-label="İşler, yana kaydırılabilir">
+          {
+            cases.map((p, i) => (
+              <li
+                class:list={["ev-case", { "is-active": i === 0 }]}
+                data-case
+                data-yt={p.data.youtubeId ?? ""}
+                aria-label={`${i + 1} / ${cases.length}: ${p.data.title}`}
+              >
+                <div class="ev-case__mon">
+                  <img
+                    src={ytThumbToWebp(p.data.poster, "large")}
+                    alt={p.data.posterAlt ?? p.data.title}
+                    width="1280"
+                    height="720"
+                    loading={i < 2 ? "eager" : "lazy"}
+                    decoding="async"
+                  />
+                  <span class="ev-case__bar" aria-hidden="true">
+                    <span class="ev-case__pgm">PGM</span>
+                    <span>{p.data.vertical ? "9:16" : "16:9"}</span>
+                    <span class="ev-case__tc">{p.data.duration ?? "--:--"}</span>
+                  </span>
+                  <span class="ev-case__safe" aria-hidden="true" />
+                  <div class="ev-case__embed" data-case-embed hidden />
+                  <span class="ev-hand ev-case__note" aria-hidden="true">
+                    {p.data.client ?? p.data.category}
+                  </span>
+                </div>
+                <div class="ev-case__info">
+                  <p class="ev-case__client">
+                    <span class="ev-chip__dot" />
+                    {p.data.client ?? "Rast Creative"}
+                  </p>
+                  <h3 class="ev-case__title">{p.data.title}</h3>
+                  {p.data.summary && <p class="ev-case__sum">{p.data.summary}</p>}
+                  <div class="ev-case__act">
+                    {p.data.youtubeId && (
+                      <button type="button" class="ev-pill ev-pill--sm" data-case-play>
+                        ▶ Burada izle
+                      </button>
+                    )}
+                    <a class="ev-link" href={`/projeler/${p.id}/`}>
+                      Proje sayfası <span aria-hidden="true">→</span>
+                    </a>
+                  </div>
+                  <dl class="ev-case__facts">
+                    <div>
+                      <dt>Süre</dt>
+                      <dd>{p.data.duration ?? "—"}</dd>
+                    </div>
+                    <div>
+                      <dt>Yıl</dt>
+                      <dd>{p.data.year ?? "—"}</dd>
+                    </div>
+                    <div>
+                      <dt>Format</dt>
+                      <dd>{p.data.vertical ? "9:16" : "16:9"}</dd>
+                    </div>
+                  </dl>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+        <button type="button" class="ev-cases__arrow ev-cases__arrow--next" data-cases-next aria-label="Sonraki iş">
+          <span aria-hidden="true">→</span>
+        </button>
+        <div class="ev-cases__dots" role="group" aria-label="İş seç">
+          {
+            cases.map((p, i) => (
+              <button
+                type="button"
+                class="ev-dot"
+                data-case-dot={i}
+                aria-label={`${i + 1}. iş: ${p.data.title}`}
+                aria-current={i === 0 ? "true" : undefined}
+              />
+            ))
+          }
+        </div>
+      </div>
+
+      <p class="ev-works__more">
+        <a class="ev-pill" href="/projeler/">Tüm arşivi keşfet ({projects.length} iş)</a>
+      </p>
+    </section>
+
+    {/* ───────── 03 · Process: four stops around the sun ─────────
+        Each stop is a button; the panel beside the orbit always shows one
+        stop in full, and "Sonraki durak" walks through them in order.
+        Without JS all four panels render. */}
+    <section id="surec" class="ev-sec ev-orbit" aria-labelledby="ev-orbit-title">
+      <header class="ev-sec__head">
+        <p class="ev-chip"><span class="ev-chip__n">03</span><span class="ev-chip__dot"></span>Nasıl çalışırız</p>
+        <h2 id="ev-orbit-title" class="ev-h2">Fikirden teslime <span class="ev-dim">dört durak.</span></h2>
+      </header>
+
+      <div class="ev-orbit__grid" data-orbit data-at="fikir">
+        <div class="ev-orbit__stage">
+          <svg class="ev-orbit__ring" viewBox="0 0 400 400" aria-hidden="true">
+            <circle cx="200" cy="200" r="150" />
+            <circle class="ev-orbit__ring-in" cx="200" cy="200" r="96" />
+          </svg>
+          <span class="ev-orb ev-orb--orbit" data-orbit-orb aria-hidden="true">
+            <span class="ev-orb__rings" />
+          </span>
+          <div class="ev-orbit__stops" role="group" aria-label="Süreç durakları">
+            {
+              stops.map((s, i) => (
+                <button
+                  type="button"
+                  class="ev-stop"
+                  data-stop={s.key}
+                  aria-pressed={i === 0 ? "true" : "false"}
+                  aria-controls={`ev-panel-${s.key}`}
+                  style={`--a:${s.angle}deg`}
+                >
+                  <span class="ev-stop__face">
+                    {ASSETS.stops[s.key] ? (
+                      <img src={ASSETS.stops[s.key]!} alt="" width="160" height="160" loading="lazy" />
+                    ) : (
+                      <svg viewBox="0 0 48 48" aria-hidden="true" class="ev-stop__ic">
+                        {s.key === "fikir" && (
+                          <>
+                            <rect x="9" y="13" width="30" height="22" rx="1.5" />
+                            <path d="M19 13v22M29 13v22M9 20.3h30M9 27.6h30" />
+                            <path d="M31 40l9-9" />
+                          </>
+                        )}
+                        {s.key === "set" && (
+                          <>
+                            <rect x="10" y="14" width="20" height="13" rx="2" />
+                            <path d="M30 18l8-4v13l-8-4" />
+                            <path d="M20 27l-7 14M20 27l7 14M20 27v14" />
+                          </>
+                        )}
+                        {s.key === "kurgu" && (
+                          <>
+                            <rect x="8" y="14" width="32" height="20" rx="1.5" />
+                            <path d="M8 18h32M8 30h32M16 14v4M24 14v4M32 14v4M16 30v4M24 30v4M32 30v4" />
+                          </>
+                        )}
+                        {s.key === "teslim" && (
+                          <>
+                            <rect x="6" y="16" width="24" height="15" rx="1.5" />
+                            <rect x="33" y="11" width="9" height="16" rx="1.5" />
+                            <path d="M14 36h8" />
+                          </>
+                        )}
+                      </svg>
+                    )}
+                  </span>
+                  <span class="ev-stop__label">
+                    <span class="ev-stop__n">{String(i + 1).padStart(2, "0")}</span>
+                    {s.label}
+                  </span>
+                </button>
+              ))
+            }
+          </div>
+        </div>
+
+        <div class="ev-orbit__panels">
+          {
+            stops.map((s, i) => (
+              <article
+                id={`ev-panel-${s.key}`}
+                class="ev-panel"
+                data-panel={s.key}
+                aria-labelledby={`ev-panel-${s.key}-t`}
+              >
+                <p class="ev-panel__n">Durak {String(i + 1).padStart(2, "0")} / 04</p>
+                <h3 id={`ev-panel-${s.key}-t`} class="ev-panel__title">
+                  {s.title}
+                </h3>
+                <p class="ev-hand ev-panel__when">{s.when}</p>
+                <p class="ev-panel__text">{s.text}</p>
+                <p class="ev-hand ev-panel__note" aria-hidden="true">— {s.note}</p>
+                {i < stops.length - 1 ? (
+                  <button type="button" class="ev-link ev-panel__next" data-stop-next={stops[i + 1].key}>
+                    Sonraki durak: {stops[i + 1].label} <span aria-hidden="true">→</span>
+                  </button>
+                ) : (
+                  <a class="ev-pill ev-pill--sm ev-panel__next" href="#on-gorusme">
+                    İlk durağa geçelim <span aria-hidden="true">→</span>
+                  </a>
+                )}
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    {/* ───────── 04 · Services ───────── */}
+    <section id="hizmetler" class="ev-sec ev-svc" aria-labelledby="ev-svc-title">
+      <header class="ev-sec__head">
+        <p class="ev-chip"><span class="ev-chip__n">04</span><span class="ev-chip__dot"></span>Hizmetler</p>
+        <h2 id="ev-svc-title" class="ev-h2">Üç masa, <span class="ev-dim">tek ekip.</span></h2>
+      </header>
+      <ul class="ev-svc__list">
+        {
+          services.map((s, i) => (
+            <li class="ev-svc__card">
+              <span class="ev-hand ev-svc__tape" aria-hidden="true">
+                {serviceNotes[i] ?? s.data.title}
+              </span>
+              <h3 class="ev-svc__title">{s.data.title}</h3>
+              <p class="ev-svc__sum">{s.data.summary}</p>
+              <ul class="ev-svc__feat">
+                {s.data.features.slice(0, 4).map((f) => (
+                  <li>{f}</li>
+                ))}
+              </ul>
+              <a class="ev-link" href={`/hizmetler/#${s.id}`}>
+                Detay <span aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    {/* ───────── Brands ───────── */}
+    <section class="ev-sec ev-brands" aria-labelledby="ev-brands-title">
+      <h2 id="ev-brands-title" class="ev-chip ev-brands__title">
+        <span class="ev-chip__dot"></span>Birlikte çalıştığımız markalar
+      </h2>
+      <LogoWall />
+    </section>
+
+    {/* ───────── 05 · Call sheet: the sun rises behind the form ───────── */}
+    <section id="on-gorusme" class="ev-sec ev-call" aria-labelledby="ev-call-title" data-call>
+      <div class="ev-call__frame">
+        <div class="ev-call__dawn" aria-hidden="true">
+          {
+            dawnHasVideo ? (
+              <video
+                class="ev-call__video"
+                data-ambient
+                muted
+                loop
+                playsinline
+                preload="none"
+                poster={ASSETS.dawnPoster ?? undefined}
+              >
+                {ASSETS.dawnWebm && <source src={ASSETS.dawnWebm} type="video/webm" />}
+                {ASSETS.dawnMp4 && <source src={ASSETS.dawnMp4} type="video/mp4" />}
+              </video>
+            ) : (
+              <span class="ev-orb ev-orb--dawn">
+                <span class="ev-orb__rings" />
+              </span>
+            )
+          }
+        </div>
+
+        <header class="ev-call__head">
+          <p class="ev-chip"><span class="ev-chip__n">05</span><span class="ev-chip__dot"></span>Ücretsiz ön görüşme</p>
+          <h2 id="ev-call-title" class="ev-h2">Bize bir cümle <span class="ev-dim">yazın.</span></h2>
+          <p class="ev-call__lede">
+            Gerisini telefonda konuşuruz. Fiyat ve kapsam için ilk görüşme ücretsiz.
+          </p>
+        </header>
+
+        <form class="ev-form" action="https://api.web3forms.com/submit" method="POST" data-ev-form>
+          <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
+          <input type="hidden" name="subject" value="Yeni ön görüşme talebi — rastcreative.com (taslak evren)" />
+          <input type="hidden" name="from_name" value={SITE.name} />
+          <input type="checkbox" name="botcheck" class="ev-sr" tabindex="-1" autocomplete="off" />
+
+          <p class="ev-form__line">
+            Merhaba, ben
+            <label class="ev-fill">
+              <span class="ev-sr">Adınız soyadınız (zorunlu)</span>
+              <input id="ev-name" name="name" type="text" autocomplete="name" minlength="2" required placeholder="adınız" />
+            </label>,
+            <label class="ev-fill">
+              <span class="ev-sr">Firma (isteğe bağlı)</span>
+              <input id="ev-company" name="company" type="text" autocomplete="organization" placeholder="firmanız" />
+            </label>
+            için bir
+            <label class="ev-fill ev-fill--select">
+              <span class="ev-sr">Proje türü</span>
+              <select id="ev-type" name="project_type">
+                {projectTypes.map((t) => <option value={t}>{t}</option>)}
+              </select>
+            </label>
+            düşünüyoruz. Bana
+            <label class="ev-fill">
+              <span class="ev-sr">Telefon (zorunlu)</span>
+              <input id="ev-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" minlength="10" required placeholder="telefonunuz" />
+            </label>
+            numarasından ulaşabilirsiniz.
+          </p>
+
+          <label class="ev-form__note" for="ev-message">
+            <span>Eklemek istediğiniz bir not var mı? <em>(isteğe bağlı)</em></span>
+          </label>
+          <textarea id="ev-message" class="ev-form__area" name="message" rows="2" placeholder="tarih, lokasyon, ne çekilecek…"></textarea>
+
+          <div class="ev-form__foot">
+            <button type="submit" class="ev-pill">Föyü gönder <span aria-hidden="true">→</span></button>
+            <a class="ev-pill ev-pill--ghost" href={whatsappHref} data-cta-location="evren_form_wa">
+              ya da WhatsApp'tan yazın
+            </a>
+            <a class="ev-link" href={`tel:${CONTACT.phoneIntl}`}>{CONTACT.phone}</a>
+          </div>
+          <p class="ev-form__status" data-ev-status role="status" aria-live="polite"></p>
+          <p class="ev-hand ev-form__sent" aria-hidden="true">föy elimizde ✓ sizi arıyoruz</p>
+          <p class="ev-form__kvkk">
+            Göndererek <a href="/kvkk/">KVKK Aydınlatma Metni</a>'ni okuduğunuzu kabul
+            etmiş sayılırsınız. Verileriniz yalnızca size dönüş için kullanılır.
+          </p>
+        </form>
+      </div>
+    </section>
+
+    {/* ───────── Footer: stays in the light ───────── */}
+    <footer class="ev-foot">
+      <div class="ev-foot__top">
+        <div class="ev-foot__brand">
+          <Logo />
+          <p>İyi iş kendini izletir.</p>
+        </div>
+        <nav class="ev-foot__col" aria-label="Alt gezinme">
+          {NAV.map((n) => <a href={n.href}>{n.label}</a>)}
+          <a href="/blog/">Blog</a>
+        </nav>
+        <div class="ev-foot__col">
+          <span>{CONTACT.city}</span>
+          <a href={`tel:${CONTACT.phoneIntl}`}>{CONTACT.phone}</a>
+          <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+        </div>
+        <div class="ev-foot__col ev-foot__social">
+          {
+            SOCIAL.map((s) => (
+              <a href={s.href} target="_blank" rel="me noopener noreferrer">
+                {s.label} <span aria-hidden="true">↗</span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+      <div class="ev-foot__bottom">
+        <span>© {year} {SITE.name}</span>
+        <span><a href="/kvkk/">KVKK</a> · <a href="/telif/">Telif</a></span>
+      </div>
+    </footer>
+  </div>
+</BaseLayout>
+
+<style is:global>
+  /* ───── Fonts (self-hosted; latin + latin-ext for Turkish) ───── */
+  @font-face {
+    font-family: "Caveat";
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url("/fonts/caveat-latin-600-normal.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+      U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: "Caveat";
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url("/fonts/caveat-latin-ext-600-normal.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+      U+1E00-1E9F, U+20A0-20AB, U+20AD-20C0, U+2C60-2C7F, U+A720-A7FF;
+  }
+
+  /* The layout's GlassNav reserves body padding globally; this page is bare. */
+  body:has(.ev) {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    background: #e9e8e5;
+  }
+
+  /* ───── Tokens: fog, ink, one amber light ───── */
+  .ev {
+    --fog: #e9e8e5;
+    --fog-deep: #dcdad6;
+    --card: #f8f7f5;
+    --ink: #111110;
+    --dim: #9a9791;
+    --soft: #5f5c57;
+    --line: #d2cfc9;
+    --amber: #e25303;
+    --amber-text: #a93c02;
+    --grease: #d63d12;
+    --hand: "Caveat", "Segoe Print", cursive;
+    --pad: clamp(1rem, 4.5vw, 3rem);
+    --max: 80rem;
+    --r-lg: clamp(1.4rem, 3vw, 2.2rem);
+
+    position: relative;
+    color-scheme: light;
+    background: radial-gradient(90% 55% at 72% 8%, #f3f2ef 0%, transparent 60%), var(--fog);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    line-height: 1.6;
+    overflow-x: clip;
+  }
+  .ev-grain {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.09;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+  .ev-sr {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .ev :focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 3px;
+  }
+  .ev-dim {
+    color: var(--dim);
+  }
+  .ev-hand {
+    margin: 0;
+    font-family: var(--hand);
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--grease);
+  }
+
+  /* Section chip — "02 ● Seçili işler" */
+  .ev-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 1.1rem;
+    padding: 0.3rem 0.75rem 0.3rem 0.6rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--card) 70%, transparent);
+    font-family: var(--font-utility);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .ev-chip__n {
+    color: var(--dim);
+    font-variant-numeric: tabular-nums;
+  }
+  .ev-chip__dot {
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 50%;
+    background: var(--amber);
+    flex: none;
+  }
+  .ev-h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(2.1rem, 4.2vw + 0.6rem, 4rem);
+    line-height: 1.02;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+  }
+
+  /* Pills */
+  .ev-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: var(--tap-min);
+    padding: 0.75rem 1.4rem;
+    border: 1px solid var(--ink);
+    border-radius: 999px;
+    background: var(--ink);
+    color: #f6f5f2;
+    font-family: var(--font-utility);
+    font-size: 0.98rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 10px 24px -14px rgba(0, 0, 0, 0.55);
+    transition:
+      transform var(--dur-fast) var(--ease-out),
+      background-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+  .ev-pill:hover {
+    transform: translateY(-1px);
+    background: #2a2926;
+  }
+  .ev-pill--sm {
+    min-height: 2.6rem;
+    padding: 0.45rem 1rem;
+    font-size: 0.9rem;
+  }
+  .ev-pill--ghost {
+    background: transparent;
+    color: var(--ink);
+    box-shadow: none;
+  }
+  .ev-pill--ghost:hover {
+    background: var(--ink);
+    color: #f6f5f2;
+  }
+  .ev-round {
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    color: var(--ink);
+  }
+  .ev-round:hover {
+    border-color: #1f9d55;
+    color: #1f9d55;
+  }
+  .ev-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: var(--tap-min);
+    padding: 0;
+    border: 0;
+    background: none;
+    font-family: var(--font-utility);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--line);
+    text-underline-offset: 5px;
+    cursor: pointer;
+  }
+  .ev-link:hover {
+    text-decoration-color: var(--amber);
+  }
+
+  /* ───── The Rast sun (CSS stand-in until the Kling footage lands) ───── */
+  .ev-orb {
+    position: absolute;
+    width: var(--s, 22rem);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle, #fff3e6 0 7%, #ffb27d 15%, #ec6a1c 26%, rgba(226, 83, 3, 0.55) 38%, rgba(236, 200, 175, 0.35) 52%, rgba(233, 232, 229, 0) 70%);
+    filter: blur(0.4px);
+    animation: ev-breathe 7s ease-in-out infinite;
+  }
+  .ev-orb::before {
+    /* Wide halo bleeding into the fog. */
+    content: "";
+    position: absolute;
+    inset: -60%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 214, 186, 0.55) 0%, rgba(255, 236, 222, 0.25) 30%, transparent 62%);
+    filter: blur(18px);
+    z-index: -1;
+  }
+  .ev-orb__rings {
+    position: absolute;
+    inset: -28%;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    box-shadow:
+      0 0 0 3.2rem rgba(255, 255, 255, 0.07),
+      0 0 0 calc(3.2rem + 1px) rgba(255, 255, 255, 0.35);
+    opacity: 0.75;
+  }
+  @keyframes ev-breathe {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.94;
+    }
+    50% {
+      transform: scale(1.035);
+      opacity: 1;
+    }
+  }
+
+  /* ───── Header ───── */
+  .ev-head {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0.55rem var(--pad);
+    background: color-mix(in srgb, var(--fog) 72%, transparent);
+    backdrop-filter: blur(14px) saturate(1.2);
+  }
+  .ev-head__logo .logo__svg {
+    height: 1.9rem;
+  }
+  .ev-head__nav {
+    display: flex;
+    gap: 1.8rem;
+    margin: 0 auto;
+  }
+  .ev-head__nav a {
+    font-family: var(--font-utility);
+    font-size: 0.93rem;
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: none;
+    padding: 0.5rem 0;
+    opacity: 0.8;
+  }
+  .ev-head__nav a:hover {
+    opacity: 1;
+  }
+  .ev-head__act {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+  @media (max-width: 860px) {
+    .ev-head__nav {
+      display: none;
+    }
+    .ev-head__act {
+      margin-left: auto;
+    }
+  }
+
+  /* ───── Hero ───── */
+  .ev-hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: min(calc(100svh - 3.7rem), 60rem);
+    padding: 5rem var(--pad) 6rem;
+    isolation: isolate;
+  }
+  .ev-hero__media {
+    position: absolute;
+    inset: -3.7rem 0 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .ev-hero__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .ev-orb--hero {
+    --s: clamp(13rem, 26vw, 24rem);
+    top: 50%;
+    left: 68%;
+    translate: -50% -48%;
+  }
+  .ev-hero__say {
+    position: relative;
+    width: min(100%, var(--max));
+    margin: 0 auto;
+  }
+  .ev-hero__title {
+    display: flex;
+    flex-direction: column;
+    max-width: 12ch;
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(3.1rem, 7.4vw + 0.4rem, 7.2rem);
+    line-height: 0.95;
+    letter-spacing: -0.055em;
+  }
+  .ev-hero__dim {
+    color: var(--dim);
+  }
+  .ev-hero__lede {
+    max-width: 30rem;
+    margin: 1.6rem 0 0;
+    color: var(--soft);
+  }
+  .ev-hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-top: 1.8rem;
+  }
+  .ev-hero__proof {
+    margin: 1.4rem 0 0;
+    font-family: var(--font-utility);
+    font-size: 0.9rem;
+    color: var(--soft);
+  }
+  .ev-hero__proof strong {
+    color: var(--ink);
+  }
+  .ev-hero__note {
+    position: absolute;
+    right: clamp(1rem, 12vw, 14rem);
+    top: clamp(5rem, 16vh, 9rem);
+    font-size: 1.6rem;
+    transform: rotate(-5deg);
+  }
+
+  /* HUD corners */
+  .ev-hud span {
+    position: absolute;
+    font-family: var(--font-utility);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--soft);
+    opacity: 0.8;
+  }
+  .ev-hud__tl {
+    top: 1.2rem;
+    left: var(--pad);
+  }
+  .ev-hud__side {
+    top: 50%;
+    right: 0.9rem;
+    writing-mode: vertical-rl;
+    translate: 0 -50%;
+  }
+  .ev-hud__bl {
+    bottom: 1.4rem;
+    left: var(--pad);
+  }
+  .ev-hud__bc {
+    bottom: 1.4rem;
+    left: 50%;
+    translate: -50% 0;
+  }
+  .ev-hud__br {
+    bottom: 1.4rem;
+    right: var(--pad);
+    font-variant-numeric: tabular-nums;
+  }
+  .ev-hud .ev-hud__br span {
+    position: static;
+    opacity: 1;
+  }
+
+  @media (max-width: 760px) {
+    .ev-hero {
+      justify-content: flex-end;
+      padding-top: 15rem;
+      padding-bottom: 4.5rem;
+    }
+    .ev-orb--hero {
+      --s: 11rem;
+      top: 8.5rem;
+      left: 62%;
+    }
+    .ev-hero__note {
+      top: 4.5rem;
+      right: 1rem;
+      font-size: 1.3rem;
+    }
+    .ev-hud__side,
+    .ev-hud__bc {
+      display: none;
+    }
+  }
+
+  /* ───── Sections ───── */
+  .ev-sec {
+    position: relative;
+    width: min(100%, var(--max));
+    margin: 0 auto;
+    padding: clamp(4.5rem, 10vw, 8rem) var(--pad);
+  }
+  .ev-sec__head {
+    position: relative;
+    margin-bottom: clamp(2rem, 4vw, 3.2rem);
+  }
+  .ev-sec__head--center {
+    text-align: center;
+  }
+
+  /* ───── Works carousel ───── */
+  .ev-works {
+    width: 100%;
+    max-width: none;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .ev-works .ev-sec__head {
+    padding: 0 var(--pad);
+  }
+  .ev-works__aside {
+    margin-top: 0.8rem;
+    font-size: 1.5rem;
+    transform: rotate(-2deg);
+  }
+  .ev-cases {
+    --card-w: min(60rem, calc(100vw - 2 * var(--pad) - 2rem));
+    position: relative;
+  }
+  .ev-cases__track {
+    display: flex;
+    gap: clamp(1rem, 2.5vw, 2rem);
+    margin: 0;
+    padding: 1.5rem calc((100% - var(--card-w)) / 2) 2rem;
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+  .ev-cases__track::-webkit-scrollbar {
+    display: none;
+  }
+  .ev-case {
+    flex: 0 0 var(--card-w);
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: clamp(1rem, 2.5vw, 2rem);
+    padding: clamp(0.7rem, 1.4vw, 1rem);
+    background: var(--card);
+    border-radius: var(--r-lg);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.9) inset,
+      0 40px 70px -40px rgba(40, 36, 30, 0.35);
+    scroll-snap-align: center;
+    opacity: 0.45;
+    transform: scale(0.94);
+    transition:
+      opacity 420ms var(--ease-out),
+      transform 420ms var(--ease-out);
+  }
+  .ev-case.is-active {
+    opacity: 1;
+    transform: none;
+  }
+  .ev-case__mon {
+    position: relative;
+    aspect-ratio: 4 / 3.4;
+    overflow: hidden;
+    border-radius: calc(var(--r-lg) - 0.6rem);
+    background: #151412;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06);
+  }
+  .ev-case__mon > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.02);
+    transition: transform 6s linear;
+  }
+  .ev-case.is-active .ev-case__mon > img {
+    transform: scale(1.08);
+  }
+  .ev-case__bar {
+    position: absolute;
+    top: 0.8rem;
+    left: 0.8rem;
+    right: 0.8rem;
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+    font-family: var(--font-utility);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  }
+  .ev-case__pgm {
+    padding: 0.08rem 0.4rem;
+    border-radius: 0.25rem;
+    background: #b3200e;
+    text-shadow: none;
+  }
+  .ev-case__tc {
+    margin-left: auto;
+    font-variant-numeric: tabular-nums;
+  }
+  .ev-case__safe {
+    position: absolute;
+    inset: 12% 7% 7%;
+    border: 1px dashed rgba(255, 255, 255, 0.28);
+    border-radius: 0.3rem;
+    pointer-events: none;
+  }
+  .ev-case__embed {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: #000;
+  }
+  .ev-case__embed iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  .ev-case__note {
+    position: absolute;
+    left: 1rem;
+    bottom: 0.8rem;
+    max-width: 85%;
+    font-size: 1.55rem;
+    color: #ff8a55;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
+    transform: rotate(-3deg);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 0;
+    transition: opacity 400ms var(--ease-out) 200ms;
+  }
+  .ev-case.is-active .ev-case__note {
+    opacity: 1;
+  }
+  .ev-case__info {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(0.5rem, 1.6vw, 1.4rem) clamp(0.3rem, 1.4vw, 1.2rem) clamp(0.4rem, 1vw, 0.8rem) 0;
+  }
+  .ev-case__client {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    font-family: var(--font-utility);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--soft);
+  }
+  .ev-case__title {
+    margin: 0.7rem 0 0;
+    font-size: clamp(1.4rem, 1.4vw + 0.9rem, 2.1rem);
+    font-weight: 520;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+  .ev-case__sum {
+    margin: 0.7rem 0 0;
+    font-size: 1rem;
+    color: var(--soft);
+  }
+  .ev-case__act {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 1.1rem;
+    margin-top: 1.2rem;
+  }
+  .ev-case__facts {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: start;
+    gap: 0.4rem clamp(1.2rem, 3vw, 2.4rem);
+    margin: auto 0 0;
+    padding-top: 1.4rem;
+  }
+  .ev-case__facts div {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .ev-case__facts dt {
+    font-family: var(--font-utility);
+    font-size: 0.75rem;
+    color: var(--soft);
+  }
+  .ev-case__facts dd {
+    margin: 0;
+    font-size: clamp(1.4rem, 1.2vw + 1rem, 1.9rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+  .ev-cases__arrow {
+    position: absolute;
+    top: calc(50% - 1.5rem);
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    width: 2.9rem;
+    height: 2.9rem;
+    border: 0;
+    border-radius: 50%;
+    background: var(--ink);
+    color: #fff;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.6);
+  }
+  .ev-cases__arrow--prev {
+    left: calc((100% - var(--card-w)) / 2 - 1.45rem);
+  }
+  .ev-cases__arrow--next {
+    right: calc((100% - var(--card-w)) / 2 - 1.45rem);
+  }
+  .ev-cases__arrow:disabled {
+    opacity: 0.25;
+    cursor: default;
+  }
+  .ev-cases__dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.25rem;
+  }
+  .ev-dot {
+    width: 1.6rem;
+    height: var(--tap-min);
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    position: relative;
+  }
+  .ev-dot::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 999px;
+    background: var(--line);
+    translate: -50% -50%;
+    transition:
+      width var(--dur) var(--ease-out),
+      background-color var(--dur) var(--ease-out);
+  }
+  .ev-dot[aria-current="true"]::after {
+    width: 1.4rem;
+    background: linear-gradient(90deg, #f2a36e, var(--amber));
+  }
+  .ev-works__more {
+    margin: 1.8rem 0 0;
+    text-align: center;
+  }
+  @media (max-width: 760px) {
+    .ev-case {
+      grid-template-columns: 1fr;
+    }
+    .ev-case__mon {
+      aspect-ratio: 16 / 10;
+    }
+    .ev-case__info {
+      padding: 0.3rem 0.4rem 0.6rem;
+    }
+    .ev-cases__arrow {
+      display: none;
+    }
+  }
+
+  /* ───── Orbit ───── */
+  .ev-orbit__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+  }
+  .ev-orbit__stage {
+    position: relative;
+    width: min(100%, 34rem);
+    aspect-ratio: 1;
+    margin: 0 auto;
+  }
+  .ev-orbit__ring {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .ev-orbit__ring circle {
+    fill: none;
+    stroke: #bdb9b2;
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+  .ev-orbit__ring-in {
+    stroke-dasharray: 2 6;
+    opacity: 0.8;
+  }
+  .ev-orb--orbit {
+    --s: 28%;
+    top: 50%;
+    left: 50%;
+    translate: calc(-50% + var(--ox, 0%)) calc(-50% + var(--oy, 0%));
+    transition: translate 700ms var(--ease-out);
+  }
+  /* The sun leans toward the selected stop. */
+  .ev-orbit__grid[data-at="fikir"] .ev-orb--orbit { --ox: 0%; --oy: -22%; }
+  .ev-orbit__grid[data-at="set"] .ev-orb--orbit { --ox: 22%; --oy: 0%; }
+  .ev-orbit__grid[data-at="kurgu"] .ev-orb--orbit { --ox: 0%; --oy: 22%; }
+  .ev-orbit__grid[data-at="teslim"] .ev-orb--orbit { --ox: -22%; --oy: 0%; }
+
+  .ev-orbit__stops {
+    position: absolute;
+    inset: 0;
+  }
+  .ev-stop {
+    --r: 37.5%; /* matches the r=150 ring in a 400 viewBox */
+    position: absolute;
+    top: calc(50% + sin(var(--a)) * var(--r));
+    left: calc(50% + cos(var(--a)) * var(--r));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--ink);
+    cursor: pointer;
+    transform: translate(-50%, -50%);
+  }
+  .ev-stop__face {
+    display: grid;
+    place-items: center;
+    width: clamp(4rem, 9vw, 5.6rem);
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--card) 82%, transparent);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    box-shadow:
+      0 0 0 1px var(--line),
+      0 18px 30px -18px rgba(40, 36, 30, 0.45);
+    backdrop-filter: blur(10px);
+    transition:
+      box-shadow var(--dur) var(--ease-out),
+      transform var(--dur) var(--ease-out);
+  }
+  .ev-stop__face img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .ev-stop__ic {
+    width: 52%;
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .ev-stop__label {
+    display: inline-flex;
+    gap: 0.35rem;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--card) 80%, transparent);
+    font-family: var(--font-utility);
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .ev-stop__n {
+    color: var(--dim);
+  }
+  .ev-stop:hover .ev-stop__face {
+    transform: translateY(-2px);
+  }
+  .ev-stop[aria-pressed="true"] .ev-stop__face {
+    box-shadow:
+      0 0 0 2px var(--amber),
+      0 0 0 7px rgba(226, 83, 3, 0.12),
+      0 18px 30px -18px rgba(40, 36, 30, 0.45);
+  }
+  .ev-stop[aria-pressed="true"] .ev-stop__label {
+    background: var(--ink);
+    color: #f6f5f2;
+  }
+  .ev-stop[aria-pressed="true"] .ev-stop__n {
+    color: #f2a36e;
+  }
+
+  .ev-panel {
+    padding: clamp(1.4rem, 3vw, 2.2rem);
+    background: var(--card);
+    border-radius: var(--r-lg);
+    box-shadow: 0 30px 60px -40px rgba(40, 36, 30, 0.4);
+  }
+  .ev-panel + .ev-panel {
+    margin-top: 1rem;
+  }
+  .js .ev-panel:not(.is-open) {
+    display: none;
+  }
+  .js .ev-panel + .ev-panel {
+    margin-top: 0;
+  }
+  .ev-panel.is-open {
+    animation: ev-panel-in 420ms var(--ease-out);
+  }
+  @keyframes ev-panel-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+  .ev-panel__n {
+    margin: 0;
+    font-family: var(--font-utility);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  .ev-panel__title {
+    margin: 0.5rem 0 0;
+    font-size: clamp(1.6rem, 1.5vw + 1rem, 2.2rem);
+    font-weight: 520;
+    letter-spacing: -0.035em;
+    line-height: 1.1;
+  }
+  .ev-panel__when {
+    margin-top: 0.3rem;
+    font-size: 1.55rem;
+  }
+  .ev-panel__text {
+    margin: 0.9rem 0 0;
+    color: var(--soft);
+  }
+  .ev-panel__note {
+    margin-top: 0.8rem;
+    font-size: 1.35rem;
+    color: var(--soft);
+    transform: rotate(-1.5deg);
+    transform-origin: left;
+  }
+  .ev-panel__next {
+    margin-top: 1.2rem;
+  }
+  @media (max-width: 860px) {
+    .ev-orbit__grid {
+      grid-template-columns: 1fr;
+    }
+    .ev-orbit__stage {
+      width: min(100%, 22rem);
+    }
+  }
+
+  /* ───── Services ───── */
+  .ev-svc__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18.5rem), 1fr));
+    gap: clamp(1.2rem, 2.5vw, 2rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ev-svc__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 2.4rem clamp(1.3rem, 2.4vw, 1.9rem) 1.4rem;
+    background: var(--card);
+    border-radius: var(--r-lg);
+    box-shadow: 0 30px 60px -45px rgba(40, 36, 30, 0.45);
+  }
+  .ev-svc__tape {
+    position: absolute;
+    top: -0.85rem;
+    left: 1.4rem;
+    padding: 0.15rem 0.85rem;
+    background: rgba(236, 226, 196, 0.95);
+    color: #2b2620;
+    font-size: 1.3rem;
+    transform: rotate(-2.5deg);
+    clip-path: polygon(2% 0, 98% 4%, 100% 96%, 0 100%);
+  }
+  .ev-svc__title {
+    margin: 0;
+    font-size: clamp(1.45rem, 1vw + 1.1rem, 1.8rem);
+    font-weight: 520;
+    letter-spacing: -0.03em;
+    line-height: 1.12;
+  }
+  .ev-svc__sum {
+    margin: 0.6rem 0 1rem;
+    color: var(--soft);
+    font-size: 1.02rem;
+  }
+  .ev-svc__feat {
+    margin: 0 0 1rem;
+    padding: 0;
+    list-style: none;
+  }
+  .ev-svc__feat li {
+    padding: 0.5rem 0;
+    border-top: 1px solid var(--line);
+    font-size: 1rem;
+  }
+  .ev-svc__card .ev-link {
+    margin-top: auto;
+    align-self: flex-start;
+  }
+
+  /* ───── Brands ───── */
+  .ev-brands {
+    padding-top: 0;
+    text-align: center;
+  }
+  .ev-brands__title {
+    font-size: 0.78rem;
+  }
+
+  /* ───── Call sheet ───── */
+  .ev-call {
+    padding-top: 0;
+  }
+  .ev-call__frame {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(2.2rem, 6vw, 5rem) clamp(1.2rem, 5vw, 4.5rem) clamp(12rem, 22vw, 17rem);
+    background: linear-gradient(180deg, var(--card) 0%, #f3efe9 55%, #f6e6d8 100%);
+    border-radius: calc(var(--r-lg) + 0.4rem);
+    box-shadow: 0 50px 90px -60px rgba(40, 36, 30, 0.5);
+    isolation: isolate;
+  }
+  .ev-call__dawn {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .ev-call__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.9;
+  }
+  .ev-orb--dawn {
+    --s: clamp(16rem, 34vw, 28rem);
+    left: 50%;
+    bottom: 0;
+    translate: -50% 55%;
+    transition:
+      translate 1.2s var(--ease-out),
+      filter 1.2s var(--ease-out);
+  }
+  .ev-call.is-sent .ev-orb--dawn {
+    translate: -50% 30%;
+    filter: brightness(1.15) saturate(1.1);
+  }
+  .ev-call__lede {
+    margin: 1rem 0 0;
+    color: var(--soft);
+  }
+  .ev-form {
+    margin-top: clamp(1.8rem, 4vw, 2.8rem);
+  }
+  .ev-form__line {
+    max-width: 56rem;
+    margin: 0;
+    font-size: clamp(1.35rem, 1.6vw + 0.9rem, 2.3rem);
+    line-height: 1.75;
+    letter-spacing: -0.025em;
+    font-weight: 450;
+  }
+  .ev-fill {
+    display: inline-block;
+  }
+  .ev-fill input,
+  .ev-fill select {
+    width: 10ch;
+    min-height: var(--tap-min);
+    padding: 0 0.25rem;
+    border: 0;
+    border-bottom: 1.5px solid #b6b2ab;
+    border-radius: 0;
+    background: transparent;
+    color: var(--amber-text);
+    font: inherit;
+    font-family: var(--hand);
+    font-weight: 600;
+    font-size: 1.12em;
+    line-height: 1.2;
+  }
+  .ev-fill--select select {
+    width: auto;
+    max-width: 100%;
+    padding-right: 1.3rem;
+    appearance: none;
+    cursor: pointer;
+    background:
+      linear-gradient(45deg, transparent 50%, var(--amber-text) 50%) right 0.4rem center / 0.4rem 0.4rem no-repeat,
+      linear-gradient(-45deg, transparent 50%, var(--amber-text) 50%) right 0.15rem center / 0.4rem 0.4rem no-repeat;
+  }
+  .ev-fill select option {
+    font-family: var(--font-body);
+    color: var(--ink);
+  }
+  .ev-fill input::placeholder {
+    color: #aaa59d;
+  }
+  .ev-fill input:focus,
+  .ev-fill select:focus {
+    outline: none;
+    border-bottom-color: var(--amber);
+  }
+  .ev-fill input:focus-visible,
+  .ev-fill select:focus-visible {
+    outline: none;
+    box-shadow: 0 2px 0 var(--amber);
+  }
+  .ev-fill input:user-invalid {
+    border-bottom-color: #c0341d;
+  }
+  .ev-form__note {
+    display: block;
+    margin-top: 1.8rem;
+    font-family: var(--font-utility);
+    font-size: 0.9rem;
+    color: var(--soft);
+  }
+  .ev-form__note em {
+    font-style: normal;
+    opacity: 0.8;
+  }
+  .ev-form__area {
+    display: block;
+    width: min(100%, 38rem);
+    min-height: 4.5rem;
+    margin-top: 0.4rem;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid var(--line);
+    border-radius: 0.9rem;
+    background: rgba(255, 255, 255, 0.6);
+    color: var(--ink);
+    font: inherit;
+    font-size: 1rem;
+    resize: vertical;
+  }
+  .ev-form__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.7rem 1.1rem;
+    margin-top: 1.6rem;
+  }
+  .ev-form__status {
+    min-height: 1.5em;
+    margin: 1rem 0 0;
+    font-size: 1rem;
+  }
+  .ev-form__status.is-err {
+    color: #b42318;
+  }
+  .ev-form__sent {
+    display: none;
+    font-size: 1.8rem;
+    transform: rotate(-2deg);
+  }
+  .ev-call.is-sent .ev-form__sent {
+    display: block;
+  }
+  .ev-form__kvkk {
+    margin: 0.4rem 0 0;
+    max-width: 40rem;
+    font-size: 0.85rem;
+    color: var(--soft);
+  }
+  .ev-form__kvkk a {
+    color: var(--amber-text);
+  }
+
+  /* ───── Footer ───── */
+  .ev-foot {
+    width: min(100%, var(--max));
+    margin: 0 auto;
+    padding: 2rem var(--pad) 2.4rem;
+    border-top: 1px solid var(--line);
+    font-family: var(--font-utility);
+    font-size: 0.95rem;
+  }
+  .ev-foot__top {
+    display: grid;
+    grid-template-columns: 1.4fr repeat(3, 1fr);
+    gap: 1.6rem;
+  }
+  .ev-foot__brand p {
+    margin: 0.6rem 0 0;
+    color: var(--soft);
+  }
+  .ev-foot__col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .ev-foot__col a,
+  .ev-foot__col span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.4rem;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .ev-foot__col span {
+    color: var(--soft);
+  }
+  .ev-foot__col a:hover {
+    color: var(--amber-text);
+  }
+  .ev-foot__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.6rem;
+    margin-top: 2rem;
+    font-size: 0.82rem;
+    color: var(--soft);
+  }
+  .ev-foot__bottom a {
+    color: inherit;
+  }
+  @media (max-width: 760px) {
+    .ev-foot__top {
+      grid-template-columns: 1fr 1fr;
+    }
+    .ev-foot__brand {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* ───── Reduced motion: every scene lands in its resting state ───── */
+  @media (prefers-reduced-motion: reduce) {
+    .ev *,
+    .ev *::before,
+    .ev *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+    .ev-case.is-active .ev-case__mon > img {
+      transform: scale(1.02);
+    }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-ev]");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const track = (name: string, params: Record<string, unknown>, cb?: () => void) => {
+    const fn = (window as any).rcTrack;
+    if (typeof fn === "function") fn(name, params, cb);
+    else cb?.();
+  };
+
+  if (root) {
+    /* ── Ambient videos + HUD timecode run only while on screen ── */
+    const tc = root.querySelector<HTMLElement>("[data-tc]");
+    const t0 = performance.now();
+    let raf = 0;
+    const pad = (n: number) => String(Math.floor(n)).padStart(2, "0");
+    const tick = (now: number) => {
+      const s = (now - t0) / 1000;
+      if (tc) tc.textContent = `${pad(s / 3600)}:${pad((s / 60) % 60)}:${pad(s % 60)}:${pad((s % 1) * 25)}`;
+      raf = requestAnimationFrame(tick);
+    };
+    const hero = root.querySelector<HTMLElement>(".ev-hero");
+    if (hero && !reduce) {
+      new IntersectionObserver(([e]) => {
+        if (e.isIntersecting) raf ||= requestAnimationFrame(tick);
+        else {
+          cancelAnimationFrame(raf);
+          raf = 0;
+        }
+      }).observe(hero);
+    }
+    if (!reduce) {
+      const io = new IntersectionObserver((entries) =>
+        entries.forEach((e) => {
+          const v = e.target as HTMLVideoElement;
+          if (e.isIntersecting) v.play().catch(() => {});
+          else v.pause();
+        }),
+      );
+      root.querySelectorAll<HTMLVideoElement>("[data-ambient]").forEach((v) => io.observe(v));
+    }
+
+    /* ── Case carousel ── */
+    const trackEl = root.querySelector<HTMLElement>("[data-cases-track]");
+    const cards = [...root.querySelectorAll<HTMLElement>("[data-case]")];
+    const dots = [...root.querySelectorAll<HTMLButtonElement>("[data-case-dot]")];
+    const prev = root.querySelector<HTMLButtonElement>("[data-cases-prev]");
+    const next = root.querySelector<HTMLButtonElement>("[data-cases-next]");
+    let active = 0;
+
+    const stopEmbeds = (except?: HTMLElement) =>
+      cards.forEach((c) => {
+        if (c === except) return;
+        const box = c.querySelector<HTMLElement>("[data-case-embed]");
+        if (box && !box.hidden) {
+          box.hidden = true;
+          box.replaceChildren();
+        }
+      });
+
+    const setActive = (i: number) => {
+      active = i;
+      cards.forEach((c, k) => c.classList.toggle("is-active", k === i));
+      dots.forEach((d, k) => (k === i ? d.setAttribute("aria-current", "true") : d.removeAttribute("aria-current")));
+      if (prev) prev.disabled = i === 0;
+      if (next) next.disabled = i === cards.length - 1;
+      stopEmbeds(cards[i]);
+    };
+    const goTo = (i: number) => {
+      const card = cards[Math.max(0, Math.min(cards.length - 1, i))];
+      if (!card || !trackEl) return;
+      trackEl.scrollTo({
+        left: card.offsetLeft - (trackEl.clientWidth - card.clientWidth) / 2,
+        behavior: reduce ? "auto" : "smooth",
+      });
+    };
+    if (trackEl) {
+      const io = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((e) => {
+            if (e.isIntersecting) setActive(cards.indexOf(e.target as HTMLElement));
+          }),
+        { root: trackEl, threshold: 0.6 },
+      );
+      cards.forEach((c) => io.observe(c));
+      trackEl.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight") {
+          e.preventDefault();
+          goTo(active + 1);
+        } else if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          goTo(active - 1);
+        }
+      });
+    }
+    prev?.addEventListener("click", () => goTo(active - 1));
+    next?.addEventListener("click", () => goTo(active + 1));
+    dots.forEach((d, i) => d.addEventListener("click", () => goTo(i)));
+    // Clicking a peeking neighbour brings it to the centre.
+    cards.forEach((c, i) =>
+      c.addEventListener("click", (e) => {
+        if (i !== active && !(e.target as Element).closest("a, button")) goTo(i);
+      }),
+    );
+    setActive(0);
+
+    root.querySelectorAll<HTMLButtonElement>("[data-case-play]").forEach((btn) =>
+      btn.addEventListener("click", () => {
+        const card = btn.closest<HTMLElement>("[data-case]");
+        const box = card?.querySelector<HTMLElement>("[data-case-embed]");
+        const id = card?.dataset.yt;
+        if (!card || !box || !id) return;
+        const iframe = document.createElement("iframe");
+        iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`;
+        iframe.title = card.querySelector(".ev-case__title")?.textContent ?? "Video";
+        iframe.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+        iframe.allowFullscreen = true;
+        box.replaceChildren(iframe);
+        box.hidden = false;
+        iframe.focus();
+        track("video_play", { event_category: "portfolio", video_id: id, location: "evren_case" });
+      }),
+    );
+
+    /* ── Orbit stops ── */
+    const orbit = root.querySelector<HTMLElement>("[data-orbit]");
+    const stopBtns = [...root.querySelectorAll<HTMLButtonElement>("[data-stop]")];
+    const panels = [...root.querySelectorAll<HTMLElement>("[data-panel]")];
+    const openStop = (key: string, focusPanel = false) => {
+      orbit?.setAttribute("data-at", key);
+      stopBtns.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.stop === key)));
+      panels.forEach((p) => {
+        const on = p.dataset.panel === key;
+        p.classList.toggle("is-open", on);
+        if (on && focusPanel) {
+          p.setAttribute("tabindex", "-1");
+          p.focus({ preventScroll: true });
+        }
+      });
+    };
+    stopBtns.forEach((b) => b.addEventListener("click", () => openStop(b.dataset.stop!)));
+    root.querySelectorAll<HTMLButtonElement>("[data-stop-next]").forEach((b) =>
+      b.addEventListener("click", () => openStop(b.dataset.stopNext!, true)),
+    );
+    openStop("fikir");
+
+    /* ── Call sheet: inputs grow with their text; submit like /iletisim/ ── */
+    const call = root.querySelector<HTMLElement>("[data-call]");
+    const form = root.querySelector<HTMLFormElement>("[data-ev-form]");
+    const status = root.querySelector<HTMLElement>("[data-ev-status]");
+    form?.querySelectorAll<HTMLInputElement>(".ev-fill input").forEach((input) => {
+      input.addEventListener("input", () => {
+        input.style.width = `${Math.max(10, input.value.length + 1)}ch`;
+      });
+    });
+    const say = (text: string, err = false) => {
+      if (!status) return;
+      status.textContent = text;
+      status.className = `ev-form__status${err ? " is-err" : ""}`;
+    };
+    form?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!form.checkValidity()) {
+        say("Adınızı ve telefon numaranızı yazmanız yeterli.", true);
+        form.reportValidity();
+        return;
+      }
+      const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (submit) submit.disabled = true;
+      say("Gönderiliyor…");
+      try {
+        const res = await fetch(form.action, {
+          method: "POST",
+          headers: { Accept: "application/json" },
+          body: new FormData(form),
+        });
+        const json = await res.json().catch(() => ({}));
+        if (res.ok && json.success) {
+          form.reset();
+          say("Teşekkürler, föyünüz bize ulaştı.");
+          call?.classList.add("is-sent");
+          track(
+            "lead_form_submit_success",
+            { event_category: "lead", event_label: "evren_call_sheet", form_id: "evren_call_sheet" },
+            () => window.setTimeout(() => (window.location.href = "/tesekkurler/"), reduce ? 0 : 1400),
+          );
+        } else {
+          say(json.message ?? "Gönderilemedi. Lütfen tekrar deneyin.", true);
+        }
+      } catch {
+        say("Bağlantı hatası. Lütfen tekrar deneyin ya da WhatsApp'tan yazın.", true);
+      } finally {
+        if (submit) submit.disabled = false;
+      }
+    });
+  }
+</script>
