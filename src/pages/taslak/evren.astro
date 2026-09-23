@@ -216,7 +216,7 @@ const year = new Date().getFullYear();
             <Icon name="whatsapp" size={19} />
           </a>
           <a class="ev-btn ev-btn--sm ev-head__cta" href="#on-gorusme" data-cta-location="evren_header">
-            <span class="ev-head__long">Ücretsiz&nbsp;</span>ön görüşme
+            <span class="ev-head__long">Ücretsiz ön görüşme</span><span class="ev-head__short">Ön görüşme</span>
           </a>
         </div>
       </div>
@@ -251,13 +251,9 @@ const year = new Date().getFullYear();
         <span class="ev-hero__wash"></span>
       </div>
 
-      <div class="ev-hud" aria-hidden="true">
-        <span class="ev-hud__side">40°46′N · 30°24′E — Serdivan</span>
-        <span class="ev-hud__bl">Film · Fotoğraf · İçerik · AI</span>
-      </div>
-
+      <div class="ev-hero__stage">
       <div class="ev-hero__say">
-        <p class="ev-label"><span class="ev-label__sun"></span>Video prodüksiyon stüdyosu · Sakarya</p>
+        <p class="ev-label"><span class="ev-label__sun"></span>Video prodüksiyon · Sakarya</p>
         <h1 id="ev-hero-title" class="ev-hero__title">
           <span class="ev-w" style="--d:0">İyi</span> <span class="ev-w" style="--d:1">iş</span>
           <span class="ev-w" style="--d:2">kendini</span>
@@ -280,10 +276,11 @@ const year = new Date().getFullYear();
         </p>
       </div>
 
+      {/* Aside: the whisper and the on-air monitor sit as one group on the
+          content grid's right edge, bottom-aligned with the proof line. The
+          monitor cycles real work; it is the only client footage in the hero. */}
+      <div class="ev-hero__aside">
       <p class="ev-whisper ev-hero__whisper" aria-hidden="true">iyi ışık, iyi iş</p>
-
-      {/* On air: real work cycling on a small monitor. It is a link, and the
-          only place the hero shows client footage. */}
       <a class="ev-onair ev-glass" href="#isler" data-onair aria-label="Seçili işlere git">
         <span class="ev-onair__screen">
           {
@@ -306,6 +303,8 @@ const year = new Date().getFullYear();
           <span>Ekranda: <b data-onair-title>{onAir[0]?.data.client}</b></span>
         </span>
       </a>
+      </div>
+      </div>
     </section>
       <div class="ev-dolly__clouds" aria-hidden="true">
         {A.cloudPoster && (
@@ -977,6 +976,9 @@ const year = new Date().getFullYear();
   }
 
   /* ───── Buttons ───── */
+  .ev-head__short {
+    display: none;
+  }
   .ev-btn {
     position: relative;
     display: inline-flex;
@@ -1155,10 +1157,21 @@ const year = new Date().getFullYear();
     -webkit-mask-image: linear-gradient(180deg, #000 72%, transparent);
     mask-image: linear-gradient(180deg, #000 72%, transparent);
   }
-  .ev-hero__say {
-    position: relative;
+  .ev-hero__stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 2rem;
     width: min(100%, var(--max));
     margin: 0 auto;
+  }
+  .ev-hero__say {
+    position: relative;
+  }
+  .ev-hero__aside {
+    display: grid;
+    justify-items: end;
+    gap: 1.1rem;
   }
   .ev-hero__title {
     max-width: 10.5ch;
@@ -1194,38 +1207,14 @@ const year = new Date().getFullYear();
     color: var(--ink);
   }
   .ev-hero__whisper {
-    position: absolute;
-    top: 30%;
-    right: clamp(1rem, 7vw, 8rem);
     margin: 0;
-  }
-  .ev-hud span {
-    position: absolute;
-    font-family: var(--font-utility);
-    font-size: 0.66rem;
-    font-weight: 600;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--mute);
-  }
-  .ev-hud__side {
-    top: 50%;
-    right: 1rem;
-    writing-mode: vertical-rl;
-    translate: 0 -50%;
-  }
-  .ev-hud__bl {
-    bottom: 1.4rem;
-    left: var(--pad);
   }
 
 
 
   /* On air */
   .ev-onair {
-    position: absolute;
-    right: var(--pad);
-    bottom: 1.2rem;
+    position: relative;
     display: grid;
     gap: 0.45rem;
     width: clamp(12rem, 17vw, 15rem);
@@ -1272,26 +1261,50 @@ const year = new Date().getFullYear();
 
 
 
+  /* Narrower screens: the monitor steps aside; on phones the whisper moves
+     up next to the sun. (The aside is never positioned or transformed, so
+     the whisper anchors to the hero.) */
+  @media (max-width: 900px) {
+    .ev-hero__stage {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .ev-onair {
+      display: none;
+    }
+    .ev-hero__aside {
+      justify-items: start;
+    }
+  }
   @media (max-width: 760px) {
+    .ev-hero__whisper {
+      position: absolute;
+      top: 6.6rem;
+      left: var(--pad);
+      font-size: 1.1rem;
+    }
     .ev-hero {
       justify-content: flex-end;
       min-height: 100svh;
-      padding: 14rem var(--pad) 4.5rem;
+      padding: 14rem var(--pad) 3.5rem;
     }
+    /* Taller than the hero and lifted, so the sun sits in the open sky
+       above the words instead of behind them. */
     .ev-hero__video {
-      object-position: 55% 22%;
+      height: calc(100% + 24svh);
+      margin-top: -24svh;
+      object-position: 80% 50%;
     }
     .ev-hero__wash {
-      background: linear-gradient(0deg, var(--fog) 0%, rgba(240, 234, 226, 0.9) 45%, rgba(240, 234, 226, 0) 72%);
+      background: linear-gradient(0deg, var(--fog) 0%, rgba(240, 234, 226, 0.9) 42%, rgba(240, 234, 226, 0) 62%);
     }
-    .ev-hero__whisper {
-      top: 7rem;
-      right: 1rem;
-      font-size: 1.1rem;
+  }
+  @media (max-width: 420px) {
+    .ev-hero__cta {
+      flex-wrap: nowrap;
+      gap: 0.5rem;
     }
-    .ev-hud__side,
-    .ev-onair {
-      display: none;
+    .ev-hero__cta .ev-btn {
+      padding-inline: 1.05rem;
     }
   }
 
@@ -1325,7 +1338,6 @@ const year = new Date().getFullYear();
     translate: 0 calc(var(--p) * -22vh);
     opacity: clamp(0, 1 - var(--p) * 1.5, 1);
   }
-  .ev-dolly .ev-hud,
   .ev-dolly .ev-hero__whisper,
   .ev-dolly .ev-onair {
     translate: 0 calc(var(--p) * -16vh);
@@ -2565,6 +2577,9 @@ const year = new Date().getFullYear();
   @media (max-width: 420px) {
     .ev-head__long {
       display: none;
+    }
+    .ev-head__short {
+      display: inline;
     }
     .ev-head__bar {
       gap: 0.6rem;

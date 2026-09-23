@@ -142,3 +142,19 @@ plan), yazılar sayfadan hızlı yükselir (yakın plan), iki bölümün birleş
 oturan bulut kümesi (üç katman) en hızlı yükselir. Sonuç: yaklaşırken alçalıyoruz ve
 bir sonraki bölüm, güneş hâlâ arkadayken bulutların içinden geliyor. Hero'dan sonraki
 statik bulut geçişi bu küme ile değiştirildi.
+
+### v6.3 — hero toparlandı
+
+Kullanıcı: hero dağınık. Sorunlar ve kararlar:
+- **HUD kaldırıldı.** Koordinat ve "Film · Fotoğraf · İçerik · AI" satırı, dolly'nin
+  `translate`'i içerik kutusunu kapsayıcı blok yaptığı için yanlış yere (sol üst, sağ
+  üst) düşüyordu; üstelik üst etiketi tekrarlıyordu. Tek etiket: "Video prodüksiyon ·
+  Sakarya" (mobilde tek satır).
+- **Tek ızgara:** metin + sağda "yan grup" (fısıltı + yayındaki monitör) aynı içerik
+  genişliğinde, alt kenarları hizalı. Monitör artık bulutların içine gömülmüyor.
+  900px altı monitör gizlenir, fısıltı metin grubunun altına iner; telefonda güneşin
+  yanına çıkar.
+- **Mobil kadraj:** video hero'dan uzun tutulup yukarı kaydırıldı; güneş yazının
+  arkasında değil, üstteki açık gökte. İki buton yan yana sığıyor.
+- **Başlık butonu:** "Ücretsiz ön görüşme" arasındaki çift boşluk düzeltildi; dar
+  ekranda "Ön görüşme".
