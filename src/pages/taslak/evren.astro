@@ -27,15 +27,15 @@ import beratPhoto from "../../assets/photos/berat-degirmenci.png";
 import muhammedPhoto from "../../assets/photos/muhammed-al-sheikhly.png";
 import lgFederal from "../../assets/logos/federal.svg";
 import lgAllufem from "../../assets/logos/allufem-aluminium.webp";
-import lgSerdivan from "../../assets/logos/serdivan.jpg";
+import lgSerdivan from "../../assets/logos/levha/serdivan.png";
 import lgAytas from "../../assets/logos/aytashome.png";
 import lgMeteors from "../../assets/logos/meteors.png";
 import lgOyka from "../../assets/logos/oyka.png";
 import lgEstada from "../../assets/logos/estada.png";
-import lgZemin from "../../assets/logos/zeminkoleji.avif";
+import lgZemin from "../../assets/logos/levha/zeminkoleji.png";
 import lgBasak from "../../assets/logos/basak.png";
-import lgCanex from "../../assets/logos/canex.jpg";
-import lgChint from "../../assets/logos/chint.webp";
+import lgCanex from "../../assets/logos/levha/canex.png";
+import lgChint from "../../assets/logos/levha/chint.png";
 import lgNewlife from "../../assets/logos/newlife.png";
 import lgAltoteks from "../../assets/logos/altoteks.png";
 import lgCandles from "../../assets/logos/candlesandechoes.png";
@@ -104,22 +104,23 @@ const faqs = await Promise.all(
   })),
 );
 
-/* Brand plate. "ink" logos have transparent backgrounds and become engraved
-   silhouettes; "print" logos sit on their own solid background and are
-   pressed into the fog with multiply instead. (Checked per file.) */
+/* Brand plate: every mark is an engraved silhouette. Logos that came on
+   their own solid ground (Canex, Altoteks, Chint, Serdivan, Zemin) use the
+   knocked-out copies in assets/logos/levha/ — blend modes can't see through
+   the plate's backdrop-filter, real transparency can. */
 const brands = [
   { src: lgFederal, name: "Federal", mode: "ink" },
   { src: lgMeteors, name: "Meteors Shipping", mode: "ink" },
-  { src: lgCanex, name: "Canex", mode: "print" },
-  { src: lgAltoteks, name: "Altoteks", mode: "print" },
-  { src: lgChint, name: "Chint Power", mode: "print" },
+  { src: lgCanex, name: "Canex", mode: "ink" },
+  { src: lgAltoteks, name: "Altoteks", mode: "ink" },
+  { src: lgChint, name: "Chint Power", mode: "ink" },
   { src: lgAytas, name: "Aytaş Home", mode: "ink" },
-  { src: lgSerdivan, name: "Serdivan AVM", mode: "print" },
+  { src: lgSerdivan, name: "Serdivan AVM", mode: "ink" },
   { src: lgAllufem, name: "Allufem Aluminium", mode: "ink" },
   { src: lgOyka, name: "Oyka Kağıt Ambalaj", mode: "ink" },
   { src: lgBasak, name: "Başak Traktör", mode: "ink" },
   { src: lgEstada, name: "Estada Hair Transplant", mode: "ink" },
-  { src: lgZemin, name: "Zemin Koleji", mode: "print" },
+  { src: lgZemin, name: "Zemin Koleji", mode: "ink" },
   { src: lgParhad, name: "PARHAD", mode: "ink" },
   { src: lgNewlife, name: "New Life", mode: "ink" },
   { src: lgCandles, name: "Candles and Echoes", mode: "ink" },
@@ -214,8 +215,8 @@ const year = new Date().getFullYear();
           <a class="ev-round" href={whatsappHref} aria-label="WhatsApp'tan yazın" data-cta-location="evren_header_wa">
             <Icon name="whatsapp" size={19} />
           </a>
-          <a class="ev-btn ev-btn--sm" href="#on-gorusme" data-cta-location="evren_header">
-            Ücretsiz ön görüşme
+          <a class="ev-btn ev-btn--sm ev-head__cta" href="#on-gorusme" data-cta-location="evren_header">
+            <span class="ev-head__long">Ücretsiz&nbsp;</span>ön görüşme
           </a>
         </div>
       </div>
@@ -1018,7 +1019,7 @@ const year = new Date().getFullYear();
     opacity: 1;
   }
   .ev-btn--sm {
-    min-height: 2.6rem;
+    min-height: 2.75rem;
     padding: 0.45rem 1.1rem;
     font-size: 0.94rem;
   }
@@ -1098,7 +1099,9 @@ const year = new Date().getFullYear();
     font-weight: 600;
     color: var(--ink-2);
     text-decoration: none;
-    padding: 0.5rem 0;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
   }
   .ev-head__nav a:hover {
     color: var(--ink);
@@ -1974,6 +1977,16 @@ const year = new Date().getFullYear();
     mix-blend-mode: multiply;
     opacity: 0.75;
   }
+  /* White lettering on a coloured block (Canex, Altoteks): invert so the
+     letters become ink and the block melts into the fog. */
+  .ev-plate__cell.is-knock .ev-plate__logo {
+    filter: grayscale(1) invert(1) contrast(1.8) brightness(1.1);
+    mix-blend-mode: multiply;
+    opacity: 0.8;
+  }
+  .ev-plate__cell.is-print .ev-plate__logo {
+    filter: grayscale(1) contrast(1.35);
+  }
   .ev-plate__cell:hover .ev-plate__logo {
     opacity: 1;
     transform: scale(1.05);
@@ -2278,7 +2291,7 @@ const year = new Date().getFullYear();
   .ev-foot__col span {
     display: inline-flex;
     align-items: center;
-    min-height: 2.4rem;
+    min-height: 2.75rem;
     color: var(--ink);
     text-decoration: none;
   }
@@ -2423,16 +2436,16 @@ const year = new Date().getFullYear();
        known to run; without it everything is simply there. */
     html.js .ev [data-rise]:not(.is-in) {
       opacity: 0;
-      transform: translateY(26px);
-      filter: blur(6px);
+      transform: translateY(20px);
+      filter: blur(4px);
     }
     html.js .ev [data-rise] {
       transition:
-        opacity 900ms var(--ease-out),
-        transform 900ms var(--ease-out),
-        filter 900ms var(--ease-out),
+        opacity 650ms var(--ease-out),
+        transform 650ms var(--ease-out),
+        filter 650ms var(--ease-out),
         box-shadow 700ms var(--ease-out);
-      transition-delay: calc(var(--d, 0) * 110ms);
+      transition-delay: calc(var(--d, 0) * 80ms);
     }
     /* A slow band of light passes over the brand plate. */
     .ev-plate {
@@ -2456,6 +2469,31 @@ const year = new Date().getFullYear();
       100% {
         left: 130%;
       }
+    }
+  }
+
+  /* ───── Narrow phones (≤ 420px) ───── */
+  .ev-head__cta {
+    white-space: nowrap;
+  }
+  .ev-foot__col a,
+  .ev-foot__col span {
+    overflow-wrap: anywhere;
+  }
+  .ev-fill select {
+    max-width: calc(100vw - 4.5rem);
+    text-overflow: ellipsis;
+  }
+  @media (max-width: 420px) {
+    .ev-head__long {
+      display: none;
+    }
+    .ev-head__bar {
+      gap: 0.6rem;
+      padding-left: 0.8rem;
+    }
+    .ev-foot__inner {
+      grid-template-columns: 1fr;
     }
   }
 
@@ -2668,7 +2706,7 @@ const year = new Date().getFullYear();
               rio.unobserve(e.target);
             }
           }),
-        { rootMargin: "0px 0px -8% 0px", threshold: 0.12 },
+        { rootMargin: "0px 0px -4% 0px", threshold: 0.05 },
       );
       risers.forEach((el) => rio.observe(el));
     }
