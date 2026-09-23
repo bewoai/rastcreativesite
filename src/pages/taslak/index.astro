@@ -1,0 +1,2009 @@
+---
+/**
+ * /taslak/ — "Işık Masası" (Light Table) homepage prototype.
+ *
+ * A side-by-side redesign candidate. It does NOT replace the live homepage:
+ * noindex, out of the sitemap, reachable only by direct URL. See
+ * docs/sections/taslak-isik-masasi.md for the concept and decisions.
+ *
+ * The idea: the site behaves like an editor's desk, not a scroll show.
+ * Experience comes from things the visitor *does* (pick a frame onto the
+ * monitor, scrub the edit timeline, fill in a call sheet) instead of things
+ * that happen to them while scrolling.
+ */
+import { getCollection } from "astro:content";
+import { getImage } from "astro:assets";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Logo from "../../components/Logo.astro";
+import LogoWall from "../../components/LogoWall.astro";
+import Footer from "../../components/Footer.astro";
+import heroStill from "../../assets/photos/crew-onset.jpg";
+import { CONTACT, WEB3FORMS_ACCESS_KEY, SITE, WHATSAPP_CTA_HREF } from "../../consts";
+import { ytThumbToWebp } from "../../lib/ytimg";
+import { groupByBrand } from "../../lib/brands";
+
+const byOrder = (a: { data: { order: number } }, b: { data: { order: number } }) =>
+  a.data.order - b.data.order;
+
+const projects = (await getCollection("projects"))
+  .filter((p) => !p.data.draft && !p.data.hidden)
+  .sort(byOrder);
+const brandCount = groupByBrand(projects).length;
+
+// Hero strip: featured, horizontal work only — it has to read on a 16:9 monitor.
+const reel = projects.filter((p) => p.data.featured && !p.data.vertical).slice(0, 7);
+
+// Contact sheet: featured first, then everything else in editorial order.
+const sheet = [
+  ...projects.filter((p) => p.data.featured),
+  ...projects.filter((p) => !p.data.featured),
+];
+const SHEET_LIMIT = 12;
+const sheetCategories = [...new Set(sheet.map((p) => p.data.category))];
+
+const services = (await getCollection("services")).sort(byOrder);
+const serviceNotes = ["sete çıkıyoruz", "strateji masası", "kurgu odası"];
+
+const still = await getImage({ src: heroStill, width: 1280, format: "webp", quality: 70 });
+
+const posterFor = (p: (typeof projects)[number], size: "card" | "large") =>
+  ytThumbToWebp(p.data.poster, size);
+
+// Edit timeline — durations mirror the verified "genellikle 2–4 hafta".
+const stages = [
+  {
+    key: "fikir",
+    track: "FİKİR",
+    from: 0,
+    to: 22,
+    title: "Ön görüşme & plan",
+    when: "1. hafta",
+    text: "İhtiyacı dinliyoruz; hangi formatların (web, reklam, Reels) gerekeceğine baştan karar veriyoruz. Çekim günü buna göre planlanır.",
+  },
+  {
+    key: "set",
+    track: "SET",
+    from: 22,
+    to: 45,
+    title: "Çekim günü",
+    when: "1–2. hafta",
+    text: "Yerinde, tek ekip. Ana film, dikey kesitler ve drone planı aynı sette çekilir; bir gün, birden çok içerik.",
+  },
+  {
+    key: "kurgu",
+    track: "KURGU",
+    from: 45,
+    to: 84,
+    title: "Kurgu, renk, ses",
+    when: "2–4. hafta",
+    text: "Kurgu, renk düzenleme ve ses tasarımı aynı masada. Revizyonlarınızı doğrudan projeyi çeken ekiple konuşursunuz.",
+  },
+  {
+    key: "teslim",
+    track: "TESLİM",
+    from: 84,
+    to: 100,
+    title: "Teslim",
+    when: "genellikle 2–4 hafta içinde",
+    text: "16:9 ana film, 9:16 dikey versiyonlar ve reklam kesitleri — her mecraya hazır dosyalar.",
+  },
+];
+
+const projectTypes = [
+  "tanıtım filmi",
+  "reklam filmi",
+  "sosyal medya videosu",
+  "drone çekimi",
+  "ürün çekimi",
+  "başka bir şey",
+];
+
+const whatsappHref = WHATSAPP_CTA_HREF ?? "/iletisim/";
+---
+
+<BaseLayout
+  title="Taslak — Işık Masası"
+  description="Rast Creative Studio ana sayfa tasarım taslağı."
+  noindex
+  bare
+>
+  <div class="lt" data-lt>
+    {/* ───────────── Header ───────────── */}
+    <header class="lt-head">
+      <Logo class="lt-head__logo" />
+      <nav class="lt-head__nav" aria-label="Sayfa içi">
+        <a href="#isler">İşler</a>
+        <a href="#surec">Nasıl çalışırız</a>
+        <a href="#hizmetler">Hizmetler</a>
+        <a href="/hakkimizda/">Biz</a>
+      </nav>
+      <div class="lt-head__act">
+        <a class="lt-head__wa" href={whatsappHref} aria-label="WhatsApp'tan yazın" data-cta-location="taslak_header_wa">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.4.8 3.2.6a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.2-.2-.5-.3Z"/></svg>
+        </a>
+        <a class="lt-btn lt-btn--amber lt-btn--sm" href="#on-gorusme" data-cta-location="taslak_header">
+          Ücretsiz ön görüşme
+        </a>
+      </div>
+    </header>
+
+    <div class="lt-main">
+      {/* ───────────── 1. Hero: the monitor ─────────────
+          Left: the promise and the two ways to reach us.
+          Right: a field monitor. The strip below it is the visitor's
+          remote — choosing a frame puts that job on the monitor. */}
+      <section class="lt-hero" aria-labelledby="lt-hero-title">
+        <div class="lt-hero__say">
+          <p class="lt-kicker">Serdivan / Sakarya · video prodüksiyon stüdyosu</p>
+          <h1 id="lt-hero-title" class="lt-hero__title">
+            İyi iş kendini <em>izletir.</em>
+          </h1>
+          <p class="lt-hero__lede">
+            Reklam filmi, tanıtım filmi ve sosyal medya videolarını fikirden teslime
+            tek ekip olarak üretiyoruz. Ne söylediğimize değil, ne çektiğimize bakın:
+            aşağıdan bir kare seçin.
+          </p>
+          <div class="lt-hero__cta">
+            <a class="lt-btn lt-btn--amber" href="#on-gorusme" data-cta-location="taslak_hero">
+              Ücretsiz ön görüşme
+              <span aria-hidden="true">→</span>
+            </a>
+            <a class="lt-btn lt-btn--ghost" href={whatsappHref} data-cta-location="taslak_hero_wa">
+              WhatsApp'tan yazın
+            </a>
+          </div>
+          <ul class="lt-hero__proof">
+            <li><strong>{brandCount}+</strong> marka</li>
+            <li><strong>100+</strong> içerik</li>
+            <li>Sakarya · Kocaeli · Düzce</li>
+          </ul>
+        </div>
+
+        <figure class="lt-mon" data-monitor aria-label="Monitör">
+          <div class="lt-mon__bezel">
+            <div class="lt-mon__bar" aria-hidden="true">
+              <span class="lt-mon__pgm">PGM</span>
+              <span class="lt-mon__name" data-mon-label>Showreel</span>
+              <span class="lt-mon__tc" data-tc>00:00:00:00</span>
+            </div>
+            <div class="lt-mon__screen">
+              {/* Default program: the studio's own board reel, silent loop. */}
+              <video
+                class="lt-mon__video"
+                data-mon-video
+                muted
+                loop
+                playsinline
+                preload="metadata"
+                poster={still.src}
+                width="1280"
+                height="720"
+                aria-label="Rast Creative showreel, sessiz döngü"
+              >
+                <source src="/videos/showreel-board.webm" type="video/webm" />
+                <source src="/videos/showreel-board.mp4" type="video/mp4" />
+              </video>
+              <div class="lt-mon__pick" data-mon-pick hidden>
+                <img data-mon-img alt="" width="1280" height="720" decoding="async" />
+                <div class="lt-mon__meta">
+                  <p class="lt-mon__client" data-mon-client></p>
+                  <p class="lt-mon__title" data-mon-title></p>
+                  <div class="lt-mon__actions">
+                    <button type="button" class="lt-btn lt-btn--light lt-btn--sm" data-mon-play>
+                      ▶ Burada izle
+                    </button>
+                    <a class="lt-mon__more" data-mon-link href="/projeler/">Proje sayfası →</a>
+                  </div>
+                </div>
+              </div>
+              <div class="lt-mon__embed" data-mon-embed hidden></div>
+              <span class="lt-mon__safe" aria-hidden="true"></span>
+            </div>
+          </div>
+          <figcaption class="lt-note lt-mon__note" aria-hidden="true">
+            ↙ bir kare seç, monitöre gelsin
+          </figcaption>
+        </figure>
+
+        {/* The remote: a real film strip of featured work. Buttons, so it is
+            fully keyboard operable; links inside the monitor lead on. */}
+        <div class="lt-strip" role="group" aria-label="Monitöre alınacak işler">
+          <div class="lt-strip__rail" data-strip>
+            <button
+              type="button"
+              class="lt-frame is-on"
+              aria-pressed="true"
+              data-frame="reel"
+              data-label="Showreel"
+            >
+              <span class="lt-frame__img lt-frame__img--reel">
+                <img src={still.src} alt="" width="320" height="180" loading="lazy" decoding="async" />
+              </span>
+              <span class="lt-frame__edge">00 · SHOWREEL</span>
+            </button>
+            {
+              reel.map((p, i) => (
+                <button
+                  type="button"
+                  class="lt-frame"
+                  aria-pressed="false"
+                  data-frame={p.id}
+                  data-label={p.data.client ?? p.data.title}
+                  data-title={p.data.title}
+                  data-client={[p.data.client, p.data.projectType].filter(Boolean).join(" · ")}
+                  data-poster={posterFor(p, "large")}
+                  data-yt={p.data.youtubeId ?? ""}
+                  data-href={`/projeler/${p.id}/`}
+                >
+                  <span class="lt-frame__img">
+                    <img
+                      src={posterFor(p, "card")}
+                      alt={p.data.posterAlt ?? p.data.title}
+                      width="320"
+                      height="180"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </span>
+                  <span class="lt-frame__edge">
+                    {String(i + 1).padStart(2, "0")} · {p.data.client ?? p.data.title}
+                  </span>
+                </button>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+
+      {/* ───────────── 2. Contact sheet ─────────────
+          Editors mark the keepers on a contact sheet with a grease pencil.
+          Featured work carries that mark permanently; the rest draws it
+          on hover/focus. */}
+      <section id="isler" class="lt-sec lt-sheet" aria-labelledby="lt-sheet-title">
+        <header class="lt-sec__head">
+          <p class="lt-kicker">Kontakt baskı · {projects.length} iş arşivde</p>
+          <h2 id="lt-sheet-title" class="lt-h2">
+            Seçtiğimiz <em>kareler</em>
+          </h2>
+          <p class="lt-note lt-sheet__aside" aria-hidden="true">hepsi gerçek müşteri işi ✓</p>
+        </header>
+
+        <div class="lt-tabs" role="group" aria-label="Kategoriye göre süz" data-tabs>
+          <button type="button" class="lt-tab" aria-pressed="true" data-cat="*">Hepsi</button>
+          {
+            sheetCategories.map((c) => (
+              <button type="button" class="lt-tab" aria-pressed="false" data-cat={c}>
+                {c}
+              </button>
+            ))
+          }
+        </div>
+
+        <ol class="lt-contact" data-sheet>
+          {
+            sheet.map((p, i) => (
+              <li
+                class:list={["lt-cell", { "is-keeper": p.data.featured && i < 3 }]}
+                data-cat={p.data.category}
+                hidden={i >= SHEET_LIMIT}
+              >
+                <a href={`/projeler/${p.id}/`} class="lt-cell__link">
+                  <span class="lt-cell__img">
+                    <img
+                      src={posterFor(p, "card")}
+                      alt={p.data.posterAlt ?? p.data.title}
+                      width="480"
+                      height="360"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    {p.data.vertical && <span class="lt-cell__fmt">9:16</span>}
+                    {p.data.duration && <span class="lt-cell__dur">{p.data.duration}</span>}
+                  </span>
+                  <span class="lt-cell__edge" aria-hidden="true">
+                    <span>{String(i + 1).padStart(2, "0")}A</span>
+                    <span>RAST {p.data.year ?? ""}</span>
+                  </span>
+                  <span class="lt-cell__title">{p.data.title}</span>
+                  <span class="lt-cell__cat">{p.data.category}</span>
+                  <svg class="lt-grease" viewBox="0 0 200 150" preserveAspectRatio="none" aria-hidden="true">
+                    <path
+                      pathLength="1"
+                      d="M28 22 C 70 6, 150 8, 180 30 S 196 118, 150 134 S 30 142, 14 104 S 10 40, 46 18"
+                    />
+                  </svg>
+                  <span class="lt-cell__note" aria-hidden="true">
+                    {p.data.client ?? p.data.category}
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+        <p class="lt-sheet__more">
+          <a class="lt-btn lt-btn--ghost" href="/projeler/">Tüm arşivi aç →</a>
+        </p>
+      </section>
+
+      {/* ───────────── 3. Edit timeline ─────────────
+          The process as an NLE timeline. The playhead is a native range
+          input — keyboard, touch and screen readers work out of the box.
+          All four stages stay readable below; the playhead only highlights. */}
+      <section id="surec" class="lt-sec lt-edit" aria-labelledby="lt-edit-title">
+        <header class="lt-sec__head">
+          <p class="lt-kicker lt-kicker--dim">Kurgu masası · süreç</p>
+          <h2 id="lt-edit-title" class="lt-h2">
+            Fikirden teslime, <em>tek timeline.</em>
+          </h2>
+          <p class="lt-edit__lede">
+            Oynatma kafasını sürükleyin: projenizin hangi haftada nerede olacağını görün.
+          </p>
+        </header>
+
+        <div class="lt-tl" data-tl>
+          <div class="lt-tl__ruler" aria-hidden="true">
+            <span>1. hf</span><span>2. hf</span><span>3. hf</span><span>4. hf</span>
+          </div>
+          <div class="lt-tl__tracks" aria-hidden="true">
+            {
+              stages.map((s, i) => (
+                <div class="lt-tl__track">
+                  <span class="lt-tl__name">{`V${i + 1}`} {s.track}</span>
+                  <span class="lt-tl__lane">
+                    <span
+                      class="lt-tl__clip"
+                      data-clip={s.key}
+                      style={`--from:${s.from}; --to:${s.to}`}
+                    >
+                      {s.title}
+                    </span>
+                  </span>
+                </div>
+              ))
+            }
+            <span class="lt-tl__head" data-tl-head style="--at:8" />
+          </div>
+          <div class="lt-tl__controls">
+            <button type="button" class="lt-tl__play" data-tl-play aria-pressed="false">
+              <span data-tl-play-label>▶ Oynat</span>
+            </button>
+            <label class="lt-tl__scrub">
+              <span class="lt-sr">Süreç zaman çizgisi</span>
+              <input
+                type="range"
+                min="0"
+                max="99"
+                value="8"
+                step="1"
+                data-tl-range
+                aria-valuetext="1. hafta — Ön görüşme ve plan"
+              />
+            </label>
+          </div>
+        </div>
+
+        <ol class="lt-stages">
+          {
+            stages.map((s, i) => (
+              <li class="lt-stage" data-stage={s.key} aria-current={i === 0 ? "step" : undefined}>
+                <span class="lt-stage__n">{String(i + 1).padStart(2, "0")}</span>
+                <h3 class="lt-stage__title">{s.title}</h3>
+                <p class="lt-stage__when">{s.when}</p>
+                <p class="lt-stage__text">{s.text}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </section>
+
+      {/* ───────────── 4. Services as film-can labels ───────────── */}
+      <section id="hizmetler" class="lt-sec lt-cans" aria-labelledby="lt-cans-title">
+        <header class="lt-sec__head">
+          <p class="lt-kicker">Hizmetler</p>
+          <h2 id="lt-cans-title" class="lt-h2">
+            Üç kutu, <em>tek ekip.</em>
+          </h2>
+        </header>
+        <ul class="lt-cans__list">
+          {
+            services.map((s, i) => (
+              <li class="lt-can">
+                <span class="lt-can__tape" aria-hidden="true">
+                  {serviceNotes[i] ?? s.data.title}
+                </span>
+                <span class="lt-can__n" aria-hidden="true">
+                  R{String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 class="lt-can__title">{s.data.title}</h3>
+                <p class="lt-can__sum">{s.data.summary}</p>
+                <ul class="lt-can__feat">
+                  {s.data.features.slice(0, 4).map((f) => (
+                    <li>{f}</li>
+                  ))}
+                </ul>
+                <a class="lt-can__link" href={`/hizmetler/#${s.id}`}>
+                  Detay <span aria-hidden="true">→</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      {/* ───────────── 5. Brands ───────────── */}
+      <section class="lt-sec lt-brands" aria-labelledby="lt-brands-title">
+        <h2 id="lt-brands-title" class="lt-kicker lt-brands__title">
+          Birlikte çalıştığımız markalar
+        </h2>
+        <LogoWall />
+      </section>
+
+      {/* ───────────── 6. Call sheet (lead form) ─────────────
+          A sentence, not a form grid: the visitor writes one line to us.
+          Same Web3Forms endpoint and required fields as /iletisim/. */}
+      <section id="on-gorusme" class="lt-sec lt-call" aria-labelledby="lt-call-title">
+        <div class="lt-call__slate">
+          <div class="lt-call__clap" aria-hidden="true"></div>
+          <header class="lt-call__head">
+            <p class="lt-kicker lt-kicker--dim">Çekim föyü · ücretsiz ön görüşme</p>
+            <h2 id="lt-call-title" class="lt-h2">
+              Bize bir cümle <em>yazın.</em>
+            </h2>
+            <p class="lt-call__lede">
+              Gerisini telefonda konuşuruz. Fiyat ve kapsam için ilk görüşme ücretsiz.
+            </p>
+          </header>
+
+          <form
+            class="lt-form"
+            action="https://api.web3forms.com/submit"
+            method="POST"
+            data-lt-form
+          >
+            <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
+            <input type="hidden" name="subject" value="Yeni ön görüşme talebi — rastcreative.com (taslak)" />
+            <input type="hidden" name="from_name" value={SITE.name} />
+            <input type="checkbox" name="botcheck" class="lt-sr" tabindex="-1" autocomplete="off" />
+
+            <p class="lt-form__line">
+              Merhaba, ben
+              <label class="lt-fill">
+                <span class="lt-sr">Adınız soyadınız (zorunlu)</span>
+                <input name="name" type="text" autocomplete="name" minlength="2" required placeholder="adınız" />
+              </label>,
+              <label class="lt-fill">
+                <span class="lt-sr">Firma (isteğe bağlı)</span>
+                <input name="company" type="text" autocomplete="organization" placeholder="firmanız" />
+              </label>
+              için bir
+              <label class="lt-fill lt-fill--select">
+                <span class="lt-sr">Proje türü</span>
+                <select name="project_type">
+                  {projectTypes.map((t) => <option value={t}>{t}</option>)}
+                </select>
+              </label>
+              düşünüyoruz. Bana
+              <label class="lt-fill">
+                <span class="lt-sr">Telefon (zorunlu)</span>
+                <input name="phone" type="tel" inputmode="tel" autocomplete="tel" minlength="10" required placeholder="telefonunuz" />
+              </label>
+              numarasından ulaşabilirsiniz.
+            </p>
+            <label class="lt-form__note">
+              <span>Eklemek istediğiniz bir not var mı? <em>(isteğe bağlı)</em></span>
+              <textarea name="message" rows="2" placeholder="tarih, lokasyon, ne çekilecek…"></textarea>
+            </label>
+
+            <div class="lt-form__foot">
+              <button type="submit" class="lt-btn lt-btn--amber">Föyü gönder →</button>
+              <a class="lt-btn lt-btn--ghost-dark" href={whatsappHref} data-cta-location="taslak_form_wa">
+                ya da WhatsApp'tan yazın
+              </a>
+              <a class="lt-call__tel" href={`tel:${CONTACT.phoneIntl}`}>{CONTACT.phone}</a>
+            </div>
+            <p class="lt-form__status" data-lt-status role="status" aria-live="polite"></p>
+            <p class="lt-form__kvkk">
+              Göndererek <a href="/kvkk/">KVKK Aydınlatma Metni</a>'ni okuduğunuzu kabul
+              etmiş sayılırsınız. Verileriniz yalnızca size dönüş için kullanılır.
+            </p>
+          </form>
+        </div>
+      </section>
+    </div>
+
+    <Footer />
+  </div>
+</BaseLayout>
+
+<style is:global>
+  /* ───── Fonts (self-hosted, latin + latin-ext for Turkish) ───── */
+  @font-face {
+    font-family: "Instrument Serif";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/fonts/instrument-serif-latin-400-normal.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+      U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: "Instrument Serif";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/fonts/instrument-serif-latin-ext-400-normal.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+      U+1E00-1E9F, U+20A0-20AB, U+20AD-20C0, U+2C60-2C7F, U+A720-A7FF;
+  }
+  @font-face {
+    font-family: "Instrument Serif";
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/fonts/instrument-serif-latin-400-italic.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+      U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: "Instrument Serif";
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/fonts/instrument-serif-latin-ext-400-italic.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+      U+1E00-1E9F, U+20A0-20AB, U+20AD-20C0, U+2C60-2C7F, U+A720-A7FF;
+  }
+  @font-face {
+    font-family: "Caveat";
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url("/fonts/caveat-latin-600-normal.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+      U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: "Caveat";
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url("/fonts/caveat-latin-ext-600-normal.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+      U+1E00-1E9F, U+20A0-20AB, U+20AD-20C0, U+2C60-2C7F, U+A720-A7FF;
+  }
+
+  /* The layout's fixed GlassNav reserves body padding globally; this page
+     is rendered bare with its own sticky header, so give that space back. */
+  body:has(.lt) {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    background: #ebe5d9;
+  }
+
+  /* ───── Tokens: warm light table, film-black, one grease pencil ───── */
+  .lt {
+    --lt-table: #ebe5d9;
+    --lt-table-2: #e2dace;
+    --lt-film: #141210;
+    --lt-film-2: #1d1a17;
+    --lt-ink: #161412;
+    --lt-soft: #57514a;
+    --lt-line: #cfc5b5;
+    --lt-amber: #e25303;
+    --lt-amber-text: #a93c02;
+    --lt-grease: #d63d12;
+    --lt-on-film: #f3eee6;
+    --lt-on-film-soft: #a39a8e;
+    --lt-serif: "Instrument Serif", "Times New Roman", serif;
+    --lt-hand: "Caveat", "Segoe Print", cursive;
+    --lt-pad: clamp(1rem, 4.5vw, 3rem);
+    --lt-max: 84rem;
+
+    color-scheme: light;
+    background:
+      radial-gradient(120% 60% at 70% 0%, #f4efe6 0%, transparent 60%),
+      var(--lt-table);
+    color: var(--lt-ink);
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    line-height: 1.6;
+    overflow-x: clip;
+  }
+  .lt em {
+    font-family: var(--lt-serif);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  .lt-sr {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .lt :focus-visible {
+    outline: 3px solid var(--lt-amber);
+    outline-offset: 3px;
+  }
+
+  .lt-kicker {
+    margin: 0 0 1rem;
+    font-family: var(--font-utility);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--lt-amber-text);
+  }
+  .lt-kicker--dim {
+    color: #f08a43;
+  }
+  .lt-note {
+    font-family: var(--lt-hand);
+    font-weight: 600;
+    color: var(--lt-grease);
+    line-height: 1.1;
+  }
+  .lt-h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 650;
+    font-size: clamp(2.2rem, 4.6vw + 0.6rem, 4.25rem);
+    line-height: 1;
+    letter-spacing: -0.035em;
+  }
+  .lt-h2 em {
+    font-size: 1.08em;
+  }
+
+  /* ───── Buttons ───── */
+  .lt-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    min-height: var(--tap-min);
+    padding: 0.8rem 1.4rem;
+    border-radius: 999px;
+    border: 1.5px solid transparent;
+    font-family: var(--font-utility);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      transform var(--dur-fast) var(--ease-out),
+      background-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+  .lt-btn:hover {
+    transform: translateY(-1px);
+  }
+  .lt-btn:active {
+    transform: translateY(1px);
+  }
+  .lt-btn--sm {
+    min-height: 2.6rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.92rem;
+  }
+  .lt-btn--amber {
+    background: var(--lt-amber);
+    color: #fff;
+    box-shadow: 0 10px 24px -12px rgba(160, 50, 0, 0.7);
+  }
+  .lt-btn--amber:hover {
+    background: #c94902;
+  }
+  .lt-btn--ghost {
+    border-color: var(--lt-ink);
+    color: var(--lt-ink);
+  }
+  .lt-btn--ghost:hover {
+    background: var(--lt-ink);
+    color: var(--lt-table);
+  }
+  .lt-btn--ghost-dark {
+    border-color: rgba(243, 238, 230, 0.4);
+    color: var(--lt-on-film);
+  }
+  .lt-btn--ghost-dark:hover {
+    background: var(--lt-on-film);
+    color: var(--lt-film);
+  }
+  .lt-btn--light {
+    background: var(--lt-on-film);
+    color: var(--lt-film);
+  }
+
+  /* ───── Header ───── */
+  .lt-head {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0.6rem var(--lt-pad);
+    background: color-mix(in srgb, var(--lt-table) 88%, transparent);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--lt-line);
+  }
+  .lt-head__logo .logo__svg {
+    height: 2rem;
+  }
+  .lt-head__nav {
+    display: flex;
+    gap: 1.6rem;
+    margin-left: auto;
+  }
+  .lt-head__nav a {
+    font-family: var(--font-utility);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--lt-ink);
+    text-decoration: none;
+    padding: 0.5rem 0;
+    background: linear-gradient(var(--lt-grease), var(--lt-grease)) left 88% / 0 2px no-repeat;
+    transition: background-size var(--dur) var(--ease-out);
+  }
+  .lt-head__nav a:hover {
+    background-size: 100% 2px;
+  }
+  .lt-head__act {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .lt-head__wa {
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 50%;
+    color: var(--lt-ink);
+    border: 1.5px solid var(--lt-line);
+  }
+  .lt-head__wa:hover {
+    border-color: #1f9d55;
+    color: #1f9d55;
+  }
+  @media (max-width: 860px) {
+    .lt-head__nav {
+      display: none;
+    }
+    .lt-head__act {
+      margin-left: auto;
+    }
+  }
+
+  /* ───── Hero ───── */
+  .lt-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    grid-template-areas:
+      "say mon"
+      "strip strip";
+    gap: clamp(1.5rem, 3vw, 3rem) clamp(2rem, 4vw, 4rem);
+    max-width: var(--lt-max);
+    margin: 0 auto;
+    padding: clamp(2rem, 5vw, 4.5rem) var(--lt-pad) clamp(2.5rem, 5vw, 4rem);
+    align-items: center;
+  }
+  .lt-hero__say {
+    grid-area: say;
+  }
+  .lt-hero__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 680;
+    font-size: clamp(3rem, 6.4vw + 0.5rem, 6.4rem);
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+  }
+  .lt-hero__title em {
+    display: inline-block;
+    font-size: 1.14em;
+    color: var(--lt-amber-text);
+    letter-spacing: -0.02em;
+  }
+  .lt-hero__lede {
+    max-width: 32rem;
+    margin: 1.5rem 0 0;
+    color: var(--lt-soft);
+  }
+  .lt-hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+  }
+  .lt-hero__proof {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.4rem;
+    margin: 1.75rem 0 0;
+    padding: 1rem 0 0;
+    list-style: none;
+    border-top: 1px dashed var(--lt-line);
+    font-family: var(--font-utility);
+    font-size: 0.92rem;
+    color: var(--lt-soft);
+  }
+  .lt-hero__proof strong {
+    color: var(--lt-ink);
+    font-weight: 700;
+  }
+
+  /* Field monitor */
+  .lt-mon {
+    grid-area: mon;
+    position: relative;
+    margin: 0;
+  }
+  .lt-mon__bezel {
+    padding: 0.55rem;
+    background: linear-gradient(180deg, #2a2622, #121110);
+    border-radius: 1.1rem;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.08) inset,
+      0 40px 60px -30px rgba(40, 25, 10, 0.55),
+      0 12px 20px -12px rgba(0, 0, 0, 0.4);
+    transform: rotate(0.6deg);
+  }
+  .lt-mon__bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.2rem 0.5rem 0.55rem;
+    font-family: var(--font-utility);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--lt-on-film-soft);
+  }
+  .lt-mon__pgm {
+    padding: 0.1rem 0.4rem;
+    border-radius: 0.25rem;
+    background: #b3200e;
+    color: #fff;
+    font-weight: 700;
+  }
+  .lt-mon__name {
+    color: var(--lt-on-film);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .lt-mon__tc {
+    margin-left: auto;
+    font-variant-numeric: tabular-nums;
+  }
+  .lt-mon__screen {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 0.55rem;
+    background: #000;
+  }
+  .lt-mon__video,
+  .lt-mon__pick img,
+  .lt-mon__embed iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 0;
+  }
+  .lt-mon__pick {
+    position: absolute;
+    inset: 0;
+  }
+  .lt-mon__pick::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0) 58%);
+  }
+  .lt-mon__pick.is-in img {
+    animation: lt-cut 420ms var(--ease-out);
+  }
+  @keyframes lt-cut {
+    from {
+      opacity: 0.2;
+      filter: brightness(2.2) saturate(0);
+    }
+  }
+  .lt-mon__meta {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    padding: clamp(0.9rem, 2.5vw, 1.5rem);
+    color: var(--lt-on-film);
+  }
+  .lt-mon__client {
+    margin: 0;
+    font-family: var(--font-utility);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #f5a36f;
+  }
+  .lt-mon__title {
+    margin: 0.2rem 0 0.8rem;
+    font-weight: 620;
+    font-size: clamp(1.1rem, 1.6vw + 0.6rem, 1.6rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+  .lt-mon__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.9rem;
+  }
+  .lt-mon__more {
+    font-family: var(--font-utility);
+    font-size: 0.92rem;
+    color: var(--lt-on-film);
+  }
+  .lt-mon__embed {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: #000;
+  }
+  /* 90% action-safe guides — a monitor, not a card. */
+  .lt-mon__safe {
+    position: absolute;
+    inset: 5%;
+    pointer-events: none;
+    background:
+      linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) left top / 14px 1px no-repeat,
+      linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) left top / 1px 14px no-repeat,
+      linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) right top / 14px 1px no-repeat,
+      linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) right top / 1px 14px no-repeat,
+      linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) left bottom / 14px 1px no-repeat,
+      linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) left bottom / 1px 14px no-repeat,
+      linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) right bottom / 14px 1px no-repeat,
+      linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) right bottom / 1px 14px no-repeat;
+    opacity: 0.7;
+    z-index: 1;
+  }
+  .lt-mon__embed:not([hidden]) ~ .lt-mon__safe {
+    display: none;
+  }
+  .lt-mon__note {
+    position: absolute;
+    left: -0.5rem;
+    bottom: -2.3rem;
+    margin: 0;
+    font-size: 1.5rem;
+    transform: rotate(-3deg);
+  }
+
+  /* Film strip — the remote */
+  .lt-strip {
+    grid-area: strip;
+    margin-top: 1.2rem;
+    padding: 0.9rem 0;
+    background: var(--lt-film);
+    border-radius: 0.6rem;
+    box-shadow: 0 30px 50px -35px rgba(30, 20, 10, 0.7);
+    position: relative;
+  }
+  /* Sprocket holes, top and bottom. */
+  .lt-strip::before,
+  .lt-strip::after {
+    content: "";
+    position: absolute;
+    left: 0.6rem;
+    right: 0.6rem;
+    height: 0.45rem;
+    background: radial-gradient(circle at 50% 50%, var(--lt-table-2) 0 42%, transparent 46%) 0 0 / 1.1rem 100% repeat-x;
+    border-radius: 2px;
+    opacity: 0.9;
+  }
+  .lt-strip::before {
+    top: 0.22rem;
+  }
+  .lt-strip::after {
+    bottom: 0.22rem;
+  }
+  .lt-strip__rail {
+    display: flex;
+    gap: 0.6rem;
+    padding: 0.2rem 0.9rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: #4a433b transparent;
+    overscroll-behavior-x: contain;
+  }
+  .lt-frame {
+    flex: 0 0 auto;
+    width: clamp(9.5rem, 15vw, 12rem);
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--lt-on-film-soft);
+    text-align: left;
+    cursor: pointer;
+    scroll-snap-align: start;
+  }
+  .lt-frame__img {
+    display: block;
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 0.2rem;
+    background: var(--lt-film-2);
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    transition: outline-color var(--dur-fast) var(--ease-out);
+  }
+  .lt-frame__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.55) brightness(0.8);
+    transition:
+      filter var(--dur) var(--ease-out),
+      transform var(--dur) var(--ease-out);
+  }
+  .lt-frame:hover .lt-frame__img img,
+  .lt-frame.is-on .lt-frame__img img {
+    filter: none;
+    transform: scale(1.04);
+  }
+  .lt-frame.is-on .lt-frame__img {
+    outline-color: var(--lt-amber);
+  }
+  .lt-frame__edge {
+    display: block;
+    margin-top: 0.45rem;
+    font-family: var(--font-utility);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .lt-frame.is-on .lt-frame__edge {
+    color: #f5a36f;
+  }
+
+  @media (max-width: 900px) {
+    .lt-hero {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas:
+        "say"
+        "mon"
+        "strip";
+    }
+    .lt-mon__bezel {
+      transform: none;
+    }
+    .lt-mon__note {
+      display: none;
+    }
+    .lt-strip {
+      margin-top: 0;
+    }
+  }
+
+  /* ───── Sections: shared ───── */
+  .lt-sec {
+    max-width: var(--lt-max);
+    margin: 0 auto;
+    padding: clamp(4rem, 9vw, 7rem) var(--lt-pad);
+  }
+  .lt-sec__head {
+    position: relative;
+    margin-bottom: clamp(1.8rem, 4vw, 3rem);
+  }
+
+  /* ───── Contact sheet ───── */
+  .lt-sheet__aside {
+    position: absolute;
+    right: 0;
+    bottom: 0.2rem;
+    margin: 0;
+    font-size: 1.6rem;
+    transform: rotate(-4deg);
+  }
+  .lt-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .lt-tab {
+    min-height: 2.75rem;
+    padding: 0.45rem 1.05rem;
+    border: 1.5px solid var(--lt-line);
+    border-radius: 0.35rem 0.35rem 0 0;
+    background: var(--lt-table-2);
+    color: var(--lt-soft);
+    font-family: var(--font-utility);
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .lt-tab[aria-pressed="true"] {
+    background: var(--lt-film);
+    border-color: var(--lt-film);
+    color: var(--lt-on-film);
+  }
+  .lt-contact {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15.5rem), 1fr));
+    gap: clamp(1rem, 2vw, 1.6rem) clamp(0.8rem, 1.6vw, 1.2rem);
+    margin: 0;
+    padding: clamp(1rem, 2.4vw, 1.8rem);
+    list-style: none;
+    background:
+      repeating-linear-gradient(90deg, transparent 0 22px, rgba(255, 255, 255, 0.025) 22px 23px),
+      var(--lt-film);
+    border-radius: 0.3rem 0.8rem 0.8rem 0.8rem;
+    box-shadow: 0 50px 70px -45px rgba(30, 20, 10, 0.75);
+  }
+  .lt-cell[hidden] {
+    display: none;
+  }
+  .lt-cell__link {
+    position: relative;
+    display: block;
+    color: var(--lt-on-film);
+    text-decoration: none;
+  }
+  .lt-cell__img {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: 0.2rem;
+    background: var(--lt-film-2);
+  }
+  .lt-cell__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.85);
+    transition:
+      transform 500ms var(--ease-out),
+      filter var(--dur) var(--ease-out);
+  }
+  .lt-cell__link:hover .lt-cell__img img,
+  .lt-cell__link:focus-visible .lt-cell__img img {
+    transform: scale(1.05);
+    filter: saturate(1.05);
+  }
+  .lt-cell__fmt,
+  .lt-cell__dur {
+    position: absolute;
+    bottom: 0.45rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 0.2rem;
+    background: rgba(0, 0, 0, 0.72);
+    font-family: var(--font-utility);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    font-variant-numeric: tabular-nums;
+  }
+  .lt-cell__fmt {
+    left: 0.45rem;
+    color: #f5a36f;
+  }
+  .lt-cell__dur {
+    right: 0.45rem;
+  }
+  .lt-cell__edge {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.4rem;
+    font-family: var(--font-utility);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: #d9892f;
+    opacity: 0.8;
+  }
+  .lt-cell__title {
+    display: block;
+    margin-top: 0.3rem;
+    font-weight: 560;
+    font-size: 1rem;
+    line-height: 1.3;
+  }
+  .lt-cell__cat {
+    display: block;
+    margin-top: 0.15rem;
+    font-family: var(--font-utility);
+    font-size: 0.8rem;
+    color: var(--lt-on-film-soft);
+  }
+  /* Grease pencil loop */
+  .lt-grease {
+    position: absolute;
+    left: -6%;
+    top: -7%;
+    width: 112%;
+    aspect-ratio: 4 / 3;
+    height: auto;
+    pointer-events: none;
+    overflow: visible;
+  }
+  .lt-grease path {
+    fill: none;
+    stroke: var(--lt-grease);
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    opacity: 0; /* the round cap would otherwise leave a dot at rest */
+    transition:
+      stroke-dashoffset 520ms var(--ease-out),
+      opacity 80ms linear;
+  }
+  .lt-cell.is-keeper .lt-grease path,
+  .lt-cell__link:hover .lt-grease path,
+  .lt-cell__link:focus-visible .lt-grease path {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  .lt-cell__note {
+    position: absolute;
+    top: -0.9rem;
+    right: -0.3rem;
+    z-index: 1;
+    max-width: 80%;
+    padding: 0 0.3rem;
+    font-family: var(--lt-hand);
+    font-weight: 600;
+    font-size: 1.3rem;
+    line-height: 1;
+    color: #ff7a45;
+    transform: rotate(4deg) translateY(4px);
+    opacity: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition:
+      opacity var(--dur) var(--ease-out),
+      transform var(--dur) var(--ease-out);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
+  }
+  .lt-cell.is-keeper .lt-cell__note,
+  .lt-cell__link:hover .lt-cell__note,
+  .lt-cell__link:focus-visible .lt-cell__note {
+    opacity: 1;
+    transform: rotate(4deg);
+  }
+  .lt-sheet__more {
+    margin: 1.8rem 0 0;
+    text-align: center;
+  }
+  @media (max-width: 700px) {
+    .lt-sheet__aside {
+      position: static;
+      margin-top: 0.8rem;
+    }
+    .lt-contact {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .lt-cell__note {
+      font-size: 1.1rem;
+    }
+  }
+
+  /* ───── Edit timeline (dark band) ───── */
+  .lt-edit {
+    max-width: none;
+    background: var(--lt-film);
+    color: var(--lt-on-film);
+    padding-left: max(var(--lt-pad), calc((100vw - var(--lt-max)) / 2 + var(--lt-pad)));
+    padding-right: max(var(--lt-pad), calc((100vw - var(--lt-max)) / 2 + var(--lt-pad)));
+  }
+  .lt-edit__lede {
+    margin: 1rem 0 0;
+    color: var(--lt-on-film-soft);
+  }
+  .lt-tl {
+    padding: 1rem;
+    background: #0c0b0a;
+    border: 1px solid #2c2722;
+    border-radius: 0.8rem;
+  }
+  .lt-tl__ruler {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-left: 7.5rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid #2c2722;
+    font-family: var(--font-utility);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--lt-on-film-soft);
+    background: repeating-linear-gradient(90deg, #3a342d 0 1px, transparent 1px 2.5%) bottom / 100% 5px no-repeat;
+  }
+  .lt-tl__tracks {
+    position: relative;
+    padding: 0.5rem 0;
+  }
+  .lt-tl__track {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr;
+    align-items: center;
+    height: 3rem;
+    border-bottom: 1px solid #1d1a17;
+  }
+  .lt-tl__name {
+    font-family: var(--font-utility);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--lt-on-film-soft);
+  }
+  .lt-tl__lane {
+    position: relative;
+    height: 2.2rem;
+  }
+  .lt-tl__clip {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--from) * 1%);
+    width: calc((var(--to) - var(--from)) * 1% - 3px);
+    display: flex;
+    align-items: center;
+    padding: 0 0.7rem;
+    overflow: hidden;
+    border-radius: 0.3rem;
+    background: #2a2521;
+    border: 1px solid #3b342d;
+    font-family: var(--font-utility);
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--lt-on-film-soft);
+    transition:
+      background-color var(--dur) var(--ease-out),
+      color var(--dur) var(--ease-out),
+      border-color var(--dur) var(--ease-out);
+  }
+  .lt-tl__clip.is-live {
+    background: var(--lt-amber);
+    border-color: #ff8a4a;
+    color: #fff;
+  }
+  .lt-tl__head {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(7.5rem + (100% - 7.5rem) * var(--at) / 100);
+    width: 2px;
+    background: #ff5a2a;
+    pointer-events: none;
+    will-change: left;
+  }
+  .lt-tl__head::before {
+    content: "";
+    position: absolute;
+    top: -0.5rem;
+    left: -0.4rem;
+    border: 0.45rem solid transparent;
+    border-top: 0.6rem solid #ff5a2a;
+  }
+  .lt-tl__controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.6rem;
+  }
+  .lt-tl__play {
+    flex: none;
+    width: 7.5rem;
+    min-height: var(--tap-min);
+    margin-right: -1rem;
+    border: 0;
+    background: none;
+    color: var(--lt-on-film);
+    font-family: var(--font-utility);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+  }
+  .lt-tl__scrub {
+    flex: 1;
+    display: flex;
+  }
+  .lt-tl__scrub input {
+    width: 100%;
+    min-height: var(--tap-min);
+    accent-color: var(--lt-amber);
+    cursor: ew-resize;
+  }
+  .lt-stages {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 1.8rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .lt-stage {
+    padding: 1.2rem 1.1rem 1.3rem;
+    border-top: 2px solid #3b342d;
+    transition:
+      border-color var(--dur) var(--ease-out),
+      background-color var(--dur) var(--ease-out);
+  }
+  .lt-stage[aria-current] {
+    border-color: var(--lt-amber);
+    background: linear-gradient(180deg, rgba(226, 83, 3, 0.12), transparent 70%);
+  }
+  .lt-stage__n {
+    font-family: var(--font-utility);
+    font-size: 0.8rem;
+    color: #f08a43;
+  }
+  .lt-stage__title {
+    margin: 0.3rem 0 0;
+    font-size: 1.3rem;
+    font-weight: 620;
+    letter-spacing: -0.015em;
+  }
+  .lt-stage__when {
+    margin: 0.15rem 0 0.6rem;
+    font-family: var(--lt-hand);
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: #ff7a45;
+    line-height: 1.1;
+  }
+  .lt-stage__text {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.55;
+    color: var(--lt-on-film-soft);
+  }
+  @media (max-width: 760px) {
+    /* The NLE view needs width; phones get the four stages as a plain list. */
+    .lt-tl {
+      display: none;
+    }
+    .lt-edit__lede {
+      display: none;
+    }
+    .lt-stages {
+      grid-template-columns: 1fr;
+      gap: 0;
+      margin: 0;
+    }
+    .lt-stage[aria-current] {
+      background: none;
+      border-color: #3b342d;
+    }
+  }
+
+  /* ───── Service cans ───── */
+  .lt-cans__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+    gap: clamp(1.4rem, 3vw, 2.2rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .lt-can {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 2.6rem 1.6rem 1.6rem;
+    background: #f7f3ec;
+    border: 1px solid var(--lt-line);
+    border-radius: 0.4rem;
+    box-shadow: 0 24px 40px -30px rgba(40, 25, 10, 0.45);
+  }
+  .lt-can:nth-child(2) {
+    transform: rotate(-0.6deg);
+  }
+  .lt-can:nth-child(3) {
+    transform: rotate(0.5deg);
+  }
+  .lt-can__tape {
+    position: absolute;
+    top: -0.9rem;
+    left: 1.2rem;
+    padding: 0.2rem 0.9rem;
+    background: rgba(236, 222, 180, 0.92);
+    font-family: var(--lt-hand);
+    font-weight: 600;
+    font-size: 1.35rem;
+    line-height: 1.2;
+    color: #2b2620;
+    transform: rotate(-2.5deg);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    clip-path: polygon(2% 0, 98% 4%, 100% 96%, 0 100%);
+  }
+  .lt-can__n {
+    position: absolute;
+    top: 1rem;
+    right: 1.2rem;
+    font-family: var(--font-utility);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--lt-soft);
+  }
+  .lt-can__title {
+    margin: 0;
+    font-size: clamp(1.5rem, 1.4vw + 1rem, 1.9rem);
+    font-weight: 650;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+  }
+  .lt-can__sum {
+    margin: 0.7rem 0 1rem;
+    color: var(--lt-soft);
+  }
+  .lt-can__feat {
+    margin: 0 0 1.4rem;
+    padding: 0;
+    list-style: none;
+    border-top: 1px dashed var(--lt-line);
+  }
+  .lt-can__feat li {
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed var(--lt-line);
+    font-size: 1rem;
+  }
+  .lt-can__link {
+    margin-top: auto;
+    align-self: flex-start;
+    display: inline-flex;
+    min-height: var(--tap-min);
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-utility);
+    font-weight: 600;
+    color: var(--lt-amber-text);
+    text-decoration: none;
+  }
+  .lt-can__link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  /* ───── Brands ───── */
+  .lt-brands {
+    padding-top: 0;
+  }
+  .lt-brands__title {
+    text-align: center;
+    color: var(--lt-soft);
+  }
+
+  /* ───── Call sheet ───── */
+  .lt-call {
+    padding-top: 0;
+  }
+  .lt-call__slate {
+    position: relative;
+    padding: clamp(3.4rem, 6vw, 5rem) clamp(1.25rem, 5vw, 4.5rem) clamp(2rem, 5vw, 3.5rem);
+    background: var(--lt-film);
+    color: var(--lt-on-film);
+    border-radius: 0.8rem;
+    overflow: hidden;
+    box-shadow: 0 60px 80px -50px rgba(30, 20, 10, 0.8);
+  }
+  /* Clapper stripes along the top edge */
+  .lt-call__clap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1.4rem;
+    background: repeating-linear-gradient(-55deg, #f3eee6 0 1.6rem, var(--lt-film) 1.6rem 3.2rem);
+    opacity: 0.92;
+  }
+  .lt-call__lede {
+    margin: 1rem 0 0;
+    color: var(--lt-on-film-soft);
+  }
+  .lt-form {
+    margin-top: clamp(1.8rem, 4vw, 2.8rem);
+  }
+  .lt-form__line {
+    margin: 0;
+    max-width: 58rem;
+    font-size: clamp(1.35rem, 1.6vw + 0.9rem, 2.2rem);
+    line-height: 1.75;
+    letter-spacing: -0.015em;
+    font-weight: 450;
+  }
+  .lt-fill {
+    display: inline-block;
+  }
+  .lt-fill input,
+  .lt-fill select {
+    min-width: 7ch;
+    width: 11ch;
+    min-height: var(--tap-min);
+    padding: 0 0.3rem;
+    border: 0;
+    border-bottom: 2px solid #6b5f52;
+    border-radius: 0;
+    background: transparent;
+    color: #ffb286;
+    font: inherit;
+    font-family: var(--lt-serif);
+    font-style: italic;
+    font-size: 1.12em;
+    line-height: 1.2;
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+  .lt-fill input[type="tel"] {
+    width: 12ch;
+  }
+  .lt-fill--select select {
+    width: auto;
+    max-width: 100%;
+    cursor: pointer;
+    appearance: none;
+    padding-right: 1.2rem;
+    background: linear-gradient(45deg, transparent 50%, #ffb286 50%) right 0.35rem center / 0.4rem 0.4rem no-repeat,
+      linear-gradient(-45deg, transparent 50%, #ffb286 50%) right 0.1rem center / 0.4rem 0.4rem no-repeat;
+  }
+  .lt-fill select option {
+    color: var(--lt-ink);
+    font-style: normal;
+  }
+  .lt-fill input::placeholder {
+    color: #7c7065;
+  }
+  .lt-fill input:focus,
+  .lt-fill select:focus {
+    outline: none;
+    border-bottom-color: var(--lt-amber);
+  }
+  .lt-fill input:focus-visible,
+  .lt-fill select:focus-visible {
+    outline: none;
+    box-shadow: 0 2px 0 var(--lt-amber);
+  }
+  .lt-fill input:user-invalid {
+    border-bottom-color: #ff6b5a;
+  }
+  .lt-form__note {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    max-width: 40rem;
+    margin-top: 1.8rem;
+    font-family: var(--font-utility);
+    font-size: 0.92rem;
+    color: var(--lt-on-film-soft);
+  }
+  .lt-form__note em {
+    font-family: inherit;
+    font-style: normal;
+    opacity: 0.8;
+  }
+  .lt-form__note textarea {
+    min-height: 4.5rem;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid #3b342d;
+    border-radius: 0.4rem;
+    background: #0e0d0c;
+    color: var(--lt-on-film);
+    font: inherit;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    resize: vertical;
+  }
+  .lt-form__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.8rem 1rem;
+    margin-top: 1.8rem;
+  }
+  .lt-call__tel {
+    font-family: var(--font-utility);
+    font-weight: 600;
+    color: var(--lt-on-film);
+    padding: 0.6rem 0;
+  }
+  .lt-form__status {
+    min-height: 1.5em;
+    margin: 1rem 0 0;
+    font-size: 1rem;
+  }
+  .lt-form__status.is-ok {
+    color: #7ee2a0;
+  }
+  .lt-form__status.is-err {
+    color: #ff8a7a;
+  }
+  .lt-form__kvkk {
+    margin: 0.4rem 0 0;
+    font-size: 0.85rem;
+    color: var(--lt-on-film-soft);
+  }
+  .lt-form__kvkk a {
+    color: #f5a36f;
+  }
+
+  /* ───── Reduced motion: everything lands in its end state ───── */
+  @media (prefers-reduced-motion: reduce) {
+    .lt *,
+    .lt *::before,
+    .lt *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+    .lt-mon__bezel,
+    .lt-can {
+      transform: none !important;
+    }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-lt]");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (root) {
+    /* ── Monitor timecode: runs only while the monitor is on screen ── */
+    const tc = root.querySelector<HTMLElement>("[data-tc]");
+    const video = root.querySelector<HTMLVideoElement>("[data-mon-video]");
+    const monitor = root.querySelector<HTMLElement>("[data-monitor]");
+    let tcStart = performance.now();
+    let tcRaf = 0;
+    const pad = (n: number) => String(Math.floor(n)).padStart(2, "0");
+    const tick = (now: number) => {
+      const s = (now - tcStart) / 1000;
+      if (tc) tc.textContent = `${pad(s / 3600)}:${pad((s / 60) % 60)}:${pad(s % 60)}:${pad((s % 1) * 25)}`;
+      tcRaf = requestAnimationFrame(tick);
+    };
+    if (monitor && !reduce) {
+      new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          if (!tcRaf) tcRaf = requestAnimationFrame(tick);
+          if (video && !video.closest("[hidden]") && root.dataset.program === undefined) {
+            video.play().catch(() => {});
+          }
+        } else {
+          cancelAnimationFrame(tcRaf);
+          tcRaf = 0;
+          video?.pause();
+        }
+      }).observe(monitor);
+    }
+
+    /* ── Strip → monitor ── */
+    const pick = root.querySelector<HTMLElement>("[data-mon-pick]");
+    const img = root.querySelector<HTMLImageElement>("[data-mon-img]");
+    const label = root.querySelector<HTMLElement>("[data-mon-label]");
+    const client = root.querySelector<HTMLElement>("[data-mon-client]");
+    const title = root.querySelector<HTMLElement>("[data-mon-title]");
+    const link = root.querySelector<HTMLAnchorElement>("[data-mon-link]");
+    const play = root.querySelector<HTMLButtonElement>("[data-mon-play]");
+    const embed = root.querySelector<HTMLElement>("[data-mon-embed]");
+    const frames = [...root.querySelectorAll<HTMLButtonElement>("[data-frame]")];
+    let currentYt = "";
+
+    const closeEmbed = () => {
+      if (embed) {
+        embed.hidden = true;
+        embed.replaceChildren();
+      }
+    };
+
+    frames.forEach((frame) => {
+      frame.addEventListener("click", () => {
+        frames.forEach((f) => {
+          const on = f === frame;
+          f.classList.toggle("is-on", on);
+          f.setAttribute("aria-pressed", String(on));
+        });
+        closeEmbed();
+        tcStart = performance.now();
+        if (label) label.textContent = frame.dataset.label ?? "";
+
+        if (frame.dataset.frame === "reel") {
+          delete root.dataset.program;
+          if (pick) pick.hidden = true;
+          if (video && !reduce) video.play().catch(() => {});
+          return;
+        }
+        root.dataset.program = frame.dataset.frame;
+        video?.pause();
+        currentYt = frame.dataset.yt ?? "";
+        if (img) img.src = frame.dataset.poster ?? "";
+        if (client) client.textContent = frame.dataset.client ?? "";
+        if (title) title.textContent = frame.dataset.title ?? "";
+        if (link) link.href = frame.dataset.href ?? "/projeler/";
+        if (play) play.hidden = !currentYt;
+        if (pick) {
+          pick.hidden = false;
+          pick.classList.remove("is-in");
+          void pick.offsetWidth; // restart the "cut" flash
+          pick.classList.add("is-in");
+        }
+      });
+    });
+
+    play?.addEventListener("click", () => {
+      if (!embed || !currentYt) return;
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://www.youtube-nocookie.com/embed/${currentYt}?autoplay=1&rel=0&modestbranding=1`;
+      iframe.title = title?.textContent ?? "Video";
+      iframe.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+      iframe.allowFullscreen = true;
+      embed.replaceChildren(iframe);
+      embed.hidden = false;
+      iframe.focus();
+      (window as any).rcTrack?.("video_play", { event_category: "portfolio", video_id: currentYt, location: "taslak_monitor" });
+    });
+
+    /* ── Contact sheet filter ── */
+    const LIMIT = 12;
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>("[data-tabs] [data-cat]")];
+    const cells = [...root.querySelectorAll<HTMLElement>("[data-sheet] > li")];
+    tabs.forEach((tab) =>
+      tab.addEventListener("click", () => {
+        const cat = tab.dataset.cat;
+        tabs.forEach((t) => t.setAttribute("aria-pressed", String(t === tab)));
+        let shown = 0;
+        cells.forEach((cell) => {
+          const match = cat === "*" || cell.dataset.cat === cat;
+          const show = match && shown < LIMIT;
+          if (show) shown++;
+          cell.hidden = !show;
+        });
+      }),
+    );
+
+    /* ── Edit timeline ── */
+    const range = root.querySelector<HTMLInputElement>("[data-tl-range]");
+    const head = root.querySelector<HTMLElement>("[data-tl-head]");
+    const clips = [...root.querySelectorAll<HTMLElement>("[data-clip]")];
+    const stageEls = [...root.querySelectorAll<HTMLElement>("[data-stage]")];
+    const playBtn = root.querySelector<HTMLButtonElement>("[data-tl-play]");
+    const playLabel = root.querySelector<HTMLElement>("[data-tl-play-label]");
+    const spans = clips.map((c) => ({
+      key: c.dataset.clip!,
+      from: Number(getComputedStyle(c).getPropertyValue("--from")),
+      to: Number(getComputedStyle(c).getPropertyValue("--to")),
+      title: c.textContent?.trim() ?? "",
+    }));
+
+    const setAt = (v: number) => {
+      head?.style.setProperty("--at", String(v));
+      const live = spans.find((s) => v >= s.from && v < s.to) ?? spans[spans.length - 1];
+      clips.forEach((c) => c.classList.toggle("is-live", c.dataset.clip === live?.key));
+      stageEls.forEach((el) => {
+        if (el.dataset.stage === live?.key) el.setAttribute("aria-current", "step");
+        else el.removeAttribute("aria-current");
+      });
+      const week = Math.min(4, Math.floor(v / 25) + 1);
+      range?.setAttribute("aria-valuetext", `${week}. hafta — ${live?.title ?? ""}`);
+    };
+    range?.addEventListener("input", () => {
+      stopPlay();
+      setAt(Number(range.value));
+    });
+    if (range) setAt(Number(range.value));
+
+    let playRaf = 0;
+    let last = 0;
+    const stopPlay = () => {
+      cancelAnimationFrame(playRaf);
+      playRaf = 0;
+      playBtn?.setAttribute("aria-pressed", "false");
+      if (playLabel) playLabel.textContent = "▶ Oynat";
+    };
+    const step = (now: number) => {
+      if (!range) return;
+      const dt = last ? now - last : 16;
+      last = now;
+      const next = Number(range.value) + dt / 60; // full pass ≈ 6s
+      if (next >= 99) {
+        range.value = "99";
+        setAt(99);
+        stopPlay();
+        return;
+      }
+      range.value = String(next);
+      setAt(next);
+      playRaf = requestAnimationFrame(step);
+    };
+    playBtn?.addEventListener("click", () => {
+      if (!range) return;
+      if (playRaf) return stopPlay();
+      if (reduce) {
+        // No sweep: jump stage by stage instead.
+        const at = Number(range.value);
+        const nextSpan = spans.find((s) => s.from > at) ?? spans[0];
+        range.value = String(nextSpan.from + 1);
+        setAt(nextSpan.from + 1);
+        return;
+      }
+      if (Number(range.value) >= 98) range.value = "0";
+      last = 0;
+      playBtn.setAttribute("aria-pressed", "true");
+      if (playLabel) playLabel.textContent = "❚❚ Durdur";
+      playRaf = requestAnimationFrame(step);
+    });
+
+    /* ── Call sheet: grow inputs with their content, submit like /iletisim/ ── */
+    const form = root.querySelector<HTMLFormElement>("[data-lt-form]");
+    const status = root.querySelector<HTMLElement>("[data-lt-status]");
+    form?.querySelectorAll<HTMLInputElement>(".lt-fill input").forEach((input) => {
+      const base = input.type === "tel" ? 12 : 11;
+      const fit = () => {
+        input.style.width = `${Math.max(base, input.value.length + 1)}ch`;
+      };
+      input.addEventListener("input", fit);
+    });
+    form?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!form.checkValidity()) {
+        if (status) {
+          status.textContent = "Adınızı ve telefon numaranızı yazmanız yeterli.";
+          status.className = "lt-form__status is-err";
+        }
+        form.reportValidity();
+        return;
+      }
+      const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (submit) submit.disabled = true;
+      if (status) {
+        status.textContent = "Gönderiliyor…";
+        status.className = "lt-form__status";
+      }
+      try {
+        const res = await fetch(form.action, {
+          method: "POST",
+          headers: { Accept: "application/json" },
+          body: new FormData(form),
+        });
+        const json = await res.json().catch(() => ({}));
+        if (res.ok && json.success) {
+          form.reset();
+          if (status) {
+            status.textContent = "Föy elimizde — en kısa sürede sizi arıyoruz.";
+            status.className = "lt-form__status is-ok";
+          }
+          const go = () => (window.location.href = "/tesekkurler/");
+          const track = (window as any).rcTrack;
+          if (typeof track === "function") {
+            track("lead_form_submit_success", { event_category: "lead", event_label: "taslak_call_sheet", form_id: "taslak_call_sheet" }, go);
+          } else go();
+        } else if (status) {
+          status.textContent = json.message ?? "Gönderilemedi. Lütfen tekrar deneyin.";
+          status.className = "lt-form__status is-err";
+        }
+      } catch {
+        if (status) {
+          status.textContent = "Bağlantı hatası. Lütfen tekrar deneyin ya da WhatsApp'tan yazın.";
+          status.className = "lt-form__status is-err";
+        }
+      } finally {
+        if (submit) submit.disabled = false;
+      }
+    });
+  }
+</script>
