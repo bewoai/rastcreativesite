@@ -63,3 +63,23 @@ evrenin malzemesinden yapılmamıştı.
 - GlassNav ve iç sayfalar henüz bu dile çevrilmedi.
 - Kurucu fotoğrafları birbirinden çok farklı; CSS ile eşitlendi, ideali aynı ışıkta yeni çekim.
 - Gerçek Lighthouse ölçümü (backdrop-filter mobilde maliyetli olabilir) prod önizlemede yapılmalı.
+
+## v4 (2026-09-23) — mitik doku, bulut geçişleri
+
+Kullanıcı geri bildirimi: süreç bölümü çok dikey, animasyon ekranın altında kalıyor;
+markalar bölümü değişsin; site daha mitik ve dokulu olsun; bölüm geçişleri bulutla.
+
+- **Süreç tek ekran.** Masaüstünde yörünge (27rem) ve panel yan yana, panel görseli
+  21:9. Mobilde yörünge dört duraklı bir "ufuk çizgisine" dönüşür, panelin üstüne
+  yapışır (sticky); güneş çizgi boyunca seçili durağa kayar. Dokun, gör; kaydırma yok.
+- **Markalar = oyma levha.** Kayan logo bandı kalktı. 16 marka numaralı bir levhada;
+  saydam logolar kabartma siluet, kendi zemini olan logolar `multiply` ile sise basılı.
+  Üzerine gelince arkasında güneş ışığı doğar. (Logo saydamlıkları dosya dosya kontrol edildi.)
+- **Doku.** Cam yüzeylere kağıt/taş greni ve iç oyma çerçeve; etiketler serif büyük harf,
+  Roma rakamı ve ✦ yıldız; butonlar, linkler ve menü serif. Gökyüzünde yavaş süzülen ışık tozu.
+- **Bulut geçişleri.** Her bölüm arasında, sis karesinin aynalanmış (dikişsiz) şeridi iki
+  katmanda zıt yönlere süzülür, üst ve alt kenarı maskeyle erir. Zamana bağlı, scroll'a
+  bağlı değil; hareketi azaltma ayarında durur. Hero'nun alt kenarı da artık düz renge
+  değil gökyüzüne erir.
+- **Düzeltme:** global `body { overflow-x: hidden }` body'yi scroll kabı yapıp sticky'yi
+  öldürüyordu; bu sayfada `overflow-x: clip` ile header ve durak şeridi yapışıyor.

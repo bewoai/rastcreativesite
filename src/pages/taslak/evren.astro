@@ -19,13 +19,28 @@
 import fs from "node:fs";
 import path from "node:path";
 import { getCollection, render } from "astro:content";
-import { Picture } from "astro:assets";
+import { Image, Picture } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Logo from "../../components/Logo.astro";
-import LogoWall from "../../components/LogoWall.astro";
 import Icon from "../../components/Icon.astro";
 import beratPhoto from "../../assets/photos/berat-degirmenci.png";
 import muhammedPhoto from "../../assets/photos/muhammed-al-sheikhly.png";
+import lgFederal from "../../assets/logos/federal.svg";
+import lgAllufem from "../../assets/logos/allufem-aluminium.webp";
+import lgSerdivan from "../../assets/logos/serdivan.jpg";
+import lgAytas from "../../assets/logos/aytashome.png";
+import lgMeteors from "../../assets/logos/meteors.png";
+import lgOyka from "../../assets/logos/oyka.png";
+import lgEstada from "../../assets/logos/estada.png";
+import lgZemin from "../../assets/logos/zeminkoleji.avif";
+import lgBasak from "../../assets/logos/basak.png";
+import lgCanex from "../../assets/logos/canex.jpg";
+import lgChint from "../../assets/logos/chint.webp";
+import lgNewlife from "../../assets/logos/newlife.png";
+import lgAltoteks from "../../assets/logos/altoteks.png";
+import lgCandles from "../../assets/logos/candlesandechoes.png";
+import lgMar from "../../assets/logos/marstudyo.png";
+import lgParhad from "../../assets/logos/parhad.png";
 import {
   CONTACT,
   NAV,
@@ -51,6 +66,7 @@ const A = {
   dawnMp4: slot("safak.mp4"),
   dawnPoster: slot("safak.webp"),
   fog: slot("sis.webp"),
+  cloud: slot("bulut-seridi.webp"),
   sun: slot("kure.webp"),
   stops: {
     fikir: [slot("durak-fikir.webp"), slot("durak-fikir-genis.webp")],
@@ -83,6 +99,28 @@ const faqs = await Promise.all(
     Content: (await render(e)).Content,
   })),
 );
+
+/* Brand plate. "ink" logos have transparent backgrounds and become engraved
+   silhouettes; "print" logos sit on their own solid background and are
+   pressed into the fog with multiply instead. (Checked per file.) */
+const brands = [
+  { src: lgFederal, name: "Federal", mode: "ink" },
+  { src: lgMeteors, name: "Meteors Shipping", mode: "ink" },
+  { src: lgCanex, name: "Canex", mode: "print" },
+  { src: lgAltoteks, name: "Altoteks", mode: "print" },
+  { src: lgChint, name: "Chint Power", mode: "print" },
+  { src: lgAytas, name: "Aytaş Home", mode: "ink" },
+  { src: lgSerdivan, name: "Serdivan AVM", mode: "print" },
+  { src: lgAllufem, name: "Allufem Aluminium", mode: "ink" },
+  { src: lgOyka, name: "Oyka Kağıt Ambalaj", mode: "ink" },
+  { src: lgBasak, name: "Başak Traktör", mode: "ink" },
+  { src: lgEstada, name: "Estada Hair Transplant", mode: "ink" },
+  { src: lgZemin, name: "Zemin Koleji", mode: "print" },
+  { src: lgParhad, name: "PARHAD", mode: "ink" },
+  { src: lgNewlife, name: "New Life", mode: "ink" },
+  { src: lgCandles, name: "Candles and Echoes", mode: "ink" },
+  { src: lgMar, name: "Mar Studyo", mode: "ink" },
+] as const;
 
 const founders = [
   { name: "Muhammed Al Sheikhly", role: "Kurucu ortak · Video director", photo: muhammedPhoto },
@@ -148,9 +186,10 @@ const year = new Date().getFullYear();
   noindex
   bare
 >
-  <div class="ev" data-ev>
+  <div class="ev" data-ev style={A.cloud ? `--cloud-img:url(${A.cloud})` : undefined}>
     {/* The world: fog behind everything, one fixed layer. */}
     <div class="ev-sky" aria-hidden="true" style={A.fog ? `--fog-img:url(${A.fog})` : undefined}></div>
+    <div class="ev-motes" aria-hidden="true"></div>
     <div class="ev-grain" aria-hidden="true"></div>
 
     {/* ───────── Header: a strip of glass floating in the fog ───────── */}
@@ -255,10 +294,12 @@ const year = new Date().getFullYear();
       </a>
     </section>
 
+
+    <div class="ev-cloud" aria-hidden="true"></div>
     {/* ───────── 02 · Works ───────── */}
     <section id="isler" class="ev-sec ev-works" aria-labelledby="ev-works-title">
       <header class="ev-head2 ev-head2--center">
-        <p class="ev-label"><span class="ev-label__n">02</span>Seçili işler</p>
+        <p class="ev-label"><span class="ev-label__n">II</span>Seçili işler</p>
         <h2 id="ev-works-title" class="ev-h2">Kameranın önünden <em>geçenler</em></h2>
         <p class="ev-whisper ev-whisper--center" aria-hidden="true">hepsi gerçek müşteri işi</p>
       </header>
@@ -350,10 +391,12 @@ const year = new Date().getFullYear();
       </p>
     </section>
 
+
+    <div class="ev-cloud" aria-hidden="true"></div>
     {/* ───────── 03 · The people you talk to ───────── */}
     <section id="ekip" class="ev-sec ev-team" aria-labelledby="ev-team-title">
       <div class="ev-team__say">
-        <p class="ev-label"><span class="ev-label__n">03</span>Muhatabınız</p>
+        <p class="ev-label"><span class="ev-label__n">III</span>Muhatabınız</p>
         <h2 id="ev-team-title" class="ev-h2">Telefonu <em>çekimi yönetenler</em> açar.</h2>
         <p class="ev-team__lede">
           Projenizi bir satış ekibiyle değil, doğrudan şirketin kurucu ortaklarıyla
@@ -382,14 +425,16 @@ const year = new Date().getFullYear();
       </ul>
     </section>
 
+
+    <div class="ev-cloud" aria-hidden="true"></div>
     {/* ───────── 04 · Process: four stops around the sun ───────── */}
     <section id="surec" class="ev-sec ev-orbit" aria-labelledby="ev-orbit-title">
       <header class="ev-head2">
-        <p class="ev-label"><span class="ev-label__n">04</span>Süreç</p>
+        <p class="ev-label"><span class="ev-label__n">IV</span>Süreç</p>
         <h2 id="ev-orbit-title" class="ev-h2">Fikirden teslime <em>dört durak.</em></h2>
       </header>
 
-      <div class="ev-orbit__grid" data-orbit data-at="fikir">
+      <div class="ev-orbit__grid" data-orbit data-at="fikir" style="--at:0">
         <div class="ev-orbit__stage">
           <svg class="ev-orbit__ring" viewBox="0 0 400 400" aria-hidden="true">
             <circle cx="200" cy="200" r="150" />
@@ -407,7 +452,7 @@ const year = new Date().getFullYear();
                   data-stop={s.key}
                   aria-pressed={i === 0 ? "true" : "false"}
                   aria-controls={`ev-panel-${s.key}`}
-                  style={`--a:${s.angle}deg`}
+                  style={`--a:${s.angle}deg; --i:${i}`}
                 >
                   <span class="ev-stop__face">
                     {A.stops[s.key][0] && (
@@ -455,10 +500,12 @@ const year = new Date().getFullYear();
       </div>
     </section>
 
+
+    <div class="ev-cloud" aria-hidden="true"></div>
     {/* ───────── 05 · Services ───────── */}
     <section id="hizmetler" class="ev-sec ev-svc" aria-labelledby="ev-svc-title">
       <header class="ev-head2">
-        <p class="ev-label"><span class="ev-label__n">05</span>Hizmetler</p>
+        <p class="ev-label"><span class="ev-label__n">V</span>Hizmetler</p>
         <h2 id="ev-svc-title" class="ev-h2">Üç masa, <em>tek ekip.</em></h2>
       </header>
       <ul class="ev-svc__list">
@@ -482,10 +529,12 @@ const year = new Date().getFullYear();
       </ul>
     </section>
 
+
+    <div class="ev-cloud" aria-hidden="true"></div>
     {/* ───────── 06 · FAQ: the questions clients actually ask ───────── */}
     <section id="sss" class="ev-sec ev-faq" aria-labelledby="ev-faq-title">
       <header class="ev-head2">
-        <p class="ev-label"><span class="ev-label__n">06</span>Sık sorulanlar</p>
+        <p class="ev-label"><span class="ev-label__n">VI</span>Sık sorulanlar</p>
         <h2 id="ev-faq-title" class="ev-h2">Aklınızdaki <em>sorular.</em></h2>
         <p class="ev-whisper" aria-hidden="true">fiyat da burada</p>
       </header>
@@ -506,12 +555,39 @@ const year = new Date().getFullYear();
       </div>
     </section>
 
+
+    <div class="ev-cloud" aria-hidden="true"></div>
     {/* ───────── Brands ───────── */}
     <section class="ev-sec ev-brands" aria-labelledby="ev-brands-title">
-      <h2 id="ev-brands-title" class="ev-label ev-label--center">Birlikte çalıştığımız markalar</h2>
-      <LogoWall />
+      <header class="ev-head2 ev-head2--center">
+        <p class="ev-label"><span class="ev-label__n">VII</span>Markalar</p>
+        <h2 id="ev-brands-title" class="ev-h2">Işığımızın düştüğü <em>markalar.</em></h2>
+        <p class="ev-whisper ev-whisper--center" aria-hidden="true">sanayiden sağlığa</p>
+      </header>
+      <ul class="ev-plate ev-glass">
+        {
+          brands.map((b, i) => (
+            <li class:list={["ev-plate__cell", `is-${b.mode}`]}>
+              <span class="ev-plate__no" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+              <Image
+                src={b.src}
+                alt={`${b.name} logosu`}
+                height={56}
+                densities={[1.5, 2]}
+                quality={75}
+                loading="lazy"
+                decoding="async"
+                class="ev-plate__logo"
+              />
+              <span class="ev-plate__name">{b.name}</span>
+            </li>
+          ))
+        }
+      </ul>
     </section>
 
+
+    <div class="ev-cloud" aria-hidden="true"></div>
     {/* ───────── 07 · Call sheet: the sun rises behind the form ───────── */}
     <section id="on-gorusme" class="ev-sec ev-call" aria-labelledby="ev-call-title" data-call>
       <div class="ev-call__frame">
@@ -530,7 +606,7 @@ const year = new Date().getFullYear();
 
         <div class="ev-call__sheet ev-glass">
           <header>
-            <p class="ev-label"><span class="ev-label__n">07</span>Ücretsiz ön görüşme</p>
+            <p class="ev-label"><span class="ev-label__n">VIII</span>Ücretsiz ön görüşme</p>
             <h2 id="ev-call-title" class="ev-h2">Bize bir cümle <em>yazın.</em></h2>
             <p class="ev-call__lede">
               Gerisini telefonda konuşuruz. Fiyat ve kapsam için ilk görüşme ücretsiz.
@@ -662,7 +738,11 @@ const year = new Date().getFullYear();
       U+1E00-1E9F, U+20A0-20AB, U+20AD-20C0, U+2C60-2C7F, U+A720-A7FF;
   }
 
+  /* body is overflow-x:hidden globally, which makes it the scroll container
+     and silently kills position:sticky; clip keeps the no-h-scroll intent. */
   body:has(.ev) {
+    overflow: visible !important;
+    overflow-x: clip !important;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
     background: #e6dfd6;
@@ -682,6 +762,7 @@ const year = new Date().getFullYear();
     --edge: rgba(255, 255, 255, 0.62);
     --shade: 0 30px 60px -34px rgba(96, 62, 30, 0.34);
     --serif: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+    --paper-tex: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .42 0 0 0 0 .33 0 0 0 0 .24 0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>");
     --pad: clamp(1rem, 4.5vw, 3rem);
     --max: 78rem;
     --r: clamp(1.2rem, 2.4vw, 1.8rem);
@@ -730,14 +811,38 @@ const year = new Date().getFullYear();
 
   /* ───── Material: fog glass, lit from the top edge ───── */
   .ev-glass {
-    background: var(--glass);
+    position: relative;
+    background:
+      radial-gradient(120% 80% at 50% -10%, rgba(255, 250, 242, 0.55), transparent 60%),
+      var(--paper-tex),
+      var(--glass);
+    background-size: auto, 220px 220px, auto;
     -webkit-backdrop-filter: blur(22px) saturate(1.15);
     backdrop-filter: blur(22px) saturate(1.15);
     border: 1px solid var(--edge);
     border-radius: var(--r);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.75),
+      inset 0 -1px 0 rgba(120, 90, 60, 0.08),
       var(--shade);
+  }
+  /* Engraved inner frame: a plate within the glass. */
+  .ev-glass::before {
+    content: "";
+    position: absolute;
+    inset: 0.4rem;
+    border: 1px solid rgba(255, 255, 255, 0.38);
+    border-radius: calc(var(--r) - 0.4rem);
+    box-shadow: 0 0 0 1px rgba(120, 90, 60, 0.05);
+    pointer-events: none;
+  }
+  .ev-head__bar.ev-glass::before,
+  .ev-onair.ev-glass::before,
+  .ev-qa.ev-glass::before,
+  .ev-case.ev-glass::before,
+  .ev-panel.ev-glass::before,
+  .ev-person.ev-glass::before {
+    display: none;
   }
 
   /* ───── Voice ───── */
@@ -761,10 +866,10 @@ const year = new Date().getFullYear();
     align-items: center;
     gap: 0.7rem;
     margin: 0 0 1.1rem;
-    font-family: var(--font-utility);
-    font-size: 0.74rem;
-    font-weight: 600;
-    letter-spacing: 0.18em;
+    font-family: var(--serif);
+    font-size: 0.98rem;
+    font-weight: 400;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--mute);
   }
@@ -781,8 +886,16 @@ const year = new Date().getFullYear();
     display: none;
   }
   .ev-label__n {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
     color: var(--sun-text);
-    font-variant-numeric: tabular-nums;
+  }
+  .ev-label__n::before {
+    content: "✦";
+    font-size: 0.8em;
+    color: var(--sun);
+    text-shadow: 0 0 8px rgba(224, 122, 46, 0.8);
   }
   .ev-label__sun {
     width: 0.5rem;
@@ -827,11 +940,14 @@ const year = new Date().getFullYear();
     padding: 0.75rem 1.45rem;
     border: 1px solid transparent;
     border-radius: 999px;
-    background: var(--ink);
+    background:
+      radial-gradient(120% 140% at 50% -40%, rgba(255, 210, 170, 0.18), transparent 60%),
+      var(--ink);
     color: #f6f1ea;
-    font-family: var(--font-utility);
-    font-size: 0.98rem;
-    font-weight: 600;
+    font-family: var(--serif);
+    font-size: 1.14rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
     text-decoration: none;
     cursor: pointer;
     overflow: hidden;
@@ -858,8 +974,8 @@ const year = new Date().getFullYear();
   }
   .ev-btn--sm {
     min-height: 2.6rem;
-    padding: 0.45rem 1.05rem;
-    font-size: 0.9rem;
+    padding: 0.45rem 1.1rem;
+    font-size: 1.02rem;
   }
   .ev-btn--glass {
     background: var(--glass-strong);
@@ -890,9 +1006,9 @@ const year = new Date().getFullYear();
     padding: 0;
     border: 0;
     background: none;
-    font-family: var(--font-utility);
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-family: var(--serif);
+    font-size: 1.12rem;
+    font-weight: 400;
     color: var(--ink);
     text-decoration: underline;
     text-decoration-color: rgba(148, 66, 15, 0.35);
@@ -921,7 +1037,7 @@ const year = new Date().getFullYear();
     margin: 0 auto;
     padding: 0.35rem 0.4rem 0.35rem 1.1rem;
     border-radius: 999px;
-    background: rgba(250, 246, 240, 0.58);
+    background-color: rgba(247, 242, 235, 0.86);
   }
   .ev-head__logo .logo__svg {
     height: 1.8rem;
@@ -932,9 +1048,9 @@ const year = new Date().getFullYear();
     margin: 0 auto;
   }
   .ev-head__nav a {
-    font-family: var(--font-utility);
-    font-size: 0.92rem;
-    font-weight: 500;
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-weight: 400;
     color: var(--ink-2);
     text-decoration: none;
     padding: 0.5rem 0;
@@ -984,8 +1100,11 @@ const year = new Date().getFullYear();
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(90deg, rgba(240, 234, 226, 0.9) 0%, rgba(240, 234, 226, 0.62) 34%, rgba(240, 234, 226, 0) 62%),
-      linear-gradient(0deg, var(--fog) 0%, rgba(230, 223, 214, 0) 26%);
+      linear-gradient(90deg, rgba(240, 234, 226, 0.9) 0%, rgba(240, 234, 226, 0.62) 34%, rgba(240, 234, 226, 0) 62%);
+  }
+  .ev-hero__media {
+    -webkit-mask-image: linear-gradient(180deg, #000 72%, transparent);
+    mask-image: linear-gradient(180deg, #000 72%, transparent);
   }
   .ev-hero__say {
     position: relative;
@@ -1278,10 +1397,10 @@ const year = new Date().getFullYear();
   }
   .ev-case__client {
     margin: 0;
-    font-family: var(--font-utility);
-    font-size: 0.74rem;
-    font-weight: 600;
-    letter-spacing: 0.16em;
+    font-family: var(--serif);
+    font-size: 0.95rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--sun-text);
   }
@@ -1313,8 +1432,8 @@ const year = new Date().getFullYear();
     font-size: 0.95rem;
   }
   .ev-case__facts dt {
-    font-family: var(--font-utility);
-    font-size: 0.74rem;
+    font-family: var(--serif);
+    font-size: 0.9rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--mute);
@@ -1455,8 +1574,9 @@ const year = new Date().getFullYear();
   }
   .ev-person__role {
     margin: 0.2rem 0.3rem 0;
-    font-family: var(--font-utility);
-    font-size: 0.8rem;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1rem;
     color: var(--mute);
   }
   @media (max-width: 860px) {
@@ -1469,15 +1589,17 @@ const year = new Date().getFullYear();
   }
 
   /* ───── Orbit ───── */
+  /* One screen: orbit and panel side by side, the orbit stays pinned while
+     the panel changes, so the sun's move is always in view. */
   .ev-orbit__grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: clamp(2rem, 5vw, 4.5rem);
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: clamp(2rem, 4vw, 3.5rem);
     align-items: center;
   }
   .ev-orbit__stage {
     position: relative;
-    width: min(100%, 32rem);
+    width: min(100%, 27rem);
     aspect-ratio: 1;
     margin: 0 auto;
   }
@@ -1569,12 +1691,12 @@ const year = new Date().getFullYear();
     top: calc(100% + 0.35rem);
     display: inline-flex;
     gap: 0.35rem;
-    padding: 0.1rem 0.6rem;
+    padding: 0.05rem 0.65rem;
     border-radius: 999px;
     background: var(--glass-strong);
-    font-family: var(--font-utility);
-    font-size: 0.78rem;
-    font-weight: 600;
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 400;
     white-space: nowrap;
   }
   .ev-stop__n {
@@ -1627,7 +1749,7 @@ const year = new Date().getFullYear();
     display: block;
     width: 100%;
     height: auto;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 21 / 9;
     object-fit: cover;
     border-radius: calc(var(--r) - 0.5rem);
   }
@@ -1636,10 +1758,10 @@ const year = new Date().getFullYear();
   }
   .ev-panel__n {
     margin: 0;
-    font-family: var(--font-utility);
-    font-size: 0.74rem;
-    font-weight: 600;
-    letter-spacing: 0.14em;
+    font-family: var(--serif);
+    font-size: 0.95rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--mute);
   }
@@ -1660,12 +1782,78 @@ const year = new Date().getFullYear();
   .ev-panel__next {
     margin-top: 0.6rem;
   }
+  /* Phones: the orbit flattens into a horizon line of four stops right
+     above the panel; the sun slides along it. Tap and see, no scrolling. */
   @media (max-width: 860px) {
     .ev-orbit__grid {
       grid-template-columns: 1fr;
+      gap: 0.8rem;
     }
     .ev-orbit__stage {
-      width: min(100%, 21rem);
+      position: sticky;
+      top: 4.6rem;
+      z-index: 3;
+      width: 100%;
+      aspect-ratio: auto;
+      height: 6.6rem;
+      padding: 0 0.4rem;
+      border-radius: 999px;
+      background: rgba(247, 242, 235, 0.9);
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 18px 30px -24px rgba(96, 62, 30, 0.6);
+    }
+    .ev-orbit__ring {
+      display: none;
+    }
+    .ev-orbit__stage::before {
+      content: "";
+      position: absolute;
+      left: 12.5%;
+      right: 12.5%;
+      top: 2.35rem;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 0 6px rgba(255, 190, 130, 0.9);
+    }
+    .ev-orbit__sun {
+      top: 2.35rem;
+      left: calc(12.5% + var(--at, 0) * 25%);
+      width: 5.2rem;
+      translate: -50% -50%;
+      transition: left 700ms var(--ease-out);
+    }
+    .ev-orbit__stops {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .ev-stop {
+      position: relative;
+      top: auto;
+      left: auto;
+      align-content: start;
+      padding-top: 0.55rem;
+      transform: none;
+    }
+    .ev-stop__face {
+      width: 3.6rem;
+    }
+    .ev-stop__label {
+      position: static;
+      margin-top: 0.25rem;
+      padding: 0 0.4rem;
+      font-size: 0.92rem;
+      background: none;
+    }
+    .ev-stop[aria-pressed="true"] .ev-stop__label {
+      background: none;
+      color: var(--sun-text);
+    }
+    .ev-stop[aria-pressed="true"] .ev-stop__n {
+      color: var(--sun-text);
+    }
+    .ev-stop__n {
+      display: none;
     }
   }
 
@@ -1790,25 +1978,157 @@ const year = new Date().getFullYear();
     }
   }
 
-  /* ───── Brands: the shared logo wall, re-lit for the fog ───── */
-  .ev-brands {
-    padding-top: 1rem;
+  /* ───── Brands: an engraved plate, not a logo carousel ───── */
+  .ev-plate {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 11rem), 1fr));
+    margin: 0;
+    padding: clamp(0.6rem, 2vw, 1.4rem);
+    list-style: none;
   }
-  .ev .marquee::before,
-  .ev .marquee::after {
-    display: none;
+  .ev-plate__cell {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: 0.6rem;
+    min-height: 8.5rem;
+    padding: 1.2rem 0.8rem 0.9rem;
+    border-right: 1px solid rgba(114, 103, 92, 0.16);
+    border-bottom: 1px solid rgba(114, 103, 92, 0.16);
   }
-  .ev .logo-chip {
-    background: var(--glass);
-    border-color: var(--edge);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  /* Sun glow that rises behind a brand on hover. */
+  .ev-plate__cell::before {
+    content: "";
+    position: absolute;
+    inset: 10%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 190, 130, 0.55), transparent 65%);
+    opacity: 0;
+    transform: scale(0.7);
+    transition:
+      opacity 500ms var(--ease-out),
+      transform 500ms var(--ease-out);
   }
-  .ev .logo-chip:not(.logo-chip--dark) img {
+  .ev-plate__cell:hover::before {
+    opacity: 1;
+    transform: none;
+  }
+  .ev-plate__no {
+    position: absolute;
+    top: 0.55rem;
+    left: 0.7rem;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--mute);
+  }
+  .ev-plate__logo {
+    position: relative;
+    width: auto;
+    max-width: 82%;
+    height: 2.6rem;
+    object-fit: contain;
+    transition:
+      opacity var(--dur) var(--ease-out),
+      transform 500ms var(--ease-out);
+  }
+  /* Transparent marks → engraved silhouettes with a pressed highlight. */
+  .ev-plate__cell.is-ink .ev-plate__logo {
+    filter: brightness(0) drop-shadow(0 1px 0 rgba(255, 255, 255, 0.9));
+    opacity: 0.62;
+  }
+  /* Marks on their own ground → pressed into the fog. */
+  .ev-plate__cell.is-print .ev-plate__logo {
+    filter: grayscale(1) contrast(1.15);
     mix-blend-mode: multiply;
+    opacity: 0.75;
   }
-  .ev .marquee {
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  .ev-plate__cell:hover .ev-plate__logo {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  .ev-plate__name {
+    font-family: var(--serif);
+    font-size: 0.95rem;
+    color: var(--ink-2);
+    text-align: center;
+    line-height: 1.2;
+  }
+  @media (max-width: 560px) {
+    .ev-plate {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .ev-plate__cell {
+      min-height: 7rem;
+    }
+  }
+
+  /* ───── Cloud passages between sections ─────
+     A mirrored (seamless) strip of the fog frame drifts sideways on two
+     layers; masks fade it in and out so one section dissolves into the
+     next. Time-based drift, never scroll-driven. */
+  .ev-sec,
+  .ev-foot,
+  .ev-hero {
+    z-index: 1;
+  }
+  .ev-cloud {
+    position: relative;
+    z-index: 0;
+    height: clamp(9rem, 20vw, 16rem);
+    margin: calc(clamp(9rem, 20vw, 16rem) / -2) 0;
+    overflow: hidden;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 38%, #000 62%, transparent);
+    mask-image: linear-gradient(180deg, transparent, #000 38%, #000 62%, transparent);
+  }
+  .ev-cloud::before,
+  .ev-cloud::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: calc(100% + 1848px);
+    background: var(--cloud-img, none) 0 50% / auto 100% repeat-x;
+    will-change: transform;
+  }
+  .ev-cloud::before {
+    opacity: 0.9;
+    filter: brightness(1.12) contrast(0.9);
+    animation: ev-drift 140s linear infinite;
+  }
+  .ev-cloud::after {
+    opacity: 0.55;
+    filter: brightness(1.25) blur(2px);
+    background-size: auto 140%;
+    animation: ev-drift 95s linear infinite reverse;
+  }
+  @keyframes ev-drift {
+    to {
+      transform: translateX(-1848px);
+    }
+  }
+
+  /* Motes: a few specks of light drifting in the sky layer. */
+  .ev-motes {
+    position: fixed;
+    inset: -10% 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      radial-gradient(circle, rgba(255, 236, 214, 0.9) 0 1px, transparent 2px),
+      radial-gradient(circle, rgba(255, 214, 176, 0.7) 0 1.5px, transparent 2.5px);
+    background-size: 190px 230px, 330px 270px;
+    background-position: 0 0, 90px 60px;
+    opacity: 0.55;
+    animation: ev-motes 60s linear infinite;
+  }
+  @keyframes ev-motes {
+    to {
+      transform: translateY(-10%);
+    }
   }
 
   /* ───── Call sheet ───── */
@@ -2199,6 +2519,8 @@ const year = new Date().getFullYear();
     const panels = [...root.querySelectorAll<HTMLElement>("[data-panel]")];
     const openStop = (key: string, focusPanel = false) => {
       orbit?.setAttribute("data-at", key);
+      const idx = stopBtns.findIndex((b) => b.dataset.stop === key);
+      orbit?.style.setProperty("--at", String(Math.max(0, idx)));
       stopBtns.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.stop === key)));
       panels.forEach((p) => {
         const on = p.dataset.panel === key;
