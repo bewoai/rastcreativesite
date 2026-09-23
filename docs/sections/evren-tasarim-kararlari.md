@@ -106,3 +106,21 @@ kalmalı, biraz animasyon. Arayüz yönü için kullanıcı "Mitik levha"yı se�
 - **Animasyon.** Hero başlığı kelime kelime sisten doğar; bölümler ekrana girerken
   yumuşakça belirir (JS yoksa ya da hareket azaltıldıysa hiçbir şey gizlenmez); hero
   görüntüsü imlece hafifçe eğilir; marka levhasının üstünden ara ara ışık geçer.
+
+## v6 (2026-09-23) — hata taraması, dolly-in açılış, beliriş animasyonları
+
+- **Hata taraması** (masaüstü/tablet/390/320, JS kapalı, hareket azaltılmış): 320px
+  taşmaları, 44px dokunma alanları, zemini olan logolar (saydamlaştırılmış kopyalar
+  `src/assets/logos/levha/`), daha hızlı beliriş.
+- **Set arayüzü kaldırıldı:** timecode, REC ışığı, PGM/format/süre şeridi (kullanıcı:
+  siteye yakışmıyor). Süre bilgisi kartın bilgi listesinde duruyor.
+- **Dolly-in (ortağın brief'i: "kaydırdıkça ilerleyen kamera").** Hero ~2 ekran boyunca
+  sabitlenir; kaydırma ilerlemesi (`--p`, 0→1) kamerayı güneşe doğru iter, başlık
+  yukarı süzülüp sise dağılır, bulutlar (screen) gelir, güneşin yanından geçerken ışık
+  patlaması olur, sahne göğe erir ve ilk bölüm başlar. Scroll ele geçirilmez; yalnızca
+  ilerleme okunur (rAF ile). Hareket azaltmada hero normal, sabitsiz.
+  Not: `screen` harmanlaması, kapsayıcıda opacity/transform olursa izole olur ve siyah
+  görünür — saydamlık görsellere verilir, hero'nun kendi sis zemini vardır.
+- **Beliriş animasyonları:** bölüm başlıkları, vaka kaydırmalısı, süreç levhaları,
+  ekip kartları, hizmetler, SSS maddeleri, marka levhası hücreleri (satır satır), form
+  föyü ve footer kademeli belirir; fısıltı ve etiket çizgileri ardından çizilir.
