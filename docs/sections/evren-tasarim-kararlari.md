@@ -132,3 +132,13 @@ A) güneşe yaklaşma (p 0→.45), B) kameranın aşağı eğilip bulutların i�
 (p .35→1). B'de sahne kadrajdan yukarı çıkar, üç bulut katmanı farklı hızlarla alttan
 gelip geçer (uzak/yakın/zemin → derinlik), hiçbir şey yerinde solmaz. Sabitlenen
 karenin alt kenarı alçalma bitince göğe erir; "Seçili işler" bulutların altından çıkar.
+
+### v6.2 — tek çekim: yaklaş + alçal + bölüm değişimi aynı anda
+
+Kullanıcı: üç aşama ayrı ayrı hissettiriyor, tek ve pürüzsüz bir hareket olsun.
+Sabitleme (sticky pin) kaldırıldı; sayfa normal kayar ve derinlik katmanları farklı
+hızlarda hareket eder: güneş/sahne büyür ve sayfadan geri kalır (yaklaşma + uzak
+plan), yazılar sayfadan hızlı yükselir (yakın plan), iki bölümün birleşim yerine
+oturan bulut kümesi (üç katman) en hızlı yükselir. Sonuç: yaklaşırken alçalıyoruz ve
+bir sonraki bölüm, güneş hâlâ arkadayken bulutların içinden geliyor. Hero'dan sonraki
+statik bulut geçişi bu küme ile değiştirildi.

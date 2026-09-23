@@ -223,9 +223,11 @@ const year = new Date().getFullYear();
     </header>
 
     {/* ───────── 01 · Hero ───────── */}
-    {/* Dolly-in: the hero is pinned for a while and scrolling pushes the
-        camera into the fog toward the sun, through the clouds, and down into
-        the first section. Native scroll drives it; nothing is hijacked. */}
+    {/* One continuous camera move, no pinning: as the page scrolls, depth
+        layers move at different speeds — the sun grows and trails (push-in,
+        far), the words lift away faster (near), and a cloud bank rises
+        fastest over the seam, so we approach, descend and arrive at the next
+        section in a single shot. Native scroll drives it. */}
     <div class="ev-dolly" data-dolly>
     <section class="ev-hero" aria-labelledby="ev-hero-title">
       <div class="ev-hero__media" aria-hidden="true">
@@ -304,27 +306,19 @@ const year = new Date().getFullYear();
           <span>Ekranda: <b data-onair-title>{onAir[0]?.data.client}</b></span>
         </span>
       </a>
+    </section>
       <div class="ev-dolly__clouds" aria-hidden="true">
         {A.cloudPoster && (
           <>
-            <img class="ev-dolly__cloud ev-dolly__cloud--mid" src={A.cloudPoster} alt="" width="1600" height="502" decoding="async" />
+            <img class="ev-dolly__cloud ev-dolly__cloud--far" src={A.cloudPoster} alt="" width="1600" height="502" decoding="async" />
+            <img class="ev-dolly__cloud ev-dolly__cloud--bank" src={A.cloudPoster} alt="" width="1600" height="502" decoding="async" />
             <img class="ev-dolly__cloud ev-dolly__cloud--near" src={A.cloudPoster} alt="" width="1600" height="502" decoding="async" />
-            <img class="ev-dolly__cloud ev-dolly__cloud--floor" src={A.cloudPoster} alt="" width="1600" height="502" decoding="async" />
           </>
         )}
       </div>
-    </section>
     </div>
 
 
-    <div class:list={["ev-cloud", { "has-video": cloudVideo }]} aria-hidden="true">
-      {cloudVideo && (
-        <video data-ambient muted loop playsinline preload="none" poster={A.cloudPoster ?? undefined}>
-          {A.cloudWebm && <source src={A.cloudWebm} type="video/webm" />}
-          {A.cloudMp4 && <source src={A.cloudMp4} type="video/mp4" />}
-        </video>
-      )}
-    </div>
     {/* ───────── 02 · Works ───────── */}
     <section id="isler" class="ev-sec ev-works" aria-labelledby="ev-works-title">
       <header class="ev-head2 ev-head2--center" data-rise>
@@ -1301,123 +1295,111 @@ const year = new Date().getFullYear();
     }
   }
 
-  /* ───── Dolly-in, then descend ─────
-     --p runs 0 → 1 while the pinned hero scrolls past. Two moves, one shot:
-       A. push-in  (p 0 → .45): the camera closes on the sun, words lift away.
-       B. descend  (p .35 → 1): the camera tilts down — the whole scene rises
-          out of frame, cloud banks come up from below at different speeds
-          (parallax = depth) and pass the lens, and a floor of cloud settles
-          at the bottom; the next section arrives beneath it.
-     --a / --d are the eased progress of each move, computed in CSS. */
+  /* ───── One-shot camera move ─────
+     --p = how far the hero has scrolled away (0 → 1). No pinning: the page
+     scrolls normally and each depth layer moves at its own rate —
+       sun/scene  grows (push-in) and trails the page (far layer),
+       words      lift faster than the page (near layer),
+       cloud bank rises fastest and swells over the hero/section seam —
+     so approach, descent and arrival read as one continuous shot. */
   .ev-dolly {
     --p: 0;
-    --a: clamp(0, var(--p) / 0.45, 1);
-    --d: clamp(0, (var(--p) - 0.35) / 0.65, 1);
     position: relative;
-    height: 230svh;
     margin-top: -4.4rem;
   }
   .ev-dolly > .ev-hero {
-    position: sticky;
-    top: 0;
-    height: 100svh;
-    min-height: 0;
     margin-top: 0;
-    overflow: hidden;
-    background:
-      radial-gradient(60% 50% at 70% 30%, rgba(255, 222, 190, 0.6), transparent 70%),
-      var(--fog);
-    /* As the descent completes, the bottom edge dissolves into the sky so
-       the pinned frame hands over to the next section without a seam. */
-    -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - var(--d) * 30%), transparent);
-    mask-image: linear-gradient(180deg, #000 calc(100% - var(--d) * 30%), transparent);
+    min-height: 100svh;
+    z-index: auto;
   }
-  /* Scene: push toward the sun, then tilt down (the frame rises). */
   .ev-dolly .ev-hero__media {
     transform-origin: 62% 44%;
-    scale: calc(1 + var(--a) * 0.9);
-    translate: 0 calc(var(--d) * var(--d) * -62vh);
+    scale: calc(1 + var(--p) * 0.75);
+    translate: 0 calc(var(--p) * 42vh);
     will-change: scale, translate;
   }
   .ev-dolly .ev-hero__wash {
-    opacity: calc(1 - var(--a));
+    opacity: calc(1 - var(--p) * 1.6);
   }
-  /* Words leave upward, faster than the scene: they are nearer the lens. */
   .ev-dolly .ev-hero__say {
-    translate: 0 calc(var(--a) * -38vh);
-    opacity: clamp(0, 1 - var(--a) * 1.6, 1);
+    translate: 0 calc(var(--p) * -22vh);
+    opacity: clamp(0, 1 - var(--p) * 1.5, 1);
   }
   .ev-dolly .ev-hud,
   .ev-dolly .ev-hero__whisper,
   .ev-dolly .ev-onair {
-    translate: 0 calc(var(--a) * -30vh);
-    opacity: clamp(0, 1 - var(--a) * 2.2, 1);
+    translate: 0 calc(var(--p) * -16vh);
+    opacity: clamp(0, 1 - var(--p) * 2, 1);
   }
   .ev-dolly[data-deep] .ev-onair {
     pointer-events: none;
   }
-  /* No opacity/filter/transform on this box: any of them would isolate the
-     images' `screen` blend and let their black ground show. */
+  /* Cloud bank straddling the seam. Deliberately NOT a stacking context
+     (no z-index/opacity/transform on the box): the images' `screen` blend
+     must reach the hero and sky beneath, or their black ground shows. */
   .ev-dolly__clouds {
     position: absolute;
-    inset: 0;
+    left: 0;
+    right: 0;
+    top: calc(100% - 40svh);
+    height: 80svh;
     pointer-events: none;
   }
   .ev-dolly__cloud {
     position: absolute;
     left: 50%;
-    top: 100%;
     max-width: none;
     height: auto;
     mix-blend-mode: screen;
-    filter: brightness(1.25) saturate(1.05);
+    filter: brightness(1.2) saturate(1.05);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
   }
-  /* Far bank: slow, rises to mid-frame. */
-  .ev-dolly__cloud--mid {
+  .ev-dolly__cloud--far {
+    top: 6%;
     width: 150%;
-    translate: -50% calc(var(--d) * -95vh);
-    opacity: calc(var(--d) * 1.2);
+    translate: -50% calc(var(--p) * -18vh);
+    opacity: calc(0.45 + var(--p) * 0.4);
   }
-  /* Near bank: big and fast — it sweeps past the lens and out the top. */
+  .ev-dolly__cloud--bank {
+    top: 22%;
+    width: 180%;
+    translate: -50% calc(var(--p) * -40vh);
+    scale: calc(1 + var(--p) * 0.35);
+    opacity: calc(0.6 + var(--p) * 0.4);
+  }
   .ev-dolly__cloud--near {
-    width: 260%;
-    translate: -46% calc(var(--d) * -210vh);
-    opacity: clamp(0, min(var(--d) * 2.5, (1 - var(--d)) * 3), 1);
+    top: 48%;
+    width: 240%;
     rotate: 180deg;
-  }
-  /* Floor: the bank we come to rest above; it meets the next section. */
-  .ev-dolly__cloud--floor {
-    width: 170%;
-    translate: -50% calc(clamp(0, (var(--d) - 0.35) / 0.65, 1) * -62%);
-    opacity: clamp(0, (var(--d) - 0.3) * 2, 1);
+    translate: -46% calc(var(--p) * -80vh);
+    scale: calc(1 + var(--p) * 0.6);
+    opacity: clamp(0, var(--p) * 1.6, 0.85);
   }
   @media (max-width: 760px) {
-    .ev-dolly {
-      height: 200svh;
-    }
     .ev-dolly .ev-hero__media {
       transform-origin: 64% 30%;
     }
-    .ev-dolly__cloud--mid {
-      width: 320%;
+    .ev-dolly__clouds {
+      top: calc(100% - 30svh);
+      height: 60svh;
+    }
+    .ev-dolly__cloud--far {
+      width: 340%;
+    }
+    .ev-dolly__cloud--bank {
+      width: 400%;
     }
     .ev-dolly__cloud--near {
       width: 520%;
     }
-    .ev-dolly__cloud--floor {
-      width: 360%;
-    }
   }
   @media (prefers-reduced-motion: reduce) {
-    .ev-dolly {
-      height: auto;
+    .ev-dolly__cloud {
+      translate: -50% 0;
+      scale: 1;
     }
-    .ev-dolly > .ev-hero {
-      position: relative;
-      height: auto;
-      min-height: min(100svh, 58rem);
-    }
-    .ev-dolly__clouds {
+    .ev-dolly__cloud--near {
       display: none;
     }
   }
@@ -2648,9 +2630,8 @@ const year = new Date().getFullYear();
       let ticking = false;
       const update = () => {
         ticking = false;
-        const r = dolly.getBoundingClientRect();
-        const range = r.height - innerHeight;
-        const p = range > 0 ? Math.min(1, Math.max(0, -r.top / range)) : 0;
+        const r = (hero ?? dolly).getBoundingClientRect();
+        const p = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height)));
         dolly.style.setProperty("--p", p.toFixed(4));
         dolly.toggleAttribute("data-deep", p > 0.3);
       };
