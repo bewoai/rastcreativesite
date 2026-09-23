@@ -202,3 +202,27 @@ Taşıma adımı (onay bekliyor): `src/pages/index.astro` → `taslak/eski-anasa
 (noindex, geri dönüş için), `taslak/evren.astro` → `index.astro`; import yolları bir
 seviye yukarı; `title/description/noindex` kaldırılır (varsayılan başlık), taslak
 URL'si ana sayfaya yönlenir.
+
+### v9 — sıra, mobil menü, performans (canlıya alınmıyor, geliştirme sürüyor)
+
+- **Bölüm sırası:** güven sinyali öne alındı → I hero · II işler · III markalar ·
+  IV ekip · V süreç · VI hizmetler · VII SSS · VIII stüdyo ve bölge · IX günlük ·
+  X ön görüşme. Bölge (SEO) kullanıcı akışında sona yakın, SSS'den sonra.
+- **Mobil menü (≤900px):** çubuğun kardeşi olan cam panel (iç içe backdrop-filter
+  sayfayı bulanıklaştıramıyor), romen numaralı bölüm linkleri + ön görüşme,
+  WhatsApp, telefon. Açılınca odak ilk linke, Esc/dış tık/link ile kapanır, odak
+  butona döner. 380px altında WhatsApp ikonu çubuktan menüye geçer. Bölümlere
+  `scroll-margin-top`: başlık, yüzen çubuğun altında kalmıyor.
+- **Performans (build + preview, mobil 4× CPU + yavaş 4G):**
+  - LCP 2,34 sn → **0,94 sn.** Video `poster`'ı ekrana göre değişemediği için
+    telefon geniş kareyi indiriyordu. Durağan kare artık duyarlı `<picture>`,
+    ekrana göre önden yükleniyor (`preloadImages`); video oynayınca üstüne eriyor.
+  - CLS 0,027 → **0,007.** Fraunces (latin + latin-ext + italik) önden yükleniyor
+    (`preloadFonts`), ölçüsü eşlenmiş "Fraunces Fallback" (Times/Liberation/Tinos,
+    size-adjust 111,9%), H1 satırları sabit (`nowrap`, 15vw üst sınır), mobil hero
+    üstten hizalı (font değişince başlık oynamıyor).
+  - Sayfa ağırlığı ~500 KB (eski ana sayfa ~1430 KB).
+  - `BaseLayout`'a geriye uyumlu iki isteğe bağlı prop eklendi: `preloadFonts`,
+    `preloadImages`; diğer sayfalar etkilenmez.
+- **Monitör:** YouTube kapağı yüklenmezse o kare atlanıyor; hiçbiri yüklenmezse
+  monitör kırık görsel yerine tamamen gizleniyor.

@@ -221,6 +221,15 @@ const year = new Date().getFullYear();
   noindex
   bare
   jsonLd={pageJsonLd}
+  preloadFonts={[
+    "/fonts/fraunces-latin-wght-normal.woff2",
+    "/fonts/fraunces-latin-ext-wght-normal.woff2",
+    "/fonts/fraunces-latin-wght-italic.woff2",
+  ]}
+  preloadImages={[
+    ...(A.heroMPoster ? [{ href: A.heroMPoster, media: "(max-width: 700px)" }] : []),
+    ...(A.heroPoster ? [{ href: A.heroPoster, media: A.heroMPoster ? "(min-width: 701px)" : undefined }] : []),
+  ]}
 >
   <div class="ev" data-ev style={A.cloud ? `--cloud-img:url(${A.cloud})` : undefined}>
     {/* The world: fog behind everything, one fixed layer. */}
@@ -246,8 +255,36 @@ const year = new Date().getFullYear();
           <a class="ev-btn ev-btn--sm ev-head__cta" href="#on-gorusme" data-cta-location="evren_header">
             <span class="ev-head__long">Ücretsiz ön görüşme</span><span class="ev-head__short">Ön görüşme</span>
           </a>
+          <button type="button" class="ev-round ev-head__menu" aria-expanded="false" aria-controls="ev-menu" data-menu-btn>
+            <span class="ev-sr" data-menu-label>Menüyü aç</span>
+            <span class="ev-burger" aria-hidden="true"><span></span><span></span></span>
+          </button>
         </div>
       </div>
+      {/* Phone / tablet menu: a sibling of the bar (not inside it) so its own
+          glass can blur the page — nested backdrop-filters only see the bar. */}
+      <nav id="ev-menu" class="ev-menu ev-glass" aria-label="Menü" hidden data-menu>
+        <ol class="ev-menu__list">
+          {[
+            ["#isler", "Seçili işler", 2],
+            ["#markalar", "Markalar", 3],
+            ["#ekip", "Ekip", 4],
+            ["#surec", "Süreç", 5],
+            ["#hizmetler", "Hizmetler", 6],
+            ["#sss", "Sık sorulanlar", 7],
+            ["#gunluk", "Günlük", 9],
+          ].map(([href, label, n]) => (
+            <li>
+              <a href={href as string}><span class="ev-menu__n" aria-hidden="true">{roman(n as number)}</span>{label}</a>
+            </li>
+          ))}
+        </ol>
+        <div class="ev-menu__foot">
+          <a class="ev-btn" href="#on-gorusme" data-cta-location="evren_menu">Ücretsiz ön görüşme <span aria-hidden="true">→</span></a>
+          <a class="ev-btn ev-btn--glass" href={whatsappHref} data-cta-location="evren_menu_wa"><Icon name="whatsapp" size={18} /> WhatsApp</a>
+          <a class="ev-link" href={`tel:${CONTACT.phoneIntl}`}>{CONTACT.phone}</a>
+        </div>
+      </nav>
     </header>
 
     {/* ───────── 01 · Hero ───────── */}
@@ -259,21 +296,25 @@ const year = new Date().getFullYear();
     <div class="ev-dolly" data-dolly>
     <section class="ev-hero" aria-labelledby="ev-hero-title">
       <div class="ev-hero__media" aria-hidden="true">
+        {/* The still is a responsive <picture> (a video poster can't switch
+            per screen, so phones were downloading the wide frame); it is the
+            LCP and is preloaded. The video fades in over it once it plays. */}
         {
-          heroVideo ? (
-            <video class="ev-hero__video" data-ambient muted loop playsinline preload="metadata" poster={A.heroPoster ?? undefined}>
+          A.heroPoster && (
+            <picture>
+              {A.heroMPoster && <source media="(max-width: 700px)" srcset={A.heroMPoster} width="900" height="1350" />}
+              <img class="ev-hero__video ev-hero__still" src={A.heroPoster} alt="" width="1672" height="941" fetchpriority="high" />
+            </picture>
+          )
+        }
+        {
+          heroVideo && (
+            <video class="ev-hero__video ev-hero__motion" data-ambient muted loop playsinline preload="metadata">
               {A.heroMWebm && <source src={A.heroMWebm} type="video/webm" media="(max-width: 700px)" />}
               {A.heroMMp4 && <source src={A.heroMMp4} type="video/mp4" media="(max-width: 700px)" />}
               {A.heroWebm && <source src={A.heroWebm} type="video/webm" />}
               {A.heroMp4 && <source src={A.heroMp4} type="video/mp4" />}
             </video>
-          ) : (
-            A.heroPoster && (
-              <picture>
-                {A.heroMPoster && <source media="(max-width: 700px)" srcset={A.heroMPoster} width="900" height="1350" />}
-                <img class="ev-hero__video" src={A.heroPoster} alt="" width="1672" height="941" fetchpriority="high" />
-              </picture>
-            )
           )
         }
         <span class="ev-hero__wash"></span>
@@ -283,9 +324,9 @@ const year = new Date().getFullYear();
       <div class="ev-hero__say">
         <h1 id="ev-hero-title" class="ev-hero__title">
           <span class="ev-label ev-hero__kicker"><span class="ev-label__sun"></span>Sakarya video prodüksiyon</span>
-          <span class="ev-w" style="--d:0">İyi</span> <span class="ev-w" style="--d:1">iş</span>
-          <span class="ev-w" style="--d:2">kendini</span>
-          <em class="ev-w" style="--d:3">izletir.</em>
+          {/* Fixed lines: the break never moves while fonts swap in (CLS). */}
+          <span class="ev-hero__line"><span class="ev-w" style="--d:0">İyi</span> <span class="ev-w" style="--d:1">iş</span> <span class="ev-w" style="--d:2">kendini</span></span>
+          <span class="ev-hero__line"><em class="ev-w" style="--d:3">izletir.</em></span>
         </h1>
         <p class="ev-hero__lede">
           Reklam filmi, tanıtım filmi ve sosyal medya videolarını fikirden teslime
@@ -446,10 +487,48 @@ const year = new Date().getFullYear();
         </video>
       )}
     </div>
-    {/* ───────── 03 · The people you talk to ───────── */}
+    {/* ───────── 03 · Brands: trust right after the work ───────── */}
+    <section id="markalar" class="ev-sec ev-brands" aria-labelledby="ev-brands-title">
+      <header class="ev-head2 ev-head2--center" data-rise>
+        <p class="ev-label"><span class="ev-label__n">III</span>Markalar</p>
+        <h2 id="ev-brands-title" class="ev-h2">Işığımızın düştüğü <em>markalar.</em></h2>
+        <p class="ev-whisper ev-whisper--center" aria-hidden="true">sanayiden sağlığa</p>
+      </header>
+      <ul class="ev-plate ev-glass">
+        {
+          brands.map((b, i) => (
+            <li class:list={["ev-plate__cell", `is-${b.mode}`]} data-rise style={`--d:${i % 6}`}>
+              <span class="ev-plate__no" aria-hidden="true">{roman(i + 1)}</span>
+              <Image
+                src={b.src}
+                alt={`${b.name} logosu`}
+                height={56}
+                densities={[1.5, 2]}
+                quality={75}
+                loading="lazy"
+                decoding="async"
+                class="ev-plate__logo"
+              />
+              <span class="ev-plate__name">{b.name}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+
+    <div class:list={["ev-cloud", { "has-video": cloudVideo }]} aria-hidden="true">
+      {cloudVideo && (
+        <video data-ambient muted loop playsinline preload="none" poster={A.cloudPoster ?? undefined}>
+          {A.cloudWebm && <source src={A.cloudWebm} type="video/webm" />}
+          {A.cloudMp4 && <source src={A.cloudMp4} type="video/mp4" />}
+        </video>
+      )}
+    </div>
+    {/* ───────── 04 · The people you talk to ───────── */}
     <section id="ekip" class="ev-sec ev-team" aria-labelledby="ev-team-title">
       <div class="ev-team__say" data-rise>
-        <p class="ev-label"><span class="ev-label__n">III</span>Muhatabınız</p>
+        <p class="ev-label"><span class="ev-label__n">IV</span>Muhatabınız</p>
         <h2 id="ev-team-title" class="ev-h2">Telefonu <em>çekimi yönetenler</em> açar.</h2>
         <p class="ev-team__lede">
           Projenizi bir satış ekibiyle değil, doğrudan şirketin kurucu ortaklarıyla
@@ -487,10 +566,10 @@ const year = new Date().getFullYear();
         </video>
       )}
     </div>
-    {/* ───────── 04 · Process: four stops around the sun ───────── */}
+    {/* ───────── 05 · Process: four stops around the sun ───────── */}
     <section id="surec" class="ev-sec ev-path" aria-labelledby="ev-path-title">
       <header class="ev-head2" data-rise>
-        <p class="ev-label"><span class="ev-label__n">IV</span>Süreç</p>
+        <p class="ev-label"><span class="ev-label__n">V</span>Süreç</p>
         <h2 id="ev-path-title" class="ev-h2">Fikirden teslime <em>dört durak.</em></h2>
       </header>
 
@@ -538,10 +617,10 @@ const year = new Date().getFullYear();
         </video>
       )}
     </div>
-    {/* ───────── 05 · Services ───────── */}
+    {/* ───────── 06 · Services ───────── */}
     <section id="hizmetler" class="ev-sec ev-svc" aria-labelledby="ev-svc-title">
       <header class="ev-head2" data-rise>
-        <p class="ev-label"><span class="ev-label__n">V</span>Hizmetler</p>
+        <p class="ev-label"><span class="ev-label__n">VI</span>Hizmetler</p>
         <h2 id="ev-svc-title" class="ev-h2">Üç masa, <em>tek ekip.</em></h2>
       </header>
       <ul class="ev-svc__list">
@@ -574,12 +653,51 @@ const year = new Date().getFullYear();
         </video>
       )}
     </div>
-    {/* ───────── 06 · Studio & region: what we are, where we shoot ─────────
+    {/* ───────── 07 · FAQ: the questions clients actually ask ───────── */}
+    <section id="sss" class="ev-sec ev-faq" aria-labelledby="ev-faq-title">
+      <header class="ev-head2" data-rise>
+        <p class="ev-label"><span class="ev-label__n">VII</span>Sık sorulanlar</p>
+        <h2 id="ev-faq-title" class="ev-h2">Aklınızdaki <em>sorular.</em></h2>
+        <p class="ev-whisper" aria-hidden="true">fiyat da burada</p>
+      </header>
+      <div class="ev-faq__list">
+        {
+          faqs.map(({ q, Content }, i) => (
+            <details class="ev-qa ev-glass" open={i === 0} data-rise style={`--d:${i}`}>
+              <summary>
+                <span>{q}</span>
+                <span class="ev-qa__ic" aria-hidden="true" />
+              </summary>
+              <div class="ev-qa__a">
+                <Content />
+              </div>
+            </details>
+          ))
+        }
+      </div>
+      <div class="ev-faq__ask">
+        <p>Sorunuz burada yok mu? Bir mesajla sorun, aynı ekip yanıtlar.</p>
+        <a class="ev-btn ev-btn--glass ev-btn--sm" href={whatsappHref} data-cta-location="evren_faq_wa">
+          <Icon name="whatsapp" size={17} /> WhatsApp'tan sorun
+        </a>
+      </div>
+    </section>
+
+
+    <div class:list={["ev-cloud", { "has-video": cloudVideo }]} aria-hidden="true">
+      {cloudVideo && (
+        <video data-ambient muted loop playsinline preload="none" poster={A.cloudPoster ?? undefined}>
+          {A.cloudWebm && <source src={A.cloudWebm} type="video/webm" />}
+          {A.cloudMp4 && <source src={A.cloudMp4} type="video/mp4" />}
+        </video>
+      )}
+    </div>
+    {/* ───────── 08 · Studio & region: what we are, where we shoot ─────────
         Answer-first copy for new visitors and search/AI engines, plus the
         regional hub linking every priority service to its location pages. */}
     <section id="bolge" class="ev-sec ev-area" aria-labelledby="ev-area-title">
       <div class="ev-area__intro" data-rise>
-        <p class="ev-label"><span class="ev-label__n">VI</span>Stüdyo ve bölge</p>
+        <p class="ev-label"><span class="ev-label__n">VIII</span>Stüdyo ve bölge</p>
         <h2 id="ev-area-title" class="ev-h2">Serdivan'dan <em>sahaya.</em></h2>
         <p class="ev-area__lead">
           Rast Creative Studio, <strong>Serdivan/Sakarya merkezli bir video prodüksiyon ve
@@ -647,83 +765,6 @@ const year = new Date().getFullYear();
           ))
         }
       </div>
-    </section>
-
-
-    <div class:list={["ev-cloud", { "has-video": cloudVideo }]} aria-hidden="true">
-      {cloudVideo && (
-        <video data-ambient muted loop playsinline preload="none" poster={A.cloudPoster ?? undefined}>
-          {A.cloudWebm && <source src={A.cloudWebm} type="video/webm" />}
-          {A.cloudMp4 && <source src={A.cloudMp4} type="video/mp4" />}
-        </video>
-      )}
-    </div>
-    {/* ───────── 07 · FAQ: the questions clients actually ask ───────── */}
-    <section id="sss" class="ev-sec ev-faq" aria-labelledby="ev-faq-title">
-      <header class="ev-head2" data-rise>
-        <p class="ev-label"><span class="ev-label__n">VII</span>Sık sorulanlar</p>
-        <h2 id="ev-faq-title" class="ev-h2">Aklınızdaki <em>sorular.</em></h2>
-        <p class="ev-whisper" aria-hidden="true">fiyat da burada</p>
-      </header>
-      <div class="ev-faq__list">
-        {
-          faqs.map(({ q, Content }, i) => (
-            <details class="ev-qa ev-glass" open={i === 0} data-rise style={`--d:${i}`}>
-              <summary>
-                <span>{q}</span>
-                <span class="ev-qa__ic" aria-hidden="true" />
-              </summary>
-              <div class="ev-qa__a">
-                <Content />
-              </div>
-            </details>
-          ))
-        }
-      </div>
-      <div class="ev-faq__ask">
-        <p>Sorunuz burada yok mu? Bir mesajla sorun, aynı ekip yanıtlar.</p>
-        <a class="ev-btn ev-btn--glass ev-btn--sm" href={whatsappHref} data-cta-location="evren_faq_wa">
-          <Icon name="whatsapp" size={17} /> WhatsApp'tan sorun
-        </a>
-      </div>
-    </section>
-
-
-    <div class:list={["ev-cloud", { "has-video": cloudVideo }]} aria-hidden="true">
-      {cloudVideo && (
-        <video data-ambient muted loop playsinline preload="none" poster={A.cloudPoster ?? undefined}>
-          {A.cloudWebm && <source src={A.cloudWebm} type="video/webm" />}
-          {A.cloudMp4 && <source src={A.cloudMp4} type="video/mp4" />}
-        </video>
-      )}
-    </div>
-    {/* ───────── Brands ───────── */}
-    <section class="ev-sec ev-brands" aria-labelledby="ev-brands-title">
-      <header class="ev-head2 ev-head2--center" data-rise>
-        <p class="ev-label"><span class="ev-label__n">VIII</span>Markalar</p>
-        <h2 id="ev-brands-title" class="ev-h2">Işığımızın düştüğü <em>markalar.</em></h2>
-        <p class="ev-whisper ev-whisper--center" aria-hidden="true">sanayiden sağlığa</p>
-      </header>
-      <ul class="ev-plate ev-glass">
-        {
-          brands.map((b, i) => (
-            <li class:list={["ev-plate__cell", `is-${b.mode}`]} data-rise style={`--d:${i % 6}`}>
-              <span class="ev-plate__no" aria-hidden="true">{roman(i + 1)}</span>
-              <Image
-                src={b.src}
-                alt={`${b.name} logosu`}
-                height={56}
-                densities={[1.5, 2]}
-                quality={75}
-                loading="lazy"
-                decoding="async"
-                class="ev-plate__logo"
-              />
-              <span class="ev-plate__name">{b.name}</span>
-            </li>
-          ))
-        }
-      </ul>
     </section>
 
 
@@ -957,6 +998,18 @@ const year = new Date().getFullYear();
       U+1E00-1E9F, U+20A0-20AB, U+20AD-20C0, U+2C60-2C7F, U+A720-A7FF;
   }
 
+  /* Metric-matched stand-in while Fraunces loads, so the swap doesn't
+     reflow the headlines (CLS). Measured: Fraunces sets ~11.9% wider than
+     Times/Liberation/Tinos; ascent 0.98em, descent 0.26em. */
+  @font-face {
+    font-family: "Fraunces Fallback";
+    src: local("Times New Roman"), local("TimesNewRomanPSMT"), local("Liberation Serif"), local("Tinos");
+    size-adjust: 111.9%;
+    ascent-override: 87.6%;
+    descent-override: 23.2%;
+    line-gap-override: 0%;
+  }
+
   /* body is overflow-x:hidden globally, which makes it the scroll container
      and silently kills position:sticky; clip keeps the no-h-scroll intent. */
   body:has(.ev) {
@@ -980,7 +1033,7 @@ const year = new Date().getFullYear();
     --glass-strong: rgba(250, 246, 240, 0.74);
     --edge: rgba(255, 255, 255, 0.62);
     --shade: 0 30px 60px -34px rgba(96, 62, 30, 0.34);
-    --serif: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
+    --serif: "Fraunces Variable", "Fraunces Fallback", Georgia, serif;
     --paper-tex: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .42 0 0 0 0 .33 0 0 0 0 .24 0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>");
     --pad: clamp(1rem, 4.5vw, 3rem);
     --max: 78rem;
@@ -1247,6 +1300,10 @@ const year = new Date().getFullYear();
   }
 
   /* ───── Header ───── */
+  /* Anchored sections land just under the floating header. */
+  .ev .ev-sec[id] {
+    scroll-margin-top: 4.5rem;
+  }
   .ev-head {
     position: sticky;
     top: 0.75rem;
@@ -1263,6 +1320,86 @@ const year = new Date().getFullYear();
     padding: 0.35rem 0.4rem 0.35rem 1.1rem;
     border-radius: 999px;
     background-color: rgba(247, 242, 235, 0.86);
+  }
+  .ev-head__menu {
+    display: none;
+    cursor: pointer;
+    border: 0;
+    background: transparent;
+  }
+  .ev-burger {
+    display: grid;
+    gap: 5px;
+    width: 1.15rem;
+  }
+  .ev-burger span {
+    display: block;
+    height: 1.5px;
+    border-radius: 2px;
+    background: var(--ink);
+    transition: transform var(--dur) var(--ease-out);
+  }
+  .ev-head__menu[aria-expanded="true"] .ev-burger span:first-child {
+    transform: translateY(3.25px) rotate(45deg);
+  }
+  .ev-head__menu[aria-expanded="true"] .ev-burger span:last-child {
+    transform: translateY(-3.25px) rotate(-45deg);
+  }
+  .ev-menu {
+    max-width: var(--max);
+    margin: 0.5rem auto 0;
+    padding: 0.6rem 1rem 1.1rem;
+    max-height: calc(100svh - 6rem);
+    overflow-y: auto;
+    background-color: rgba(247, 242, 235, 0.92);
+  }
+  .ev-menu[hidden] {
+    display: none;
+  }
+  .ev-menu__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ev-menu__list a {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    min-height: 3.1rem;
+    padding: 0.55rem 0.3rem;
+    border-bottom: 1px solid rgba(114, 103, 92, 0.18);
+    font-family: var(--serif);
+    font-weight: 560;
+    font-size: 1.45rem;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .ev-menu__list a[aria-current] {
+    color: var(--sun-text);
+  }
+  .ev-menu__n {
+    width: 2.2rem;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--sun-text);
+  }
+  .ev-menu__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 1rem;
+    margin-top: 1.1rem;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .ev-menu:not([hidden]) {
+      animation: ev-menu-in 380ms var(--ease-out);
+    }
+    @keyframes ev-menu-in {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+    }
   }
   .ev-head__logo .logo__svg {
     height: 1.8rem;
@@ -1312,7 +1449,15 @@ const year = new Date().getFullYear();
     align-items: center;
     gap: 0.3rem;
   }
+  @media (min-width: 901px) {
+    .ev-menu {
+      display: none !important;
+    }
+  }
   @media (max-width: 900px) {
+    .ev-head__menu {
+      display: grid;
+    }
     .ev-head__nav {
       display: none;
     }
@@ -1345,6 +1490,18 @@ const year = new Date().getFullYear();
     object-fit: cover;
     object-position: 62% 50%;
   }
+  .ev-hero__media picture {
+    display: contents;
+  }
+  .ev-hero__motion {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 900ms var(--ease-out);
+  }
+  .ev-hero__motion.is-playing {
+    opacity: 1;
+  }
   .ev-hero__wash {
     position: absolute;
     inset: 0;
@@ -1372,13 +1529,18 @@ const year = new Date().getFullYear();
     gap: 1.1rem;
   }
   .ev-hero__title {
-    max-width: 10.5ch;
+    max-width: none;
     margin: 0;
     font-family: var(--serif);
     font-weight: 620;
-    font-size: clamp(3.4rem, 7.6vw + 0.4rem, 7.6rem);
+    /* 15vw cap: "İyi iş kendini" (~5.7em) always fits on one line. */
+    font-size: min(clamp(3.4rem, 7.6vw + 0.4rem, 7.6rem), 15vw);
     line-height: 0.92;
     letter-spacing: -0.035em;
+  }
+  .ev-hero__line {
+    display: block;
+    white-space: nowrap;
   }
   .ev-hero__title em {
     color: var(--sun-text);
@@ -1438,6 +1600,10 @@ const year = new Date().getFullYear();
     opacity: 0;
     transition: opacity 900ms var(--ease-out);
   }
+  .ev-onair[hidden],
+  .ev-onair__screen img[data-broken] {
+    display: none;
+  }
   .ev-onair__screen img.is-on {
     opacity: 1;
   }
@@ -1480,10 +1646,12 @@ const year = new Date().getFullYear();
       left: var(--pad);
       font-size: 1.1rem;
     }
+    /* Anchored from the top (not the bottom): if a font swap changes the
+       copy's height, only what sits below the title moves, never the title. */
     .ev-hero {
-      justify-content: flex-end;
+      justify-content: flex-start;
       min-height: 100svh;
-      padding: 14rem var(--pad) 3.5rem;
+      padding: max(11rem, calc(100svh - 32rem)) var(--pad) 3.5rem;
     }
     /* Taller than the hero and lifted, so the sun sits in the open sky
        above the words instead of behind them. */
@@ -3181,6 +3349,12 @@ const year = new Date().getFullYear();
       padding-left: 0.8rem;
     }
   }
+  /* The narrowest phones: WhatsApp moves into the menu. */
+  @media (max-width: 380px) {
+    .ev-head__act > .ev-round:not(.ev-head__menu) {
+      display: none;
+    }
+  }
 
   /* ───── Reduced motion: every scene rests ───── */
   @media (prefers-reduced-motion: reduce) {
@@ -3212,14 +3386,31 @@ const year = new Date().getFullYear();
     const onAirTitle = root.querySelector<HTMLElement>("[data-onair-title]");
     let cycle = 0;
     let frame = 0;
+    const live = () => frames.filter((f) => !f.hasAttribute("data-broken"));
     const nextFrame = () => {
-      if (frames.length < 2) return;
-      frames[frame].classList.remove("is-on");
-      frame = (frame + 1) % frames.length;
-      const img = frames[frame];
+      const ok = live();
+      if (!ok.length) return;
+      const cur = frames[frame];
+      const img = ok[(ok.indexOf(cur) + 1) % ok.length] ?? ok[0];
+      if (img === cur) return;
+      cur.classList.remove("is-on");
+      frame = frames.indexOf(img);
       img.classList.add("is-on");
       if (onAirTitle) onAirTitle.textContent = img.dataset.title ?? "";
     };
+    // A cover that fails to load (YouTube down, blocked) is skipped; if none
+    // load, the monitor steps aside instead of showing a broken image.
+    const onAir = root.querySelector<HTMLElement>("[data-onair]");
+    frames.forEach((f) => {
+      const broke = () => {
+        f.setAttribute("data-broken", "");
+        if (!live().length) {
+          if (onAir) onAir.hidden = true;
+        } else if (f.classList.contains("is-on")) nextFrame();
+      };
+      if (f.complete && f.naturalWidth === 0 && f.currentSrc) broke();
+      else f.addEventListener("error", broke, { once: true });
+    });
     if (hero && !reduce) {
       new IntersectionObserver(([e]) => {
         if (e.isIntersecting) {
@@ -3264,6 +3455,11 @@ const year = new Date().getFullYear();
       );
       root.querySelectorAll<HTMLVideoElement>("video[data-ambient]").forEach((v) => io.observe(v));
     }
+    root.querySelector<HTMLVideoElement>(".ev-hero__motion")?.addEventListener(
+      "playing",
+      (e) => (e.target as HTMLElement).classList.add("is-playing"),
+      { once: true },
+    );
 
     /* ── Button light follows the pointer ── */
     root.addEventListener("pointermove", (e) => {
@@ -3273,8 +3469,31 @@ const year = new Date().getFullYear();
       btn.style.setProperty("--gx", `${((e.clientX - r.left) / r.width) * 100}%`);
     });
 
+    /* ── Phone menu ── */
+    const menu = root.querySelector<HTMLElement>("[data-menu]");
+    const menuBtn = root.querySelector<HTMLButtonElement>("[data-menu-btn]");
+    const menuLabel = root.querySelector<HTMLElement>("[data-menu-label]");
+    const setMenu = (open: boolean, focusBack = false) => {
+      if (!menu || !menuBtn) return;
+      menu.hidden = !open;
+      menuBtn.setAttribute("aria-expanded", String(open));
+      if (menuLabel) menuLabel.textContent = open ? "Menüyü kapat" : "Menüyü aç";
+      if (open) menu.querySelector<HTMLElement>("a")?.focus();
+      else if (focusBack) menuBtn.focus();
+    };
+    menuBtn?.addEventListener("click", () => setMenu(menu?.hidden ?? false));
+    menu?.addEventListener("click", (e) => {
+      if ((e.target as Element).closest("a")) setMenu(false);
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && menu && !menu.hidden) setMenu(false, true);
+    });
+    document.addEventListener("click", (e) => {
+      if (menu && !menu.hidden && !(e.target as Element).closest(".ev-head")) setMenu(false);
+    });
+
     /* ── Header: mark the section in view ── */
-    const navLinks = [...root.querySelectorAll<HTMLAnchorElement>(".ev-head__nav a")];
+    const navLinks = [...root.querySelectorAll<HTMLAnchorElement>(".ev-head__nav a, .ev-menu__list a")];
     const navIo = new IntersectionObserver(
       (entries) =>
         entries.forEach((e) => {
