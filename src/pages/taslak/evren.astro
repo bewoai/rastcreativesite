@@ -1,26 +1,31 @@
 ---
 /**
- * /taslak/evren/ — "Evren" homepage prototype (v2 of the Işık Masası draft).
+ * /taslak/evren/ — "Evren" homepage prototype, v3 ("Işık & Sis").
  *
- * A misty, near-monochrome world around one character: the Rast sun, a glowing
- * sphere. It appears in three scenes — the hero, the centre of the process
- * orbit, and the dawn behind the call-sheet form. Everything else is quiet.
+ * v2 had a world (fog, the Rast sun) and a UI (white cards, black pills,
+ * uppercase chips, handwritten notes) that came from two different places.
+ * v3 builds the UI out of the world's own materials:
  *
- * Kept from v1 (user feedback): the monitor (now inside the case cards), the
- * handwritten notes, the one-sentence call sheet. Dropped: the NLE timeline
- * (not usable) → replaced by four orbit stops.
+ *   - Surface  → frosted fog glass, lit from inside, never opaque white.
+ *   - Voice    → one serif (Instrument Serif) for titles and for the
+ *                "whispers" that replace the handwritten notes.
+ *   - Light    → the sun is the only accent; highlights glow, they are not
+ *                orange outlines.
+ *   - Ground   → the fog lives behind the whole page, not only the hero.
  *
- * Media slots: drop files into public/evren/ and they are picked up at build
- * (see ASSETS below); until then the sphere is drawn in CSS.
- * Prompts for those files: docs/sections/evren-gorsel-uretim.md
+ * Decisions and the review behind them: docs/sections/evren-tasarim-kararlari.md
+ * Media: public/evren/* (prompts in docs/sections/evren-gorsel-uretim.md).
  */
 import fs from "node:fs";
 import path from "node:path";
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
+import { Picture } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Logo from "../../components/Logo.astro";
 import LogoWall from "../../components/LogoWall.astro";
 import Icon from "../../components/Icon.astro";
+import beratPhoto from "../../assets/photos/berat-degirmenci.png";
+import muhammedPhoto from "../../assets/photos/muhammed-al-sheikhly.png";
 import {
   CONTACT,
   NAV,
@@ -35,32 +40,27 @@ import { groupByBrand } from "../../lib/brands";
 /* ---- Media slots (public/evren/*) ---------------------------------- */
 const slot = (file: string) =>
   fs.existsSync(path.join(process.cwd(), "public", "evren", file)) ? `/evren/${file}` : null;
-const ASSETS = {
+const A = {
   heroWebm: slot("hero.webm"),
   heroMp4: slot("hero.mp4"),
   heroPoster: slot("hero.webp"),
-  heroMobileWebm: slot("hero-dikey.webm"),
-  heroMobileMp4: slot("hero-dikey.mp4"),
-  heroMobilePoster: slot("hero-dikey.webp"),
+  heroMWebm: slot("hero-dikey.webm"),
+  heroMMp4: slot("hero-dikey.mp4"),
+  heroMPoster: slot("hero-dikey.webp"),
   dawnWebm: slot("safak.webm"),
   dawnMp4: slot("safak.mp4"),
   dawnPoster: slot("safak.webp"),
   fog: slot("sis.webp"),
-  stopsWide: {
-    fikir: slot("durak-fikir-genis.webp"),
-    set: slot("durak-set-genis.webp"),
-    kurgu: slot("durak-kurgu-genis.webp"),
-    teslim: slot("durak-teslim-genis.webp"),
-  } as Record<string, string | null>,
+  sun: slot("kure.webp"),
   stops: {
-    fikir: slot("durak-fikir.webp"),
-    set: slot("durak-set.webp"),
-    kurgu: slot("durak-kurgu.webp"),
-    teslim: slot("durak-teslim.webp"),
-  } as Record<string, string | null>,
+    fikir: [slot("durak-fikir.webp"), slot("durak-fikir-genis.webp")],
+    set: [slot("durak-set.webp"), slot("durak-set-genis.webp")],
+    kurgu: [slot("durak-kurgu.webp"), slot("durak-kurgu-genis.webp")],
+    teslim: [slot("durak-teslim.webp"), slot("durak-teslim-genis.webp")],
+  } as Record<string, (string | null)[]>,
 };
-const heroHasVideo = Boolean(ASSETS.heroWebm || ASSETS.heroMp4);
-const dawnHasVideo = Boolean(ASSETS.dawnWebm || ASSETS.dawnMp4);
+const heroVideo = Boolean(A.heroWebm || A.heroMp4);
+const dawnVideo = Boolean(A.dawnWebm || A.dawnMp4);
 
 /* ---- Content -------------------------------------------------------- */
 const byOrder = (a: { data: { order: number } }, b: { data: { order: number } }) =>
@@ -70,9 +70,24 @@ const projects = (await getCollection("projects"))
   .sort(byOrder);
 const brandCount = groupByBrand(projects).length;
 const cases = projects.filter((p) => p.data.featured);
+// Real work on the hero monitor, so the first screen reads "video studio",
+// not "AI startup": horizontal featured pieces only.
+const onAir = cases.filter((p) => !p.data.vertical).slice(0, 5);
 
 const services = (await getCollection("services")).sort(byOrder);
-const serviceNotes = ["sete çıkıyoruz", "strateji masası", "kurgu odası"];
+const serviceWhispers = ["sete çıkıyoruz", "strateji masası", "kurgu odası"];
+
+const faqs = await Promise.all(
+  (await getCollection("faq")).sort(byOrder).map(async (e) => ({
+    q: e.data.question,
+    Content: (await render(e)).Content,
+  })),
+);
+
+const founders = [
+  { name: "Muhammed Al Sheikhly", role: "Kurucu ortak · Video director", photo: muhammedPhoto },
+  { name: "Berat Değirmenci", role: "Kurucu ortak · Video director", photo: beratPhoto },
+];
 
 // Four orbit stops. Durations mirror the verified "genellikle 2–4 hafta".
 const stops = [
@@ -80,9 +95,9 @@ const stops = [
     key: "fikir",
     label: "Fikir",
     when: "1. hafta",
-    title: "Ön görüşme & plan",
+    title: "Ön görüşme ve plan",
     text: "İhtiyacınızı dinliyoruz; hangi formatların (web, reklam, Reels) gerekeceğine baştan karar veriyoruz. Çekim günü buna göre planlanır.",
-    note: "burada ücret yok, sadece sohbet",
+    whisper: "burada ücret yok, sadece sohbet",
     angle: -90,
   },
   {
@@ -91,7 +106,7 @@ const stops = [
     when: "1–2. hafta",
     title: "Çekim günü",
     text: "Yerinde, tek ekip. Ana film, dikey kesitler ve drone planı aynı sette çekilir; tek günden birden çok içerik çıkar.",
-    note: "tek gün, çok içerik",
+    whisper: "tek gün, çok içerik",
     angle: 0,
   },
   {
@@ -100,7 +115,7 @@ const stops = [
     when: "2–4. hafta",
     title: "Kurgu, renk, ses",
     text: "Kurgu, renk düzenleme ve ses tasarımı aynı masada. Revizyonları doğrudan projeyi çeken ekiple konuşursunuz.",
-    note: "muhatabınız değişmez",
+    whisper: "muhatabınız değişmez",
     angle: 90,
   },
   {
@@ -109,7 +124,7 @@ const stops = [
     when: "genellikle 2–4 hafta içinde",
     title: "Teslim",
     text: "16:9 ana film, 9:16 dikey versiyonlar ve reklam kesitleri: her mecraya hazır dosyalar.",
-    note: "yayına hazır ✓",
+    whisper: "yayına hazır",
     angle: 180,
   },
 ];
@@ -134,99 +149,75 @@ const year = new Date().getFullYear();
   bare
 >
   <div class="ev" data-ev>
-    {/* Film grain over the whole world — one fixed layer, no per-section cost. */}
+    {/* The world: fog behind everything, one fixed layer. */}
+    <div class="ev-sky" aria-hidden="true" style={A.fog ? `--fog-img:url(${A.fog})` : undefined}></div>
     <div class="ev-grain" aria-hidden="true"></div>
 
-    {/* ───────── Header ───────── */}
+    {/* ───────── Header: a strip of glass floating in the fog ───────── */}
     <header class="ev-head">
-      <Logo class="ev-head__logo" />
-      <nav class="ev-head__nav" aria-label="Sayfa içi">
-        <a href="#isler">İşler</a>
-        <a href="#surec">Nasıl çalışırız</a>
-        <a href="#hizmetler">Hizmetler</a>
-        <a href="/hakkimizda/">Biz</a>
-      </nav>
-      <div class="ev-head__act">
-        <a class="ev-round" href={whatsappHref} aria-label="WhatsApp'tan yazın" data-cta-location="evren_header_wa">
-          <Icon name="whatsapp" size={19} />
-        </a>
-        <a class="ev-pill ev-pill--sm" href="#on-gorusme" data-cta-location="evren_header">
-          Ücretsiz ön görüşme
-        </a>
+      <div class="ev-head__bar ev-glass">
+        <Logo class="ev-head__logo" />
+        <nav class="ev-head__nav" aria-label="Sayfa içi">
+          <a href="#isler">İşler</a>
+          <a href="#ekip">Ekip</a>
+          <a href="#surec">Süreç</a>
+          <a href="#hizmetler">Hizmetler</a>
+          <a href="#sss">SSS</a>
+        </nav>
+        <div class="ev-head__act">
+          <a class="ev-round" href={whatsappHref} aria-label="WhatsApp'tan yazın" data-cta-location="evren_header_wa">
+            <Icon name="whatsapp" size={19} />
+          </a>
+          <a class="ev-btn ev-btn--sm" href="#on-gorusme" data-cta-location="evren_header">
+            Ücretsiz ön görüşme
+          </a>
+        </div>
       </div>
     </header>
 
-    {/* ───────── 01 · Hero: the Rast sun in fog ───────── */}
+    {/* ───────── 01 · Hero ───────── */}
     <section class="ev-hero" aria-labelledby="ev-hero-title">
       <div class="ev-hero__media" aria-hidden="true">
         {
-          heroHasVideo ? (
-            <video
-              class="ev-hero__video"
-              data-ambient
-              muted
-              loop
-              playsinline
-              preload="metadata"
-              poster={ASSETS.heroPoster ?? undefined}
-            >
-              {ASSETS.heroMobileWebm && (
-                <source src={ASSETS.heroMobileWebm} type="video/webm" media="(max-width: 700px)" />
-              )}
-              {ASSETS.heroMobileMp4 && (
-                <source src={ASSETS.heroMobileMp4} type="video/mp4" media="(max-width: 700px)" />
-              )}
-              {ASSETS.heroWebm && <source src={ASSETS.heroWebm} type="video/webm" />}
-              {ASSETS.heroMp4 && <source src={ASSETS.heroMp4} type="video/mp4" />}
+          heroVideo ? (
+            <video class="ev-hero__video" data-ambient muted loop playsinline preload="metadata" poster={A.heroPoster ?? undefined}>
+              {A.heroMWebm && <source src={A.heroMWebm} type="video/webm" media="(max-width: 700px)" />}
+              {A.heroMMp4 && <source src={A.heroMMp4} type="video/mp4" media="(max-width: 700px)" />}
+              {A.heroWebm && <source src={A.heroWebm} type="video/webm" />}
+              {A.heroMp4 && <source src={A.heroMp4} type="video/mp4" />}
             </video>
-          ) : ASSETS.heroPoster ? (
-            <picture>
-              {ASSETS.heroMobilePoster && (
-                <source media="(max-width: 700px)" srcset={ASSETS.heroMobilePoster} width="900" height="1350" />
-              )}
-              <img
-                class="ev-hero__img"
-                src={ASSETS.heroPoster}
-                alt=""
-                width="1672"
-                height="941"
-                fetchpriority="high"
-                decoding="async"
-              />
-            </picture>
           ) : (
-            <span class="ev-orb ev-orb--hero">
-              <span class="ev-orb__rings" />
-            </span>
+            A.heroPoster && (
+              <picture>
+                {A.heroMPoster && <source media="(max-width: 700px)" srcset={A.heroMPoster} width="900" height="1350" />}
+                <img class="ev-hero__video" src={A.heroPoster} alt="" width="1672" height="941" fetchpriority="high" />
+              </picture>
+            )
           )
         }
-        <span class="ev-hero__wash" />
+        <span class="ev-hero__wash"></span>
       </div>
 
-      {/* HUD: ambient labels in the corners. Never information you need. */}
       <div class="ev-hud" aria-hidden="true">
-        <span class="ev-hud__tl">RAST / 001</span>
-        <span class="ev-hud__side">40°46′N · 30°24′E · SERDİVAN</span>
-        <span class="ev-hud__bl">Film / Fotoğraf / İçerik / AI</span>
-        <span class="ev-hud__bc">↓ kaydır</span>
+        <span class="ev-hud__side">40°46′N · 30°24′E — Serdivan</span>
+        <span class="ev-hud__bl">Film · Fotoğraf · İçerik · AI</span>
         <span class="ev-hud__br">TC <span data-tc>00:00:00:00</span></span>
       </div>
 
       <div class="ev-hero__say">
-        <p class="ev-chip"><span class="ev-chip__dot"></span>Video prodüksiyon stüdyosu · Sakarya</p>
+        <p class="ev-label"><span class="ev-label__sun"></span>Video prodüksiyon stüdyosu · Sakarya</p>
         <h1 id="ev-hero-title" class="ev-hero__title">
-          <span class="ev-hero__dim">İyi iş</span>
-          <span>kendini izletir.</span>
+          İyi iş kendini <em>izletir.</em>
         </h1>
         <p class="ev-hero__lede">
           Reklam filmi, tanıtım filmi ve sosyal medya videolarını fikirden teslime
           tek ekip olarak üretiyoruz.
         </p>
         <div class="ev-hero__cta">
-          <a class="ev-pill" href="#on-gorusme" data-cta-location="evren_hero">
+          <a class="ev-btn" href="#on-gorusme" data-cta-location="evren_hero">
             Ücretsiz ön görüşme <span aria-hidden="true">→</span>
           </a>
-          <a class="ev-pill ev-pill--ghost" href="#isler" data-cta-location="evren_hero_works">
+          <a class="ev-btn ev-btn--glass" href="#isler" data-cta-location="evren_hero_works">
             İşleri izle
           </a>
         </div>
@@ -234,22 +225,42 @@ const year = new Date().getFullYear();
           <strong>{brandCount}+</strong> marka · <strong>100+</strong> içerik · Sakarya, Kocaeli, Düzce
         </p>
       </div>
-      <p class="ev-hand ev-hero__note" aria-hidden="true">iyi ışık, iyi iş ↗</p>
+
+      <p class="ev-whisper ev-hero__whisper" aria-hidden="true">iyi ışık, iyi iş</p>
+
+      {/* On air: real work cycling on a small monitor. It is a link, and the
+          only place the hero shows client footage. */}
+      <a class="ev-onair ev-glass" href="#isler" data-onair aria-label="Seçili işlere git">
+        <span class="ev-onair__screen">
+          {
+            onAir.map((p, i) => (
+              <img
+                src={ytThumbToWebp(p.data.poster, "card")}
+                alt=""
+                width="480"
+                height="270"
+                loading="lazy"
+                decoding="async"
+                class:list={{ "is-on": i === 0 }}
+                data-onair-frame
+                data-title={p.data.client ?? p.data.title}
+              />
+            ))
+          }
+        </span>
+        <span class="ev-onair__meta">
+          <span class="ev-onair__rec" aria-hidden="true"></span>
+          <span>Ekranda: <b data-onair-title>{onAir[0]?.data.client}</b></span>
+        </span>
+      </a>
     </section>
 
-    {/* ───────── 02 · Works: case carousel with a monitor in every card ─────────
-        Native horizontal scroll with snap: swipe, trackpad and keyboard all
-        work without JS; the buttons and dots are a convenience on top. */}
-    <section
-      id="isler"
-      class="ev-sec ev-works"
-      aria-labelledby="ev-works-title"
-      style={ASSETS.fog ? `--fog-img:url(${ASSETS.fog})` : undefined}
-    >
-      <header class="ev-sec__head ev-sec__head--center">
-        <p class="ev-chip"><span class="ev-chip__n">02</span><span class="ev-chip__dot"></span>Seçili işler</p>
-        <h2 id="ev-works-title" class="ev-h2">Kameranın önünden geçenler</h2>
-        <p class="ev-hand ev-works__aside" aria-hidden="true">hepsi gerçek müşteri işi ✓</p>
+    {/* ───────── 02 · Works ───────── */}
+    <section id="isler" class="ev-sec ev-works" aria-labelledby="ev-works-title">
+      <header class="ev-head2 ev-head2--center">
+        <p class="ev-label"><span class="ev-label__n">02</span>Seçili işler</p>
+        <h2 id="ev-works-title" class="ev-h2">Kameranın önünden <em>geçenler</em></h2>
+        <p class="ev-whisper ev-whisper--center" aria-hidden="true">hepsi gerçek müşteri işi</p>
       </header>
 
       <div class="ev-cases" data-cases>
@@ -260,7 +271,7 @@ const year = new Date().getFullYear();
           {
             cases.map((p, i) => (
               <li
-                class:list={["ev-case", { "is-active": i === 0 }]}
+                class:list={["ev-case ev-glass", { "is-active": i === 0 }]}
                 data-case
                 data-yt={p.data.youtubeId ?? ""}
                 aria-label={`${i + 1} / ${cases.length}: ${p.data.title}`}
@@ -277,24 +288,33 @@ const year = new Date().getFullYear();
                   <span class="ev-case__bar" aria-hidden="true">
                     <span class="ev-case__pgm">PGM</span>
                     <span>{p.data.vertical ? "9:16" : "16:9"}</span>
-                    <span class="ev-case__tc">{p.data.duration ?? "--:--"}</span>
+                    <span class="ev-case__tc">{p.data.duration ?? ""}</span>
                   </span>
-                  <span class="ev-case__safe" aria-hidden="true" />
                   <div class="ev-case__embed" data-case-embed hidden />
-                  <span class="ev-hand ev-case__note" aria-hidden="true">
-                    {p.data.client ?? p.data.category}
-                  </span>
                 </div>
                 <div class="ev-case__info">
-                  <p class="ev-case__client">
-                    <span class="ev-chip__dot" />
-                    {p.data.client ?? "Rast Creative"}
-                  </p>
+                  <p class="ev-case__client">{p.data.client ?? "Rast Creative"}</p>
                   <h3 class="ev-case__title">{p.data.title}</h3>
                   {p.data.summary && <p class="ev-case__sum">{p.data.summary}</p>}
+                  <dl class="ev-case__facts">
+                    <div>
+                      <dt>Sektör</dt>
+                      <dd>{p.data.sector ?? p.data.category}</dd>
+                    </div>
+                    <div>
+                      <dt>İş</dt>
+                      <dd>{p.data.projectType ?? p.data.category}</dd>
+                    </div>
+                    {p.data.duration && (
+                      <div>
+                        <dt>Süre</dt>
+                        <dd>{p.data.duration}</dd>
+                      </div>
+                    )}
+                  </dl>
                   <div class="ev-case__act">
                     {p.data.youtubeId && (
-                      <button type="button" class="ev-pill ev-pill--sm" data-case-play>
+                      <button type="button" class="ev-btn ev-btn--sm" data-case-play>
                         ▶ Burada izle
                       </button>
                     )}
@@ -302,20 +322,6 @@ const year = new Date().getFullYear();
                       Proje sayfası <span aria-hidden="true">→</span>
                     </a>
                   </div>
-                  <dl class="ev-case__facts">
-                    <div>
-                      <dt>Süre</dt>
-                      <dd>{p.data.duration ?? "—"}</dd>
-                    </div>
-                    <div>
-                      <dt>Yıl</dt>
-                      <dd>{p.data.year ?? "—"}</dd>
-                    </div>
-                    <div>
-                      <dt>Format</dt>
-                      <dd>{p.data.vertical ? "9:16" : "16:9"}</dd>
-                    </div>
-                  </dl>
                 </div>
               </li>
             ))
@@ -340,28 +346,57 @@ const year = new Date().getFullYear();
       </div>
 
       <p class="ev-works__more">
-        <a class="ev-pill" href="/projeler/">Tüm arşivi keşfet ({projects.length} iş)</a>
+        <a class="ev-btn ev-btn--glass" href="/projeler/">Tüm arşiv · {projects.length} iş</a>
       </p>
     </section>
 
-    {/* ───────── 03 · Process: four stops around the sun ─────────
-        Each stop is a button; the panel beside the orbit always shows one
-        stop in full, and "Sonraki durak" walks through them in order.
-        Without JS all four panels render. */}
+    {/* ───────── 03 · The people you talk to ───────── */}
+    <section id="ekip" class="ev-sec ev-team" aria-labelledby="ev-team-title">
+      <div class="ev-team__say">
+        <p class="ev-label"><span class="ev-label__n">03</span>Muhatabınız</p>
+        <h2 id="ev-team-title" class="ev-h2">Telefonu <em>çekimi yönetenler</em> açar.</h2>
+        <p class="ev-team__lede">
+          Projenizi bir satış ekibiyle değil, doğrudan şirketin kurucu ortaklarıyla
+          konuşursunuz. Planlayan, sette yöneten ve kurguyu teslim eden aynı iki kişi.
+        </p>
+        <a class="ev-link" href="/hakkimizda/">Ekibi tanıyın <span aria-hidden="true">→</span></a>
+      </div>
+      <ul class="ev-team__list">
+        {
+          founders.map((f) => (
+            <li class="ev-person ev-glass">
+              <Picture
+                src={f.photo}
+                alt={f.name}
+                widths={[240, 400]}
+                sizes="(max-width: 700px) 45vw, 14rem"
+                formats={["avif", "webp"]}
+                class="ev-person__img"
+                loading="lazy"
+              />
+              <p class="ev-person__name">{f.name}</p>
+              <p class="ev-person__role">{f.role}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    {/* ───────── 04 · Process: four stops around the sun ───────── */}
     <section id="surec" class="ev-sec ev-orbit" aria-labelledby="ev-orbit-title">
-      <header class="ev-sec__head">
-        <p class="ev-chip"><span class="ev-chip__n">03</span><span class="ev-chip__dot"></span>Nasıl çalışırız</p>
-        <h2 id="ev-orbit-title" class="ev-h2">Fikirden teslime <span class="ev-dim">dört durak.</span></h2>
+      <header class="ev-head2">
+        <p class="ev-label"><span class="ev-label__n">04</span>Süreç</p>
+        <h2 id="ev-orbit-title" class="ev-h2">Fikirden teslime <em>dört durak.</em></h2>
       </header>
 
       <div class="ev-orbit__grid" data-orbit data-at="fikir">
         <div class="ev-orbit__stage">
           <svg class="ev-orbit__ring" viewBox="0 0 400 400" aria-hidden="true">
             <circle cx="200" cy="200" r="150" />
-            <circle class="ev-orbit__ring-in" cx="200" cy="200" r="96" />
+            <circle class="ev-orbit__ring-in" cx="200" cy="200" r="104" />
           </svg>
-          <span class="ev-orb ev-orb--orbit" data-orbit-orb aria-hidden="true">
-            <span class="ev-orb__rings" />
+          <span class="ev-orbit__sun" aria-hidden="true">
+            {A.sun && <img src={A.sun} alt="" width="560" height="560" loading="lazy" decoding="async" />}
           </span>
           <div class="ev-orbit__stops" role="group" aria-label="Süreç durakları">
             {
@@ -375,38 +410,8 @@ const year = new Date().getFullYear();
                   style={`--a:${s.angle}deg`}
                 >
                   <span class="ev-stop__face">
-                    {ASSETS.stops[s.key] ? (
-                      <img src={ASSETS.stops[s.key]!} alt="" width="160" height="160" loading="lazy" />
-                    ) : (
-                      <svg viewBox="0 0 48 48" aria-hidden="true" class="ev-stop__ic">
-                        {s.key === "fikir" && (
-                          <>
-                            <rect x="9" y="13" width="30" height="22" rx="1.5" />
-                            <path d="M19 13v22M29 13v22M9 20.3h30M9 27.6h30" />
-                            <path d="M31 40l9-9" />
-                          </>
-                        )}
-                        {s.key === "set" && (
-                          <>
-                            <rect x="10" y="14" width="20" height="13" rx="2" />
-                            <path d="M30 18l8-4v13l-8-4" />
-                            <path d="M20 27l-7 14M20 27l7 14M20 27v14" />
-                          </>
-                        )}
-                        {s.key === "kurgu" && (
-                          <>
-                            <rect x="8" y="14" width="32" height="20" rx="1.5" />
-                            <path d="M8 18h32M8 30h32M16 14v4M24 14v4M32 14v4M16 30v4M24 30v4M32 30v4" />
-                          </>
-                        )}
-                        {s.key === "teslim" && (
-                          <>
-                            <rect x="6" y="16" width="24" height="15" rx="1.5" />
-                            <rect x="33" y="11" width="9" height="16" rx="1.5" />
-                            <path d="M14 36h8" />
-                          </>
-                        )}
-                      </svg>
+                    {A.stops[s.key][0] && (
+                      <img src={A.stops[s.key][0]!} alt="" width="160" height="160" loading="lazy" />
                     )}
                   </span>
                   <span class="ev-stop__label">
@@ -422,39 +427,27 @@ const year = new Date().getFullYear();
         <div class="ev-orbit__panels">
           {
             stops.map((s, i) => (
-              <article
-                id={`ev-panel-${s.key}`}
-                class="ev-panel"
-                data-panel={s.key}
-                aria-labelledby={`ev-panel-${s.key}-t`}
-              >
-                {ASSETS.stopsWide[s.key] && (
-                  <img
-                    class="ev-panel__img"
-                    src={ASSETS.stopsWide[s.key]!}
-                    alt=""
-                    width="1100"
-                    height="733"
-                    loading="lazy"
-                    decoding="async"
-                  />
+              <article id={`ev-panel-${s.key}`} class="ev-panel ev-glass" data-panel={s.key} aria-labelledby={`ev-panel-${s.key}-t`}>
+                {A.stops[s.key][1] && (
+                  <img class="ev-panel__img" src={A.stops[s.key][1]!} alt="" width="1100" height="733" loading="lazy" decoding="async" />
                 )}
-                <p class="ev-panel__n">Durak {String(i + 1).padStart(2, "0")} / 04</p>
-                <h3 id={`ev-panel-${s.key}-t`} class="ev-panel__title">
-                  {s.title}
-                </h3>
-                <p class="ev-hand ev-panel__when">{s.when}</p>
-                <p class="ev-panel__text">{s.text}</p>
-                <p class="ev-hand ev-panel__note" aria-hidden="true">— {s.note}</p>
-                {i < stops.length - 1 ? (
-                  <button type="button" class="ev-link ev-panel__next" data-stop-next={stops[i + 1].key}>
-                    Sonraki durak: {stops[i + 1].label} <span aria-hidden="true">→</span>
-                  </button>
-                ) : (
-                  <a class="ev-pill ev-pill--sm ev-panel__next" href="#on-gorusme">
-                    İlk durağa geçelim <span aria-hidden="true">→</span>
-                  </a>
-                )}
+                <div class="ev-panel__body">
+                  <p class="ev-panel__n">
+                    Durak {String(i + 1).padStart(2, "0")} / 04 · <span>{s.when}</span>
+                  </p>
+                  <h3 id={`ev-panel-${s.key}-t`} class="ev-panel__title">{s.title}</h3>
+                  <p class="ev-panel__text">{s.text}</p>
+                  <p class="ev-whisper" aria-hidden="true">{s.whisper}</p>
+                  {i < stops.length - 1 ? (
+                    <button type="button" class="ev-link ev-panel__next" data-stop-next={stops[i + 1].key}>
+                      Sonraki durak: {stops[i + 1].label} <span aria-hidden="true">→</span>
+                    </button>
+                  ) : (
+                    <a class="ev-btn ev-btn--sm ev-panel__next" href="#on-gorusme">
+                      İlk durağa geçelim <span aria-hidden="true">→</span>
+                    </a>
+                  )}
+                </div>
               </article>
             ))
           }
@@ -462,19 +455,17 @@ const year = new Date().getFullYear();
       </div>
     </section>
 
-    {/* ───────── 04 · Services ───────── */}
+    {/* ───────── 05 · Services ───────── */}
     <section id="hizmetler" class="ev-sec ev-svc" aria-labelledby="ev-svc-title">
-      <header class="ev-sec__head">
-        <p class="ev-chip"><span class="ev-chip__n">04</span><span class="ev-chip__dot"></span>Hizmetler</p>
-        <h2 id="ev-svc-title" class="ev-h2">Üç masa, <span class="ev-dim">tek ekip.</span></h2>
+      <header class="ev-head2">
+        <p class="ev-label"><span class="ev-label__n">05</span>Hizmetler</p>
+        <h2 id="ev-svc-title" class="ev-h2">Üç masa, <em>tek ekip.</em></h2>
       </header>
       <ul class="ev-svc__list">
         {
           services.map((s, i) => (
-            <li class="ev-svc__card">
-              <span class="ev-hand ev-svc__tape" aria-hidden="true">
-                {serviceNotes[i] ?? s.data.title}
-              </span>
+            <li class="ev-svc__card ev-glass">
+              <p class="ev-whisper" aria-hidden="true">{serviceWhispers[i] ?? ""}</p>
               <h3 class="ev-svc__title">{s.data.title}</h3>
               <p class="ev-svc__sum">{s.data.summary}</p>
               <ul class="ev-svc__feat">
@@ -483,7 +474,7 @@ const year = new Date().getFullYear();
                 ))}
               </ul>
               <a class="ev-link" href={`/hizmetler/#${s.id}`}>
-                Detay <span aria-hidden="true">→</span>
+                Hizmeti incele <span aria-hidden="true">→</span>
               </a>
             </li>
           ))
@@ -491,109 +482,119 @@ const year = new Date().getFullYear();
       </ul>
     </section>
 
+    {/* ───────── 06 · FAQ: the questions clients actually ask ───────── */}
+    <section id="sss" class="ev-sec ev-faq" aria-labelledby="ev-faq-title">
+      <header class="ev-head2">
+        <p class="ev-label"><span class="ev-label__n">06</span>Sık sorulanlar</p>
+        <h2 id="ev-faq-title" class="ev-h2">Aklınızdaki <em>sorular.</em></h2>
+        <p class="ev-whisper" aria-hidden="true">fiyat da burada</p>
+      </header>
+      <div class="ev-faq__list">
+        {
+          faqs.map(({ q, Content }, i) => (
+            <details class="ev-qa ev-glass" open={i === 0}>
+              <summary>
+                <span>{q}</span>
+                <span class="ev-qa__ic" aria-hidden="true" />
+              </summary>
+              <div class="ev-qa__a">
+                <Content />
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </section>
+
     {/* ───────── Brands ───────── */}
     <section class="ev-sec ev-brands" aria-labelledby="ev-brands-title">
-      <h2 id="ev-brands-title" class="ev-chip ev-brands__title">
-        <span class="ev-chip__dot"></span>Birlikte çalıştığımız markalar
-      </h2>
+      <h2 id="ev-brands-title" class="ev-label ev-label--center">Birlikte çalıştığımız markalar</h2>
       <LogoWall />
     </section>
 
-    {/* ───────── 05 · Call sheet: the sun rises behind the form ───────── */}
+    {/* ───────── 07 · Call sheet: the sun rises behind the form ───────── */}
     <section id="on-gorusme" class="ev-sec ev-call" aria-labelledby="ev-call-title" data-call>
       <div class="ev-call__frame">
         <div class="ev-call__dawn" aria-hidden="true">
           {
-            dawnHasVideo ? (
-              <video
-                class="ev-call__video"
-                data-ambient
-                muted
-                loop
-                playsinline
-                preload="none"
-                poster={ASSETS.dawnPoster ?? undefined}
-              >
-                {ASSETS.dawnWebm && <source src={ASSETS.dawnWebm} type="video/webm" />}
-                {ASSETS.dawnMp4 && <source src={ASSETS.dawnMp4} type="video/mp4" />}
+            dawnVideo ? (
+              <video class="ev-call__video" data-ambient muted loop playsinline preload="none" poster={A.dawnPoster ?? undefined}>
+                {A.dawnWebm && <source src={A.dawnWebm} type="video/webm" />}
+                {A.dawnMp4 && <source src={A.dawnMp4} type="video/mp4" />}
               </video>
-            ) : ASSETS.dawnPoster ? (
-              <img class="ev-call__img" src={ASSETS.dawnPoster} alt="" width="1600" height="900" loading="lazy" decoding="async" />
             ) : (
-              <span class="ev-orb ev-orb--dawn">
-                <span class="ev-orb__rings" />
-              </span>
+              A.dawnPoster && <img class="ev-call__video" src={A.dawnPoster} alt="" width="1600" height="900" loading="lazy" />
             )
           }
         </div>
 
-        <header class="ev-call__head">
-          <p class="ev-chip"><span class="ev-chip__n">05</span><span class="ev-chip__dot"></span>Ücretsiz ön görüşme</p>
-          <h2 id="ev-call-title" class="ev-h2">Bize bir cümle <span class="ev-dim">yazın.</span></h2>
-          <p class="ev-call__lede">
-            Gerisini telefonda konuşuruz. Fiyat ve kapsam için ilk görüşme ücretsiz.
-          </p>
-        </header>
+        <div class="ev-call__sheet ev-glass">
+          <header>
+            <p class="ev-label"><span class="ev-label__n">07</span>Ücretsiz ön görüşme</p>
+            <h2 id="ev-call-title" class="ev-h2">Bize bir cümle <em>yazın.</em></h2>
+            <p class="ev-call__lede">
+              Gerisini telefonda konuşuruz. Fiyat ve kapsam için ilk görüşme ücretsiz.
+            </p>
+          </header>
 
-        <form class="ev-form" action="https://api.web3forms.com/submit" method="POST" data-ev-form>
-          <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
-          <input type="hidden" name="subject" value="Yeni ön görüşme talebi — rastcreative.com (taslak evren)" />
-          <input type="hidden" name="from_name" value={SITE.name} />
-          <input type="checkbox" name="botcheck" class="ev-sr" tabindex="-1" autocomplete="off" />
+          <form class="ev-form" action="https://api.web3forms.com/submit" method="POST" data-ev-form>
+            <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
+            <input type="hidden" name="subject" value="Yeni ön görüşme talebi — rastcreative.com (taslak evren)" />
+            <input type="hidden" name="from_name" value={SITE.name} />
+            <input type="checkbox" name="botcheck" class="ev-sr" tabindex="-1" autocomplete="off" />
 
-          <p class="ev-form__line">
-            Merhaba, ben
-            <label class="ev-fill">
-              <span class="ev-sr">Adınız soyadınız (zorunlu)</span>
-              <input id="ev-name" name="name" type="text" autocomplete="name" minlength="2" required placeholder="adınız" />
-            </label>,
-            <label class="ev-fill">
-              <span class="ev-sr">Firma (isteğe bağlı)</span>
-              <input id="ev-company" name="company" type="text" autocomplete="organization" placeholder="firmanız" />
-            </label>
-            için bir
-            <label class="ev-fill ev-fill--select">
-              <span class="ev-sr">Proje türü</span>
-              <select id="ev-type" name="project_type">
-                {projectTypes.map((t) => <option value={t}>{t}</option>)}
-              </select>
-            </label>
-            düşünüyoruz. Bana
-            <label class="ev-fill">
-              <span class="ev-sr">Telefon (zorunlu)</span>
-              <input id="ev-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" minlength="10" required placeholder="telefonunuz" />
-            </label>
-            numarasından ulaşabilirsiniz.
-          </p>
+            <p class="ev-form__line">
+              Merhaba, ben
+              <label class="ev-fill">
+                <span class="ev-sr">Adınız soyadınız (zorunlu)</span>
+                <input id="ev-name" name="name" type="text" autocomplete="name" minlength="2" required placeholder="adınız" />
+              </label>,
+              <label class="ev-fill">
+                <span class="ev-sr">Firma (isteğe bağlı)</span>
+                <input id="ev-company" name="company" type="text" autocomplete="organization" placeholder="firmanız" />
+              </label>
+              için bir
+              <label class="ev-fill ev-fill--select">
+                <span class="ev-sr">Proje türü</span>
+                <select id="ev-type" name="project_type">
+                  {projectTypes.map((t) => <option value={t}>{t}</option>)}
+                </select>
+              </label>
+              düşünüyoruz. Bana
+              <label class="ev-fill">
+                <span class="ev-sr">Telefon (zorunlu)</span>
+                <input id="ev-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" minlength="10" required placeholder="telefonunuz" />
+              </label>
+              numarasından ulaşabilirsiniz.
+            </p>
 
-          <label class="ev-form__note" for="ev-message">
-            <span>Eklemek istediğiniz bir not var mı? <em>(isteğe bağlı)</em></span>
-          </label>
-          <textarea id="ev-message" class="ev-form__area" name="message" rows="2" placeholder="tarih, lokasyon, ne çekilecek…"></textarea>
+            <label class="ev-form__note" for="ev-message">Eklemek istediğiniz bir not var mı? <span>(isteğe bağlı)</span></label>
+            <textarea id="ev-message" class="ev-form__area" name="message" rows="2" placeholder="Tarih, lokasyon, ne çekilecek…"></textarea>
 
-          <div class="ev-form__foot">
-            <button type="submit" class="ev-pill">Föyü gönder <span aria-hidden="true">→</span></button>
-            <a class="ev-pill ev-pill--ghost" href={whatsappHref} data-cta-location="evren_form_wa">
-              ya da WhatsApp'tan yazın
-            </a>
-            <a class="ev-link" href={`tel:${CONTACT.phoneIntl}`}>{CONTACT.phone}</a>
-          </div>
-          <p class="ev-form__status" data-ev-status role="status" aria-live="polite"></p>
-          <p class="ev-hand ev-form__sent" aria-hidden="true">föy elimizde ✓ sizi arıyoruz</p>
-          <p class="ev-form__kvkk">
-            Göndererek <a href="/kvkk/">KVKK Aydınlatma Metni</a>'ni okuduğunuzu kabul
-            etmiş sayılırsınız. Verileriniz yalnızca size dönüş için kullanılır.
-          </p>
-        </form>
+            <div class="ev-form__foot">
+              <button type="submit" class="ev-btn">Föyü gönder <span aria-hidden="true">→</span></button>
+              <a class="ev-btn ev-btn--glass" href={whatsappHref} data-cta-location="evren_form_wa">
+                ya da WhatsApp'tan yazın
+              </a>
+              <a class="ev-link" href={`tel:${CONTACT.phoneIntl}`}>{CONTACT.phone}</a>
+            </div>
+            <p class="ev-form__status" data-ev-status role="status" aria-live="polite"></p>
+            <p class="ev-whisper ev-form__sent" aria-hidden="true">föy elimizde, sizi arıyoruz</p>
+            <p class="ev-form__kvkk">
+              Göndererek <a href="/kvkk/">KVKK Aydınlatma Metni</a>'ni okuduğunuzu kabul
+              etmiş sayılırsınız. Verileriniz yalnızca size dönüş için kullanılır.
+            </p>
+          </form>
+        </div>
       </div>
     </section>
 
-    {/* ───────── Footer: stays in the light ───────── */}
+    {/* ───────── Footer ───────── */}
     <footer class="ev-foot">
-      <div class="ev-foot__top">
+      <div class="ev-foot__inner ev-glass">
         <div class="ev-foot__brand">
           <Logo />
-          <p>İyi iş kendini izletir.</p>
+          <p class="ev-foot__motto">İyi iş kendini <em>izletir.</em></p>
         </div>
         <nav class="ev-foot__col" aria-label="Alt gezinme">
           {NAV.map((n) => <a href={n.href}>{n.label}</a>)}
@@ -604,7 +605,7 @@ const year = new Date().getFullYear();
           <a href={`tel:${CONTACT.phoneIntl}`}>{CONTACT.phone}</a>
           <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
         </div>
-        <div class="ev-foot__col ev-foot__social">
+        <div class="ev-foot__col">
           {
             SOCIAL.map((s) => (
               <a href={s.href} target="_blank" rel="me noopener noreferrer">
@@ -613,76 +614,104 @@ const year = new Date().getFullYear();
             ))
           }
         </div>
-      </div>
-      <div class="ev-foot__bottom">
-        <span>© {year} {SITE.name}</span>
-        <span><a href="/kvkk/">KVKK</a> · <a href="/telif/">Telif</a></span>
+        <div class="ev-foot__bottom">
+          <span>© {year} {SITE.name}</span>
+          <span><a href="/kvkk/">KVKK</a> · <a href="/telif/">Telif</a></span>
+        </div>
       </div>
     </footer>
   </div>
 </BaseLayout>
 
 <style is:global>
-  /* ───── Fonts (self-hosted; latin + latin-ext for Turkish) ───── */
+  /* ───── Fonts: Instrument Serif is the world's voice (titles + whispers) ───── */
   @font-face {
-    font-family: "Caveat";
+    font-family: "Instrument Serif";
     font-style: normal;
-    font-weight: 600;
+    font-weight: 400;
     font-display: swap;
-    src: url("/fonts/caveat-latin-600-normal.woff2") format("woff2");
+    src: url("/fonts/instrument-serif-latin-400-normal.woff2") format("woff2");
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
       U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
   }
   @font-face {
-    font-family: "Caveat";
+    font-family: "Instrument Serif";
     font-style: normal;
-    font-weight: 600;
+    font-weight: 400;
     font-display: swap;
-    src: url("/fonts/caveat-latin-ext-600-normal.woff2") format("woff2");
+    src: url("/fonts/instrument-serif-latin-ext-400-normal.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+      U+1E00-1E9F, U+20A0-20AB, U+20AD-20C0, U+2C60-2C7F, U+A720-A7FF;
+  }
+  @font-face {
+    font-family: "Instrument Serif";
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/fonts/instrument-serif-latin-400-italic.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+      U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: "Instrument Serif";
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/fonts/instrument-serif-latin-ext-400-italic.woff2") format("woff2");
     unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
       U+1E00-1E9F, U+20A0-20AB, U+20AD-20C0, U+2C60-2C7F, U+A720-A7FF;
   }
 
-  /* The layout's GlassNav reserves body padding globally; this page is bare. */
   body:has(.ev) {
     padding-top: 0 !important;
     padding-bottom: 0 !important;
-    background: #e8e2da;
+    background: #e6dfd6;
   }
 
-  /* ───── Tokens: fog, ink, one amber light ───── */
+  /* ───── Tokens: sampled from the frames, one light source ───── */
   .ev {
-    /* Sampled from the GPT Image frames: warm fog, never neutral grey. */
-    --fog: #e8e2da;
-    --fog-deep: #d9d0c6;
-    --card: #f7f3ee;
-    --ink: #151311;
-    --dim: #8c847b;
-    --soft: #5c5650;
-    --line: #d5ccc1;
-    --amber: #e25303;
-    --amber-text: #a93c02;
-    --grease: #d63d12;
-    --hand: "Caveat", "Segoe Print", cursive;
+    --fog: #e6dfd6;
+    --fog-hi: #f4efe8;
+    --ink: #1d1915;
+    --ink-2: #51493f; /* body copy on fog / glass  (≈ 7.5:1) */
+    --mute: #72675c; /* labels, ≥ 4.5:1 on fog */
+    --sun: #e07a2e; /* light itself — glows, never small text */
+    --sun-text: #94420f; /* the sun as text: whispers, links  (≈ 5.5:1) */
+    --glass: rgba(250, 246, 240, 0.5);
+    --glass-strong: rgba(250, 246, 240, 0.74);
+    --edge: rgba(255, 255, 255, 0.62);
+    --shade: 0 30px 60px -34px rgba(96, 62, 30, 0.34);
+    --serif: "Instrument Serif", "Iowan Old Style", Georgia, serif;
     --pad: clamp(1rem, 4.5vw, 3rem);
-    --max: 80rem;
-    --r-lg: clamp(1.4rem, 3vw, 2.2rem);
+    --max: 78rem;
+    --r: clamp(1.2rem, 2.4vw, 1.8rem);
 
     position: relative;
+    isolation: isolate;
     color-scheme: light;
-    background: radial-gradient(90% 55% at 72% 8%, #f4efe9 0%, transparent 60%), var(--fog);
+    background: var(--fog);
     color: var(--ink);
     font-family: var(--font-body);
     font-size: var(--text-body);
     line-height: 1.6;
     overflow-x: clip;
   }
+  .ev-sky {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(60% 50% at 78% 12%, rgba(255, 214, 176, 0.5), transparent 70%),
+      linear-gradient(180deg, rgba(230, 223, 214, 0.3), rgba(230, 223, 214, 0.7)),
+      var(--fog-img, none) center / cover no-repeat,
+      var(--fog);
+  }
   .ev-grain {
     position: fixed;
     inset: 0;
     z-index: 60;
     pointer-events: none;
-    opacity: 0.09;
+    opacity: 0.08;
     mix-blend-mode: multiply;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   }
@@ -695,110 +724,162 @@ const year = new Date().getFullYear();
     white-space: nowrap;
   }
   .ev :focus-visible {
-    outline: 2px solid var(--amber);
+    outline: 2px solid var(--sun-text);
     outline-offset: 3px;
   }
-  .ev-dim {
-    color: var(--dim);
-  }
-  .ev-hand {
-    margin: 0;
-    font-family: var(--hand);
-    font-weight: 600;
-    line-height: 1.1;
-    color: var(--grease);
+
+  /* ───── Material: fog glass, lit from the top edge ───── */
+  .ev-glass {
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(22px) saturate(1.15);
+    backdrop-filter: blur(22px) saturate(1.15);
+    border: 1px solid var(--edge);
+    border-radius: var(--r);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.75),
+      var(--shade);
   }
 
-  /* Section chip — "02 ● Seçili işler" */
-  .ev-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 0 0 1.1rem;
-    padding: 0.3rem 0.75rem 0.3rem 0.6rem;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--card) 70%, transparent);
-    font-family: var(--font-utility);
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink);
-  }
-  .ev-chip__n {
-    color: var(--dim);
-    font-variant-numeric: tabular-nums;
-  }
-  .ev-chip__dot {
-    width: 0.42rem;
-    height: 0.42rem;
-    border-radius: 50%;
-    background: var(--amber);
-    flex: none;
+  /* ───── Voice ───── */
+  .ev em {
+    font-style: italic;
   }
   .ev-h2 {
     margin: 0;
-    font-family: var(--font-display);
-    font-weight: 500;
-    font-size: clamp(2.1rem, 4.2vw + 0.6rem, 4rem);
-    line-height: 1.02;
-    letter-spacing: -0.045em;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(2.5rem, 4.8vw + 0.6rem, 4.8rem);
+    line-height: 1;
+    letter-spacing: -0.015em;
     text-wrap: balance;
   }
+  .ev-h2 em {
+    color: var(--ink-2);
+  }
+  .ev-label {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin: 0 0 1.1rem;
+    font-family: var(--font-utility);
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mute);
+  }
+  .ev-label::after {
+    content: "";
+    flex: 0 1 4rem;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(114, 103, 92, 0.5), transparent);
+  }
+  .ev-label--center {
+    justify-content: center;
+  }
+  .ev-label--center::after {
+    display: none;
+  }
+  .ev-label__n {
+    color: var(--sun-text);
+    font-variant-numeric: tabular-nums;
+  }
+  .ev-label__sun {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--sun);
+    box-shadow: 0 0 0 4px rgba(224, 122, 46, 0.18), 0 0 14px 2px rgba(224, 122, 46, 0.55);
+  }
+  /* Whispers: the notes, spoken in the world's voice. A thread of light
+     leads into a line of serif italic. */
+  .ev-whisper {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0.9rem 0 0;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.3rem;
+    line-height: 1.2;
+    color: var(--sun-text);
+  }
+  .ev-whisper::before {
+    content: "";
+    flex: none;
+    width: 2rem;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--sun));
+    box-shadow: 0 0 6px rgba(224, 122, 46, 0.6);
+  }
+  .ev-whisper--center {
+    justify-content: center;
+  }
 
-  /* Pills */
-  .ev-pill {
+  /* ───── Buttons ───── */
+  .ev-btn {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
     min-height: var(--tap-min);
-    padding: 0.75rem 1.4rem;
-    border: 1px solid var(--ink);
+    padding: 0.75rem 1.45rem;
+    border: 1px solid transparent;
     border-radius: 999px;
     background: var(--ink);
-    color: #f6f5f2;
+    color: #f6f1ea;
     font-family: var(--font-utility);
     font-size: 0.98rem;
     font-weight: 600;
     text-decoration: none;
     cursor: pointer;
-    box-shadow: 0 10px 24px -14px rgba(0, 0, 0, 0.55);
+    overflow: hidden;
+    box-shadow: 0 14px 30px -16px rgba(60, 35, 15, 0.7);
     transition:
       transform var(--dur-fast) var(--ease-out),
-      background-color var(--dur-fast) var(--ease-out),
-      color var(--dur-fast) var(--ease-out);
+      box-shadow var(--dur) var(--ease-out);
   }
-  .ev-pill:hover {
+  /* Light passes over the button on hover, like the sun through fog. */
+  .ev-btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(60% 120% at var(--gx, 50%) 120%, rgba(255, 170, 100, 0.45), transparent 70%);
+    opacity: 0;
+    transition: opacity var(--dur) var(--ease-out);
+    pointer-events: none;
+  }
+  .ev-btn:hover {
     transform: translateY(-1px);
-    background: #2a2926;
   }
-  .ev-pill--sm {
+  .ev-btn:hover::after {
+    opacity: 1;
+  }
+  .ev-btn--sm {
     min-height: 2.6rem;
-    padding: 0.45rem 1rem;
+    padding: 0.45rem 1.05rem;
     font-size: 0.9rem;
   }
-  .ev-pill--ghost {
-    background: transparent;
+  .ev-btn--glass {
+    background: var(--glass-strong);
     color: var(--ink);
-    box-shadow: none;
-  }
-  .ev-pill--ghost:hover {
-    background: var(--ink);
-    color: #f6f5f2;
+    border-color: var(--edge);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.8),
+      0 12px 26px -18px rgba(96, 62, 30, 0.5);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
   }
   .ev-round {
     display: grid;
     place-items: center;
     width: 2.6rem;
     height: 2.6rem;
-    border: 1px solid var(--line);
     border-radius: 50%;
     color: var(--ink);
   }
   .ev-round:hover {
-    border-color: #1f9d55;
     color: #1f9d55;
   }
   .ev-link {
@@ -814,95 +895,59 @@ const year = new Date().getFullYear();
     font-weight: 600;
     color: var(--ink);
     text-decoration: underline;
-    text-decoration-color: var(--line);
-    text-underline-offset: 5px;
+    text-decoration-color: rgba(148, 66, 15, 0.35);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 6px;
     cursor: pointer;
   }
   .ev-link:hover {
-    text-decoration-color: var(--amber);
-  }
-
-  /* ───── The Rast sun (CSS stand-in until the Kling footage lands) ───── */
-  .ev-orb {
-    position: absolute;
-    width: var(--s, 22rem);
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background:
-      radial-gradient(circle, #fff3e6 0 7%, #ffb27d 15%, #ec6a1c 26%, rgba(226, 83, 3, 0.55) 38%, rgba(236, 200, 175, 0.35) 52%, rgba(233, 232, 229, 0) 70%);
-    filter: blur(0.4px);
-    animation: ev-breathe 7s ease-in-out infinite;
-  }
-  .ev-orb::before {
-    /* Wide halo bleeding into the fog. */
-    content: "";
-    position: absolute;
-    inset: -60%;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 214, 186, 0.55) 0%, rgba(255, 236, 222, 0.25) 30%, transparent 62%);
-    filter: blur(18px);
-    z-index: -1;
-  }
-  .ev-orb__rings {
-    position: absolute;
-    inset: -28%;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.55);
-    box-shadow:
-      0 0 0 3.2rem rgba(255, 255, 255, 0.07),
-      0 0 0 calc(3.2rem + 1px) rgba(255, 255, 255, 0.35);
-    opacity: 0.75;
-  }
-  @keyframes ev-breathe {
-    0%,
-    100% {
-      transform: scale(1);
-      opacity: 0.94;
-    }
-    50% {
-      transform: scale(1.035);
-      opacity: 1;
-    }
+    color: var(--sun-text);
+    text-decoration-color: var(--sun);
   }
 
   /* ───── Header ───── */
   .ev-head {
     position: sticky;
-    top: 0;
+    top: 0.75rem;
     z-index: 50;
+    padding: 0 var(--pad);
+    margin-top: 0.75rem;
+  }
+  .ev-head__bar {
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    padding: 0.55rem var(--pad);
-    background: color-mix(in srgb, var(--fog) 72%, transparent);
-    backdrop-filter: blur(14px) saturate(1.2);
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0.35rem 0.4rem 0.35rem 1.1rem;
+    border-radius: 999px;
+    background: rgba(250, 246, 240, 0.58);
   }
   .ev-head__logo .logo__svg {
-    height: 1.9rem;
+    height: 1.8rem;
   }
   .ev-head__nav {
     display: flex;
-    gap: 1.8rem;
+    gap: 1.6rem;
     margin: 0 auto;
   }
   .ev-head__nav a {
     font-family: var(--font-utility);
-    font-size: 0.93rem;
+    font-size: 0.92rem;
     font-weight: 500;
-    color: var(--ink);
+    color: var(--ink-2);
     text-decoration: none;
     padding: 0.5rem 0;
-    opacity: 0.8;
   }
   .ev-head__nav a:hover {
-    opacity: 1;
+    color: var(--ink);
   }
   .ev-head__act {
     display: flex;
     align-items: center;
-    gap: 0.55rem;
+    gap: 0.3rem;
   }
-  @media (max-width: 860px) {
+  @media (max-width: 900px) {
     .ev-head__nav {
       display: none;
     }
@@ -917,45 +962,30 @@ const year = new Date().getFullYear();
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-height: min(calc(100svh - 3.7rem), 60rem);
-    padding: 5rem var(--pad) 6rem;
+    min-height: min(100svh, 58rem);
+    margin-top: -4.4rem;
+    padding: 8rem var(--pad) 6rem;
     isolation: isolate;
   }
   .ev-hero__media {
     position: absolute;
-    inset: -3.7rem 0 0;
+    inset: 0;
     z-index: -1;
     overflow: hidden;
     pointer-events: none;
   }
-  .ev-hero__video,
-  .ev-hero__img {
+  .ev-hero__video {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 60% 50%;
+    object-position: 62% 50%;
   }
-  .ev-hero__img {
-    animation: ev-drift 28s ease-in-out infinite alternate;
-  }
-  @keyframes ev-drift {
-    to {
-      transform: scale(1.06) translateX(-1.5%);
-    }
-  }
-  /* Fog wash: lifts the left half so the headline always reads. */
   .ev-hero__wash {
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(90deg, rgba(240, 235, 228, 0.92) 0%, rgba(240, 235, 228, 0.7) 32%, rgba(240, 235, 228, 0) 62%),
-      linear-gradient(0deg, var(--fog) 0%, rgba(232, 226, 218, 0) 22%);
-  }
-  .ev-orb--hero {
-    --s: clamp(13rem, 26vw, 24rem);
-    top: 50%;
-    left: 68%;
-    translate: -50% -48%;
+      linear-gradient(90deg, rgba(240, 234, 226, 0.9) 0%, rgba(240, 234, 226, 0.62) 34%, rgba(240, 234, 226, 0) 62%),
+      linear-gradient(0deg, var(--fog) 0%, rgba(230, 223, 214, 0) 26%);
   }
   .ev-hero__say {
     position: relative;
@@ -963,23 +993,22 @@ const year = new Date().getFullYear();
     margin: 0 auto;
   }
   .ev-hero__title {
-    display: flex;
-    flex-direction: column;
-    max-width: 12ch;
+    max-width: 10.5ch;
     margin: 0;
-    font-family: var(--font-display);
-    font-weight: 500;
-    font-size: clamp(3.1rem, 7.4vw + 0.4rem, 7.2rem);
-    line-height: 0.95;
-    letter-spacing: -0.055em;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(3.6rem, 8.2vw + 0.5rem, 8.4rem);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
   }
-  .ev-hero__dim {
-    color: var(--dim);
+  .ev-hero__title em {
+    color: var(--sun-text);
+    text-shadow: 0 0 40px rgba(255, 190, 130, 0.7);
   }
   .ev-hero__lede {
-    max-width: 30rem;
+    max-width: 29rem;
     margin: 1.6rem 0 0;
-    color: var(--soft);
+    color: var(--ink-2);
   }
   .ev-hero__cta {
     display: flex;
@@ -991,37 +1020,29 @@ const year = new Date().getFullYear();
     margin: 1.4rem 0 0;
     font-family: var(--font-utility);
     font-size: 0.9rem;
-    color: var(--soft);
+    color: var(--ink-2);
   }
   .ev-hero__proof strong {
     color: var(--ink);
   }
-  .ev-hero__note {
+  .ev-hero__whisper {
     position: absolute;
-    right: clamp(1rem, 12vw, 14rem);
-    top: clamp(5rem, 16vh, 9rem);
-    font-size: 1.6rem;
-    transform: rotate(-5deg);
+    top: 30%;
+    right: clamp(1rem, 7vw, 8rem);
+    margin: 0;
   }
-
-  /* HUD corners */
   .ev-hud span {
     position: absolute;
     font-family: var(--font-utility);
-    font-size: 0.68rem;
+    font-size: 0.66rem;
     font-weight: 600;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--soft);
-    opacity: 0.8;
-  }
-  .ev-hud__tl {
-    top: 1.2rem;
-    left: var(--pad);
+    color: var(--mute);
   }
   .ev-hud__side {
     top: 50%;
-    right: 0.9rem;
+    right: 1rem;
     writing-mode: vertical-rl;
     translate: 0 -50%;
   }
@@ -1029,45 +1050,99 @@ const year = new Date().getFullYear();
     bottom: 1.4rem;
     left: var(--pad);
   }
-  .ev-hud__bc {
+  .ev-hud__br {
     bottom: 1.4rem;
     left: 50%;
     translate: -50% 0;
-  }
-  .ev-hud__br {
-    bottom: 1.4rem;
-    right: var(--pad);
     font-variant-numeric: tabular-nums;
   }
   .ev-hud .ev-hud__br span {
     position: static;
+  }
+
+  /* On air */
+  .ev-onair {
+    position: absolute;
+    right: var(--pad);
+    bottom: 1.2rem;
+    display: grid;
+    gap: 0.45rem;
+    width: clamp(12rem, 17vw, 15rem);
+    padding: 0.4rem 0.4rem 0.55rem;
+    border-radius: 1rem;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .ev-onair__screen {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 0.7rem;
+    background: #1d1915;
+  }
+  .ev-onair__screen img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 900ms var(--ease-out);
+  }
+  .ev-onair__screen img.is-on {
     opacity: 1;
+  }
+  .ev-onair__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0 0.3rem;
+    font-family: var(--font-utility);
+    font-size: 0.75rem;
+    color: var(--ink-2);
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .ev-onair__meta b {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .ev-onair__rec {
+    flex: none;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: #c9331b;
+    box-shadow: 0 0 8px rgba(201, 51, 27, 0.7);
+    animation: ev-rec 2.4s ease-in-out infinite;
+  }
+  @keyframes ev-rec {
+    50% {
+      opacity: 0.35;
+    }
   }
 
   @media (max-width: 760px) {
     .ev-hero {
       justify-content: flex-end;
-      padding-top: 15rem;
-      padding-bottom: 4.5rem;
+      min-height: 100svh;
+      padding: 14rem var(--pad) 4.5rem;
     }
-    .ev-hero__img {
-      object-position: 64% 26%;
+    .ev-hero__video {
+      object-position: 55% 22%;
     }
     .ev-hero__wash {
-      background: linear-gradient(0deg, var(--fog) 0%, rgba(240, 235, 228, 0.88) 42%, rgba(240, 235, 228, 0) 70%);
+      background: linear-gradient(0deg, var(--fog) 0%, rgba(240, 234, 226, 0.9) 45%, rgba(240, 234, 226, 0) 72%);
     }
-    .ev-orb--hero {
-      --s: 11rem;
-      top: 8.5rem;
-      left: 62%;
-    }
-    .ev-hero__note {
-      top: 4.5rem;
+    .ev-hero__whisper {
+      top: 7rem;
       right: 1rem;
-      font-size: 1.3rem;
+      font-size: 1.1rem;
     }
     .ev-hud__side,
-    .ev-hud__bc {
+    .ev-hud__br,
+    .ev-onair {
       display: none;
     }
   }
@@ -1077,33 +1152,30 @@ const year = new Date().getFullYear();
     position: relative;
     width: min(100%, var(--max));
     margin: 0 auto;
-    padding: clamp(4.5rem, 10vw, 8rem) var(--pad);
+    padding: clamp(3.5rem, 6.5vw, 5.5rem) var(--pad);
   }
-  .ev-sec__head {
-    position: relative;
-    margin-bottom: clamp(2rem, 4vw, 3.2rem);
+  .ev-head2 {
+    margin-bottom: clamp(2rem, 4vw, 3rem);
   }
-  .ev-sec__head--center {
+  .ev-head2--center {
     text-align: center;
   }
+  .ev-head2--center .ev-label {
+    justify-content: center;
+  }
+  .ev-head2--center .ev-label::after {
+    display: none;
+  }
 
-  /* ───── Works carousel ───── */
+  /* ───── Works ───── */
   .ev-works {
     width: 100%;
     max-width: none;
     padding-left: 0;
     padding-right: 0;
-    background:
-      linear-gradient(180deg, var(--fog) 0%, rgba(232, 226, 218, 0.35) 24%, rgba(232, 226, 218, 0.35) 62%, var(--fog) 96%),
-      var(--fog-img, none) center / cover no-repeat;
   }
-  .ev-works .ev-sec__head {
+  .ev-works .ev-head2 {
     padding: 0 var(--pad);
-  }
-  .ev-works__aside {
-    margin-top: 0.8rem;
-    font-size: 1.5rem;
-    transform: rotate(-2deg);
   }
   .ev-cases {
     --card-w: min(60rem, calc(100vw - 2 * var(--pad) - 2rem));
@@ -1113,7 +1185,7 @@ const year = new Date().getFullYear();
     display: flex;
     gap: clamp(1rem, 2.5vw, 2rem);
     margin: 0;
-    padding: 1.5rem calc((100% - var(--card-w)) / 2) 2rem;
+    padding: 1.5rem calc((100% - var(--card-w)) / 2) 2.4rem;
     list-style: none;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -1126,56 +1198,56 @@ const year = new Date().getFullYear();
   .ev-case {
     flex: 0 0 var(--card-w);
     display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
     gap: clamp(1rem, 2.5vw, 2rem);
-    padding: clamp(0.7rem, 1.4vw, 1rem);
-    background: var(--card);
-    border-radius: var(--r-lg);
-    box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.9) inset,
-      0 40px 70px -40px rgba(40, 36, 30, 0.35);
+    padding: clamp(0.6rem, 1.2vw, 0.85rem);
     scroll-snap-align: center;
-    opacity: 0.45;
+    opacity: 0.5;
     transform: scale(0.94);
+    filter: saturate(0.6);
     transition:
       opacity 420ms var(--ease-out),
-      transform 420ms var(--ease-out);
+      transform 420ms var(--ease-out),
+      filter 420ms var(--ease-out);
   }
   .ev-case.is-active {
     opacity: 1;
     transform: none;
+    filter: none;
   }
   .ev-case__mon {
     position: relative;
-    aspect-ratio: 4 / 3.4;
+    aspect-ratio: 4 / 3.3;
     overflow: hidden;
-    border-radius: calc(var(--r-lg) - 0.6rem);
-    background: #151412;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06);
+    border-radius: calc(var(--r) - 0.55rem);
+    background: #1d1915;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.4),
+      0 18px 40px -24px rgba(60, 35, 15, 0.6);
   }
   .ev-case__mon > img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transform: scale(1.02);
-    transition: transform 6s linear;
+    transition: transform 7s linear;
   }
   .ev-case.is-active .ev-case__mon > img {
     transform: scale(1.08);
   }
   .ev-case__bar {
     position: absolute;
-    top: 0.8rem;
-    left: 0.8rem;
-    right: 0.8rem;
+    top: 0.75rem;
+    left: 0.75rem;
+    right: 0.75rem;
     display: flex;
     gap: 0.6rem;
     align-items: center;
     font-family: var(--font-utility);
-    font-size: 0.68rem;
+    font-size: 0.66rem;
     font-weight: 600;
     letter-spacing: 0.12em;
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(255, 255, 255, 0.88);
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
   }
   .ev-case__pgm {
@@ -1188,13 +1260,6 @@ const year = new Date().getFullYear();
     margin-left: auto;
     font-variant-numeric: tabular-nums;
   }
-  .ev-case__safe {
-    position: absolute;
-    inset: 12% 7% 7%;
-    border: 1px dashed rgba(255, 255, 255, 0.28);
-    border-radius: 0.3rem;
-    pointer-events: none;
-  }
   .ev-case__embed {
     position: absolute;
     inset: 0;
@@ -1206,145 +1271,129 @@ const year = new Date().getFullYear();
     height: 100%;
     border: 0;
   }
-  .ev-case__note {
-    position: absolute;
-    left: 1rem;
-    bottom: 0.8rem;
-    max-width: 85%;
-    font-size: 1.55rem;
-    color: #ff8a55;
-    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
-    transform: rotate(-3deg);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    opacity: 0;
-    transition: opacity 400ms var(--ease-out) 200ms;
-  }
-  .ev-case.is-active .ev-case__note {
-    opacity: 1;
-  }
   .ev-case__info {
     display: flex;
     flex-direction: column;
-    padding: clamp(0.5rem, 1.6vw, 1.4rem) clamp(0.3rem, 1.4vw, 1.2rem) clamp(0.4rem, 1vw, 0.8rem) 0;
+    padding: clamp(0.5rem, 1.6vw, 1.3rem) clamp(0.3rem, 1.4vw, 1.1rem) clamp(0.4rem, 1vw, 0.8rem) 0;
   }
   .ev-case__client {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
     margin: 0;
     font-family: var(--font-utility);
-    font-size: 0.8rem;
+    font-size: 0.74rem;
     font-weight: 600;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--soft);
+    color: var(--sun-text);
   }
   .ev-case__title {
-    margin: 0.7rem 0 0;
-    font-size: clamp(1.4rem, 1.4vw + 0.9rem, 2.1rem);
-    font-weight: 520;
-    line-height: 1.12;
-    letter-spacing: -0.03em;
+    margin: 0.55rem 0 0;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(1.7rem, 1.6vw + 1.1rem, 2.5rem);
+    line-height: 1.04;
+    letter-spacing: -0.01em;
     text-wrap: balance;
   }
   .ev-case__sum {
     margin: 0.7rem 0 0;
     font-size: 1rem;
-    color: var(--soft);
+    color: var(--ink-2);
+  }
+  .ev-case__facts {
+    display: grid;
+    margin: auto 0 0;
+    padding-top: 1.3rem;
+  }
+  .ev-case__facts div {
+    display: grid;
+    grid-template-columns: 4.5rem 1fr;
+    gap: 0.8rem;
+    padding: 0.45rem 0;
+    border-top: 1px solid rgba(114, 103, 92, 0.22);
+    font-size: 0.95rem;
+  }
+  .ev-case__facts dt {
+    font-family: var(--font-utility);
+    font-size: 0.74rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mute);
+    padding-top: 0.15rem;
+  }
+  .ev-case__facts dd {
+    margin: 0;
+    color: var(--ink);
   }
   .ev-case__act {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 0.4rem 1.1rem;
-    margin-top: 1.2rem;
-  }
-  .ev-case__facts {
-    display: grid;
-    grid-template-columns: repeat(3, auto);
-    justify-content: start;
-    gap: 0.4rem clamp(1.2rem, 3vw, 2.4rem);
-    margin: auto 0 0;
-    padding-top: 1.4rem;
-  }
-  .ev-case__facts div {
-    display: flex;
-    flex-direction: column-reverse;
-  }
-  .ev-case__facts dt {
-    font-family: var(--font-utility);
-    font-size: 0.75rem;
-    color: var(--soft);
-  }
-  .ev-case__facts dd {
-    margin: 0;
-    font-size: clamp(1.4rem, 1.2vw + 1rem, 1.9rem);
-    font-weight: 500;
-    letter-spacing: -0.03em;
-    font-variant-numeric: tabular-nums;
+    margin-top: 1rem;
   }
   .ev-cases__arrow {
     position: absolute;
-    top: calc(50% - 1.5rem);
+    top: calc(50% - 1.6rem);
     z-index: 3;
     display: grid;
     place-items: center;
-    width: 2.9rem;
-    height: 2.9rem;
-    border: 0;
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid var(--edge);
     border-radius: 50%;
-    background: var(--ink);
-    color: #fff;
+    background: var(--glass-strong);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    color: var(--ink);
     font-size: 1.1rem;
     cursor: pointer;
-    box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 12px 26px -16px rgba(96, 62, 30, 0.6);
   }
   .ev-cases__arrow--prev {
-    left: calc((100% - var(--card-w)) / 2 - 1.45rem);
+    left: calc((100% - var(--card-w)) / 2 - 1.5rem);
   }
   .ev-cases__arrow--next {
-    right: calc((100% - var(--card-w)) / 2 - 1.45rem);
+    right: calc((100% - var(--card-w)) / 2 - 1.5rem);
   }
   .ev-cases__arrow:disabled {
-    opacity: 0.25;
+    opacity: 0.3;
     cursor: default;
   }
   .ev-cases__dots {
     display: flex;
     justify-content: center;
-    gap: 0.25rem;
   }
   .ev-dot {
+    position: relative;
     width: 1.6rem;
     height: var(--tap-min);
     padding: 0;
     border: 0;
     background: none;
     cursor: pointer;
-    position: relative;
   }
   .ev-dot::after {
     content: "";
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 0.45rem;
-    height: 0.45rem;
+    width: 0.4rem;
+    height: 0.4rem;
     border-radius: 999px;
-    background: var(--line);
+    background: rgba(114, 103, 92, 0.4);
     translate: -50% -50%;
     transition:
       width var(--dur) var(--ease-out),
-      background-color var(--dur) var(--ease-out);
+      background-color var(--dur) var(--ease-out),
+      box-shadow var(--dur) var(--ease-out);
   }
   .ev-dot[aria-current="true"]::after {
-    width: 1.4rem;
-    background: linear-gradient(90deg, #f2a36e, var(--amber));
+    width: 1.3rem;
+    background: var(--sun);
+    box-shadow: 0 0 10px rgba(224, 122, 46, 0.7);
   }
   .ev-works__more {
-    margin: 1.8rem 0 0;
+    margin: 1.4rem 0 0;
     text-align: center;
   }
   @media (max-width: 760px) {
@@ -1362,16 +1411,73 @@ const year = new Date().getFullYear();
     }
   }
 
+  /* ───── Team ───── */
+  .ev-team {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: center;
+  }
+  .ev-team__lede {
+    max-width: 30rem;
+    margin: 1.2rem 0 0.6rem;
+    color: var(--ink-2);
+  }
+  .ev-team__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin: 0;
+    padding: 0 0 2.2rem;
+    list-style: none;
+  }
+  .ev-person {
+    padding: 0.55rem 0.55rem 1rem;
+  }
+  .ev-person:nth-child(2) {
+    translate: 0 2.2rem;
+  }
+  .ev-person img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: calc(var(--r) - 0.5rem);
+    /* Two very different photos, one light: warm monochrome. */
+    filter: grayscale(1) sepia(0.28) contrast(0.95) brightness(1.04);
+  }
+  .ev-person__name {
+    margin: 0.85rem 0.3rem 0;
+    font-family: var(--serif);
+    font-size: 1.45rem;
+    line-height: 1.1;
+  }
+  .ev-person__role {
+    margin: 0.2rem 0.3rem 0;
+    font-family: var(--font-utility);
+    font-size: 0.8rem;
+    color: var(--mute);
+  }
+  @media (max-width: 860px) {
+    .ev-team {
+      grid-template-columns: 1fr;
+    }
+    .ev-person:nth-child(2) {
+      translate: 0 1.2rem;
+    }
+  }
+
   /* ───── Orbit ───── */
   .ev-orbit__grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-    gap: clamp(2rem, 5vw, 5rem);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
     align-items: center;
   }
   .ev-orbit__stage {
     position: relative;
-    width: min(100%, 34rem);
+    width: min(100%, 32rem);
     aspect-ratio: 1;
     margin: 0 auto;
   }
@@ -1384,40 +1490,54 @@ const year = new Date().getFullYear();
   }
   .ev-orbit__ring circle {
     fill: none;
-    stroke: #bdb9b2;
-    stroke-width: 1;
+    stroke: rgba(255, 255, 255, 0.85);
+    stroke-width: 1.2;
     vector-effect: non-scaling-stroke;
+    filter: drop-shadow(0 0 3px rgba(255, 200, 150, 0.8));
   }
   .ev-orbit__ring-in {
-    stroke-dasharray: 2 6;
-    opacity: 0.8;
+    stroke-dasharray: 2 7;
+    opacity: 0.7;
   }
-  .ev-orb--orbit {
-    --s: 28%;
+  .ev-orbit__sun {
+    position: absolute;
     top: 50%;
     left: 50%;
+    width: 46%;
+    aspect-ratio: 1;
     translate: calc(-50% + var(--ox, 0%)) calc(-50% + var(--oy, 0%));
-    transition: translate 700ms var(--ease-out);
+    transition: translate 800ms var(--ease-out);
   }
-  /* The sun leans toward the selected stop. */
-  .ev-orbit__grid[data-at="fikir"] .ev-orb--orbit { --ox: 0%; --oy: -22%; }
-  .ev-orbit__grid[data-at="set"] .ev-orb--orbit { --ox: 22%; --oy: 0%; }
-  .ev-orbit__grid[data-at="kurgu"] .ev-orb--orbit { --ox: 0%; --oy: 22%; }
-  .ev-orbit__grid[data-at="teslim"] .ev-orb--orbit { --ox: -22%; --oy: 0%; }
+  .ev-orbit__sun img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    -webkit-mask-image: radial-gradient(circle, #000 40%, transparent 68%);
+    mask-image: radial-gradient(circle, #000 40%, transparent 68%);
+    animation: ev-breathe 7s ease-in-out infinite;
+  }
+  @keyframes ev-breathe {
+    50% {
+      transform: scale(1.04);
+      filter: brightness(1.06);
+    }
+  }
+  .ev-orbit__grid[data-at="fikir"] .ev-orbit__sun { --ox: 0%; --oy: -14%; }
+  .ev-orbit__grid[data-at="set"] .ev-orbit__sun { --ox: 14%; --oy: 0%; }
+  .ev-orbit__grid[data-at="kurgu"] .ev-orbit__sun { --ox: 0%; --oy: 14%; }
+  .ev-orbit__grid[data-at="teslim"] .ev-orbit__sun { --ox: -14%; --oy: 0%; }
 
   .ev-orbit__stops {
     position: absolute;
     inset: 0;
   }
   .ev-stop {
-    --r: 37.5%; /* matches the r=150 ring in a 400 viewBox */
+    --r: 37.5%;
     position: absolute;
     top: calc(50% + sin(var(--a)) * var(--r));
     left: calc(50% + cos(var(--a)) * var(--r));
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.4rem;
+    display: grid;
+    justify-items: center;
     padding: 0;
     border: 0;
     background: none;
@@ -1426,18 +1546,13 @@ const year = new Date().getFullYear();
     transform: translate(-50%, -50%);
   }
   .ev-stop__face {
-    display: grid;
-    place-items: center;
-    width: clamp(4rem, 9vw, 5.6rem);
+    display: block;
+    width: clamp(3.8rem, 8.5vw, 5.2rem);
     aspect-ratio: 1;
     overflow: hidden;
     border-radius: 50%;
-    background: color-mix(in srgb, var(--card) 82%, transparent);
-    border: 1px solid rgba(255, 255, 255, 0.9);
-    box-shadow:
-      0 0 0 1px var(--line),
-      0 18px 30px -18px rgba(40, 36, 30, 0.45);
-    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 14px 26px -16px rgba(96, 62, 30, 0.6);
     transition:
       box-shadow var(--dur) var(--ease-out),
       transform var(--dur) var(--ease-out);
@@ -1446,51 +1561,49 @@ const year = new Date().getFullYear();
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
-  .ev-stop__ic {
-    width: 52%;
-    fill: none;
-    stroke: var(--ink);
-    stroke-width: 1.6;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+    filter: saturate(0.7);
+    transition: filter var(--dur) var(--ease-out);
   }
   .ev-stop__label {
+    position: absolute;
+    top: calc(100% + 0.35rem);
     display: inline-flex;
     gap: 0.35rem;
-    padding: 0.15rem 0.6rem;
+    padding: 0.1rem 0.6rem;
     border-radius: 999px;
-    background: color-mix(in srgb, var(--card) 80%, transparent);
+    background: var(--glass-strong);
     font-family: var(--font-utility);
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 600;
     white-space: nowrap;
   }
   .ev-stop__n {
-    color: var(--dim);
+    color: var(--mute);
   }
   .ev-stop:hover .ev-stop__face {
-    transform: translateY(-2px);
+    transform: scale(1.05);
   }
   .ev-stop[aria-pressed="true"] .ev-stop__face {
+    transform: scale(1.12);
     box-shadow:
-      0 0 0 2px var(--amber),
-      0 0 0 7px rgba(226, 83, 3, 0.12),
-      0 18px 30px -18px rgba(40, 36, 30, 0.45);
+      0 0 0 1px rgba(255, 255, 255, 0.95),
+      0 0 26px 4px rgba(255, 180, 110, 0.75),
+      0 14px 26px -16px rgba(96, 62, 30, 0.6);
+  }
+  .ev-stop[aria-pressed="true"] .ev-stop__face img {
+    filter: none;
   }
   .ev-stop[aria-pressed="true"] .ev-stop__label {
     background: var(--ink);
-    color: #f6f5f2;
+    color: #f6f1ea;
   }
   .ev-stop[aria-pressed="true"] .ev-stop__n {
-    color: #f2a36e;
+    color: #f3b27c;
   }
 
   .ev-panel {
-    padding: clamp(1.4rem, 3vw, 2.2rem);
-    background: var(--card);
-    border-radius: var(--r-lg);
-    box-shadow: 0 30px 60px -40px rgba(40, 36, 30, 0.4);
+    overflow: hidden;
+    padding: 0.55rem;
   }
   .ev-panel + .ev-panel {
     margin-top: 1rem;
@@ -1502,7 +1615,7 @@ const year = new Date().getFullYear();
     margin-top: 0;
   }
   .ev-panel.is-open {
-    animation: ev-panel-in 420ms var(--ease-out);
+    animation: ev-panel-in 460ms var(--ease-out);
   }
   @keyframes ev-panel-in {
     from {
@@ -1512,54 +1625,47 @@ const year = new Date().getFullYear();
   }
   .ev-panel__img {
     display: block;
-    width: calc(100% + 2 * clamp(1.4rem, 3vw, 2.2rem) - 1.2rem);
-    max-width: none;
+    width: 100%;
     height: auto;
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 16 / 9;
     object-fit: cover;
-    margin: calc(-1 * clamp(1.4rem, 3vw, 2.2rem) + 0.6rem) calc(-1 * clamp(1.4rem, 3vw, 2.2rem) + 0.6rem) 1.2rem;
-    border-radius: calc(var(--r-lg) - 0.5rem);
+    border-radius: calc(var(--r) - 0.5rem);
+  }
+  .ev-panel__body {
+    padding: 1.1rem clamp(0.8rem, 2vw, 1.4rem) 0.8rem;
   }
   .ev-panel__n {
     margin: 0;
     font-family: var(--font-utility);
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     font-weight: 600;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--dim);
+    color: var(--mute);
+  }
+  .ev-panel__n span {
+    color: var(--sun-text);
   }
   .ev-panel__title {
-    margin: 0.5rem 0 0;
-    font-size: clamp(1.6rem, 1.5vw + 1rem, 2.2rem);
-    font-weight: 520;
-    letter-spacing: -0.035em;
-    line-height: 1.1;
-  }
-  .ev-panel__when {
-    margin-top: 0.3rem;
-    font-size: 1.55rem;
+    margin: 0.35rem 0 0;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(1.9rem, 1.5vw + 1.2rem, 2.6rem);
+    line-height: 1.05;
   }
   .ev-panel__text {
-    margin: 0.9rem 0 0;
-    color: var(--soft);
-  }
-  .ev-panel__note {
-    margin-top: 0.8rem;
-    font-size: 1.35rem;
-    color: var(--soft);
-    transform: rotate(-1.5deg);
-    transform-origin: left;
+    margin: 0.7rem 0 0;
+    color: var(--ink-2);
   }
   .ev-panel__next {
-    margin-top: 1.2rem;
+    margin-top: 0.6rem;
   }
   @media (max-width: 860px) {
     .ev-orbit__grid {
       grid-template-columns: 1fr;
     }
     .ev-orbit__stage {
-      width: min(100%, 22rem);
+      width: min(100%, 21rem);
     }
   }
 
@@ -1567,41 +1673,30 @@ const year = new Date().getFullYear();
   .ev-svc__list {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 18.5rem), 1fr));
-    gap: clamp(1.2rem, 2.5vw, 2rem);
+    gap: clamp(1rem, 2vw, 1.6rem);
     margin: 0;
     padding: 0;
     list-style: none;
   }
   .ev-svc__card {
-    position: relative;
     display: flex;
     flex-direction: column;
-    padding: 2.4rem clamp(1.3rem, 2.4vw, 1.9rem) 1.4rem;
-    background: var(--card);
-    border-radius: var(--r-lg);
-    box-shadow: 0 30px 60px -45px rgba(40, 36, 30, 0.45);
+    padding: 1.4rem clamp(1.2rem, 2.2vw, 1.7rem) 1.2rem;
   }
-  .ev-svc__tape {
-    position: absolute;
-    top: -0.85rem;
-    left: 1.4rem;
-    padding: 0.15rem 0.85rem;
-    background: rgba(236, 226, 196, 0.95);
-    color: #2b2620;
-    font-size: 1.3rem;
-    transform: rotate(-2.5deg);
-    clip-path: polygon(2% 0, 98% 4%, 100% 96%, 0 100%);
+  .ev-svc__card > .ev-whisper {
+    margin: 0 0 0.8rem;
+    font-size: 1.15rem;
   }
   .ev-svc__title {
     margin: 0;
-    font-size: clamp(1.45rem, 1vw + 1.1rem, 1.8rem);
-    font-weight: 520;
-    letter-spacing: -0.03em;
-    line-height: 1.12;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(1.9rem, 1vw + 1.4rem, 2.3rem);
+    line-height: 1.02;
   }
   .ev-svc__sum {
     margin: 0.6rem 0 1rem;
-    color: var(--soft);
+    color: var(--ink-2);
     font-size: 1.02rem;
   }
   .ev-svc__feat {
@@ -1611,7 +1706,7 @@ const year = new Date().getFullYear();
   }
   .ev-svc__feat li {
     padding: 0.5rem 0;
-    border-top: 1px solid var(--line);
+    border-top: 1px solid rgba(114, 103, 92, 0.22);
     font-size: 1rem;
   }
   .ev-svc__card .ev-link {
@@ -1619,103 +1714,168 @@ const year = new Date().getFullYear();
     align-self: flex-start;
   }
 
-  /* ───── Brands ───── */
-  .ev-brands {
-    padding-top: 0;
-    text-align: center;
+  /* ───── FAQ ───── */
+  .ev-faq {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(1.5rem, 5vw, 4.5rem);
+    align-items: start;
   }
-  .ev-brands__title {
-    font-size: 0.78rem;
+  .ev-faq__list {
+    display: grid;
+    gap: 0.7rem;
+  }
+  .ev-qa {
+    border-radius: 1.1rem;
+  }
+  .ev-qa summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 3.6rem;
+    padding: 0.8rem 1.2rem;
+    font-weight: 560;
+    cursor: pointer;
+    list-style: none;
+  }
+  .ev-qa summary::-webkit-details-marker {
+    display: none;
+  }
+  .ev-qa__ic {
+    position: relative;
+    flex: none;
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 50%;
+    background: var(--glass-strong);
+    box-shadow: inset 0 0 0 1px var(--edge);
+  }
+  .ev-qa__ic::before,
+  .ev-qa__ic::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.65rem;
+    height: 1.5px;
+    background: var(--ink);
+    translate: -50% -50%;
+    transition: transform var(--dur) var(--ease-out);
+  }
+  .ev-qa__ic::after {
+    transform: rotate(90deg);
+  }
+  .ev-qa[open] .ev-qa__ic::after {
+    transform: rotate(0deg);
+  }
+  .ev-qa[open] .ev-qa__ic {
+    background: var(--sun);
+    box-shadow: 0 0 14px rgba(224, 122, 46, 0.6);
+  }
+  .ev-qa[open] .ev-qa__ic::before,
+  .ev-qa[open] .ev-qa__ic::after {
+    background: #fff;
+  }
+  .ev-qa__a {
+    padding: 0 1.2rem 1.1rem;
+    color: var(--ink-2);
+  }
+  .ev-qa__a p {
+    margin: 0;
+  }
+  @media (max-width: 860px) {
+    .ev-faq {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ───── Brands: the shared logo wall, re-lit for the fog ───── */
+  .ev-brands {
+    padding-top: 1rem;
+  }
+  .ev .marquee::before,
+  .ev .marquee::after {
+    display: none;
+  }
+  .ev .logo-chip {
+    background: var(--glass);
+    border-color: var(--edge);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
+  .ev .logo-chip:not(.logo-chip--dark) img {
+    mix-blend-mode: multiply;
+  }
+  .ev .marquee {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
   }
 
   /* ───── Call sheet ───── */
-  .ev-call {
-    padding-top: 0;
-  }
   .ev-call__frame {
     position: relative;
     overflow: hidden;
-    padding: clamp(2.2rem, 6vw, 5rem) clamp(1.2rem, 5vw, 4.5rem) clamp(12rem, 22vw, 17rem);
-    background: linear-gradient(180deg, var(--card) 0%, #f3efe9 55%, #f6e6d8 100%);
-    border-radius: calc(var(--r-lg) + 0.4rem);
-    box-shadow: 0 50px 90px -60px rgba(40, 36, 30, 0.5);
+    padding: clamp(1rem, 4vw, 3.5rem) clamp(0.6rem, 4vw, 3.5rem) clamp(12rem, 24vw, 18rem);
+    border-radius: calc(var(--r) + 0.6rem);
     isolation: isolate;
+    box-shadow: var(--shade);
   }
   .ev-call__dawn {
     position: absolute;
     inset: 0;
     z-index: -1;
-    pointer-events: none;
+    background: var(--fog);
   }
-  .ev-call__video,
-  .ev-call__img {
+  .ev-call__video {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: 50% 100%;
-    opacity: 0.95;
     transition:
       transform 1.4s var(--ease-out),
       filter 1.4s var(--ease-out);
   }
-  .ev-call.is-sent .ev-call__img,
   .ev-call.is-sent .ev-call__video {
     transform: translateY(-4%) scale(1.04);
     filter: brightness(1.08);
   }
-  /* Paper wash over the dawn so the sentence stays readable. */
-  .ev-call__dawn::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(247, 243, 238, 0.94) 0%, rgba(247, 243, 238, 0.86) 45%, rgba(247, 243, 238, 0.2) 80%, rgba(247, 243, 238, 0) 100%);
-  }
-  .ev-orb--dawn {
-    --s: clamp(16rem, 34vw, 28rem);
-    left: 50%;
-    bottom: 0;
-    translate: -50% 55%;
-    transition:
-      translate 1.2s var(--ease-out),
-      filter 1.2s var(--ease-out);
-  }
-  .ev-call.is-sent .ev-orb--dawn {
-    translate: -50% 30%;
-    filter: brightness(1.15) saturate(1.1);
+  .ev-call__sheet {
+    max-width: 58rem;
+    padding: clamp(1.4rem, 4vw, 3rem);
+    background: rgba(250, 246, 240, 0.62);
   }
   .ev-call__lede {
-    margin: 1rem 0 0;
-    color: var(--soft);
+    margin: 0.9rem 0 0;
+    color: var(--ink-2);
   }
   .ev-form {
-    margin-top: clamp(1.8rem, 4vw, 2.8rem);
+    margin-top: clamp(1.4rem, 3vw, 2.2rem);
   }
   .ev-form__line {
-    max-width: 56rem;
     margin: 0;
-    font-size: clamp(1.35rem, 1.6vw + 0.9rem, 2.3rem);
-    line-height: 1.75;
-    letter-spacing: -0.025em;
-    font-weight: 450;
+    font-family: var(--serif);
+    font-size: clamp(1.7rem, 2vw + 1rem, 2.7rem);
+    line-height: 1.55;
   }
   .ev-fill {
     display: inline-block;
   }
   .ev-fill input,
   .ev-fill select {
-    width: 10ch;
+    width: 9ch;
     min-height: var(--tap-min);
-    padding: 0 0.25rem;
+    padding: 0 0.2rem;
     border: 0;
-    border-bottom: 1.5px solid #b6b2ab;
+    border-bottom: 1px solid rgba(81, 73, 63, 0.45);
     border-radius: 0;
     background: transparent;
-    color: var(--amber-text);
+    color: var(--sun-text);
     font: inherit;
-    font-family: var(--hand);
-    font-weight: 600;
-    font-size: 1.12em;
-    line-height: 1.2;
+    font-style: italic;
+    line-height: 1.1;
+  }
+  .ev-fill input[type="tel"] {
+    width: 11ch;
   }
   .ev-fill--select select {
     width: auto;
@@ -1724,39 +1884,41 @@ const year = new Date().getFullYear();
     appearance: none;
     cursor: pointer;
     background:
-      linear-gradient(45deg, transparent 50%, var(--amber-text) 50%) right 0.4rem center / 0.4rem 0.4rem no-repeat,
-      linear-gradient(-45deg, transparent 50%, var(--amber-text) 50%) right 0.15rem center / 0.4rem 0.4rem no-repeat;
+      linear-gradient(45deg, transparent 50%, var(--sun-text) 50%) right 0.4rem center / 0.4rem 0.4rem no-repeat,
+      linear-gradient(-45deg, transparent 50%, var(--sun-text) 50%) right 0.15rem center / 0.4rem 0.4rem no-repeat;
   }
   .ev-fill select option {
     font-family: var(--font-body);
+    font-style: normal;
     color: var(--ink);
   }
   .ev-fill input::placeholder {
-    color: #aaa59d;
+    color: var(--mute);
+    opacity: 1;
   }
   .ev-fill input:focus,
   .ev-fill select:focus {
     outline: none;
-    border-bottom-color: var(--amber);
+    border-bottom-color: var(--sun);
+    box-shadow: 0 6px 12px -8px rgba(224, 122, 46, 0.7);
   }
   .ev-fill input:focus-visible,
   .ev-fill select:focus-visible {
     outline: none;
-    box-shadow: 0 2px 0 var(--amber);
+    border-bottom: 2px solid var(--sun);
   }
   .ev-fill input:user-invalid {
-    border-bottom-color: #c0341d;
+    border-bottom-color: #b42318;
   }
   .ev-form__note {
     display: block;
-    margin-top: 1.8rem;
+    margin-top: 1.6rem;
     font-family: var(--font-utility);
     font-size: 0.9rem;
-    color: var(--soft);
+    color: var(--ink-2);
   }
-  .ev-form__note em {
-    font-style: normal;
-    opacity: 0.8;
+  .ev-form__note span {
+    color: var(--mute);
   }
   .ev-form__area {
     display: block;
@@ -1764,20 +1926,24 @@ const year = new Date().getFullYear();
     min-height: 4.5rem;
     margin-top: 0.4rem;
     padding: 0.75rem 0.9rem;
-    border: 1px solid var(--line);
+    border: 1px solid var(--edge);
     border-radius: 0.9rem;
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.5);
     color: var(--ink);
     font: inherit;
     font-size: 1rem;
     resize: vertical;
+  }
+  .ev-form__area:focus-visible {
+    outline: 2px solid var(--sun);
+    outline-offset: 1px;
   }
   .ev-form__foot {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 0.7rem 1.1rem;
-    margin-top: 1.6rem;
+    margin-top: 1.5rem;
   }
   .ev-form__status {
     min-height: 1.5em;
@@ -1789,44 +1955,46 @@ const year = new Date().getFullYear();
   }
   .ev-form__sent {
     display: none;
-    font-size: 1.8rem;
-    transform: rotate(-2deg);
   }
   .ev-call.is-sent .ev-form__sent {
-    display: block;
+    display: flex;
   }
   .ev-form__kvkk {
     margin: 0.4rem 0 0;
     max-width: 40rem;
     font-size: 0.85rem;
-    color: var(--soft);
+    color: var(--ink-2);
   }
   .ev-form__kvkk a {
-    color: var(--amber-text);
+    color: var(--sun-text);
   }
 
   /* ───── Footer ───── */
   .ev-foot {
     width: min(100%, var(--max));
     margin: 0 auto;
-    padding: 2rem var(--pad) 2.4rem;
-    border-top: 1px solid var(--line);
-    font-family: var(--font-utility);
-    font-size: 0.95rem;
+    padding: 1rem var(--pad) 1.6rem;
   }
-  .ev-foot__top {
+  .ev-foot__inner {
     display: grid;
     grid-template-columns: 1.4fr repeat(3, 1fr);
     gap: 1.6rem;
+    padding: clamp(1.4rem, 3vw, 2.2rem);
+    font-family: var(--font-utility);
+    font-size: 0.95rem;
   }
-  .ev-foot__brand p {
-    margin: 0.6rem 0 0;
-    color: var(--soft);
+  .ev-foot__motto {
+    margin: 0.7rem 0 0;
+    font-family: var(--serif);
+    font-size: 1.6rem;
+    line-height: 1.1;
+  }
+  .ev-foot__motto em {
+    color: var(--sun-text);
   }
   .ev-foot__col {
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
   }
   .ev-foot__col a,
   .ev-foot__col span {
@@ -1837,25 +2005,27 @@ const year = new Date().getFullYear();
     text-decoration: none;
   }
   .ev-foot__col span {
-    color: var(--soft);
+    color: var(--mute);
   }
   .ev-foot__col a:hover {
-    color: var(--amber-text);
+    color: var(--sun-text);
   }
   .ev-foot__bottom {
+    grid-column: 1 / -1;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 0.6rem;
-    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(114, 103, 92, 0.22);
     font-size: 0.82rem;
-    color: var(--soft);
+    color: var(--mute);
   }
   .ev-foot__bottom a {
     color: inherit;
   }
   @media (max-width: 760px) {
-    .ev-foot__top {
+    .ev-foot__inner {
       grid-template-columns: 1fr 1fr;
     }
     .ev-foot__brand {
@@ -1863,7 +2033,7 @@ const year = new Date().getFullYear();
     }
   }
 
-  /* ───── Reduced motion: every scene lands in its resting state ───── */
+  /* ───── Reduced motion: every scene rests ───── */
   @media (prefers-reduced-motion: reduce) {
     .ev *,
     .ev *::before,
@@ -1887,26 +2057,44 @@ const year = new Date().getFullYear();
   };
 
   if (root) {
-    /* ── Ambient videos + HUD timecode run only while on screen ── */
+    /* ── Hero: timecode + on-air monitor, only while the hero is visible ── */
+    const hero = root.querySelector<HTMLElement>(".ev-hero");
     const tc = root.querySelector<HTMLElement>("[data-tc]");
+    const frames = [...root.querySelectorAll<HTMLImageElement>("[data-onair-frame]")];
+    const onAirTitle = root.querySelector<HTMLElement>("[data-onair-title]");
     const t0 = performance.now();
     let raf = 0;
+    let cycle = 0;
+    let frame = 0;
     const pad = (n: number) => String(Math.floor(n)).padStart(2, "0");
     const tick = (now: number) => {
       const s = (now - t0) / 1000;
       if (tc) tc.textContent = `${pad(s / 3600)}:${pad((s / 60) % 60)}:${pad(s % 60)}:${pad((s % 1) * 25)}`;
       raf = requestAnimationFrame(tick);
     };
-    const hero = root.querySelector<HTMLElement>(".ev-hero");
+    const nextFrame = () => {
+      if (frames.length < 2) return;
+      frames[frame].classList.remove("is-on");
+      frame = (frame + 1) % frames.length;
+      const img = frames[frame];
+      img.classList.add("is-on");
+      if (onAirTitle) onAirTitle.textContent = img.dataset.title ?? "";
+    };
     if (hero && !reduce) {
       new IntersectionObserver(([e]) => {
-        if (e.isIntersecting) raf ||= requestAnimationFrame(tick);
-        else {
+        if (e.isIntersecting) {
+          raf ||= requestAnimationFrame(tick);
+          cycle ||= window.setInterval(nextFrame, 3200);
+        } else {
           cancelAnimationFrame(raf);
           raf = 0;
+          window.clearInterval(cycle);
+          cycle = 0;
         }
       }).observe(hero);
     }
+
+    /* ── Ambient videos play only on screen ── */
     if (!reduce) {
       const io = new IntersectionObserver((entries) =>
         entries.forEach((e) => {
@@ -1915,8 +2103,16 @@ const year = new Date().getFullYear();
           else v.pause();
         }),
       );
-      root.querySelectorAll<HTMLVideoElement>("[data-ambient]").forEach((v) => io.observe(v));
+      root.querySelectorAll<HTMLVideoElement>("video[data-ambient]").forEach((v) => io.observe(v));
     }
+
+    /* ── Button light follows the pointer ── */
+    root.addEventListener("pointermove", (e) => {
+      const btn = (e.target as Element).closest<HTMLElement>(".ev-btn");
+      if (!btn) return;
+      const r = btn.getBoundingClientRect();
+      btn.style.setProperty("--gx", `${((e.clientX - r.left) / r.width) * 100}%`);
+    });
 
     /* ── Case carousel ── */
     const trackEl = root.querySelector<HTMLElement>("[data-cases-track]");
@@ -1925,7 +2121,6 @@ const year = new Date().getFullYear();
     const prev = root.querySelector<HTMLButtonElement>("[data-cases-prev]");
     const next = root.querySelector<HTMLButtonElement>("[data-cases-next]");
     let active = 0;
-
     const stopEmbeds = (except?: HTMLElement) =>
       cards.forEach((c) => {
         if (c === except) return;
@@ -1935,7 +2130,6 @@ const year = new Date().getFullYear();
           box.replaceChildren();
         }
       });
-
     const setActive = (i: number) => {
       active = i;
       cards.forEach((c, k) => c.classList.toggle("is-active", k === i));
@@ -1974,7 +2168,6 @@ const year = new Date().getFullYear();
     prev?.addEventListener("click", () => goTo(active - 1));
     next?.addEventListener("click", () => goTo(active + 1));
     dots.forEach((d, i) => d.addEventListener("click", () => goTo(i)));
-    // Clicking a peeking neighbour brings it to the centre.
     cards.forEach((c, i) =>
       c.addEventListener("click", (e) => {
         if (i !== active && !(e.target as Element).closest("a, button")) goTo(i);
@@ -2022,13 +2215,13 @@ const year = new Date().getFullYear();
     );
     openStop("fikir");
 
-    /* ── Call sheet: inputs grow with their text; submit like /iletisim/ ── */
+    /* ── Call sheet ── */
     const call = root.querySelector<HTMLElement>("[data-call]");
     const form = root.querySelector<HTMLFormElement>("[data-ev-form]");
     const status = root.querySelector<HTMLElement>("[data-ev-status]");
     form?.querySelectorAll<HTMLInputElement>(".ev-fill input").forEach((input) => {
       input.addEventListener("input", () => {
-        input.style.width = `${Math.max(10, input.value.length + 1)}ch`;
+        input.style.width = `${Math.max(input.type === "tel" ? 11 : 9, input.value.length + 1)}ch`;
       });
     });
     const say = (text: string, err = false) => {
