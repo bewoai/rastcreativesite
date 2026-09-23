@@ -84,3 +84,18 @@ PNG olarak, numarasıyla adlandır (`01-hero-yatay.png`, `01-hero-dikey.png`,
 
 Kling kredi tahmini (686 kredi var): 4 video (hero yatay, hero dikey, şafak, sis) ×
 ~5 sn. Hangi model ve ayarla üreteceğimi üretimden önce sana söyleyip onay alacağım.
+
+## Videolar (2026-09-23)
+
+Kling web'de kullanıcı tarafından üretildi: Kling 2.6, 1080p, 5 sn, ilk kare = son
+kare (kesintisiz döngü), ses yok. Yukarıdaki promptlar kullanıldı.
+
+| Dosya | Kaynak | webm | mp4 |
+|---|---|---|---|
+| `public/evren/hero.*` | 1916×1080 → 1600w | ~112 KB | ~500 KB |
+| `public/evren/hero-dikey.*` | 1176×1764 → 900w | ~92 KB | ~376 KB |
+| `public/evren/safak.*` | 1916×1080 → 1600w | ~144 KB | ~512 KB |
+
+Encode: VP9 CRF 28 / H.264 CRF 22, 24 fps, ses kanalı silindi. Döngü dikişi
+(ilk/son kare PSNR) 33–39 dB, gözle fark edilmiyor. Videolar yalnızca ekrandayken
+oynar; `prefers-reduced-motion` açıksa poster (webp) kalır.
