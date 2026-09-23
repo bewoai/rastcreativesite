@@ -129,7 +129,9 @@ const brands = [
 
 const founders = [
   { name: "Muhammed Al Sheikhly", role: "Kurucu ortak · Video director", photo: muhammedPhoto },
-  { name: "Berat Değirmenci", role: "Kurucu ortak · Video director", photo: beratPhoto },
+  // The only photo we have is monochrome: `mono` warms it into the page's
+  // light until a colour portrait arrives.
+  { name: "Berat Değirmenci", role: "Kurucu ortak · Video director", photo: beratPhoto, mono: true },
 ];
 
 // Four orbit stops. Durations mirror the verified "genellikle 2–4 hafta".
@@ -164,7 +166,7 @@ const stops = [
   {
     key: "teslim",
     label: "Teslim",
-    when: "genellikle 2–4 hafta içinde",
+    when: "2–4 hafta içinde",
     title: "Teslim",
     text: "16:9 ana film, 9:16 dikey versiyonlar ve reklam kesitleri: her mecraya hazır dosyalar.",
     whisper: "yayına hazır",
@@ -432,7 +434,7 @@ const year = new Date().getFullYear();
       <ul class="ev-team__list">
         {
           founders.map((f, i) => (
-            <li class="ev-person ev-glass" data-rise style={`--d:${i + 1}`}>
+            <li class:list={["ev-person ev-glass", { "is-mono": f.mono }]} data-rise style={`--d:${i + 1}`}>
               <Picture
                 src={f.photo}
                 alt={f.name}
@@ -567,6 +569,12 @@ const year = new Date().getFullYear();
             </details>
           ))
         }
+      </div>
+      <div class="ev-faq__ask">
+        <p>Sorunuz burada yok mu? Bir mesajla sorun, aynı ekip yanıtlar.</p>
+        <a class="ev-btn ev-btn--glass ev-btn--sm" href={whatsappHref} data-cta-location="evren_faq_wa">
+          <Icon name="whatsapp" size={17} /> WhatsApp'tan sorun
+        </a>
       </div>
     </section>
 
@@ -1119,8 +1127,30 @@ const year = new Date().getFullYear();
     align-items: center;
     min-height: 2.75rem;
   }
-  .ev-head__nav a:hover {
+  .ev-head__nav a {
+    position: relative;
+  }
+  .ev-head__nav a:hover,
+  .ev-head__nav a[aria-current] {
     color: var(--ink);
+  }
+  /* Where you are: a small sun under the current section's link. */
+  .ev-head__nav a::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0.3rem;
+    width: 0.3rem;
+    height: 0.3rem;
+    border-radius: 50%;
+    background: var(--sun);
+    box-shadow: 0 0 8px rgba(224, 122, 46, 0.8);
+    translate: -50% 0;
+    scale: 0;
+    transition: scale var(--dur) var(--ease-out);
+  }
+  .ev-head__nav a[aria-current]::after {
+    scale: 1;
   }
   .ev-head__act {
     display: flex;
@@ -1467,7 +1497,10 @@ const year = new Date().getFullYear();
     display: flex;
     gap: clamp(1rem, 2.5vw, 2rem);
     margin: 0;
-    padding: 1.5rem calc((100% - var(--card-w)) / 2) 2.4rem;
+    /* Deep bottom padding: the scroller clips on both axes, so the card
+       shadow needs room to fade out instead of ending in a hard band. */
+    padding: 1.5rem calc((100% - var(--card-w)) / 2) 4.8rem;
+    margin-bottom: -2.4rem;
     list-style: none;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -1708,6 +1741,9 @@ const year = new Date().getFullYear();
     /* Colour, gently warmed toward the fog so both portraits share a light. */
     filter: saturate(0.92) sepia(0.1) contrast(1.02);
   }
+  .ev-person.is-mono img {
+    filter: sepia(0.6) saturate(1.5) hue-rotate(-6deg) brightness(1.06) contrast(0.96);
+  }
   .ev-person__name {
     margin: 0.85rem 0.3rem 0;
     font-weight: 560;
@@ -1873,13 +1909,50 @@ const year = new Date().getFullYear();
       padding-top: 1.4rem;
     }
   }
+  /* Phones: each stop becomes a compact row (thumbnail + text), so all
+     four read in about one screen instead of four. */
   @media (max-width: 600px) {
     .ev-path__list {
       grid-template-columns: 1fr;
-      row-gap: 2.2rem;
+      row-gap: 0.8rem;
+    }
+    .ev-step {
+      display: grid;
+      grid-template-columns: 4.6rem minmax(0, 1fr);
+      column-gap: 0.9rem;
+      align-items: start;
+      padding: 0.6rem 0.8rem 0.9rem 0.6rem;
+    }
+    .ev-step.is-lit {
+      transform: none;
+    }
+    .ev-step__node {
+      display: none;
     }
     .ev-step__img {
-      aspect-ratio: 21 / 9;
+      grid-row: 1 / span 4;
+      aspect-ratio: 1;
+      border-radius: 0.8rem;
+    }
+    .ev-step__n,
+    .ev-step__title,
+    .ev-step__text,
+    .ev-step > .ev-whisper {
+      grid-column: 2;
+      margin-inline: 0;
+    }
+    .ev-step__n {
+      margin-top: 0.2rem;
+    }
+    .ev-step__roman {
+      font-size: 1.25rem;
+    }
+    .ev-step__text {
+      font-size: 0.94rem;
+    }
+    .ev-step > .ev-whisper {
+      padding-top: 0.4rem;
+      font-size: 0.98rem;
     }
   }
 
@@ -1932,12 +2005,35 @@ const year = new Date().getFullYear();
   .ev-faq {
     display: grid;
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-    gap: clamp(1.5rem, 5vw, 4.5rem);
+    grid-template-rows: auto 1fr;
+    gap: 0 clamp(1.5rem, 5vw, 4.5rem);
     align-items: start;
   }
   .ev-faq__list {
     display: grid;
     gap: 0.7rem;
+  }
+  .ev-faq > .ev-head2 {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .ev-faq__list {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+  .ev-faq__ask {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: start;
+    display: grid;
+    justify-items: start;
+    gap: 0.8rem;
+    margin-top: 2rem;
+    max-width: 22rem;
+  }
+  .ev-faq__ask p {
+    margin: 0;
+    color: var(--ink-2);
   }
   .ev-qa {
     border-radius: 1.1rem;
@@ -2002,12 +2098,26 @@ const year = new Date().getFullYear();
     .ev-faq {
       grid-template-columns: 1fr;
     }
+    /* On one column the ask follows the questions, where it is needed. */
+    .ev-faq {
+      grid-template-rows: none;
+      row-gap: 1.8rem;
+    }
+    .ev-faq > .ev-head2,
+    .ev-faq__list,
+    .ev-faq__ask {
+      grid-column: 1;
+      grid-row: auto;
+    }
+    .ev-faq__ask {
+      margin-top: 0;
+    }
   }
 
   /* ───── Brands: an engraved plate, not a logo carousel ───── */
   .ev-plate {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 11rem), 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     margin: 0;
     padding: clamp(0.6rem, 2vw, 1.4rem);
     list-style: none;
@@ -2092,12 +2202,33 @@ const year = new Date().getFullYear();
     text-align: center;
     line-height: 1.2;
   }
+  /* 16 marks: 8 × 2 on wide screens, 4 × 4 in between, and on phones a
+     tight 2-column plate with the marks alone (names stay for readers). */
+  @media (min-width: 1100px) {
+    .ev-plate {
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
+    .ev-plate__cell {
+      min-height: 9rem;
+    }
+  }
   @media (max-width: 560px) {
     .ev-plate {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     .ev-plate__cell {
-      min-height: 7rem;
+      min-height: 5.2rem;
+      padding: 1.1rem 0.6rem 0.8rem;
+    }
+    .ev-plate__logo {
+      height: 2.2rem;
+    }
+    .ev-plate__name {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
     }
   }
 
@@ -2340,6 +2471,10 @@ const year = new Date().getFullYear();
       max-width: 100%;
       padding-inline: 0.15rem 0.5rem;
     }
+    .ev-fill--select select {
+      field-sizing: content;
+      padding-right: 1.5rem;
+    }
   }
   .ev-fill--select select {
     width: auto;
@@ -2486,14 +2621,28 @@ const year = new Date().getFullYear();
     color: var(--mute);
   }
   .ev-foot__bottom a {
+    display: inline-block;
+    padding: 0.7rem 0.2rem;
+    margin: -0.7rem 0;
     color: inherit;
   }
+  /* Phones: pages and socials side by side, contact lines full width. */
   @media (max-width: 760px) {
     .ev-foot__inner {
       grid-template-columns: 1fr 1fr;
+      gap: 1rem 1.6rem;
     }
-    .ev-foot__brand {
+    .ev-foot__brand,
+    .ev-foot__col:nth-of-type(2) {
       grid-column: 1 / -1;
+    }
+    .ev-foot__col:nth-of-type(2) {
+      order: 3;
+      padding-top: 0.6rem;
+      border-top: 1px solid rgba(114, 103, 92, 0.22);
+    }
+    .ev-foot__bottom {
+      order: 4;
     }
   }
 
@@ -2678,9 +2827,6 @@ const year = new Date().getFullYear();
       gap: 0.6rem;
       padding-left: 0.8rem;
     }
-    .ev-foot__inner {
-      grid-template-columns: 1fr;
-    }
   }
 
   /* ───── Reduced motion: every scene rests ───── */
@@ -2773,6 +2919,21 @@ const year = new Date().getFullYear();
       const r = btn.getBoundingClientRect();
       btn.style.setProperty("--gx", `${((e.clientX - r.left) / r.width) * 100}%`);
     });
+
+    /* ── Header: mark the section in view ── */
+    const navLinks = [...root.querySelectorAll<HTMLAnchorElement>(".ev-head__nav a")];
+    const navIo = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          navLinks.forEach((a) =>
+            a.getAttribute("href") === `#${e.target.id}` ? a.setAttribute("aria-current", "true") : a.removeAttribute("aria-current"),
+          );
+        }),
+      { rootMargin: "-45% 0px -50% 0px" },
+    );
+    // Watch every scene, so the mark clears on scenes the menu doesn't list.
+    root.querySelectorAll(".ev-hero, .ev-sec").forEach((sec) => navIo.observe(sec));
 
     /* ── Case carousel ── */
     const trackEl = root.querySelector<HTMLElement>("[data-cases-track]");

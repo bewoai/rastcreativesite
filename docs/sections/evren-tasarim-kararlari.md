@@ -158,3 +158,28 @@ Kullanıcı: hero dağınık. Sorunlar ve kararlar:
   arkasında değil, üstteki açık gökte. İki buton yan yana sığıyor.
 - **Başlık butonu:** "Ücretsiz ön görüşme" arasındaki çift boşluk düzeltildi; dar
   ekranda "Ön görüşme".
+
+### v7 — serbest tur: iletişim yeniden, bütün sayfada UI/UX düzeltmeleri
+
+Kullanıcı iletişim bölümünü beğenmedi ve sitenin geri kalanında serbest bıraktı.
+- **İletişim (VIII):** kutu içinde kutu kaldırıldı. Şafak videosu hero gibi tam
+  genişlikte, üstten ve alttan sise eriyor; güneş içeriğin altında ufukta. Solda
+  başlık, "Sonra ne olur?" (I formu gönderin · II sizi arıyoruz · III kapsam ve
+  teklif) ve doğrudan hatlar (WhatsApp, telefon, e-posta); sağda cümle formu. Form
+  alanları içerik kadar genişliyor (`field-sizing: content`), cümle tek parça
+  okunuyor. Müşteriye yabancı "föy" dili kaldırıldı: buton "Gönder, sizi arayalım".
+  Mobilde form, adımlardan önce gelir (önce lead).
+- **Süreç (IV):** telefonda her durak küçük görsel + metin satırı; dört durak
+  yaklaşık bir buçuk ekranda okunuyor (önce ~2000px). IV. durağın etiketi
+  kısaltıldı, kartlar hizalı.
+- **Markalar (VII):** 16 marka geniş ekranda 8 × 2, arada 4 × 4; telefonda kompakt
+  levha (isimler ekran okuyucu için duruyor).
+- **SSS (VI):** "Sorunuz burada yok mu?" + WhatsApp; masaüstünde sol boşluğu
+  dolduruyor, telefonda soruların ardından geliyor.
+- **Üst menü:** ekrandaki bölümün linkinin altında küçük bir güneş.
+- **İşler (II):** kart gölgesi kaydırıcı sınırında kesilip sert bir şerit
+  oluşturuyordu; gölgeye sönme payı verildi.
+- **Ekip (III):** Berat'ın elimizdeki tek fotoğrafı siyah-beyaz; renkli fotoğraf
+  gelene kadar sayfanın ışığına ısıtıldı (`mono`). Renkli kare gelince bayrak kalkar.
+- **Footer:** telefonda iki kolon (sayfalar | sosyal), iletişim altta tam genişlik;
+  KVKK/Telif dokunma alanı büyütüldü.
