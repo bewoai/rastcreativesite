@@ -183,3 +183,22 @@ Kullanıcı iletişim bölümünü beğenmedi ve sitenin geri kalanında serbest
   gelene kadar sayfanın ışığına ısıtıldı (`mono`). Renkli kare gelince bayrak kalkar.
 - **Footer:** telefonda iki kolon (sayfalar | sosyal), iletişim altta tam genişlik;
   KVKK/Telif dokunma alanı büyütüldü.
+
+### v8 — ana sayfaya taşımaya hazırlık: SEO içeriği evrene girdi
+
+Eski ana sayfanın arama motoru / AI görünürlüğü taşıyan blokları evren diline
+çevrilerek taslağa eklendi; taslak artık ana sayfanın yerine geçebilecek durumda.
+- **VI · Stüdyo ve bölge (`#bolge`):** "Rast Creative Studio ne yapar?" yanıt-öncelikli
+  metni, künye (merkez / bölge / hizmetler), "Sakarya'da video çekimi nasıl
+  planlanır?" metni (açılır, içerik DOM'da) ve bölgesel hub: 5 öncelikli hizmet ×
+  22 bölge sayfası linki (eski `AreaIndex` ile aynı linkler).
+- **IX · Günlük (`#gunluk`):** son 3 blog yazısı, cam kartlar.
+- **JSON-LD:** Organization + WebSite + LocalBusiness + FAQPage (eski ana sayfayla aynı).
+- **Hero H1:** üst etiket H1'in içine alındı → H1 "Sakarya video prodüksiyon — İyi iş
+  kendini izletir." diye okunur (slogan tek başına anahtar kelime taşımıyordu).
+- Bölüm numaraları: VI bölge · VII SSS · VIII markalar · IX günlük · X ön görüşme.
+
+Taşıma adımı (onay bekliyor): `src/pages/index.astro` → `taslak/eski-anasayfa.astro`
+(noindex, geri dönüş için), `taslak/evren.astro` → `index.astro`; import yolları bir
+seviye yukarı; `title/description/noindex` kaldırılır (varsayılan başlık), taslak
+URL'si ana sayfaya yönlenir.

@@ -50,6 +50,9 @@ import {
   WHATSAPP_CTA_HREF,
 } from "../../consts";
 import { ytThumbToWebp } from "../../lib/ytimg";
+import { localBusiness, organization, webSite, faqPage, toPlainText } from "../../lib/schema";
+import { SEO_SERVICES } from "../../data/seo-services";
+import { AREA_INDEX_LOCATION_SLUGS, SEO_LOCATIONS } from "../../data/locations";
 import { groupByBrand } from "../../lib/brands";
 
 /* ---- Media slots (public/evren/*) ---------------------------------- */
@@ -97,12 +100,34 @@ const onAir = cases.filter((p) => !p.data.vertical).slice(0, 5);
 const services = (await getCollection("services")).sort(byOrder);
 const serviceWhispers = ["sete çıkıyoruz", "strateji masası", "kurgu odası"];
 
+const faqEntries = (await getCollection("faq")).sort(byOrder);
 const faqs = await Promise.all(
-  (await getCollection("faq")).sort(byOrder).map(async (e) => ({
+  faqEntries.map(async (e) => ({
     q: e.data.question,
     Content: (await render(e)).Content,
   })),
 );
+
+/* ---- Carried over from the previous homepage (SEO) ----------------- */
+// Regional hub: every priority service links to its location pages.
+const areaServices = SEO_SERVICES.filter((s) =>
+  ["video-cekimi", "drone-cekimi", "tanitim-filmi", "reklam-filmi", "sosyal-medya-icerigi"].includes(s.slug),
+);
+const areaLocations = SEO_LOCATIONS.filter((l) => AREA_INDEX_LOCATION_SLUGS.includes(l.slug));
+
+const blogPosts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .slice(0, 3);
+const fmtDate = (d: Date) => d.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" });
+
+// Structured data: Organization + WebSite + LocalBusiness + FAQPage.
+const pageJsonLd = [
+  organization,
+  webSite,
+  localBusiness,
+  faqPage(faqEntries.map((e) => ({ question: e.data.question, answer: toPlainText(e.body ?? "") }))),
+];
 
 /* Brand plate: every mark is an engraved silhouette. Logos that came on
    their own solid ground (Canex, Altoteks, Chint, Serdivan, Zemin) use the
@@ -195,6 +220,7 @@ const year = new Date().getFullYear();
   description="Rast Creative Studio ana sayfa tasarım taslağı (evren)."
   noindex
   bare
+  jsonLd={pageJsonLd}
 >
   <div class="ev" data-ev style={A.cloud ? `--cloud-img:url(${A.cloud})` : undefined}>
     {/* The world: fog behind everything, one fixed layer. */}
@@ -255,8 +281,8 @@ const year = new Date().getFullYear();
 
       <div class="ev-hero__stage">
       <div class="ev-hero__say">
-        <p class="ev-label"><span class="ev-label__sun"></span>Video prodüksiyon · Sakarya</p>
         <h1 id="ev-hero-title" class="ev-hero__title">
+          <span class="ev-label ev-hero__kicker"><span class="ev-label__sun"></span>Sakarya video prodüksiyon</span>
           <span class="ev-w" style="--d:0">İyi</span> <span class="ev-w" style="--d:1">iş</span>
           <span class="ev-w" style="--d:2">kendini</span>
           <em class="ev-w" style="--d:3">izletir.</em>
@@ -548,10 +574,94 @@ const year = new Date().getFullYear();
         </video>
       )}
     </div>
-    {/* ───────── 06 · FAQ: the questions clients actually ask ───────── */}
+    {/* ───────── 06 · Studio & region: what we are, where we shoot ─────────
+        Answer-first copy for new visitors and search/AI engines, plus the
+        regional hub linking every priority service to its location pages. */}
+    <section id="bolge" class="ev-sec ev-area" aria-labelledby="ev-area-title">
+      <div class="ev-area__intro" data-rise>
+        <p class="ev-label"><span class="ev-label__n">VI</span>Stüdyo ve bölge</p>
+        <h2 id="ev-area-title" class="ev-h2">Serdivan'dan <em>sahaya.</em></h2>
+        <p class="ev-area__lead">
+          Rast Creative Studio, <strong>Serdivan/Sakarya merkezli bir video prodüksiyon ve
+          kreatif içerik ajansıdır.</strong> Markalar için reklam filmi, tanıtım filmi, sosyal
+          medya videosu, ürün ve drone çekimi üretir; çekim, kurgu ve renk düzenlemeyi tek
+          elden yürütür.
+        </p>
+        <p class="ev-area__text">
+          Serdivan'daki stüdyosundan Sakarya, Adapazarı, Erenler, Arifiye ve çevre ilçelerin
+          yanı sıra Kocaeli, Gebze ve Düzce hattında yerinde çekim yapar. Fikirden teslime
+          kadar süreç, projeyi planlayan kurucu ortakların kontrolünde ilerler.
+        </p>
+        <dl class="ev-area__facts">
+          <div><dt>Merkez</dt><dd>Serdivan, Sakarya</dd></div>
+          <div><dt>Hizmet bölgesi</dt><dd>Sakarya ve çevresi · Kocaeli · Gebze · Düzce</dd></div>
+          <div><dt>Ana hizmetler</dt><dd>Reklam ve tanıtım filmi, sosyal medya videosu, ürün & drone çekimi, kurgu</dd></div>
+        </dl>
+        <details class="ev-area__more">
+          <summary><h3>Sakarya'da video çekimi nasıl planlanır?</h3><span class="ev-qa__ic" aria-hidden="true" /></summary>
+          <p>
+            Rast Creative Studio, Sakarya ve Serdivan merkezli işletmeler için video çekimi
+            sürecini hedef, mecra ve teslim formatına göre planlar. Tanıtım filmi,
+            sosyal medya videosu, ürün çekimi, etkinlik kaydı veya kurumsal prodüksiyon
+            ihtiyacında önce mesajı netleştirir; ardından sahne akışı, kamera, ışık,
+            ses, kurgu ve renk düzenleme adımlarını tek üretim planında toplarız.
+          </p>
+          <p>
+            Çekim günü sadece güzel görüntü almak için değil, markanın kullanabileceği
+            içerik havuzunu büyütmek için tasarlanır. Aynı prodüksiyondan web sitesi,
+            Instagram Reels, YouTube, reklam kampanyası ve satış sunumu için farklı
+            sürelerde yatay ve dikey videolar hazırlanabilir.
+          </p>
+          <p>
+            Sakarya tanıtım filmi projelerinde Serdivan, Adapazarı, Arifiye ve çevre
+            ilçelerde keşif, çekim izni, sahne akışı ve teslim takvimini baştan
+            netleştiririz. Ürün çekimi ve kurgu aşamasında ise videonun yalnızca iyi
+            görünmesine değil, satış ekibi, web sitesi ve sosyal medya içerik planı
+            içinde gerçekten kullanılabilir olmasına odaklanırız.
+          </p>
+        </details>
+      </div>
+
+      <div class="ev-area__links" aria-label="Bölgesel hizmet sayfaları">
+        {
+          areaServices.map((svc, i) => (
+            <details class="ev-qa ev-area__svc ev-glass" data-rise style={`--d:${i}`}>
+              <summary>
+                <span class="ev-area__svc-head">
+                  <span class="ev-area__svc-name">{svc.name}</span>
+                  <span class="ev-area__svc-where">{areaLocations.slice(0, 4).map((l) => l.name).join(", ")}{areaLocations.length > 4 && ` +${areaLocations.length - 4}`}</span>
+                </span>
+                <span class="ev-qa__ic" aria-hidden="true" />
+              </summary>
+              <div class="ev-qa__a">
+                <p>{svc.tagline}. <a class="ev-link" href={`/${svc.slug}/`}>{svc.name} sayfası</a></p>
+                <ul class="ev-area__places">
+                  {areaLocations.map((l) => (
+                    <li>
+                      <a href={`/${svc.slug}/${l.slug}/`} title={`${l.name} ${svc.name} hizmeti`}>{l.name} {svc.name}</a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </section>
+
+
+    <div class:list={["ev-cloud", { "has-video": cloudVideo }]} aria-hidden="true">
+      {cloudVideo && (
+        <video data-ambient muted loop playsinline preload="none" poster={A.cloudPoster ?? undefined}>
+          {A.cloudWebm && <source src={A.cloudWebm} type="video/webm" />}
+          {A.cloudMp4 && <source src={A.cloudMp4} type="video/mp4" />}
+        </video>
+      )}
+    </div>
+    {/* ───────── 07 · FAQ: the questions clients actually ask ───────── */}
     <section id="sss" class="ev-sec ev-faq" aria-labelledby="ev-faq-title">
       <header class="ev-head2" data-rise>
-        <p class="ev-label"><span class="ev-label__n">VI</span>Sık sorulanlar</p>
+        <p class="ev-label"><span class="ev-label__n">VII</span>Sık sorulanlar</p>
         <h2 id="ev-faq-title" class="ev-h2">Aklınızdaki <em>sorular.</em></h2>
         <p class="ev-whisper" aria-hidden="true">fiyat da burada</p>
       </header>
@@ -590,7 +700,7 @@ const year = new Date().getFullYear();
     {/* ───────── Brands ───────── */}
     <section class="ev-sec ev-brands" aria-labelledby="ev-brands-title">
       <header class="ev-head2 ev-head2--center" data-rise>
-        <p class="ev-label"><span class="ev-label__n">VII</span>Markalar</p>
+        <p class="ev-label"><span class="ev-label__n">VIII</span>Markalar</p>
         <h2 id="ev-brands-title" class="ev-h2">Işığımızın düştüğü <em>markalar.</em></h2>
         <p class="ev-whisper ev-whisper--center" aria-hidden="true">sanayiden sağlığa</p>
       </header>
@@ -625,7 +735,52 @@ const year = new Date().getFullYear();
         </video>
       )}
     </div>
-    {/* ───────── 07 · Call sheet: the sun rises behind the form ─────────
+    {/* ───────── 09 · Journal: latest posts ───────── */}
+    {
+      blogPosts.length > 0 && (
+        <section id="gunluk" class="ev-sec ev-blog" aria-labelledby="ev-blog-title">
+          <header class="ev-head2 ev-blog__head" data-rise>
+            <div>
+              <p class="ev-label"><span class="ev-label__n">IX</span>Günlük</p>
+              <h2 id="ev-blog-title" class="ev-h2">Setten <em>notlar.</em></h2>
+            </div>
+            <a class="ev-link" href="/blog/">Tüm yazılar <span aria-hidden="true">→</span></a>
+          </header>
+          <ul class="ev-blog__list">
+            {blogPosts.map((post, i) => (
+              <li class="ev-post ev-glass" data-rise style={`--d:${i}`}>
+                <a href={`/blog/${post.id}/`} class="ev-post__link">
+                  {post.data.cover && (
+                    <Image
+                      src={post.data.cover}
+                      alt={post.data.coverAlt ?? ""}
+                      widths={[400, 700]}
+                      sizes="(min-width: 1000px) 24rem, 92vw"
+                      class="ev-post__img"
+                      loading="lazy"
+                    />
+                  )}
+                  <time class="ev-post__date" datetime={post.data.pubDate.toISOString()}>{fmtDate(post.data.pubDate)}</time>
+                  <h3 class="ev-post__title">{post.data.title}</h3>
+                  {post.data.description && <p class="ev-post__text">{post.data.description}</p>}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+
+    <div class:list={["ev-cloud", { "has-video": cloudVideo }]} aria-hidden="true">
+      {cloudVideo && (
+        <video data-ambient muted loop playsinline preload="none" poster={A.cloudPoster ?? undefined}>
+          {A.cloudWebm && <source src={A.cloudWebm} type="video/webm" />}
+          {A.cloudMp4 && <source src={A.cloudMp4} type="video/mp4" />}
+        </video>
+      )}
+    </div>
+    {/* ───────── 10 · Call sheet: the sun rises behind the form ─────────
         A full-bleed dawn stage (like the hero), not a box in a box: the
         promise and the ways to reach us on the left, the one-sentence form on
         the right, and the sun on the horizon below. Sending lifts the sun. */}
@@ -645,7 +800,7 @@ const year = new Date().getFullYear();
 
       <div class="ev-call__grid">
         <div class="ev-call__intro" data-rise>
-          <p class="ev-label"><span class="ev-label__n">VIII</span>Ücretsiz ön görüşme</p>
+          <p class="ev-label"><span class="ev-label__n">X</span>Ücretsiz ön görüşme</p>
           <h2 id="ev-call-title" class="ev-h2">Bize bir cümle <em>yazın.</em></h2>
           <p class="ev-call__lede">
             Gerisini telefonda konuşuruz. Fiyat ve kapsam için ilk görüşme ücretsiz.
@@ -2112,6 +2267,204 @@ const year = new Date().getFullYear();
     .ev-faq__ask {
       margin-top: 0;
     }
+  }
+
+  /* ───── Studio & region ───── */
+  .ev-hero__kicker {
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+  .ev-area {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: start;
+  }
+  .ev-area__lead {
+    margin: 1.2rem 0 0;
+    font-size: 1.12rem;
+    color: var(--ink);
+  }
+  .ev-area__lead strong {
+    font-weight: 620;
+  }
+  .ev-area__text {
+    margin: 0.9rem 0 0;
+    color: var(--ink-2);
+  }
+  .ev-area__facts {
+    display: grid;
+    margin: 1.6rem 0 0;
+    border-top: 1px solid rgba(114, 103, 92, 0.22);
+  }
+  .ev-area__facts div {
+    display: grid;
+    grid-template-columns: 9.5rem 1fr;
+    gap: 1rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid rgba(114, 103, 92, 0.22);
+  }
+  .ev-area__facts dt {
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mute);
+    padding-top: 0.2rem;
+  }
+  .ev-area__facts dd {
+    margin: 0;
+  }
+  .ev-area__more {
+    margin-top: 1.2rem;
+  }
+  .ev-area__more summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: var(--tap-min);
+    cursor: pointer;
+    list-style: none;
+  }
+  .ev-area__more summary::-webkit-details-marker {
+    display: none;
+  }
+  .ev-area__more h3 {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 580;
+    font-size: 1.25rem;
+  }
+  .ev-area__more[open] .ev-qa__ic::after {
+    transform: rotate(0deg);
+  }
+  .ev-area__more p {
+    margin: 0.7rem 0 0;
+    color: var(--ink-2);
+  }
+  .ev-area__links {
+    display: grid;
+    gap: 0.7rem;
+  }
+  .ev-area__svc-head {
+    display: grid;
+    gap: 0.15rem;
+  }
+  .ev-area__svc-name {
+    font-family: var(--serif);
+    font-weight: 580;
+    font-size: 1.25rem;
+  }
+  .ev-area__svc-where {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--mute);
+  }
+  .ev-area__svc .ev-qa__a > p {
+    margin: 0 0 0.8rem;
+  }
+  .ev-area__places {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ev-area__places a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+    padding: 0 0.85rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.45);
+    box-shadow: inset 0 0 0 1px var(--edge);
+    color: var(--ink);
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background var(--dur) var(--ease-out), color var(--dur) var(--ease-out);
+  }
+  .ev-area__places a:hover {
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--sun-text);
+  }
+  @media (max-width: 860px) {
+    .ev-area {
+      grid-template-columns: 1fr;
+    }
+    .ev-area__facts div {
+      grid-template-columns: 1fr;
+      gap: 0.2rem;
+    }
+  }
+
+  /* ───── Journal ───── */
+  .ev-blog__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+  }
+  .ev-blog__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+    gap: clamp(1rem, 2vw, 1.6rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ev-post {
+    padding: 0.5rem;
+    transition: transform 500ms var(--ease-out), box-shadow 500ms var(--ease-out);
+  }
+  .ev-post:hover {
+    transform: translateY(-3px);
+  }
+  .ev-post__link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding-bottom: 0.9rem;
+    color: inherit;
+    text-decoration: none;
+  }
+  .ev-post__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    border-radius: calc(var(--r) - 0.45rem);
+  }
+  .ev-post__date {
+    margin: 0.9rem 0.6rem 0;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mute);
+  }
+  .ev-post__title {
+    margin: 0.35rem 0.6rem 0;
+    font-family: var(--serif);
+    font-weight: 580;
+    font-size: 1.3rem;
+    line-height: 1.2;
+  }
+  .ev-post__link:hover .ev-post__title {
+    color: var(--sun-text);
+  }
+  .ev-post__text {
+    margin: 0.5rem 0.6rem 0;
+    font-size: 0.95rem;
+    color: var(--ink-2);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   /* ───── Brands: an engraved plate, not a logo carousel ───── */
