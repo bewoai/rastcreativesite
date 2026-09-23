@@ -83,3 +83,26 @@ markalar bölümü değişsin; site daha mitik ve dokulu olsun; bölüm geçişl
   değil gökyüzüne erir.
 - **Düzeltme:** global `body { overflow-x: hidden }` body'yi scroll kabı yapıp sticky'yi
   öldürüyordu; bu sayfada `overflow-x: clip` ile header ve durak şeridi yapışıyor.
+
+## v5 (2026-09-23) — güçlü yazı, tek bakışta süreç, site içi oynatıcı
+
+Geri bildirim: süreç hâlâ kötü (her şey tek sayfada okunmalı), fontlar ince/cılız,
+Roma rakamı kullanılabilir, kurucular siyah beyaz olmamalı, video oynatıcı site içinde
+kalmalı, biraz animasyon. Arayüz yönü için kullanıcı "Mitik levha"yı seçti.
+
+- **Süreç = dört levha yan yana.** Dördü de aynı anda, tam metniyle okunur; tıklama
+  gerekmez. Üstlerinde ışık çizgisi, güneş I → IV arasında kendi yürür ve bulunduğu
+  durağı hafifçe öne çıkarır (üzerine gelince orada durur). Tablette 2×2, telefonda alt alta.
+- **Yazı.** Başlık fontu Fraunces (değişken, 560–620 ağırlık, self-host, latin-ext).
+  Etiket, buton, menü ve linkler kalın Inter (600–700). Gövde 430 ağırlık.
+- **Roma rakamları:** bölüm etiketleri, süreç durakları (I–IV), vaka sayacı (I / VIII),
+  marka levhası (I–XVI).
+- **Kurucular renkli**, sise hafif ısıtılmış. Not: Berat Değirmenci'nin kaynak
+  fotoğrafı zaten siyah beyaz; renkli versiyonu gerekli.
+- **Sinema oynatıcı.** "Filmi izle" tam ekran karartılmış bir pencerede, site içinde
+  YouTube (nocookie) oynatır; ESC / kapat / arka plana tıklama ile kapanır, video durur,
+  odak butona döner. YouTube'a yönlendirme yok. (Önizleme artifact'ı dış oynatıcı
+  barındıramadığı için orada yalnızca kapak ve açıklama görünür.)
+- **Animasyon.** Hero başlığı kelime kelime sisten doğar; bölümler ekrana girerken
+  yumuşakça belirir (JS yoksa ya da hareket azaltıldıysa hiçbir şey gizlenmez); hero
+  görüntüsü imlece hafifçe eğilir; marka levhasının üstünden ara ara ışık geçer.
