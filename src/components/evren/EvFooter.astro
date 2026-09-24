@@ -1,0 +1,41 @@
+---
+/**
+ * Evren footer: one glass plate — motto, pages, contact, socials, legal.
+ * Styles: src/styles/evren.css (.ev-foot).
+ */
+import Logo from "../Logo.astro";
+import { CONTACT, SITE, SOCIAL } from "../../consts";
+import { EV_NAV } from "../../lib/evren";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="ev-foot">
+  <div class="ev-foot__inner ev-glass">
+    <div class="ev-foot__brand">
+      <Logo />
+      <p class="ev-foot__motto">İyi iş kendini <em>izletir.</em></p>
+    </div>
+    <nav class="ev-foot__col" aria-label="Alt gezinme">
+      {EV_NAV.map((n) => <a href={n.href}>{n.label}</a>)}
+    </nav>
+    <div class="ev-foot__col">
+      <span>{CONTACT.city}</span>
+      <a href={`tel:${CONTACT.phoneIntl}`}>{CONTACT.phone}</a>
+      <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+    </div>
+    <div class="ev-foot__col">
+      {
+        SOCIAL.map((s) => (
+          <a href={s.href} target="_blank" rel="me noopener noreferrer">
+            {s.label} <span aria-hidden="true">↗</span>
+          </a>
+        ))
+      }
+    </div>
+    <div class="ev-foot__bottom">
+      <span>© {year} {SITE.name}</span>
+      <span><a href="/kvkk/">KVKK</a> · <a href="/telif/">Telif</a></span>
+    </div>
+  </div>
+</footer>

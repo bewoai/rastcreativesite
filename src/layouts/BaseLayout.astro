@@ -1,8 +1,8 @@
 ---
 import "../styles/global.css";
 import { SITE, GA4_MEASUREMENT_ID } from "../consts";
-import GlassNav from "../components/GlassNav.astro";
-import Footer from "../components/Footer.astro";
+import EvHeader from "../components/evren/EvHeader.astro";
+import EvFooter from "../components/evren/EvFooter.astro";
 import EntryOverlay from "../components/EntryOverlay.astro";
 import WebMcpTools from "../components/WebMcpTools.astro";
 
@@ -30,6 +30,10 @@ interface Props {
   preloadImage?: string;
   /** Homepage-only Live Set entry animation overlay. */
   entryAnimation?: boolean;
+  /** Extra font files to preload (e.g. a page's own headline face). */
+  preloadFonts?: string[];
+  /** Responsive LCP image preloads, e.g. a portrait poster for phones only. */
+  preloadImages?: { href: string; media?: string }[];
 }
 
 const {
@@ -42,6 +46,8 @@ const {
   bare = false,
   jsonLd,
   preloadImage,
+  preloadFonts = [],
+  preloadImages = [],
   entryAnimation = false,
 } = Astro.props;
 
@@ -62,7 +68,11 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="light dark" />
+    {/* "only light": the Evren world is a daylight fog with photographic
+        skies. Browsers' automatic dark mode (Chrome "dark theme for web
+        contents", Samsung Internet) would flip the text light while the fog
+        images stay light — white on white. This opts the page out. */}
+    <meta name="color-scheme" content="only light" />
 
     <script is:inline define:vars={{ entryAnimation }}>
       try {
@@ -116,22 +126,15 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
           }
         }
 
-        const savedTheme = localStorage.getItem("rc_theme");
-        const theme =
-          savedTheme === "light" || savedTheme === "dark"
-            ? savedTheme
-            : matchMedia("(prefers-color-scheme: dark)").matches
-              ? "dark"
-              : "light";
-        root.dataset.theme = theme;
+        // The Evren world is a daylight fog — one light theme, no toggle.
+        root.dataset.theme = "light";
       } catch (e) {
         document.documentElement.classList.add("js");
         document.documentElement.dataset.theme = "light";
       }
     </script>
 
-    <meta name="theme-color" content={SITE.themeColor} media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#191612" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#e6dfd6" />
     <meta name="generator" content={Astro.generator} />
 
     {/* Google Search Console site ownership verification. */}
@@ -166,6 +169,8 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
     {/* Preload only the LCP image so it gets the connection first; fonts rely
         on font-display:swap (CLS is 0, so the swap costs no layout shift). */}
     {preloadImage && <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />}
+    {preloadFonts.map((href) => <link rel="preload" as="font" type="font/woff2" href={href} crossorigin />)}
+    {preloadImages.map((img) => <link rel="preload" as="image" href={img.href} media={img.media} fetchpriority="high" />)}
     {/* Inter carries BOTH body and display, so its two subsets are the
         headline font too — preload them or the h1 swaps in late. */}
     <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin-wght-normal.woff2" crossorigin />
@@ -342,11 +347,23 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
       İçeriğe geç
     </a>
     {!bare && entryAnimation && <EntryOverlay />}
-    {!bare && <GlassNav />}
-    <main id="main">
-      <slot />
-    </main>
-    {!bare && <Footer />}
+    {
+      bare ? (
+        <main id="main">
+          <slot />
+        </main>
+      ) : (
+        <div class="ev ev-site">
+          <div class="ev-sky" aria-hidden="true" style="--fog-img:url(/evren/sis.webp)" />
+          <div class="ev-grain" aria-hidden="true" />
+          <EvHeader />
+          <main id="main">
+            <slot />
+          </main>
+          <EvFooter />
+        </div>
+      )
+    }
     <WebMcpTools />
 
     <script>

@@ -3,6 +3,7 @@
 @import "./tokens.css";
 @import "./fonts.css";
 @import "./live-set.css";
+@import "./evren.css";
 
 /*
   Expose the design tokens to Tailwind so utilities are generated from the
@@ -61,9 +62,9 @@
   h1,
   h2 {
     font-family: var(--font-display);
-    font-weight: 650;
+    font-weight: 580;
     line-height: var(--leading-tight);
-    letter-spacing: -0.03em;
+    letter-spacing: -0.015em;
     text-wrap: balance;
   }
   h1 {

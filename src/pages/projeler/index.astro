@@ -4,9 +4,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import Section from "../../components/Section.astro";
 import BrandFolder from "../../components/BrandFolder.astro";
 import ProjectsNote from "../../components/ProjectsNote.astro";
-import VideoHero from "../../components/VideoHero.astro";
-import Eyebrow from "../../components/Eyebrow.astro";
-import projHeroPoster from "../../assets/photos/projeler-hero.jpg";
+import SectionHeading from "../../components/SectionHeading.astro";
 import { breadcrumb } from "../../lib/schema";
 import { groupByBrand, brandHref } from "../../lib/brands";
 import { PROJECT_CATEGORIES } from "../../consts";
@@ -34,17 +32,16 @@ const crumbs = breadcrumb([
   description="Rast Creative Studio portfolyosu: Sakarya'da kurumsal, ürün, medikal ve sosyal medya video prodüksiyon işleri — markalara göre düzenli."
   jsonLd={crumbs}
 >
-  <VideoHero poster={projHeroPoster.src} height="min(48vh, 440px)" scrim={66} flush class="proj-hero">
-    <div class="proj-hero__text">
-      <Eyebrow tone="paper">Sahne 01 · Portfolyo</Eyebrow>
-      <h1 class="proj-hero__title">Projeler</h1>
-      <p class="proj-hero__intro">
-        Markalar için ürettiğimiz işler — kategori ve markaya göre düzenli.
-      </p>
-    </div>
-  </VideoHero>
+  <Section space="tight" class="proj-head">
+    <SectionHeading eyebrow="Portfolyo" as="h1">
+      Seçili <em>işler.</em>
+      <Fragment slot="intro">
+        <p>Markalar için ürettiğimiz filmler, reklamlar ve sosyal medya serileri — kategoriye ve markaya göre düzenli.</p>
+      </Fragment>
+    </SectionHeading>
+  </Section>
 
-  <Section>
+  <Section space="tight">
     {/* Quick jump to a category section */}
     <nav class="catnav" aria-label="Kategoriler">
       {
@@ -81,22 +78,9 @@ const crumbs = breadcrumb([
 </BaseLayout>
 
 <style>
-  .proj-hero__text {
-    display: flex;
-    flex-direction: column;
-    gap: 0.9rem;
-    max-width: 40rem;
-  }
-  .proj-hero__title {
-    margin: 0;
-    color: var(--on-ink);
-  }
-  .proj-hero__intro {
-    margin: 0;
-    font-size: 1.1rem;
-    line-height: 1.5;
-    color: color-mix(in srgb, var(--on-ink) 82%, transparent);
-    max-width: 48ch;
+  .proj-head :global(.sh__title em) {
+    font-weight: 460;
+    color: var(--amber-text);
   }
   .catnav {
     display: flex;

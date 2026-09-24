@@ -1,0 +1,92 @@
+---
+/**
+ * Evren header: one floating glass bar on every page.
+ * Four page tabs, WhatsApp, and the lead CTA ("Görüşelim"). Below 900px the
+ * tabs fold into a phone menu. Styles: src/styles/evren.css (.ev-head, .ev-menu).
+ */
+import Logo from "../Logo.astro";
+import { CONTACT, WHATSAPP_CTA_HREF } from "../../consts";
+import { EV_CTA, EV_NAV, WA_PATH, roman } from "../../lib/evren";
+
+interface Props {
+  /** Where the CTA goes: the homepage uses its own form (#on-gorusme). */
+  ctaHref?: string;
+}
+const { ctaHref = "/iletisim/" } = Astro.props;
+const whatsappHref = WHATSAPP_CTA_HREF ?? "/iletisim/";
+const path = Astro.url.pathname;
+// "/" matches only the homepage, never every page.
+const isCurrent = (href: string) =>
+  href === "/" ? path === "/" : path.startsWith(href);
+const menuItems = EV_NAV;
+---
+
+<header class="ev-head">
+  <div class="ev-head__bar ev-glass">
+    <Logo class="ev-head__logo" />
+    <nav class="ev-head__nav" aria-label="Ana menü">
+      {EV_NAV.map((n) => <a href={n.href} aria-current={isCurrent(n.href) ? "page" : undefined}>{n.label}</a>)}
+    </nav>
+    <div class="ev-head__act">
+      <a class="ev-wa" href={whatsappHref} aria-label="WhatsApp'tan yazın" data-cta-location="evren_header_wa">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d={WA_PATH} /></svg>
+      </a>
+      <a class="ev-btn ev-btn--sun ev-btn--sm ev-head__cta" href={ctaHref} data-cta-location="evren_header">{EV_CTA}</a>
+      <button type="button" class="ev-round ev-head__menu" aria-expanded="false" aria-controls="ev-menu" data-menu-btn>
+        <span class="ev-sr" data-menu-label>Menüyü aç</span>
+        <span class="ev-burger" aria-hidden="true"><span></span><span></span></span>
+      </button>
+    </div>
+  </div>
+  {/* A sibling of the bar (not inside it) so its own glass can blur the
+      page — nested backdrop-filters only see the bar. */}
+  <nav id="ev-menu" class="ev-menu ev-glass" aria-label="Menü" hidden data-menu>
+    <ol class="ev-menu__list">
+      {menuItems.map((n, i) => (
+        <li>
+          <a href={n.href} aria-current={isCurrent(n.href) ? "page" : undefined}>
+            <span class="ev-menu__n" aria-hidden="true">{roman(i + 1)}</span>{n.label}
+          </a>
+        </li>
+      ))}
+    </ol>
+    <div class="ev-menu__foot">
+      <a class="ev-btn ev-btn--sun" href={ctaHref} data-cta-location="evren_menu">{EV_CTA} <span aria-hidden="true">→</span></a>
+      <a class="ev-btn ev-btn--glass" href={whatsappHref} data-cta-location="evren_menu_wa">
+        <svg class="ev-wa__mark" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d={WA_PATH} /></svg> WhatsApp
+      </a>
+      <a class="ev-link" href={`tel:${CONTACT.phoneIntl}`}>{CONTACT.phone}</a>
+    </div>
+  </nav>
+</header>
+
+<script>
+  const menu = document.querySelector<HTMLElement>("[data-menu]");
+  const menuBtn = document.querySelector<HTMLButtonElement>("[data-menu-btn]");
+  const menuLabel = document.querySelector<HTMLElement>("[data-menu-label]");
+  const setMenu = (open: boolean, focusBack = false) => {
+    if (!menu || !menuBtn) return;
+    menu.hidden = !open;
+    menuBtn.setAttribute("aria-expanded", String(open));
+    if (menuLabel) menuLabel.textContent = open ? "Menüyü kapat" : "Menüyü aç";
+    if (open) menu.querySelector<HTMLElement>("a")?.focus();
+    else if (focusBack) menuBtn.focus();
+  };
+  menuBtn?.addEventListener("click", () => setMenu(menu?.hidden ?? false));
+  menu?.addEventListener("click", (e) => {
+    if ((e.target as Element).closest("a")) setMenu(false);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && menu && !menu.hidden) setMenu(false, true);
+  });
+  document.addEventListener("click", (e) => {
+    if (menu && !menu.hidden && !(e.target as Element).closest(".ev-head")) setMenu(false);
+  });
+  // Light passes over a button under the pointer.
+  document.addEventListener("pointermove", (e) => {
+    const btn = (e.target as Element).closest?.<HTMLElement>(".ev-btn");
+    if (!btn) return;
+    const r = btn.getBoundingClientRect();
+    btn.style.setProperty("--gx", `${((e.clientX - r.left) / r.width) * 100}%`);
+  });
+</script>

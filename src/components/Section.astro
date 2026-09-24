@@ -29,14 +29,24 @@ const { id, tone = "paper", width = "default", space = "default", class: classNa
   .section--tight {
     padding-block: clamp(2.5rem, 5vw, 4rem);
   }
+  /* Accent band in the Evren world: a lit glass plate over the fog (no black
+     slab). Text stays ink, so components tuned for "ink" read as normal. */
   .section--ink {
-    background: var(--ink-band);
-    color: color-mix(in srgb, var(--on-ink) 88%, transparent);
-    --ink: var(--on-ink);
-    --ink-soft: color-mix(in srgb, var(--on-ink) 72%, transparent);
-    --line: color-mix(in srgb, var(--on-ink) 16%, transparent);
-    --glass-bg: color-mix(in srgb, var(--on-ink) 7%, transparent);
-    --glass-border: color-mix(in srgb, var(--on-ink) 14%, transparent);
+    --on-ink: var(--ink);
+    --ink-band: var(--ink);
+    position: relative;
+  }
+  .section--ink > .section__inner {
+    padding-block: clamp(2rem, 4vw, 3.2rem);
+    border: 1px solid var(--edge, rgba(255, 255, 255, 0.62));
+    border-radius: var(--r, 1.5rem);
+    background:
+      radial-gradient(120% 80% at 50% -10%, rgba(255, 250, 242, 0.6), transparent 60%),
+      rgba(250, 246, 240, 0.55);
+    -webkit-backdrop-filter: blur(22px) saturate(1.15);
+    backdrop-filter: blur(22px) saturate(1.15);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75), var(--shade, none);
+    max-width: calc(var(--container-max) - 2 * var(--container-pad));
   }
   .section__inner {
     margin-inline: auto;
