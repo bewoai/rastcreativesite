@@ -1,0 +1,1243 @@
+---
+// Archived pre-Evren homepage (noindex), kept for reference and rollback.
+import { getCollection, render } from "astro:content";
+import { Picture } from "astro:assets";
+import whyPhoto from "../../assets/photos/hero-cinema.jpg";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Section from "../../components/Section.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import Eyebrow from "../../components/Eyebrow.astro";
+import Button from "../../components/Button.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+import ServiceCard from "../../components/ServiceCard.astro";
+import AccordionItem from "../../components/AccordionItem.astro";
+import LogoWall from "../../components/LogoWall.astro";
+import VideoHero from "../../components/VideoHero.astro";
+import HeroAtmosphere from "../../components/HeroAtmosphere.astro";
+import HeroSolarSystem from "../../components/HeroSolarSystem.astro";
+import HeroShowreel3D from "../../components/HeroShowreel3D.astro";
+import Icon from "../../components/Icon.astro";
+import AreaIndex from "../../components/AreaIndex.astro";
+import BlogCard from "../../components/BlogCard.astro";
+import { PRIMARY_CTA, CONTACT } from "../../consts";
+import { localBusiness, organization, webSite, faqPage, toPlainText } from "../../lib/schema";
+import { groupByBrand } from "../../lib/brands";
+import { SEO_SERVICES } from "../../data/seo-services";
+import { AREA_INDEX_LOCATION_SLUGS, SEO_LOCATIONS } from "../../data/locations";
+
+const byOrder = (a: { data: { order: number } }, b: { data: { order: number } }) =>
+  a.data.order - b.data.order;
+
+const projects = (await getCollection("projects")).filter(
+  (p) => !p.data.draft && !p.data.hidden,
+);
+const dailyProjectCount = 3;
+const dailyProjects = [...projects].sort(byOrder);
+const services = (await getCollection("services")).sort(byOrder);
+const faqEntries = (await getCollection("faq")).sort(byOrder);
+const faqRendered = await Promise.all(
+  faqEntries.map(async (e) => ({ data: e.data, Content: (await render(e)).Content })),
+);
+
+// Latest blog posts for the homepage "Son yazılar" section.
+const blogPosts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .slice(0, 3);
+const fmtBlogDate = (d: Date) =>
+  d.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" });
+
+// Quick credibility numbers — derived from real content so they stay accurate.
+const brandCount = groupByBrand(projects).length;
+
+const stats = [
+  {
+    n: `${brandCount}+`,
+    l: "Marka",
+    d: "Sanayi, medikal, perakende ve hizmet sektörlerinde farklı markalarla üretim süreci yürüttük.",
+  },
+  {
+    n: "100+",
+    l: "İçerik",
+    d: "Tanıtım filmi, sosyal medya videosu, ürün videosu ve reklam formatlarında içerikler ürettik.",
+  },
+  {
+    n: "4K",
+    l: "Sinema Standardı",
+    d: "Profesyonel kamera, ışık, ses ve renk düzenleme süreciyle yayına hazır çıktılar teslim ederiz.",
+  },
+  {
+    n: "Sakarya",
+    l: "Merkezli Stüdyo",
+    d: "Sakarya, Kocaeli, Gebze ve çevresinde yerinde çekim süreçleri planlıyoruz.",
+  },
+];
+
+// "Nasıl çalışırız" — process clarity the 35+ audience wants (roadmap §2.5).
+const steps = [
+  {
+    n: "01",
+    t: "Projenizi anlatın",
+    d: "İhtiyacınızı dinler; formatı, kapsamı ve takvimi birlikte netleştiririz.",
+  },
+  {
+    n: "02",
+    t: "Çekim & prodüksiyon",
+    d: "Sinema standardı ekipmanla sahadayız; ön hazırlıktan sete tek ekip disiplini.",
+  },
+  {
+    n: "03",
+    t: "Kurgu & teslim",
+    d: "Post-prodüksiyon, renk ve son rötuş; genellikle 2–4 hafta içinde teslim.",
+  },
+];
+
+// "Neden Rast" — concrete trust signals for the 35+ audience (roadmap §2.5).
+const whyRast = [
+  {
+    k: "Yerinde çekim",
+    t: "Sahaya yakın prodüksiyon",
+    d: "Sakarya ve çevresinde keşif, planlama, prodüksiyon ve kurgu sürecini tek ekip olarak yürütürüz.",
+  },
+  {
+    k: "Tek elden",
+    t: "Dağılmayan üretim akışı",
+    d: "Fikir, senaryo, çekim, kurgu, renk ve teslim süreci aynı masada ilerler; projenin muhatabı değişmez.",
+  },
+  {
+    k: "Format uyumu",
+    t: "Web, reklam ve sosyal medya",
+    d: "Ana videonun yanında Reels, Shorts, YouTube ve reklam kullanımına uygun versiyonları baştan planlarız.",
+  },
+];
+
+const prioritySeoServices = SEO_SERVICES.filter((s) =>
+  ["video-cekimi", "drone-cekimi", "tanitim-filmi", "reklam-filmi", "sosyal-medya-icerigi"].includes(s.slug),
+);
+const prioritySeoLocations = SEO_LOCATIONS.filter((l) =>
+  AREA_INDEX_LOCATION_SLUGS.includes(l.slug),
+);
+
+// Home-page structured data: enriched LocalBusiness + FAQPage (rich results).
+const pageJsonLd = [
+  organization,
+  webSite,
+  localBusiness,
+  faqPage(
+    faqEntries.map((e) => ({
+      question: e.data.question,
+      answer: toPlainText(e.body ?? ""),
+    })),
+  ),
+];
+---
+
+<BaseLayout title="Eski ana sayfa (arşiv)" noindex>
+  {/* 1 — Hero: the studio's belief on the left, its world on the right.
+       No project, cover or showreel here by design — selected work lives in
+       its own section below. */}
+  <VideoHero flush fadeBottom class="hero" height="100svh">
+    <HeroAtmosphere />
+    <div class="hero__layout">
+      <div class="hero__say">
+        {/* Forced break: left to itself the box wraps "İyi iş kendini /
+            izletir.", splitting the phrase. "kendini izletir." measures 607px
+            against the 680px cap, so it always fits on its own line. */}
+        <h1 class="hero__title">Rast Creative Studio</h1>
+        <p class="hero__lede">
+          Sakarya video prodüksiyon ve kreatif içerik ajansı.
+          <span>Markanızı anlatan nitelikli işler üretiyoruz.</span>
+        </p>
+        <div class="hero__cta">
+          {/* ↗ leaves for the quote page; ↘ moves you down this one. */}
+          <Button
+            href={PRIMARY_CTA.href}
+            size="lg"
+            arrow
+            class="hero__go hero__go--away"
+            data-cta-location="hero"
+          >
+            {PRIMARY_CTA.shortLabel}
+          </Button>
+          <a href="#secili-isler" class="hero__link hero__link--down" data-cta-location="hero">
+            İşleri Gör
+            <Icon name="arrow-up-right" size={17} class="hero__link-ic" />
+          </a>
+        </div>
+      </div>
+
+      <div class="hero__show">
+        <HeroSolarSystem />
+      </div>
+    </div>
+
+    <div class="hero__foot">
+      <p class="hero__disciplines">Film / Fotoğraf / İçerik / AI</p>
+    </div>
+  </VideoHero>
+
+  <HeroShowreel3D />
+
+  {/* 1.5 — Kurumsal kimlik / "ne yapar" — yanıt-öncelikli, AI motorları ve yeni ziyaretçiler için */}
+  <Section width="narrow" space="tight">
+    <div class="entity" data-reveal>
+      <Eyebrow>Rast Creative Studio ne yapar?</Eyebrow>
+      <p class="entity__lead">
+        Rast Creative Studio, <strong>Serdivan/Sakarya merkezli bir video prodüksiyon ve
+        kreatif içerik ajansıdır.</strong> Markalar için reklam filmi, tanıtım filmi, sosyal
+        medya videosu, ürün ve drone çekimi üretir; çekim, kurgu ve renk düzenlemeyi tek
+        elden yürütür.
+      </p>
+      <p class="entity__text">
+        Serdivan'daki stüdyosundan Sakarya, Adapazarı, Erenler, Arifiye ve çevre ilçelerin
+        yanı sıra Kocaeli, Gebze ve Düzce hattında yerinde çekim yapar. Fikirden teslime
+        kadar süreç, projeyi planlayan kurucu ortakların kontrolünde ilerler.
+      </p>
+      <dl class="entity__facts">
+        <div><dt>Merkez</dt><dd>Serdivan, Sakarya</dd></div>
+        <div><dt>Hizmet bölgesi</dt><dd>Sakarya ve çevresi · Kocaeli · Gebze · Düzce</dd></div>
+        <div>
+          <dt>Ana hizmetler</dt>
+          <dd>Reklam ve tanıtım filmi, sosyal medya videosu, ürün & drone çekimi, kurgu</dd>
+        </div>
+        <div>
+          <dt>İletişim</dt>
+          <dd>
+            <a href={`tel:${CONTACT.phoneIntl}`}>{CONTACT.phone}</a> ·
+            <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </Section>
+
+  <style>
+    .entity__lead {
+      margin: 1rem 0 0;
+      font-size: 1.15rem;
+      line-height: var(--leading-body);
+      color: var(--ink);
+      max-width: 60ch;
+    }
+    .entity__text {
+      margin: 0.9rem 0 0;
+      color: var(--ink-soft);
+      line-height: var(--leading-body);
+      max-width: 62ch;
+    }
+    .entity__facts {
+      margin: 1.6rem 0 0;
+      border-top: 1px solid var(--line);
+    }
+    .entity__facts > div {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.15rem;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .entity__facts dt {
+      font-family: var(--font-utility);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+    .entity__facts dd {
+      margin: 0;
+      color: var(--ink);
+    }
+    .entity__facts a:hover {
+      color: var(--amber-text);
+    }
+    @media (min-width: 640px) {
+      .entity__facts > div {
+        grid-template-columns: 12rem 1fr;
+        gap: 1rem;
+        align-items: baseline;
+      }
+    }
+  </style>
+
+  {/* 2 — Seçili işler */}
+  <Section id="secili-isler">
+    <div class="head-row">
+      <SectionHeading eyebrow="Sahne 02 · Seçili İşler">Son işlerimizden seçmeler</SectionHeading>
+      <Button href="/projeler/" variant="secondary" arrow class="head-row__cta">Tümünü gör</Button>
+    </div>
+    <div class="grid-cards" data-reveal="frame-advance" data-daily-projects data-daily-count={dailyProjectCount}>
+      {
+        dailyProjects.map((p, index) => (
+          <div class="daily-project" data-daily-project data-project-index={index}>
+            <ProjectCard
+              href={p.data.externalUrl ?? `/projeler/${p.id}/`}
+              title={p.data.title}
+              category={p.data.category}
+              poster={p.data.poster}
+              posterAlt={p.data.posterAlt}
+              client={p.data.client}
+              year={p.data.year}
+              timecode={p.data.duration}
+              vertical={p.data.vertical}
+              preview={p.data.preview}
+              summary={p.data.summary}
+              class="card--balanced"
+            />
+          </div>
+        ))
+      }
+    </div>
+  </Section>
+
+  {/* 3 — Referans logoları */}
+  <Section space="tight">
+    <div class="refs">
+      <Eyebrow tone="soft">Çalıştığımız markalardan bazıları</Eyebrow>
+      <LogoWall />
+    </div>
+  </Section>
+
+  {/* 3.5 — İstatistik barı */}
+  <Section space="tight">
+    <ul class="stats" data-reveal="odometer" aria-label="Rakamlarla Rast Creative">
+      {
+        stats.map((s) => (
+          <li class="stats__item">
+            <span class="stats__n">{s.n}</span>
+            <span class="stats__l">{s.l}</span>
+            <span class="stats__d">{s.d}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  {/* 4 — Hizmetler özeti */}
+  <Section id="hizmetler-ozet">
+    <SectionHeading eyebrow="Sahne 03 · Hizmetler">
+      Uçtan uca üç ana hizmet
+      <Fragment slot="intro">
+        <p>Fikirden teslime; strateji, prodüksiyon ve post-prodüksiyonu tek elden yürütürüz.</p>
+      </Fragment>
+    </SectionHeading>
+    <div class="grid-services" data-reveal="frame-advance">
+      {
+        services.map((s, i) => (
+          <ServiceCard
+            href={`/hizmetler/#${s.id}`}
+            index={i + 1}
+            title={s.data.title}
+            summary={s.data.summary}
+            features={s.data.features.slice(0, 3)}
+          />
+        ))
+      }
+    </div>
+  </Section>
+
+  {/* 4.25 — Bölgesel SEO hub */}
+  <Section space="tight">
+    <AreaIndex
+      eyebrow="Sakarya ve çevresi"
+      title="Sakarya ve Serdivan'da prodüksiyon hizmetleri"
+      text="Sakarya merkezli markalar için video çekimi, drone, tanıtım filmi, reklam filmi ve sosyal medya içeriklerini bölgeye göre planlıyoruz. Çekim yapılacak ilçeyi seçerek ilgili hizmet detaylarına geçebilirsiniz."
+      services={prioritySeoServices}
+      locations={prioritySeoLocations}
+    />
+  </Section>
+
+  <Section width="narrow" space="tight">
+    <div class="seo-copy" data-reveal="focus-pull">
+      <h2>Sakarya'da video çekimi nasıl planlanır?</h2>
+      <p>
+        Rast Creative Studio, Sakarya ve Serdivan merkezli işletmeler için video çekimi
+        sürecini hedef, mecra ve teslim formatına göre planlar. Tanıtım filmi,
+        sosyal medya videosu, ürün çekimi, etkinlik kaydı veya kurumsal prodüksiyon
+        ihtiyacında önce mesajı netleştirir; ardından sahne akışı, kamera, ışık,
+        ses, kurgu ve renk düzenleme adımlarını tek üretim planında toplarız.
+      </p>
+      <p>
+        Çekim günü sadece güzel görüntü almak için değil, markanın kullanabileceği
+        içerik havuzunu büyütmek için tasarlanır. Aynı prodüksiyondan web sitesi,
+        Instagram Reels, YouTube, reklam kampanyası ve satış sunumu için farklı
+        sürelerde yatay ve dikey videolar hazırlanabilir.
+      </p>
+      <p>
+        Sakarya tanıtım filmi projelerinde Serdivan, Adapazarı, Arifiye ve çevre
+        ilçelerde keşif, çekim izni, sahne akışı ve teslim takvimini baştan
+        netleştiririz. Ürün çekimi ve kurgu aşamasında ise videonun yalnızca iyi
+        görünmesine değil, satış ekibi, web sitesi ve sosyal medya içerik planı
+        içinde gerçekten kullanılabilir olmasına odaklanırız.
+      </p>
+    </div>
+  </Section>
+
+  {/* 4.5 — Ara CTA */}
+  <Section space="tight">
+    <div class="services-cta" data-reveal>
+      <p class="services-cta__text">Projeniz için doğru kareyi birlikte yakalayalım.</p>
+      <Button href={PRIMARY_CTA.href} arrow data-cta-location="services_mid_page">{PRIMARY_CTA.label}</Button>
+    </div>
+  </Section>
+
+  {/* 5 — Neden Rast */}
+  <Section id="neden-rast" tone="ink">
+    <SectionHeading eyebrow="Sahne 04 · Neden Rast" eyebrowTone="paper">Somut güven sinyalleri</SectionHeading>
+    <Picture
+      src={whyPhoto}
+      formats={["avif", "webp"]}
+      alt="Sakarya'da video prodüksiyon setinde çekim ekibi, monitör ve sinema ışığı"
+      widths={[600, 900, 1200, 1600]}
+      sizes="(min-width: 1100px) 1040px, 92vw"
+      loading="lazy"
+      class="why__photo"
+      data-reveal="exposure-fade"
+    />
+    <ul class="why">
+      {
+        whyRast.map((w) => (
+          <li class="why__item">
+            <span class="why__k">{w.k}</span>
+            <h3 class="why__t">{w.t}</h3>
+            <p class="why__d">{w.d}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  {/* 5.5 — Süreç */}
+  <Section id="surec">
+    <SectionHeading eyebrow="Sahne 05 · Süreç">
+      Üç adımda, baştan sona
+      <Fragment slot="intro">
+        <p>Net bir akış: ön görüşmeden teslime kadar her aşamada yanınızdayız.</p>
+      </Fragment>
+    </SectionHeading>
+    <ol class="steps" data-reveal="frame-advance">
+      {
+        steps.map((s) => (
+          <li class="steps__item">
+            <span class="steps__n">{s.n}</span>
+            <h3 class="steps__t">{s.t}</h3>
+            <p class="steps__d">{s.d}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
+
+  {/* 6 — SSS */}
+  <Section id="sss" width="narrow">
+    <SectionHeading eyebrow="Sahne 06 · SSS">Sık sorulan sorular</SectionHeading>
+    <div class="faq">
+      {
+        faqRendered.map((f, i) => {
+          const Answer = f.Content;
+          return (
+            <AccordionItem question={f.data.question} open={i === 0}>
+              <Answer />
+            </AccordionItem>
+          );
+        })
+      }
+    </div>
+  </Section>
+
+  {/* 6.5 — Son yazılar (blog) */}
+  {
+    blogPosts.length > 0 && (
+      <Section id="blog" space="tight">
+        <div class="head-row">
+          <SectionHeading eyebrow="Sahne 07 · Günlük">Son yazılar</SectionHeading>
+          <Button href="/blog/" variant="secondary" arrow class="head-row__cta">
+            Tüm yazılar
+          </Button>
+        </div>
+        <div class="grid-cards" data-reveal="frame-advance">
+          {blogPosts.map((p) => (
+            <BlogCard
+              href={`/blog/${p.id}/`}
+              title={p.data.title}
+              description={p.data.description}
+              date={fmtBlogDate(p.data.pubDate)}
+              datetime={p.data.pubDate.toISOString()}
+              cover={p.data.cover}
+              coverAlt={p.data.coverAlt}
+            />
+          ))}
+        </div>
+      </Section>
+    )
+  }
+
+  {/* 7 — Son CTA bandı */}
+  <Section tone="ink" space="tight">
+    <div class="cta-band">
+      <Eyebrow tone="paper">Hazır mısınız?</Eyebrow>
+      <h2 class="cta-band__title">Markanızın sinematik yüzünü birlikte çekelim.</h2>
+      <Button href={PRIMARY_CTA.href} size="lg" arrow data-cta-location="final_band">{PRIMARY_CTA.label}</Button>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  /* 1 — Hero (sinematik merkezi tablo; Monopo Saigon esinli) */
+  :global(.hero) {
+    background: #050403 !important;
+  }
+  /* The hero is exactly one viewport and never scrolls internally. */
+  :global(.hero) {
+    height: 100svh;
+    min-height: 680px;
+  }
+  /* Rebalanced: heavy enough on the LEFT to hold the headline's contrast,
+     light on the RIGHT so the orbit object is actually visible. The old
+     symmetric scrim buried the scene it was supposed to sit on. */
+  :global(.hero .vhero__scrim) {
+    display: block !important;
+    background:
+      radial-gradient(
+        65% 70% at 72% 44%,
+        rgba(0, 0, 0, 0.03) 0%,
+        rgba(0, 0, 0, 0.18) 55%,
+        rgba(0, 0, 0, 0.58) 100%
+      ),
+      linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.44) 0%,
+        rgba(0, 0, 0, 0.08) 58%,
+        rgba(0, 0, 0, 0.16) 100%
+      ) !important;
+  }
+  /* One column, one gutter: the headline, lede, CTAs and the foot rule all
+     start on the same line because they now share a single flex container
+     instead of the foot being positioned against the section edge. */
+  :global(.hero) {
+    /* The shared hero lead reserves ~90px of slack above the content, more
+       than the 60px nav pill needs; it is what pushed the foot rule out of
+       the first viewport. Clear the nav, then stop. */
+    --vhero-lead: clamp(1.25rem, 4vh, 3rem);
+  }
+  :global(.hero .vhero__inner) {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding-bottom: 1.6rem;
+  }
+  /* Below the desktop breakpoint a fixed tab bar owns the bottom ~70px of the
+     screen; without this the foot rule renders behind it. */
+  @media (max-width: 979.98px) {
+    :global(.hero .vhero__inner) {
+      padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0px));
+    }
+  }
+  /* Two columns: what we believe, and how the studio turns an idea into a
+     finished production. The headline owns the left; the process orbits right. */
+  /* VideoHero's .vhero__inner already supplies the container width and gutter;
+     this only adds the column split and clearance for the foot rule. */
+  .hero__layout {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(22rem, 36rem);
+    align-items: center;
+    gap: clamp(1.5rem, 3vw, 3rem);
+    width: 100%;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero__say {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    /* Content is present on first paint; the entry overlay carries the reveal. */
+    opacity: 1;
+    transform: none;
+  }
+
+  /* The one monumental element on the page. Optical tracking is tighter than
+     the global h1 because this runs 2–3× larger than any other heading. */
+  /* The single dominant object on the screen. Larger, lighter and tighter
+     than the global h1: at this size extra weight reads heavy and default
+     tracking reads loose, so both move the opposite way. Capped at 680px so
+     it stacks into a monumental block instead of a wide banner. */
+  .hero__title {
+    margin: 0;
+    max-width: 680px;
+    color: #f1f1ef;
+    font-family: var(--font-display);
+    font-weight: 560;
+    font-size: clamp(2.75rem, 8.2vw, 8.25rem);
+    line-height: 0.88;
+    letter-spacing: -0.055em;
+    text-wrap: initial;
+  }
+
+  .hero__lede {
+    margin: 0;
+    max-width: 430px;
+    color: rgba(241, 241, 239, 0.58);
+    font-size: clamp(0.95rem, 1.15vw, 1.0625rem);
+    line-height: 1.5;
+  }
+  /* Second sentence carries the promise → brighter than the locator line. */
+  .hero__lede span {
+    display: block;
+    color: rgba(241, 241, 239, 0.78);
+  }
+
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.9rem 1.6rem;
+    margin-top: 0.4rem;
+  }
+
+  /* Primary: a soft-cornered light surface rather than a full SaaS pill.
+     Its arrow points down-right — it moves you down the page, not away. */
+  :global(.hero__go) {
+    min-height: 52px;
+    padding-inline: 26px;
+    border-radius: 17px;
+  }
+  :global(.hero__go .btn__bg) {
+    border-radius: 17px;
+  }
+  :global(.hero__go .btn__arrow) {
+    transform: rotate(45deg);
+  }
+  :global(.hero__go:hover .btn__arrow) {
+    transform: rotate(45deg) translate(3px, 3px);
+  }
+  /* The primary action now leaves for the quote page, so its arrow points
+     straight ahead instead of down into the page. */
+  :global(.hero__go--away .btn__arrow) {
+    transform: none;
+  }
+  :global(.hero__go--away:hover .btn__arrow) {
+    transform: translateX(3px);
+  }
+  :global(.hero .btn--primary) {
+    color: #111110 !important;
+    box-shadow: none !important;
+  }
+  :global(.hero .btn--primary .btn__bg) {
+    background: #f1f1ef !important;
+    filter: none !important;
+  }
+  :global(.hero .btn--primary:hover) {
+    box-shadow: none !important;
+  }
+  :global(.hero .btn--primary:hover .btn__bg) {
+    background: #ffffff !important;
+    filter: none !important;
+  }
+
+  /* Secondary: a text link with a rule that draws itself on intent —
+     deliberately lighter in weight than the primary. */
+  .hero__link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    /* A text link still has to be a 48px target for a thumb. */
+    min-height: var(--tap-min);
+    gap: 0.45rem;
+    padding-block: 0.3rem;
+    color: rgba(241, 241, 239, 0.68);
+    font-family: var(--font-utility);
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .hero__link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    /* Anchored to the text, not to the (taller) tap target's bottom edge. */
+    top: calc(50% + 0.85em);
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur) var(--ease-out);
+  }
+  .hero__link:hover,
+  .hero__link:focus-visible {
+    color: #ffffff;
+  }
+  .hero__link:hover::after,
+  .hero__link:focus-visible::after {
+    transform: scaleX(1);
+  }
+  /* :global — these target the <svg> rendered inside <Icon />, which sits
+     outside this component's style scope. */
+  :global(.hero__link-ic) {
+    transition: transform var(--dur) var(--ease-out);
+  }
+  .hero__link:hover :global(.hero__link-ic),
+  .hero__link:focus-visible :global(.hero__link-ic) {
+    transform: translateX(4px);
+  }
+  /* The secondary link scrolls down this page, so the arrow turns to match. */
+  .hero__link--down :global(.hero__link-ic) {
+    transform: rotate(90deg);
+  }
+  .hero__link--down:hover :global(.hero__link-ic),
+  .hero__link--down:focus-visible :global(.hero__link-ic) {
+    transform: rotate(90deg) translateX(4px);
+  }
+
+  .hero__show {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    min-height: 0;
+  }
+
+  /* ---- Foot rule: what we make, and where the page goes next.
+     In flow, as the last child of .vhero__inner, so it shares the headline's
+     exact left edge instead of being measured from the section edge. ---- */
+  .hero__foot {
+    position: relative;
+    z-index: 2;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: var(--font-utility);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+  }
+  .hero__disciplines {
+    margin: 0;
+    color: rgba(241, 241, 239, 0.62);
+  }
+  /* ---- One authored entrance: the hero settles, it does not assemble ---- */
+  .hero__say > *,
+  .hero__show,
+  .hero__foot {
+    animation: hero-settle 900ms var(--ease-out) both;
+  }
+  .hero__title { animation-delay: 0.06s; }
+  .hero__lede { animation-delay: 0.16s; }
+  .hero__cta { animation-delay: 0.26s; }
+  .hero__show { animation-delay: 0.2s; }
+  .hero__foot { animation-delay: 0.4s; }
+  @keyframes hero-settle {
+    from { opacity: 0; transform: translate3d(0, 14px, 0); filter: blur(6px); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); filter: blur(0); }
+  }
+
+  /* ---- Tablet & below: one column. The process system stops being a column
+     and becomes an absolute backdrop behind the message. ---- */
+  @media (max-width: 979.98px) {
+    .hero__layout {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: clamp(10.5rem, 25svh, 14rem) auto;
+      align-content: center;
+      gap: 0.35rem;
+    }
+    .hero__show {
+      order: -1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+    }
+    .hero__say {
+      position: relative;
+      z-index: 3;
+    }
+    .hero__foot {
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+    }
+  }
+
+  /* Short desktop screens (laptops around 1280×620–700): shrink the headline
+     and the rhythm rather than clip, since the hero is a fixed 100svh box.
+     Must come after the base .hero__title rule — same specificity, so order
+     decides. */
+  @media (min-width: 980px) and (max-height: 700px) {
+    .hero__title {
+      font-size: clamp(2.5rem, 5.6vw, 4.5rem);
+    }
+    .hero__say {
+      gap: 1rem;
+    }
+  }
+  /* Below this there is no honest way to fit a monumental headline into one
+     screen — let the hero grow and the page scroll instead of cropping it. */
+  @media (max-height: 560px) {
+    :global(.hero) {
+      height: auto;
+      min-height: 100svh;
+    }
+    :global(.hero .vhero__inner) {
+      height: auto;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .hero__say {
+      gap: 0.95rem;
+    }
+    .hero__layout {
+      grid-template-rows: clamp(9.5rem, 23svh, 12rem) auto;
+      gap: 0.2rem;
+    }
+    .hero__title {
+      font-size: clamp(2.5rem, 13vw, 3.6rem);
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+    }
+    .hero__lede {
+      font-size: 0.95rem;
+      max-width: 30ch;
+    }
+    .hero__cta {
+      gap: 0.85rem 1.1rem;
+      margin-top: 0.15rem;
+    }
+    /* The disciplines line is the hero's least load-bearing text; below this
+       width the scroll cue alone frames the composition. */
+    .hero__disciplines {
+      display: none;
+    }
+    .hero__foot {
+      justify-content: flex-start;
+      padding-top: 0.7rem;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .hero__layout {
+      grid-template-rows: 9rem auto;
+    }
+    .hero__title {
+      font-size: clamp(2.35rem, 12.5vw, 3rem);
+    }
+    .hero__lede {
+      font-size: 0.875rem;
+    }
+    :global(.hero__go) {
+      min-height: 48px;
+      padding-inline: 21px;
+    }
+    .hero__link {
+      font-size: 0.8rem;
+    }
+  }
+
+  @media (max-width: 380px) and (max-height: 620px) {
+    :global(.hero .vhero__inner) {
+      padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+    }
+    .hero__layout {
+      grid-template-rows: 7.5rem auto;
+      align-content: start;
+    }
+    .hero__say {
+      gap: 0.65rem;
+    }
+    .hero__lede {
+      line-height: 1.4;
+    }
+    .hero__cta {
+      gap: 0.4rem 1rem;
+      margin-top: 0;
+    }
+    .hero__link {
+      min-height: 40px;
+    }
+    .hero__foot {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__say > *,
+    .hero__show,
+    .hero__foot {
+      animation: none;
+    }
+  }
+
+  /* 2 — section head row with side CTA */
+  .head-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .head-row__cta {
+    flex: none;
+  }
+  .grid-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .daily-project {
+    display: flex;
+    min-width: 0;
+  }
+  .daily-project:nth-child(n + 4) {
+    display: none;
+  }
+  .daily-project.is-active {
+    display: flex;
+  }
+  .daily-project > :global(.card) {
+    width: 100%;
+  }
+  .daily-project.is-inactive {
+    display: none;
+  }
+  @media (min-width: 640px) {
+    .grid-cards {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1000px) {
+    .grid-cards {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* 3 — references */
+  .refs {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    align-items: center;
+    text-align: center;
+  }
+
+  /* 4 — services grid */
+  .grid-services {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+  @media (min-width: 768px) {
+    .grid-services {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* 4.5 — services cta */
+  .services-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    padding: 2rem clamp(1.25rem, 4vw, 2.5rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--amber) 4%, var(--paper));
+    text-align: center;
+  }
+
+  .services-cta__text {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 3vw, 1.4rem);
+    font-weight: 500;
+    line-height: var(--leading-flat);
+    color: var(--ink);
+  }
+
+  .seo-copy {
+    display: grid;
+    gap: 1rem;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .seo-copy h2 {
+    margin: 0;
+    color: var(--ink);
+  }
+  .seo-copy p {
+    margin: 0;
+    max-width: 68ch;
+  }
+  @media (min-width: 640px) {
+    .services-cta {
+      flex-direction: row;
+      text-align: left;
+      gap: 2rem;
+    }
+  }
+
+  /* 5 — why rast */
+  .why__photo {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 7;
+    object-fit: cover;
+    border-radius: var(--radius-card);
+    margin: 2.5rem 0 0;
+    border: 1px solid color-mix(in srgb, #ffffff 12%, transparent);
+  }
+  :global(picture):has(.why__photo) {
+    display: block;
+  }
+  .why {
+    list-style: none;
+    margin: 2.5rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .why__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding-top: 1.4rem;
+    border-top: 2px solid color-mix(in srgb, var(--amber) 70%, transparent);
+  }
+  .why__k {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    font-weight: 500;
+    color: var(--on-ink);
+    line-height: 1;
+  }
+  .why__t {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--on-ink);
+  }
+  .why__d {
+    margin: 0;
+    color: color-mix(in srgb, var(--on-ink) 72%, transparent);
+    line-height: var(--leading-body);
+  }
+  @media (min-width: 768px) {
+    .why {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.5rem;
+    }
+  }
+
+  /* 3.5 — stats bar */
+  .stats {
+    list-style: none;
+    margin: 0;
+    padding: 1.4rem clamp(1rem, 4vw, 2rem);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem 1.1rem;
+    border-block: 1px solid var(--line);
+  }
+  .stats__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    text-align: center;
+  }
+  .stats__n {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    line-height: 1;
+    color: var(--amber-text);
+  }
+  .stats__l {
+    font-family: var(--font-utility);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .stats__d {
+    max-width: 24ch;
+    margin-top: 0.35rem;
+    color: var(--ink-soft);
+    font-size: 0.86rem;
+    line-height: 1.45;
+  }
+  @media (min-width: 720px) {
+    .stats {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* 5.5 — process steps */
+  .steps {
+    list-style: none;
+    margin: 2.5rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.8rem;
+    counter-reset: step;
+  }
+  .steps__item {
+    position: relative;
+    padding-top: 1.3rem;
+    border-top: 2px solid color-mix(in srgb, var(--amber) 65%, transparent);
+  }
+  .steps__n {
+    font-family: var(--font-utility);
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--amber-text);
+  }
+  .steps__t {
+    margin: 0.5rem 0 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  .steps__d {
+    margin: 0;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+    max-width: 42ch;
+  }
+  @media (min-width: 768px) {
+    .steps {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+  }
+
+  /* 6 — faq */
+  .faq {
+    margin-top: 2.5rem;
+    border-top: 1px solid var(--line);
+  }
+
+  /* 7 — final CTA band */
+  .cta-band {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.25rem;
+  }
+  .cta-band__title {
+    margin: 0;
+    max-width: 18ch;
+    color: var(--on-ink);
+  }
+</style>
+
+<script>
+  const dailyProjectRoot = document.querySelector<HTMLElement>("[data-daily-projects]");
+  if (dailyProjectRoot) {
+    const cards = Array.from(dailyProjectRoot.querySelectorAll<HTMLElement>("[data-daily-project]"));
+    const count = Math.min(Number(dailyProjectRoot.dataset.dailyCount ?? 3), cards.length);
+
+    const istanbulDateKey = () => {
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Europe/Istanbul",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).formatToParts(new Date());
+      const get = (type: string) => parts.find((part) => part.type === type)?.value ?? "";
+      return `${get("year")}-${get("month")}-${get("day")}`;
+    };
+
+    const seedFromString = (value: string) => {
+      let seed = 2166136261;
+      for (let i = 0; i < value.length; i += 1) {
+        seed ^= value.charCodeAt(i);
+        seed = Math.imul(seed, 16777619);
+      }
+      return seed >>> 0;
+    };
+
+    const nextRandom = (seed: number) => {
+      let state = seed || 1;
+      return () => {
+        state = Math.imul(state ^ (state >>> 15), 1 | state);
+        state ^= state + Math.imul(state ^ (state >>> 7), 61 | state);
+        return ((state ^ (state >>> 14)) >>> 0) / 4294967296;
+      };
+    };
+
+    let equalizeFrame = 0;
+    const equalizeProjectCards = () => {
+      if (equalizeFrame) window.cancelAnimationFrame(equalizeFrame);
+      equalizeFrame = window.requestAnimationFrame(() => {
+        const activeCards = cards
+          .filter((card) => !card.classList.contains("is-inactive"))
+          .map((card) => card.querySelector<HTMLElement>(".card"))
+          .filter((card): card is HTMLElement => !!card);
+
+        // Frame 1: clear heights — browser recalculates layout before next frame
+        activeCards.forEach((card) => {
+          card.style.minHeight = "";
+        });
+
+        if (activeCards.length < 2) { equalizeFrame = 0; return; }
+
+        // Frame 2: read after layout settles, then write (no forced reflow)
+        equalizeFrame = window.requestAnimationFrame(() => {
+          equalizeFrame = 0;
+          const maxHeight = Math.max(
+            ...activeCards.map((card) => card.offsetHeight),
+          );
+          activeCards.forEach((card) => {
+            card.style.minHeight = `${Math.ceil(maxHeight)}px`;
+          });
+        });
+      });
+    };
+
+    let currentDateKey = "";
+    const applyDailyProjects = () => {
+      const dateKey = istanbulDateKey();
+      if (dateKey === currentDateKey) {
+        equalizeProjectCards();
+        return;
+      }
+      currentDateKey = dateKey;
+
+      const random = nextRandom(seedFromString(dateKey));
+      const indexes = cards.map((_, index) => index);
+      for (let i = indexes.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(random() * (i + 1));
+        [indexes[i], indexes[j]] = [indexes[j], indexes[i]];
+      }
+
+      const selected = new Set(indexes.slice(0, count));
+      cards.forEach((card, index) => {
+        const order = indexes.indexOf(index);
+        const active = selected.has(index);
+        card.classList.toggle("is-active", active);
+        card.classList.toggle("is-inactive", !active);
+        if (active) card.style.order = String(order);
+      });
+      equalizeProjectCards();
+    };
+
+    applyDailyProjects();
+    window.addEventListener("load", equalizeProjectCards, { once: true });
+    window.addEventListener("resize", equalizeProjectCards, { passive: true });
+    window.setInterval(applyDailyProjects, 60_000);
+  }
+</script>

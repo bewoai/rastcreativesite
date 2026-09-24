@@ -325,3 +325,13 @@ Kullanıcı: sekmeler sayfalara götürüyor, Ana sayfa neden yok? Menü artık 
 aynı altı sekme: Ana sayfa · İşler · Hizmetler · Hakkımızda · Blog · İletişim
 (`EV_NAV`). "/" yalnızca ana sayfada (ve taslağında) aktif. Altı sekme sığsın diye
 aralık esnek, mobil menüye geçiş 1000px. Footer da aynı listeyi kullanıyor.
+
+### v14 — Evren ana sayfa oldu
+
+- `src/pages/taslak/evren.astro` → `src/pages/index.astro` (import yolları bir seviye
+  yukarı; "Taslak — Evren" başlığı ve `noindex` kalktı → varsayılan site başlığı,
+  canonical `/`, indekslenebilir; form konusu "(taslak evren)" eki kalktı).
+- Eski ana sayfa → `src/pages/taslak/eski-anasayfa.astro` (`noindex`, giriş animasyonu
+  kapalı; geri dönüş için arşiv). `/taslak` sitemap dışında.
+- Doğrulama (build + preview): form, sinema oynatıcı, mobil menü; 15 sayfada
+  320/390/1440px yatay taşma yok; mobil (4× CPU, yavaş 4G) LCP 1,08 sn · CLS 0,009.

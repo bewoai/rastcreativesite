@@ -15,9 +15,9 @@ interface Props {
 const { ctaHref = "/iletisim/" } = Astro.props;
 const whatsappHref = WHATSAPP_CTA_HREF ?? "/iletisim/";
 const path = Astro.url.pathname;
-// "/" matches only the homepage (and its draft), never every page.
+// "/" matches only the homepage, never every page.
 const isCurrent = (href: string) =>
-  href === "/" ? path === "/" || path.startsWith("/taslak/evren") : path.startsWith(href);
+  href === "/" ? path === "/" : path.startsWith(href);
 const menuItems = EV_NAV;
 ---
 
