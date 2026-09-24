@@ -226,3 +226,28 @@ URL'si ana sayfaya yönlenir.
     `preloadImages`; diğer sayfalar etkilenmez.
 - **Monitör:** YouTube kapağı yüklenmezse o kare atlanıyor; hiçbiri yüklenmezse
   monitör kırık görsel yerine tamamen gizleniyor.
+
+### v10 — anlatı kameraya, sete ve içeriğe bağlandı
+
+Kullanıcı: site hâlâ "alakasız" kalıyor; daha çok kamera, çekim, video ve içerik
+anlatısı istiyor. Karar: sis/güneş dünyası **arka plan ışığı** olarak kalır; sayfanın
+anlattığı şey gerçek set, gerçek görüntü ve teslim edilen içeriktir.
+(Kural korunuyor: timecode/REC/PGM ve vizör arayüzü yok.)
+- **Hero monitörü:** YouTube kapak slaytı yerine gerçek kamera arkası döngüsü
+  (Aytaş Home seti, eski showreel-board'dan; `public/evren/set.{webm,mp4,webp}`,
+  640px, ~200 KB). Masaüstünde büyüdü, telefonda gökte güneşin önünde, tablette
+  metnin altında. Lede: "…sette çekip kurgu masasında bitiriyoruz."
+- **Yeni III · Tek çekim günü — "Bir set, çok kadraj." (`#cekim`):** setten gerçek
+  bir kare (`set-kare.webp`) üzerinde 16:9 → 4:5 → 9:16 yeniden kadraj rehberi
+  (görünürken 2,4 sn'de bir döner; hareket azaltmada 9:16 sabit). Formatlar
+  çizilmiş oranlarla listelenir (ana film, dikey kesitler, reklam versiyonları,
+  fotoğraf). Aytaş Home'un 6 dikey videosu site içi oynatıcıda **dikey** açılır
+  (`.ev-cinema.is-vertical`). CTA + "Bir çekimden kaç içerik çıkar?" blog linki.
+- **Süreç:** yapay zekâ sis kareleri yerine gerçek set fotoğrafları (ışık hazırlığı,
+  sokak çekimi, renk düzenleme, dikey çekim), sayfanın ışığına ısıtılmış.
+  Aşamalar set diliyle: Ön hazırlık · Set · Post · Yayın; süre sağda.
+- **Hizmetler:** her masaya bir set fotoğrafı (vinç kamerası, klaket, stüdyo).
+- **Markalar:** "Kadrajımıza giren markalar." · "fabrikadan kliniğe, mağazadan sahneye".
+- Numaralar: II işler · III tek çekim · IV markalar · V ekip · VI süreç ·
+  VII hizmetler · VIII SSS · IX bölge · X günlük · XI ön görüşme.
+- Ölçüm (mobil, 4× CPU + yavaş 4G): LCP 1,01 sn · CLS 0,011 · ~730 KB.

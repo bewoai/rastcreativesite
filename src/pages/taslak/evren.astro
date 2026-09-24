@@ -25,6 +25,13 @@ import Logo from "../../components/Logo.astro";
 import Icon from "../../components/Icon.astro";
 import beratPhoto from "../../assets/photos/berat-degirmenci.png";
 import muhammedPhoto from "../../assets/photos/muhammed-al-sheikhly.png";
+import stopPrep from "../../assets/photos/studio-lighting.jpg";
+import stopSet from "../../assets/photos/film-crew-red-camera.jpg";
+import stopGrade from "../../assets/photos/post-production-color-grading.jpg";
+import stopDeliver from "../../assets/photos/vertical-video-creator.jpg";
+import svcCrane from "../../assets/photos/camera-crane.jpg";
+import svcSlate from "../../assets/photos/director-clapper.jpg";
+import svcSuite from "../../assets/photos/hero-cinema.jpg";
 import lgFederal from "../../assets/logos/federal.svg";
 import lgAllufem from "../../assets/logos/allufem-aluminium.webp";
 import lgSerdivan from "../../assets/logos/levha/serdivan.png";
@@ -74,6 +81,11 @@ const A = {
   cloudMp4: slot("bulut.mp4"),
   cloudPoster: slot("bulut.webp"),
   sun: slot("kure.webp"),
+  // Behind the scenes on a real set (Aytaş Home), from the old hero reel.
+  setWebm: slot("set.webm"),
+  setMp4: slot("set.mp4"),
+  setPoster: slot("set.webp"),
+  setFrame: slot("set-kare.webp"),
   stops: {
     fikir: [slot("durak-fikir.webp"), slot("durak-fikir-genis.webp")],
     set: [slot("durak-set.webp"), slot("durak-set-genis.webp")],
@@ -97,8 +109,31 @@ const cases = projects.filter((p) => p.data.featured);
 // not "AI startup": horizontal featured pieces only.
 const onAir = cases.filter((p) => !p.data.vertical).slice(0, 5);
 
+// "One set, many frames": Aytaş Home's vertical series (playable in-site).
+const shootReels = projects
+  .filter((p) => p.data.client === "Aytaş Home" && p.data.vertical && p.data.youtubeId)
+  .slice(0, 6);
+// Reframe guides over the set still, centred on the presenter (x ≈ 37%).
+const reframes = [
+  { ratio: "16:9", use: "Ana film", left: 0, width: 100 },
+  { ratio: "4:5", use: "Reklam kesiti", left: 14.6, width: 45 },
+  { ratio: "9:16", use: "Reels · Shorts", left: 21.2, width: 31.6 },
+];
+const shootOut = [
+  { r: "16 / 9", ratio: "16:9", t: "Ana film", d: "Web sitesi, YouTube, sunum ve fuar ekranı" },
+  { r: "9 / 16", ratio: "9:16", t: "Dikey kesitler", d: "Reels, Shorts ve TikTok için ayrı kurgular" },
+  { r: "4 / 5", ratio: "4:5 · 1:1", t: "Reklam versiyonları", d: "Meta ve Google reklamları, gönderiler" },
+  { r: "3 / 2", ratio: "Foto", t: "Fotoğraf ve kamera arkası", d: "Katalog, haber ve kurumsal kullanım" },
+];
+
 const services = (await getCollection("services")).sort(byOrder);
 const serviceWhispers = ["sete çıkıyoruz", "strateji masası", "kurgu odası"];
+// One set photograph per desk, in service order (production, strategy, post).
+const servicePhotos = [
+  { src: svcCrane, alt: "Vinç üzerinde sinema kamerası, set ışıkları altında" },
+  { src: svcSlate, alt: "Stüdyo setinde klaket vuran yönetmen yardımcısı ve oyuncu" },
+  { src: svcSuite, alt: "Karanlık stüdyoda monitörler ve kurgu masası" },
+];
 
 const faqEntries = (await getCollection("faq")).sort(byOrder);
 const faqs = await Promise.all(
@@ -164,16 +199,22 @@ const stops = [
   {
     key: "fikir",
     label: "Fikir",
+    photo: stopPrep,
+    alt: "Çekim öncesi hazırlanan set: ışıklar, yönetmen sandalyesi ve arka fon",
     when: "1. hafta",
-    title: "Ön görüşme ve plan",
-    text: "İhtiyacınızı dinliyoruz; hangi formatların (web, reklam, Reels) gerekeceğine baştan karar veriyoruz. Çekim günü buna göre planlanır.",
+    phase: "Ön hazırlık",
+    title: "Ön görüşme, senaryo, plan",
+    text: "İhtiyacınızı dinliyoruz; hangi formatların (web, reklam, Reels) gerekeceğine baştan karar veriyoruz. Senaryo, mekân ve çekim listesi buna göre hazırlanır.",
     whisper: "burada ücret yok, sadece sohbet",
     angle: -90,
   },
   {
     key: "set",
     label: "Set",
+    photo: stopSet,
+    alt: "Sokakta çekim yapan ekip: sinema kamerası, monitör ve operatör",
     when: "1–2. hafta",
+    phase: "Set",
     title: "Çekim günü",
     text: "Yerinde, tek ekip. Ana film, dikey kesitler ve drone planı aynı sette çekilir; tek günden birden çok içerik çıkar.",
     whisper: "tek gün, çok içerik",
@@ -182,7 +223,10 @@ const stops = [
   {
     key: "kurgu",
     label: "Kurgu",
+    photo: stopGrade,
+    alt: "Kurgu odasında renk düzenleme ekranı başında çalışan editör",
     when: "2–4. hafta",
+    phase: "Post",
     title: "Kurgu, renk, ses",
     text: "Kurgu, renk düzenleme ve ses tasarımı aynı masada. Revizyonları doğrudan projeyi çeken ekiple konuşursunuz.",
     whisper: "muhatabınız değişmez",
@@ -191,7 +235,10 @@ const stops = [
   {
     key: "teslim",
     label: "Teslim",
+    photo: stopDeliver,
+    alt: "Telefonla dikey video çeken içerik üreticisi",
     when: "2–4 hafta içinde",
+    phase: "Yayın",
     title: "Teslim",
     text: "16:9 ana film, 9:16 dikey versiyonlar ve reklam kesitleri: her mecraya hazır dosyalar.",
     whisper: "yayına hazır",
@@ -267,12 +314,13 @@ const year = new Date().getFullYear();
         <ol class="ev-menu__list">
           {[
             ["#isler", "Seçili işler", 2],
-            ["#markalar", "Markalar", 3],
-            ["#ekip", "Ekip", 4],
-            ["#surec", "Süreç", 5],
-            ["#hizmetler", "Hizmetler", 6],
-            ["#sss", "Sık sorulanlar", 7],
-            ["#gunluk", "Günlük", 9],
+            ["#cekim", "Tek çekim günü", 3],
+            ["#markalar", "Markalar", 4],
+            ["#ekip", "Ekip", 5],
+            ["#surec", "Süreç", 6],
+            ["#hizmetler", "Hizmetler", 7],
+            ["#sss", "Sık sorulanlar", 8],
+            ["#gunluk", "Günlük", 10],
           ].map(([href, label, n]) => (
             <li>
               <a href={href as string}><span class="ev-menu__n" aria-hidden="true">{roman(n as number)}</span>{label}</a>
@@ -329,8 +377,8 @@ const year = new Date().getFullYear();
           <span class="ev-hero__line"><em class="ev-w" style="--d:3">izletir.</em></span>
         </h1>
         <p class="ev-hero__lede">
-          Reklam filmi, tanıtım filmi ve sosyal medya videolarını fikirden teslime
-          tek ekip olarak üretiyoruz.
+          Reklam filmi, tanıtım filmi ve sosyal medya videolarını sette çekip kurgu
+          masasında bitiriyoruz. Fikirden teslime tek ekip.
         </p>
         <div class="ev-hero__cta">
           <a class="ev-btn" href="#on-gorusme" data-cta-location="evren_hero">
@@ -345,31 +393,24 @@ const year = new Date().getFullYear();
         </p>
       </div>
 
-      {/* Aside: the whisper and the on-air monitor sit as one group on the
-          content grid's right edge, bottom-aligned with the proof line. The
-          monitor cycles real work; it is the only client footage in the hero. */}
+      {/* Aside: the whisper and the set monitor sit as one group on the
+          content grid's right edge. The monitor plays real behind-the-scenes
+          footage from one of our sets: the first thing you see us doing is
+          the job itself. */}
       <div class="ev-hero__aside">
       <p class="ev-whisper ev-hero__whisper" aria-hidden="true">iyi ışık, iyi iş</p>
-      <a class="ev-onair ev-glass" href="#isler" data-onair aria-label="Seçili işlere git">
+      <a class="ev-onair ev-glass" href="#isler" data-onair data-cta-location="evren_hero_monitor">
         <span class="ev-onair__screen">
-          {
-            onAir.map((p, i) => (
-              <img
-                src={ytThumbToWebp(p.data.poster, "card")}
-                alt=""
-                width="480"
-                height="270"
-                loading="lazy"
-                decoding="async"
-                class:list={{ "is-on": i === 0 }}
-                data-onair-frame
-                data-title={p.data.client ?? p.data.title}
-              />
-            ))
-          }
+          {A.setPoster && (
+            <video class="ev-onair__video" data-ambient muted loop playsinline preload="none" poster={A.setPoster} aria-hidden="true">
+              {A.setWebm && <source src={A.setWebm} type="video/webm" />}
+              {A.setMp4 && <source src={A.setMp4} type="video/mp4" />}
+            </video>
+          )}
         </span>
         <span class="ev-onair__meta">
-          <span>Ekranda: <b data-onair-title>{onAir[0]?.data.client}</b></span>
+          <span>Setten · <b>Aytaş Home çekimi</b></span>
+          <span class="ev-onair__go">İşler <span aria-hidden="true">→</span></span>
         </span>
       </a>
       </div>
@@ -487,12 +528,87 @@ const year = new Date().getFullYear();
         </video>
       )}
     </div>
-    {/* ───────── 03 · Brands: trust right after the work ───────── */}
+    {/* ───────── 03 · One set, many frames ─────────
+        The part a client actually buys: one shoot day planned as a pool of
+        content. A real still from our set is reframed 16:9 → 4:5 → 9:16, and
+        the series that came out of that client's system plays in-site. */}
+    <section id="cekim" class="ev-sec ev-shoot" aria-labelledby="ev-shoot-title">
+      <div class="ev-shoot__intro" data-rise>
+        <p class="ev-label"><span class="ev-label__n">III</span>Tek çekim günü</p>
+        <h2 id="ev-shoot-title" class="ev-h2">Bir set, <em>çok kadraj.</em></h2>
+        <p class="ev-shoot__lede">
+          Çekim gününü tek bir video için değil, markanızın uzun süre kullanacağı bir içerik
+          havuzu için planlıyoruz. Kamera aynı sahneyi çekerken kurgu masasındaki her
+          format baştan hesaptadır.
+        </p>
+        <ul class="ev-shoot__out">
+          {shootOut.map((o) => (
+            <li>
+              <span class="ev-ratio" style={`--r:${o.r}`} aria-hidden="true"></span>
+              <span class="ev-shoot__what"><b>{o.t}</b><span>{o.d}</span></span>
+              <span class="ev-shoot__fmt">{o.ratio}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="ev-shoot__cta">
+          <a class="ev-btn" href="#on-gorusme" data-cta-location="evren_shoot">Çekim gününüzü planlayalım <span aria-hidden="true">→</span></a>
+          <a class="ev-link" href="/blog/tek-cekim-gununden-kac-icerik-cikar/">Bir çekimden kaç içerik çıkar?</a>
+        </p>
+      </div>
+
+      <figure class="ev-shoot__case ev-glass" data-rise style="--d:1">
+        {A.setFrame && (
+          <div class="ev-reframe" data-reframe data-at="0">
+            <img class="ev-reframe__img" src={A.setFrame} alt="Aytaş Home setinde kamera arkası: sunucu mağaza önünde, kamera operatörü omuz hizasından çekiyor" width="1280" height="720" loading="lazy" decoding="async" />
+            {reframes.map((f, i) => (
+              <span class="ev-reframe__guide" data-guide={i} style={`--l:${f.left}%;--w:${f.width}%`} aria-hidden="true">
+                <span class="ev-reframe__tag"><b>{f.ratio}</b> {f.use}</span>
+              </span>
+            ))}
+          </div>
+        )}
+        {shootReels.length > 0 && (
+          <ul class="ev-shoot__reels" aria-label="Aytaş Home dikey video serisi">
+            {shootReels.map((p) => (
+              <li>
+                <button
+                  type="button"
+                  class="ev-reel"
+                  data-case-play
+                  data-yt={p.data.youtubeId}
+                  data-vertical
+                  data-title={p.data.title}
+                  data-poster={ytThumbToWebp(p.data.poster)}
+                  aria-label={`${p.data.title} videosunu izle`}
+                >
+                  <img src={ytThumbToWebp(p.data.poster)} alt="" width="480" height="360" loading="lazy" decoding="async" />
+                  <span class="ev-reel__play" aria-hidden="true">▶</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+        <figcaption class="ev-shoot__cap">
+          Örnek: <b>Aytaş Home</b>. Setten bir kare ve aynı içerik sisteminden çıkan dikey seri. Videolar sayfadan çıkmadan oynar.
+        </figcaption>
+      </figure>
+    </section>
+
+
+    <div class:list={["ev-cloud", { "has-video": cloudVideo }]} aria-hidden="true">
+      {cloudVideo && (
+        <video data-ambient muted loop playsinline preload="none" poster={A.cloudPoster ?? undefined}>
+          {A.cloudWebm && <source src={A.cloudWebm} type="video/webm" />}
+          {A.cloudMp4 && <source src={A.cloudMp4} type="video/mp4" />}
+        </video>
+      )}
+    </div>
+    {/* ───────── 04 · Brands: trust right after the work ───────── */}
     <section id="markalar" class="ev-sec ev-brands" aria-labelledby="ev-brands-title">
       <header class="ev-head2 ev-head2--center" data-rise>
-        <p class="ev-label"><span class="ev-label__n">III</span>Markalar</p>
-        <h2 id="ev-brands-title" class="ev-h2">Işığımızın düştüğü <em>markalar.</em></h2>
-        <p class="ev-whisper ev-whisper--center" aria-hidden="true">sanayiden sağlığa</p>
+        <p class="ev-label"><span class="ev-label__n">IV</span>Markalar</p>
+        <h2 id="ev-brands-title" class="ev-h2">Kadrajımıza giren <em>markalar.</em></h2>
+        <p class="ev-whisper ev-whisper--center" aria-hidden="true">fabrikadan kliniğe, mağazadan sahneye</p>
       </header>
       <ul class="ev-plate ev-glass">
         {
@@ -525,10 +641,10 @@ const year = new Date().getFullYear();
         </video>
       )}
     </div>
-    {/* ───────── 04 · The people you talk to ───────── */}
+    {/* ───────── 05 · The people you talk to ───────── */}
     <section id="ekip" class="ev-sec ev-team" aria-labelledby="ev-team-title">
       <div class="ev-team__say" data-rise>
-        <p class="ev-label"><span class="ev-label__n">IV</span>Muhatabınız</p>
+        <p class="ev-label"><span class="ev-label__n">V</span>Muhatabınız</p>
         <h2 id="ev-team-title" class="ev-h2">Telefonu <em>çekimi yönetenler</em> açar.</h2>
         <p class="ev-team__lede">
           Projenizi bir satış ekibiyle değil, doğrudan şirketin kurucu ortaklarıyla
@@ -566,10 +682,10 @@ const year = new Date().getFullYear();
         </video>
       )}
     </div>
-    {/* ───────── 05 · Process: four stops around the sun ───────── */}
+    {/* ───────── 06 · Process: four stops around the sun ───────── */}
     <section id="surec" class="ev-sec ev-path" aria-labelledby="ev-path-title">
       <header class="ev-head2" data-rise>
-        <p class="ev-label"><span class="ev-label__n">V</span>Süreç</p>
+        <p class="ev-label"><span class="ev-label__n">VI</span>Süreç</p>
         <h2 id="ev-path-title" class="ev-h2">Fikirden teslime <em>dört durak.</em></h2>
       </header>
 
@@ -586,12 +702,11 @@ const year = new Date().getFullYear();
             stops.map((s, i) => (
               <li class:list={["ev-step ev-glass", { "is-lit": i === 0 }]} data-step data-rise style={`--d:${i}`}>
                 <span class="ev-step__node" aria-hidden="true" />
-                {A.stops[s.key][1] && (
-                  <img class="ev-step__img" src={A.stops[s.key][1]!} alt="" width="1100" height="733" loading="lazy" decoding="async" />
-                )}
+                <Image class="ev-step__img" src={s.photo} alt={s.alt} widths={[360, 560, 800]} sizes="(max-width: 600px) 5rem, (max-width: 980px) 45vw, 22vw" loading="lazy" />
                 <p class="ev-step__n">
                   <span class="ev-step__roman">{roman(i + 1)}</span>
-                  <span>{s.when}</span>
+                  <span>{s.phase}</span>
+                  <span class="ev-step__when">{s.when}</span>
                 </p>
                 <h3 class="ev-step__title">{s.title}</h3>
                 <p class="ev-step__text">{s.text}</p>
@@ -617,16 +732,19 @@ const year = new Date().getFullYear();
         </video>
       )}
     </div>
-    {/* ───────── 06 · Services ───────── */}
+    {/* ───────── 07 · Services ───────── */}
     <section id="hizmetler" class="ev-sec ev-svc" aria-labelledby="ev-svc-title">
       <header class="ev-head2" data-rise>
-        <p class="ev-label"><span class="ev-label__n">VI</span>Hizmetler</p>
+        <p class="ev-label"><span class="ev-label__n">VII</span>Hizmetler</p>
         <h2 id="ev-svc-title" class="ev-h2">Üç masa, <em>tek ekip.</em></h2>
       </header>
       <ul class="ev-svc__list">
         {
           services.map((s, i) => (
             <li class="ev-svc__card ev-glass" data-rise style={`--d:${i}`}>
+              {servicePhotos[i] && (
+                <Image class="ev-svc__img" src={servicePhotos[i].src} alt={servicePhotos[i].alt} widths={[400, 640]} sizes="(max-width: 700px) 92vw, 26rem" loading="lazy" />
+              )}
               <p class="ev-whisper" aria-hidden="true">{serviceWhispers[i] ?? ""}</p>
               <h3 class="ev-svc__title">{s.data.title}</h3>
               <p class="ev-svc__sum">{s.data.summary}</p>
@@ -653,10 +771,10 @@ const year = new Date().getFullYear();
         </video>
       )}
     </div>
-    {/* ───────── 07 · FAQ: the questions clients actually ask ───────── */}
+    {/* ───────── 08 · FAQ: the questions clients actually ask ───────── */}
     <section id="sss" class="ev-sec ev-faq" aria-labelledby="ev-faq-title">
       <header class="ev-head2" data-rise>
-        <p class="ev-label"><span class="ev-label__n">VII</span>Sık sorulanlar</p>
+        <p class="ev-label"><span class="ev-label__n">VIII</span>Sık sorulanlar</p>
         <h2 id="ev-faq-title" class="ev-h2">Aklınızdaki <em>sorular.</em></h2>
         <p class="ev-whisper" aria-hidden="true">fiyat da burada</p>
       </header>
@@ -692,12 +810,12 @@ const year = new Date().getFullYear();
         </video>
       )}
     </div>
-    {/* ───────── 08 · Studio & region: what we are, where we shoot ─────────
+    {/* ───────── 09 · Studio & region: what we are, where we shoot ─────────
         Answer-first copy for new visitors and search/AI engines, plus the
         regional hub linking every priority service to its location pages. */}
     <section id="bolge" class="ev-sec ev-area" aria-labelledby="ev-area-title">
       <div class="ev-area__intro" data-rise>
-        <p class="ev-label"><span class="ev-label__n">VIII</span>Stüdyo ve bölge</p>
+        <p class="ev-label"><span class="ev-label__n">IX</span>Stüdyo ve bölge</p>
         <h2 id="ev-area-title" class="ev-h2">Serdivan'dan <em>sahaya.</em></h2>
         <p class="ev-area__lead">
           Rast Creative Studio, <strong>Serdivan/Sakarya merkezli bir video prodüksiyon ve
@@ -776,13 +894,13 @@ const year = new Date().getFullYear();
         </video>
       )}
     </div>
-    {/* ───────── 09 · Journal: latest posts ───────── */}
+    {/* ───────── 10 · Journal: latest posts ───────── */}
     {
       blogPosts.length > 0 && (
         <section id="gunluk" class="ev-sec ev-blog" aria-labelledby="ev-blog-title">
           <header class="ev-head2 ev-blog__head" data-rise>
             <div>
-              <p class="ev-label"><span class="ev-label__n">IX</span>Günlük</p>
+              <p class="ev-label"><span class="ev-label__n">X</span>Günlük</p>
               <h2 id="ev-blog-title" class="ev-h2">Setten <em>notlar.</em></h2>
             </div>
             <a class="ev-link" href="/blog/">Tüm yazılar <span aria-hidden="true">→</span></a>
@@ -821,7 +939,7 @@ const year = new Date().getFullYear();
         </video>
       )}
     </div>
-    {/* ───────── 10 · Call sheet: the sun rises behind the form ─────────
+    {/* ───────── 11 · Call sheet: the sun rises behind the form ─────────
         A full-bleed dawn stage (like the hero), not a box in a box: the
         promise and the ways to reach us on the left, the one-sentence form on
         the right, and the sun on the horizon below. Sending lifts the sun. */}
@@ -841,7 +959,7 @@ const year = new Date().getFullYear();
 
       <div class="ev-call__grid">
         <div class="ev-call__intro" data-rise>
-          <p class="ev-label"><span class="ev-label__n">X</span>Ücretsiz ön görüşme</p>
+          <p class="ev-label"><span class="ev-label__n">XI</span>Ücretsiz ön görüşme</p>
           <h2 id="ev-call-title" class="ev-h2">Bize bir cümle <em>yazın.</em></h2>
           <p class="ev-call__lede">
             Gerisini telefonda konuşuruz. Fiyat ve kapsam için ilk görüşme ücretsiz.
@@ -1577,7 +1695,7 @@ const year = new Date().getFullYear();
     position: relative;
     display: grid;
     gap: 0.45rem;
-    width: clamp(12rem, 17vw, 15rem);
+    width: clamp(15rem, 24vw, 22rem);
     padding: 0.4rem 0.4rem 0.55rem;
     border-radius: 1rem;
     color: var(--ink);
@@ -1613,10 +1731,27 @@ const year = new Date().getFullYear();
     gap: 0.45rem;
     padding: 0 0.3rem;
     font-family: var(--font-utility);
-    font-size: 0.75rem;
+    font-size: 0.82rem;
     color: var(--ink-2);
     white-space: nowrap;
     overflow: hidden;
+  }
+  .ev-onair__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* warmed toward the page's light, like a print of the day */
+    filter: saturate(0.85) sepia(0.12) contrast(1.02);
+  }
+  .ev-onair__go {
+    margin-left: auto;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .ev-onair:hover .ev-onair__go {
+    color: var(--sun-text);
   }
   .ev-onair__meta b {
     color: var(--ink);
@@ -1632,11 +1767,11 @@ const year = new Date().getFullYear();
     .ev-hero__stage {
       grid-template-columns: minmax(0, 1fr);
     }
-    .ev-onair {
-      display: none;
-    }
     .ev-hero__aside {
       justify-items: start;
+    }
+    .ev-onair {
+      width: min(100%, 24rem);
     }
   }
   @media (max-width: 760px) {
@@ -1645,6 +1780,20 @@ const year = new Date().getFullYear();
       top: 6.6rem;
       left: var(--pad);
       font-size: 1.1rem;
+    }
+    /* Phones: the set monitor floats in the sky, in front of the sun. */
+    .ev-onair {
+      position: absolute;
+      top: 9.4rem;
+      right: var(--pad);
+      width: min(58vw, 15rem);
+      padding: 0.3rem 0.3rem 0.4rem;
+    }
+    .ev-onair__meta {
+      font-size: 0.72rem;
+    }
+    .ev-onair__go {
+      display: none;
     }
     /* Anchored from the top (not the bottom): if a font swap changes the
        copy's height, only what sits below the title moves, never the title. */
@@ -2165,11 +2314,13 @@ const year = new Date().getFullYear();
     aspect-ratio: 16 / 10;
     object-fit: cover;
     border-radius: calc(var(--r) - 0.45rem);
-    filter: saturate(0.8);
+    /* Set photos graded toward the page's light, like prints of one day. */
+    filter: saturate(0.72) sepia(0.2) contrast(1.02) brightness(1.04);
     transition: filter 700ms var(--ease-out);
   }
   .ev-step__n {
     display: flex;
+    flex-wrap: wrap;
     align-items: baseline;
     gap: 0.6rem;
     margin: 1rem 0.7rem 0;
@@ -2186,6 +2337,17 @@ const year = new Date().getFullYear();
     letter-spacing: 0;
     color: var(--sun-text);
     text-transform: none;
+  }
+  .ev-step__when {
+    margin-left: auto;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--ink-2);
+    white-space: nowrap;
   }
   .ev-step__title {
     margin: 0.35rem 0.7rem 0;
@@ -2292,6 +2454,21 @@ const year = new Date().getFullYear();
     display: flex;
     flex-direction: column;
     padding: 1.4rem clamp(1.2rem, 2.2vw, 1.7rem) 1.2rem;
+  }
+  .ev-svc__img {
+    display: block;
+    width: calc(100% + 2 * clamp(1.2rem, 2.2vw, 1.7rem) - 1rem);
+    max-width: none;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    margin: -0.9rem calc(-1 * clamp(1.2rem, 2.2vw, 1.7rem) + 0.5rem) 1.1rem;
+    object-fit: cover;
+    border-radius: calc(var(--r) - 0.45rem);
+    filter: saturate(0.72) sepia(0.2) contrast(1.02) brightness(1.04);
+    transition: filter 700ms var(--ease-out);
+  }
+  .ev-svc__card:hover .ev-svc__img {
+    filter: none;
   }
   .ev-svc__card > .ev-whisper {
     margin: 0 0 0.8rem;
@@ -2434,6 +2611,217 @@ const year = new Date().getFullYear();
     }
     .ev-faq__ask {
       margin-top: 0;
+    }
+  }
+
+  /* ───── One set, many frames ───── */
+  .ev-shoot {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: center;
+  }
+  .ev-shoot__lede {
+    max-width: 32rem;
+    margin: 1.2rem 0 0;
+    color: var(--ink-2);
+  }
+  .ev-shoot__out {
+    display: grid;
+    margin: 1.6rem 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid rgba(114, 103, 92, 0.22);
+  }
+  .ev-shoot__out li {
+    display: grid;
+    grid-template-columns: 2.6rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(114, 103, 92, 0.22);
+  }
+  /* The format itself, drawn: a frame of that aspect ratio. */
+  .ev-ratio {
+    justify-self: center;
+    display: block;
+    height: 1.6rem;
+    max-width: 2.6rem;
+    aspect-ratio: var(--r);
+    border: 1.5px solid var(--ink);
+    border-radius: 3px;
+    background: linear-gradient(135deg, rgba(255, 200, 150, 0.45), rgba(255, 255, 255, 0.2));
+    box-shadow: 0 0 10px rgba(255, 190, 130, 0.45);
+  }
+  .ev-shoot__what {
+    display: grid;
+    gap: 0.1rem;
+  }
+  .ev-shoot__what b {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.18rem;
+  }
+  .ev-shoot__what span {
+    font-size: 0.92rem;
+    color: var(--ink-2);
+  }
+  .ev-shoot__fmt {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 560;
+    color: var(--sun-text);
+    white-space: nowrap;
+  }
+  .ev-shoot__cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.8rem 1.3rem;
+    margin: 1.8rem 0 0;
+  }
+  .ev-shoot__case {
+    margin: 0;
+    padding: clamp(0.5rem, 1.2vw, 0.8rem);
+  }
+  .ev-reframe {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    border-radius: calc(var(--r) - 0.45rem);
+    background: #1d1915;
+  }
+  .ev-reframe__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.88) sepia(0.1);
+  }
+  /* A reframe guide: only the active one is drawn and dims what it leaves out. */
+  .ev-reframe__guide {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--l);
+    width: var(--w);
+    border: 2px solid rgba(255, 244, 232, 0.95);
+    border-radius: 4px;
+    box-shadow: 0 0 0 100vmax rgba(20, 16, 12, 0.5), 0 0 24px rgba(255, 190, 130, 0.6);
+    opacity: 0;
+    transition: opacity 700ms var(--ease-out);
+  }
+  .ev-reframe__guide[data-guide="0"] {
+    border-color: transparent;
+    box-shadow: none;
+  }
+  .ev-reframe[data-at="0"] [data-guide="0"],
+  .ev-reframe[data-at="1"] [data-guide="1"],
+  .ev-reframe[data-at="2"] [data-guide="2"] {
+    opacity: 1;
+  }
+  .ev-reframe__tag {
+    position: absolute;
+    left: 0.6rem;
+    bottom: 0.6rem;
+    padding: 0.3rem 0.65rem;
+    border-radius: 999px;
+    background: rgba(250, 246, 240, 0.9);
+    color: var(--ink);
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .ev-reframe__tag b {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--sun-text);
+  }
+  .ev-shoot__reels {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin: 0.6rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ev-reel {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: 0.7rem;
+    background: #1d1915;
+    cursor: pointer;
+  }
+  .ev-reel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 600ms var(--ease-out);
+  }
+  .ev-reel:hover img {
+    transform: scale(1.06);
+  }
+  .ev-reel__play {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    display: grid;
+    place-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    padding-left: 0.15rem;
+    border-radius: 50%;
+    background: rgba(250, 246, 240, 0.88);
+    color: var(--ink);
+    font-size: 0.8rem;
+    translate: -50% -50%;
+    box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.5);
+    transition: scale var(--dur) var(--ease-out);
+  }
+  .ev-reel:hover .ev-reel__play,
+  .ev-reel:focus-visible .ev-reel__play {
+    scale: 1.12;
+  }
+  .ev-reel:focus-visible {
+    outline: 2px solid var(--sun);
+    outline-offset: 2px;
+  }
+  .ev-shoot__cap {
+    margin: 0.8rem 0.3rem 0.2rem;
+    font-size: 0.88rem;
+    color: var(--ink-2);
+  }
+  /* Vertical films open in a tall cinema. */
+  .ev-cinema.is-vertical {
+    width: min(92vw, calc((100svh - 8rem) * 9 / 16));
+  }
+  .ev-cinema.is-vertical .ev-cinema__screen {
+    aspect-ratio: 9 / 16;
+  }
+  @media (max-width: 960px) {
+    .ev-shoot {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 560px) {
+    .ev-shoot__reels {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .ev-shoot__out li {
+      grid-template-columns: 2.2rem minmax(0, 1fr);
+    }
+    .ev-shoot__fmt {
+      display: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ev-reframe[data-at] [data-guide="2"] {
+      opacity: 1;
     }
   }
 
@@ -3577,8 +3965,9 @@ const year = new Date().getFullYear();
     root.querySelectorAll<HTMLButtonElement>("[data-case-play]").forEach((btn) =>
       btn.addEventListener("click", () => {
         const card = btn.closest<HTMLElement>("[data-case]");
-        const id = card?.dataset.yt;
+        const id = btn.dataset.yt ?? card?.dataset.yt;
         if (!cinema || !slot || !id) return;
+        cinema.classList.toggle("is-vertical", btn.hasAttribute("data-vertical"));
         opener = btn;
         const iframe = document.createElement("iframe");
         iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
@@ -3591,6 +3980,24 @@ const year = new Date().getFullYear();
         track("video_play", { event_category: "portfolio", video_id: id, location: "evren_cinema" });
       }),
     );
+
+    /* ── Reframe: 16:9 → 4:5 → 9:16 over the same still, while in view ── */
+    const reframe = root.querySelector<HTMLElement>("[data-reframe]");
+    if (reframe && !reduce) {
+      let rf = 0;
+      let rfAt = 0;
+      new IntersectionObserver(([e]) => {
+        if (e.isIntersecting && !rf) {
+          rf = window.setInterval(() => {
+            rfAt = (rfAt + 1) % 3;
+            reframe.dataset.at = String(rfAt);
+          }, 2400);
+        } else if (!e.isIntersecting) {
+          window.clearInterval(rf);
+          rf = 0;
+        }
+      }).observe(reframe);
+    }
 
     /* ── Process path: the sun walks I → IV, lighting one stop at a time ── */
     const path = root.querySelector<HTMLElement>("[data-path]");
