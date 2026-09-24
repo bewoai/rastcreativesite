@@ -25,8 +25,12 @@ import Logo from "../../components/Logo.astro";
 import Icon from "../../components/Icon.astro";
 import beratPhoto from "../../assets/photos/berat-degirmenci.png";
 import muhammedPhoto from "../../assets/photos/muhammed-al-sheikhly.png";
-import stopPrep from "../../assets/photos/studio-lighting.jpg";
-import stopSet from "../../assets/photos/film-crew-red-camera.jpg";
+import stopPrep from "../../assets/photos/bts/ofis-isik-kurulumu.jpg";
+import stopSet from "../../assets/photos/bts/sokak-kadraj.jpg";
+import btsMedical from "../../assets/photos/bts/medikal-radyoterapi.jpg";
+import btsEvent from "../../assets/photos/bts/etkinlik-sahne.jpg";
+import btsMonitor from "../../assets/photos/bts/kamera-roportaj.jpg";
+import btsShowroom from "../../assets/photos/bts/magaza-showroom.jpg";
 import stopGrade from "../../assets/photos/post-production-color-grading.jpg";
 import stopDeliver from "../../assets/photos/vertical-video-creator.jpg";
 import svcCrane from "../../assets/photos/camera-crane.jpg";
@@ -85,7 +89,6 @@ const A = {
   setWebm: slot("set.webm"),
   setMp4: slot("set.mp4"),
   setPoster: slot("set.webp"),
-  setFrame: slot("set-kare.webp"),
   stops: {
     fikir: [slot("durak-fikir.webp"), slot("durak-fikir-genis.webp")],
     set: [slot("durak-set.webp"), slot("durak-set-genis.webp")],
@@ -113,17 +116,19 @@ const onAir = cases.filter((p) => !p.data.vertical).slice(0, 5);
 const shootReels = projects
   .filter((p) => p.data.client === "Aytaş Home" && p.data.vertical && p.data.youtubeId)
   .slice(0, 6);
-// Reframe guides over the set still, centred on the presenter (x ≈ 37%).
-const reframes = [
-  { ratio: "16:9", use: "Ana film", left: 0, width: 100 },
-  { ratio: "4:5", use: "Reklam kesiti", left: 14.6, width: 45 },
-  { ratio: "9:16", use: "Reels · Shorts", left: 21.2, width: 31.6 },
+// Real behind-the-scenes from our sets (Drive: rast-evren-gorseller/Kamera arkası).
+const btsShots = [
+  { src: btsMedical, alt: "Hastanede radyoterapi ünitesi önünde doktorla medikal tanıtım çekimi", tag: "Medikal · radyoterapi ünitesi" },
+  { src: btsEvent, alt: "Okul etkinliğinde sahnedeki müzisyeni çeken kamera operatörü", tag: "Etkinlik · canlı sahne" },
+  { src: btsMonitor, alt: "Kamera ekranında mikrofonla konuşan sunucu, röportaj çekimi", tag: "Röportaj · kamera ekranı" },
+  { src: btsShowroom, alt: "Mobilya mağazasında softbox ışıkla kurulan çekim seti", tag: "Mağaza · showroom seti" },
 ];
-const shootOut = [
-  { r: "16 / 9", ratio: "16:9", t: "Ana film", d: "Web sitesi, YouTube, sunum ve fuar ekranı" },
-  { r: "9 / 16", ratio: "9:16", t: "Dikey kesitler", d: "Reels, Shorts ve TikTok için ayrı kurgular" },
-  { r: "4 / 5", ratio: "4:5 · 1:1", t: "Reklam versiyonları", d: "Meta ve Google reklamları, gönderiler" },
-  { r: "3 / 2", ratio: "Foto", t: "Fotoğraf ve kamera arkası", d: "Katalog, haber ve kurumsal kullanım" },
+// What one shoot day is planned to deliver — the section's four promises.
+const shootPillars = [
+  { t: "Tek sette çok ürün", d: "Ana film, Reels serisi, reklam kesitleri, fotoğraf ve kamera arkası aynı günden çıkar." },
+  { t: "Süreklilik", d: "Tek seferlik değil: takvimli çekimlerle markanızı her hafta yayında tutan bir akış." },
+  { t: "Sinema kalitesi", d: "Sinema kamerası, ışık ve renk düzenleme; telefon ekranında da fark edilen görüntü." },
+  { t: "İlgi çeken kurgu", d: "İlk saniyede durduran açılışlar, platforma göre ritim, altyazı ve müzik." },
 ];
 
 const services = (await getCollection("services")).sort(byOrder);
@@ -200,7 +205,7 @@ const stops = [
     key: "fikir",
     label: "Fikir",
     photo: stopPrep,
-    alt: "Çekim öncesi hazırlanan set: ışıklar, yönetmen sandalyesi ve arka fon",
+    alt: "Ofiste röportaj öncesi softbox ve kamera kurulumu",
     when: "1. hafta",
     phase: "Ön hazırlık",
     title: "Ön görüşme, senaryo, plan",
@@ -212,7 +217,7 @@ const stops = [
     key: "set",
     label: "Set",
     photo: stopSet,
-    alt: "Sokakta çekim yapan ekip: sinema kamerası, monitör ve operatör",
+    alt: "Sokak çekiminde kamera ekranında kadraj ve pozlama ayarları",
     when: "1–2. hafta",
     phase: "Set",
     title: "Çekim günü",
@@ -259,6 +264,9 @@ const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"
 const roman = (n: number) => ROMAN[n - 1] ?? String(n);
 
 const whatsappHref = WHATSAPP_CTA_HREF ?? "/iletisim/";
+// The real (filled) WhatsApp mark — simple-icons, CC0. The site Icon is a
+// hairline outline that read as a stray glyph at header size.
+const WA_PATH = "M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z";
 const year = new Date().getFullYear();
 ---
 
@@ -290,17 +298,17 @@ const year = new Date().getFullYear();
         <Logo class="ev-head__logo" />
         <nav class="ev-head__nav" aria-label="Sayfa içi">
           <a href="#isler">İşler</a>
+          <a href="#cekim">Çekim günü</a>
           <a href="#ekip">Ekip</a>
           <a href="#surec">Süreç</a>
-          <a href="#hizmetler">Hizmetler</a>
           <a href="#sss">SSS</a>
         </nav>
         <div class="ev-head__act">
-          <a class="ev-round" href={whatsappHref} aria-label="WhatsApp'tan yazın" data-cta-location="evren_header_wa">
-            <Icon name="whatsapp" size={19} />
+          <a class="ev-wa" href={whatsappHref} aria-label="WhatsApp'tan yazın" data-cta-location="evren_header_wa">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d={WA_PATH} /></svg>
           </a>
-          <a class="ev-btn ev-btn--sm ev-head__cta" href="#on-gorusme" data-cta-location="evren_header">
-            <span class="ev-head__long">Ücretsiz ön görüşme</span><span class="ev-head__short">Ön görüşme</span>
+          <a class="ev-btn ev-btn--sun ev-btn--sm ev-head__cta" href="#on-gorusme" data-cta-location="evren_header">
+            <span class="ev-head__long">Çekiminizi planlayalım</span><span class="ev-head__short">Planlayalım</span>
           </a>
           <button type="button" class="ev-round ev-head__menu" aria-expanded="false" aria-controls="ev-menu" data-menu-btn>
             <span class="ev-sr" data-menu-label>Menüyü aç</span>
@@ -328,8 +336,8 @@ const year = new Date().getFullYear();
           ))}
         </ol>
         <div class="ev-menu__foot">
-          <a class="ev-btn" href="#on-gorusme" data-cta-location="evren_menu">Ücretsiz ön görüşme <span aria-hidden="true">→</span></a>
-          <a class="ev-btn ev-btn--glass" href={whatsappHref} data-cta-location="evren_menu_wa"><Icon name="whatsapp" size={18} /> WhatsApp</a>
+          <a class="ev-btn ev-btn--sun" href="#on-gorusme" data-cta-location="evren_menu">Çekiminizi planlayalım <span aria-hidden="true">→</span></a>
+          <a class="ev-btn ev-btn--glass" href={whatsappHref} data-cta-location="evren_menu_wa"><svg class="ev-wa__mark" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d={WA_PATH} /></svg> WhatsApp</a>
           <a class="ev-link" href={`tel:${CONTACT.phoneIntl}`}>{CONTACT.phone}</a>
         </div>
       </nav>
@@ -381,15 +389,15 @@ const year = new Date().getFullYear();
           masasında bitiriyoruz. Fikirden teslime tek ekip.
         </p>
         <div class="ev-hero__cta">
-          <a class="ev-btn" href="#on-gorusme" data-cta-location="evren_hero">
-            Ücretsiz ön görüşme <span aria-hidden="true">→</span>
+          <a class="ev-btn ev-btn--sun" href="#on-gorusme" data-cta-location="evren_hero">
+            Çekiminizi planlayalım <span aria-hidden="true">→</span>
           </a>
           <a class="ev-btn ev-btn--glass" href="#isler" data-cta-location="evren_hero_works">
             İşleri izle
           </a>
         </div>
         <p class="ev-hero__proof">
-          <strong>{brandCount}+</strong> marka · <strong>100+</strong> içerik · Sakarya, Kocaeli, Düzce
+          <span class="ev-hero__free">İlk görüşme ücretsiz</span><span class="ev-hero__sep"> · </span><strong>{brandCount}+</strong> marka · <strong>100+</strong> içerik · Sakarya, Kocaeli, Düzce
         </p>
       </div>
 
@@ -528,69 +536,68 @@ const year = new Date().getFullYear();
         </video>
       )}
     </div>
-    {/* ───────── 03 · One set, many frames ─────────
-        The part a client actually buys: one shoot day planned as a pool of
-        content. A real still from our set is reframed 16:9 → 4:5 → 9:16, and
-        the series that came out of that client's system plays in-site. */}
+    {/* ───────── 03 · One shoot day, many products ─────────
+        What a client buys: one shoot planned to feed them for weeks — many
+        products from one set, a steady rhythm, cinema quality, edits that
+        stop the scroll. Proof is our own behind-the-scenes and a client's
+        running vertical series, playable in-site. */}
     <section id="cekim" class="ev-sec ev-shoot" aria-labelledby="ev-shoot-title">
       <div class="ev-shoot__intro" data-rise>
         <p class="ev-label"><span class="ev-label__n">III</span>Tek çekim günü</p>
-        <h2 id="ev-shoot-title" class="ev-h2">Bir set, <em>çok kadraj.</em></h2>
+        <h2 id="ev-shoot-title" class="ev-h2">Bir çekim günü,<br /><em>haftalarca içerik.</em></h2>
         <p class="ev-shoot__lede">
-          Çekim gününü tek bir video için değil, markanızın uzun süre kullanacağı bir içerik
-          havuzu için planlıyoruz. Kamera aynı sahneyi çekerken kurgu masasındaki her
-          format baştan hesaptadır.
+          Çekim gününü tek bir video için değil, markanızı haftalarca yayında tutacak bir
+          içerik havuzu için planlıyoruz. Set bir kez kurulur; ondan çıkan işler takvime
+          dizilir.
         </p>
-        <ul class="ev-shoot__out">
-          {shootOut.map((o) => (
+        <ol class="ev-shoot__out">
+          {shootPillars.map((o, i) => (
             <li>
-              <span class="ev-ratio" style={`--r:${o.r}`} aria-hidden="true"></span>
+              <span class="ev-shoot__n" aria-hidden="true">{roman(i + 1)}</span>
               <span class="ev-shoot__what"><b>{o.t}</b><span>{o.d}</span></span>
-              <span class="ev-shoot__fmt">{o.ratio}</span>
             </li>
           ))}
-        </ul>
+        </ol>
         <p class="ev-shoot__cta">
-          <a class="ev-btn" href="#on-gorusme" data-cta-location="evren_shoot">Çekim gününüzü planlayalım <span aria-hidden="true">→</span></a>
+          <a class="ev-btn ev-btn--sun" href="#on-gorusme" data-cta-location="evren_shoot">Çekim gününüzü planlayalım <span aria-hidden="true">→</span></a>
           <a class="ev-link" href="/blog/tek-cekim-gununden-kac-icerik-cikar/">Bir çekimden kaç içerik çıkar?</a>
         </p>
       </div>
 
-      <figure class="ev-shoot__case ev-glass" data-rise style="--d:1">
-        {A.setFrame && (
-          <div class="ev-reframe" data-reframe data-at="0">
-            <img class="ev-reframe__img" src={A.setFrame} alt="Aytaş Home setinde kamera arkası: sunucu mağaza önünde, kamera operatörü omuz hizasından çekiyor" width="1280" height="720" loading="lazy" decoding="async" />
-            {reframes.map((f, i) => (
-              <span class="ev-reframe__guide" data-guide={i} style={`--l:${f.left}%;--w:${f.width}%`} aria-hidden="true">
-                <span class="ev-reframe__tag"><b>{f.ratio}</b> {f.use}</span>
-              </span>
-            ))}
+      <figure class="ev-shoot__case" data-rise style="--d:1">
+        <ul class="ev-bts" aria-label="Setlerimizden kamera arkası">
+          {btsShots.map((b, i) => (
+            <li class:list={["ev-bts__shot ev-glass", `ev-bts__shot--${i}`]}>
+              <Image src={b.src} alt={b.alt} widths={[420, 720, 1000]} sizes="(max-width: 960px) 46vw, 22rem" loading="lazy" />
+              <span class="ev-bts__tag">{b.tag}</span>
+            </li>
+          ))}
+        </ul>
+        {shootReels.length > 0 && (
+          <div class="ev-shoot__rhythm ev-glass">
+            <p class="ev-shoot__rtitle"><b>Süreklilik</b> · Aytaş Home için düzenli dikey video akışı</p>
+            <ul class="ev-shoot__reels" aria-label="Aytaş Home dikey video serisi">
+              {shootReels.map((p) => (
+                <li>
+                  <button
+                    type="button"
+                    class="ev-reel"
+                    data-case-play
+                    data-yt={p.data.youtubeId}
+                    data-vertical
+                    data-title={p.data.title}
+                    data-poster={ytThumbToWebp(p.data.poster)}
+                    aria-label={`${p.data.title} videosunu izle`}
+                  >
+                    <img src={ytThumbToWebp(p.data.poster)} alt="" width="480" height="360" loading="lazy" decoding="async" />
+                    <span class="ev-reel__play" aria-hidden="true">▶</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
-        {shootReels.length > 0 && (
-          <ul class="ev-shoot__reels" aria-label="Aytaş Home dikey video serisi">
-            {shootReels.map((p) => (
-              <li>
-                <button
-                  type="button"
-                  class="ev-reel"
-                  data-case-play
-                  data-yt={p.data.youtubeId}
-                  data-vertical
-                  data-title={p.data.title}
-                  data-poster={ytThumbToWebp(p.data.poster)}
-                  aria-label={`${p.data.title} videosunu izle`}
-                >
-                  <img src={ytThumbToWebp(p.data.poster)} alt="" width="480" height="360" loading="lazy" decoding="async" />
-                  <span class="ev-reel__play" aria-hidden="true">▶</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-        <figcaption class="ev-shoot__cap">
-          Örnek: <b>Aytaş Home</b>. Setten bir kare ve aynı içerik sisteminden çıkan dikey seri. Videolar sayfadan çıkmadan oynar.
-        </figcaption>
+        <figcaption class="ev-shoot__cap">Setlerimizden kamera arkası. Videolar sayfadan çıkmadan oynar.</figcaption>
       </figure>
     </section>
 
@@ -796,7 +803,7 @@ const year = new Date().getFullYear();
       <div class="ev-faq__ask">
         <p>Sorunuz burada yok mu? Bir mesajla sorun, aynı ekip yanıtlar.</p>
         <a class="ev-btn ev-btn--glass ev-btn--sm" href={whatsappHref} data-cta-location="evren_faq_wa">
-          <Icon name="whatsapp" size={17} /> WhatsApp'tan sorun
+          <svg class="ev-wa__mark" viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path fill="currentColor" d={WA_PATH} /></svg> WhatsApp'tan sorun
         </a>
       </div>
     </section>
@@ -973,7 +980,7 @@ const year = new Date().getFullYear();
 
           <div class="ev-call__direct">
             <a class="ev-btn ev-btn--glass" href={whatsappHref} data-cta-location="evren_form_wa">
-              <Icon name="whatsapp" size={18} /> WhatsApp'tan yazın
+              <svg class="ev-wa__mark" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d={WA_PATH} /></svg> WhatsApp'tan yazın
             </a>
             <a class="ev-link" href={`tel:${CONTACT.phoneIntl}`} data-cta-location="evren_form_tel">{CONTACT.phone}</a>
             <a class="ev-link" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
@@ -1016,7 +1023,7 @@ const year = new Date().getFullYear();
             <textarea id="ev-message" class="ev-form__area" name="message" rows="2" placeholder="Tarih, lokasyon, ne çekilecek…"></textarea>
 
             <div class="ev-form__foot">
-              <button type="submit" class="ev-btn">Gönder, sizi arayalım <span aria-hidden="true">→</span></button>
+              <button type="submit" class="ev-btn ev-btn--sun">Gönder, sizi arayalım <span aria-hidden="true">→</span></button>
             </div>
             <p class="ev-form__status" data-ev-status role="status" aria-live="polite"></p>
             <p class="ev-whisper ev-form__sent" aria-hidden="true">mesajınız elimizde, sizi arıyoruz</p>
@@ -1373,6 +1380,54 @@ const year = new Date().getFullYear();
     padding: 0.45rem 1.1rem;
     font-size: 0.94rem;
   }
+  /* The lead button: the sun itself. Mid-stop #b3501a keeps white text
+     ≥ 4.5:1; the glow is what draws the eye, not a louder hue. */
+  .ev-btn--sun {
+    background:
+      radial-gradient(120% 140% at 30% -30%, rgba(255, 220, 180, 0.55), transparent 55%),
+      linear-gradient(135deg, #d56d25 0%, #b3501a 55%, #933c0c 100%);
+    color: #fff;
+    text-shadow: 0 1px 1px rgba(90, 30, 0, 0.35);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 225, 190, 0.6),
+      0 0 0 1px rgba(160, 70, 20, 0.35),
+      0 10px 28px -10px rgba(224, 122, 46, 0.85),
+      0 0 26px -6px rgba(255, 170, 90, 0.55);
+  }
+  .ev-btn--sun::after {
+    background: radial-gradient(60% 120% at var(--gx, 50%) 120%, rgba(255, 230, 200, 0.55), transparent 70%);
+  }
+  .ev-btn--sun:hover {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 225, 190, 0.7),
+      0 0 0 1px rgba(160, 70, 20, 0.35),
+      0 14px 34px -10px rgba(224, 122, 46, 0.95),
+      0 0 40px -4px rgba(255, 170, 90, 0.7);
+  }
+  .ev-btn--sun:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 3px;
+  }
+  .ev-wa {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: #1fa855;
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 6px 16px -8px rgba(20, 110, 55, 0.8);
+    transition: transform var(--dur-fast) var(--ease-out), background var(--dur) var(--ease-out);
+  }
+  .ev-wa:hover {
+    background: #19934a;
+    transform: translateY(-1px);
+  }
+  .ev-wa__mark {
+    flex: none;
+    color: #1a8f48;
+  }
   .ev-btn--glass {
     background: var(--glass-strong);
     color: var(--ink);
@@ -1565,7 +1620,7 @@ const year = new Date().getFullYear();
   .ev-head__act {
     display: flex;
     align-items: center;
-    gap: 0.3rem;
+    gap: 0.55rem;
   }
   @media (min-width: 901px) {
     .ev-menu {
@@ -1681,6 +1736,10 @@ const year = new Date().getFullYear();
     font-size: 0.9rem;
     color: var(--ink-2);
   }
+  .ev-hero__free {
+    font-weight: 600;
+    color: var(--sun-text);
+  }
   .ev-hero__proof strong {
     color: var(--ink);
   }
@@ -1793,6 +1852,13 @@ const year = new Date().getFullYear();
       font-size: 0.72rem;
     }
     .ev-onair__go {
+      display: none;
+    }
+    /* Fixed two lines, so the font swap can't rewrap it (CLS). */
+    .ev-hero__free {
+      display: block;
+    }
+    .ev-hero__sep {
       display: none;
     }
     /* Anchored from the top (not the bottom): if a font swap changes the
@@ -2617,7 +2683,7 @@ const year = new Date().getFullYear();
   /* ───── One set, many frames ───── */
   .ev-shoot {
     display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: clamp(2rem, 5vw, 4.5rem);
     align-items: center;
   }
@@ -2635,23 +2701,11 @@ const year = new Date().getFullYear();
   }
   .ev-shoot__out li {
     display: grid;
-    grid-template-columns: 2.6rem minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 0.9rem;
+    grid-template-columns: 2.4rem minmax(0, 1fr);
+    align-items: baseline;
+    gap: 0.6rem;
     padding: 0.75rem 0;
     border-bottom: 1px solid rgba(114, 103, 92, 0.22);
-  }
-  /* The format itself, drawn: a frame of that aspect ratio. */
-  .ev-ratio {
-    justify-self: center;
-    display: block;
-    height: 1.6rem;
-    max-width: 2.6rem;
-    aspect-ratio: var(--r);
-    border: 1.5px solid var(--ink);
-    border-radius: 3px;
-    background: linear-gradient(135deg, rgba(255, 200, 150, 0.45), rgba(255, 255, 255, 0.2));
-    box-shadow: 0 0 10px rgba(255, 190, 130, 0.45);
   }
   .ev-shoot__what {
     display: grid;
@@ -2666,13 +2720,6 @@ const year = new Date().getFullYear();
     font-size: 0.92rem;
     color: var(--ink-2);
   }
-  .ev-shoot__fmt {
-    font-family: var(--serif);
-    font-style: italic;
-    font-weight: 560;
-    color: var(--sun-text);
-    white-space: nowrap;
-  }
   .ev-shoot__cta {
     display: flex;
     flex-wrap: wrap;
@@ -2680,68 +2727,91 @@ const year = new Date().getFullYear();
     gap: 0.8rem 1.3rem;
     margin: 1.8rem 0 0;
   }
+  /* Two fixed lines at a size the half column holds. */
+  .ev-shoot__intro .ev-h2 {
+    font-size: clamp(2.3rem, 3.6vw + 0.4rem, 3.9rem);
+    text-wrap: nowrap;
+  }
+  .ev-shoot__n {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--sun-text);
+  }
   .ev-shoot__case {
     margin: 0;
-    padding: clamp(0.5rem, 1.2vw, 0.8rem);
   }
-  .ev-reframe {
+  /* Behind the scenes: a loose contact sheet of our own sets. */
+  .ev-bts {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 0.7rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ev-bts__shot {
     position: relative;
+    padding: 0.35rem;
     overflow: hidden;
-    aspect-ratio: 16 / 9;
-    border-radius: calc(var(--r) - 0.45rem);
-    background: #1d1915;
   }
-  .ev-reframe__img {
+  .ev-bts__shot--0 { grid-column: span 4; }
+  .ev-bts__shot--1 { grid-column: span 2; }
+  .ev-bts__shot--2 { grid-column: span 2; }
+  .ev-bts__shot--3 { grid-column: span 4; }
+  .ev-bts__shot img {
     display: block;
     width: 100%;
     height: 100%;
+    min-height: 9rem;
+    aspect-ratio: 16 / 10;
     object-fit: cover;
-    filter: saturate(0.88) sepia(0.1);
+    border-radius: calc(var(--r) - 0.55rem);
+    filter: saturate(0.85) sepia(0.1);
+    transition: filter 600ms var(--ease-out), transform 900ms var(--ease-out);
   }
-  /* A reframe guide: only the active one is drawn and dims what it leaves out. */
-  .ev-reframe__guide {
+  .ev-bts__shot--1 img,
+  .ev-bts__shot--2 img {
+    aspect-ratio: auto;
+  }
+  .ev-bts__shot:hover img {
+    filter: none;
+    transform: scale(1.03);
+  }
+  .ev-bts__tag {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: var(--l);
-    width: var(--w);
-    border: 2px solid rgba(255, 244, 232, 0.95);
-    border-radius: 4px;
-    box-shadow: 0 0 0 100vmax rgba(20, 16, 12, 0.5), 0 0 24px rgba(255, 190, 130, 0.6);
-    opacity: 0;
-    transition: opacity 700ms var(--ease-out);
-  }
-  .ev-reframe__guide[data-guide="0"] {
-    border-color: transparent;
-    box-shadow: none;
-  }
-  .ev-reframe[data-at="0"] [data-guide="0"],
-  .ev-reframe[data-at="1"] [data-guide="1"],
-  .ev-reframe[data-at="2"] [data-guide="2"] {
-    opacity: 1;
-  }
-  .ev-reframe__tag {
-    position: absolute;
-    left: 0.6rem;
-    bottom: 0.6rem;
-    padding: 0.3rem 0.65rem;
+    left: 0.9rem;
+    bottom: 0.9rem;
+    padding: 0.28rem 0.65rem;
     border-radius: 999px;
     background: rgba(250, 246, 240, 0.9);
     color: var(--ink);
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 600;
     white-space: nowrap;
   }
-  .ev-reframe__tag b {
+  .ev-shoot__rhythm {
+    margin-top: 0.7rem;
+    padding: 0.8rem 0.8rem 0.9rem;
+  }
+  .ev-shoot__rtitle {
+    margin: 0 0.2rem 0.6rem;
+    font-size: 0.9rem;
+    color: var(--ink-2);
+  }
+  .ev-shoot__rtitle b {
     font-family: var(--serif);
     font-style: italic;
+    font-weight: 600;
+    font-size: 1.05rem;
     color: var(--sun-text);
   }
   .ev-shoot__reels {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 0.5rem;
-    margin: 0.6rem 0 0;
+    margin: 0;
     padding: 0;
     list-style: none;
   }
@@ -2812,16 +2882,41 @@ const year = new Date().getFullYear();
     .ev-shoot__reels {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
-    .ev-shoot__out li {
-      grid-template-columns: 2.2rem minmax(0, 1fr);
+    .ev-shoot__intro .ev-h2 {
+      text-wrap: balance;
     }
-    .ev-shoot__fmt {
-      display: none;
+    .ev-bts {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.5rem;
     }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .ev-reframe[data-at] [data-guide="2"] {
-      opacity: 1;
+    .ev-bts__shot[class*="--"] {
+      grid-column: auto;
+    }
+    .ev-bts__shot img,
+    .ev-bts__shot--1 img,
+    .ev-bts__shot--2 img {
+      aspect-ratio: 1;
+      min-height: 0;
+    }
+    .ev-bts__tag {
+      left: 0.6rem;
+      right: 0.6rem;
+      bottom: 0.6rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 0.7rem;
+    }
+    /* Phones: the series is a swipeable strip, not a two-row wall. */
+    .ev-shoot__reels {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .ev-shoot__reels li {
+      flex: 0 0 29%;
+      scroll-snap-align: start;
     }
   }
 
@@ -3739,7 +3834,7 @@ const year = new Date().getFullYear();
   }
   /* The narrowest phones: WhatsApp moves into the menu. */
   @media (max-width: 380px) {
-    .ev-head__act > .ev-round:not(.ev-head__menu) {
+    .ev-head__act > .ev-wa {
       display: none;
     }
   }
@@ -3980,24 +4075,6 @@ const year = new Date().getFullYear();
         track("video_play", { event_category: "portfolio", video_id: id, location: "evren_cinema" });
       }),
     );
-
-    /* ── Reframe: 16:9 → 4:5 → 9:16 over the same still, while in view ── */
-    const reframe = root.querySelector<HTMLElement>("[data-reframe]");
-    if (reframe && !reduce) {
-      let rf = 0;
-      let rfAt = 0;
-      new IntersectionObserver(([e]) => {
-        if (e.isIntersecting && !rf) {
-          rf = window.setInterval(() => {
-            rfAt = (rfAt + 1) % 3;
-            reframe.dataset.at = String(rfAt);
-          }, 2400);
-        } else if (!e.isIntersecting) {
-          window.clearInterval(rf);
-          rf = 0;
-        }
-      }).observe(reframe);
-    }
 
     /* ── Process path: the sun walks I → IV, lighting one stop at a time ── */
     const path = root.querySelector<HTMLElement>("[data-path]");

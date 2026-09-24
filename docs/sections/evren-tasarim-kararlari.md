@@ -251,3 +251,24 @@ anlattığı şey gerçek set, gerçek görüntü ve teslim edilen içeriktir.
 - Numaralar: II işler · III tek çekim · IV markalar · V ekip · VI süreç ·
   VII hizmetler · VIII SSS · IX bölge · X günlük · XI ön görüşme.
 - Ölçüm (mobil, 4× CPU + yavaş 4G): LCP 1,01 sn · CLS 0,011 · ~730 KB.
+
+### v11 — odak: tek çekimde çok ürün, süreklilik, kalite; menü çubuğu ve CTA
+
+Kullanıcı: odak "tek çekimde çok kadraj" değil; tek çekimden birçok ürün, süreklilik,
+kaliteli ve ilgi çekici iş. Kamera arkası fotoğrafları Drive'da
+(`rast-evren-gorseller/Kamera arkası`, 6 kare) → `src/assets/photos/bts/`.
+- **III · "Bir çekim günü, haftalarca içerik."** Yeniden kadraj gösterimi kaldırıldı.
+  Dört vaat: I Tek sette çok ürün · II Süreklilik · III Sinema kalitesi · IV İlgi
+  çeken kurgu. Sağda kendi setlerimizden kamera arkası mozaiği (medikal, etkinlik,
+  röportaj, showroom) ve "Süreklilik · Aytaş Home düzenli dikey video akışı"
+  (6 video, dikey oynatıcı; telefonda kaydırılabilir şerit).
+- **Süreç:** I ve II durakları da kendi kamera arkası karelerimiz (ofis ışık kurulumu,
+  sokak kadrajı).
+- **Menü çubuğu:** linkler İşler · Çekim günü · Ekip · Süreç · SSS. WhatsApp artık
+  gerçek dolu logo, yeşil yuvarlak (eski ince çizgi ikon kayboluyordu).
+- **CTA:** "Ücretsiz ön görüşme" → **"Çekiminizi planlayalım"** (dar ekranda
+  "Planlayalım"); yeni `ev-btn--sun` stili: güneş turuncusu degrade + ışıma, beyaz
+  metin (orta ton #b3501a, ≥4.5:1). Hero, menü, çekim bölümü ve form gönder butonunda
+  aynı. "Ücretsiz" vaadi kaybolmasın diye hero kanıt satırı "İlk görüşme ücretsiz" ile
+  başlıyor (telefonda ayrı satır, CLS için sabit).
+- Ölçüm (mobil, 4× CPU + yavaş 4G): LCP 1,01 sn · CLS 0,022.
