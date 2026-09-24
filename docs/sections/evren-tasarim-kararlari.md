@@ -335,3 +335,19 @@ aralık esnek, mobil menüye geçiş 1000px. Footer da aynı listeyi kullanıyor
   kapalı; geri dönüş için arşiv). `/taslak` sitemap dışında.
 - Doğrulama (build + preview): form, sinema oynatıcı, mobil menü; 15 sayfada
   320/390/1440px yatay taşma yok; mobil (4× CPU, yavaş 4G) LCP 1,08 sn · CLS 0,009.
+
+### v14.1 — SEO / GEO denetimi (yayın öncesi)
+
+Build çıktısı (211 sayfa) tarandı ve `main` ile karşılaştırıldı.
+- Ana sayfa: title, description, canonical, OG görseli ve JSON-LD (Organization,
+  WebSite, LocalBusiness, FAQPage) eskisiyle birebir; tek H1 ("Sakarya video
+  prodüksiyon — İyi iş kendini izletir."); anahtar kelime yoğunluğu eşdeğer; bölge
+  hub'ı 110 bölge linkini koruyor; eski ana sayfa noindex, sitemap'te değil.
+- Bu PR'ın getirdiği yeni sorun yok. Düzeltilenler (eskiden de vardı): kategori,
+  marka, KVKK ve Telif sayfalarında H1 eksikti → `as="h1"`. "Bir çekim günü," H2'sinde
+  `<br>` yüzünden birleşen kelimeler ayrıldı. Etiket (Eyebrow) dar yerde kırılmıyor.
+- GEO: robots.txt (OAI-SearchBot/ChatGPT-User açık, GPTBot kapalı, Content-Signal),
+  llms.txt ve llms-full.txt geçerli, içlerindeki tüm URL'ler var.
+- Sonraya kalan (eski, bu PR dışı): bölge sayfalarının bir kısmında title 65+ /
+  description 165+ karakter; bazı proje açıklamaları 70 karakterden kısa; ana sayfa
+  H2'leri şiirsel — etiketler anahtar kelimeyi taşıyor, istenirse H2'lere de eklenebilir.

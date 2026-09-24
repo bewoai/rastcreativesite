@@ -36,6 +36,11 @@ const html = (await Astro.slots.render("default")).replace(/^\s*Sahne\s+\d+\s*·
     height: 1px;
     background: linear-gradient(90deg, rgba(114, 103, 92, 0.5), transparent);
   }
+  /* The label never wraps to a sliver next to its hairline. */
+  .eyebrow > span:not(.eyebrow__mark) {
+    flex: none;
+    max-width: 100%;
+  }
   .eyebrow__mark {
     font-size: 0.8em;
     color: var(--sun, #e07a2e);
