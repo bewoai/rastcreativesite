@@ -274,3 +274,15 @@ kaliteli ve ilgi çekici iş. Kamera arkası fotoğrafları Drive'da
 - Ölçüm (mobil, 4× CPU + yavaş 4G): LCP 1,01 sn · CLS 0,022.
   Not: `bts/` karelerinin tamamı gerçek çekimlerimizden; yalnızca görüntü iyileştirme
   (enhance) uygulandı. "Setlerimizden kamera arkası" ifadesi doğru.
+
+### v12 — sadeleştirme: reels şeridi çıktı, yeni ekip fotoğrafları, düz ve kısa CTA
+
+- **Aytaş reels şeridi** ana sayfadan kaldırıldı (kullanıcı: orada hoş durmuyor).
+  "Tek çekim günü" bölümü artık yalnızca dört vaat + kamera arkası mozaiği.
+- **Ekip:** Drive `ekip` klasöründeki yeni renkli portreler
+  (`muhammed-al-sheikhly-2026.jpg`, `berat-degirmenci-2026.jpg`); Berat'ın geçici
+  renklendirme filtresi (`mono`) kaldırıldı.
+- **CTA:** "Çekiminizi planlayalım" → **"Teklif alın"** (kısa, net, kendinden emin).
+  Buton düz: tek renk #b3501a (beyaz metin 5,1:1), degrade/ışıma/iç gölge yok;
+  hover'da koyulaşır. WhatsApp butonu da gölgesiz. "İlk görüşme ücretsiz" hero kanıt
+  satırında kalıyor.

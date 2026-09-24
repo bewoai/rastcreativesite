@@ -23,8 +23,8 @@ import { Image, Picture } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Logo from "../../components/Logo.astro";
 import Icon from "../../components/Icon.astro";
-import beratPhoto from "../../assets/photos/berat-degirmenci.png";
-import muhammedPhoto from "../../assets/photos/muhammed-al-sheikhly.png";
+import beratPhoto from "../../assets/photos/berat-degirmenci-2026.jpg";
+import muhammedPhoto from "../../assets/photos/muhammed-al-sheikhly-2026.jpg";
 import stopPrep from "../../assets/photos/bts/ofis-isik-kurulumu.jpg";
 import stopSet from "../../assets/photos/bts/sokak-kadraj.jpg";
 import btsMedical from "../../assets/photos/bts/medikal-radyoterapi.jpg";
@@ -112,10 +112,6 @@ const cases = projects.filter((p) => p.data.featured);
 // not "AI startup": horizontal featured pieces only.
 const onAir = cases.filter((p) => !p.data.vertical).slice(0, 5);
 
-// "One set, many frames": Aytaş Home's vertical series (playable in-site).
-const shootReels = projects
-  .filter((p) => p.data.client === "Aytaş Home" && p.data.vertical && p.data.youtubeId)
-  .slice(0, 6);
 // Real behind-the-scenes from our sets (Drive: rast-evren-gorseller/Kamera arkası).
 const btsShots = [
   { src: btsMedical, alt: "Hastanede radyoterapi ünitesi önünde doktorla medikal tanıtım çekimi", tag: "Medikal · radyoterapi ünitesi" },
@@ -194,9 +190,7 @@ const brands = [
 
 const founders = [
   { name: "Muhammed Al Sheikhly", role: "Kurucu ortak · Video director", photo: muhammedPhoto },
-  // The only photo we have is monochrome: `mono` warms it into the page's
-  // light until a colour portrait arrives.
-  { name: "Berat Değirmenci", role: "Kurucu ortak · Video director", photo: beratPhoto, mono: true },
+  { name: "Berat Değirmenci", role: "Kurucu ortak · Video director", photo: beratPhoto },
 ];
 
 // Four orbit stops. Durations mirror the verified "genellikle 2–4 hafta".
@@ -308,7 +302,7 @@ const year = new Date().getFullYear();
             <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d={WA_PATH} /></svg>
           </a>
           <a class="ev-btn ev-btn--sun ev-btn--sm ev-head__cta" href="#on-gorusme" data-cta-location="evren_header">
-            <span class="ev-head__long">Çekiminizi planlayalım</span><span class="ev-head__short">Planlayalım</span>
+            Teklif alın
           </a>
           <button type="button" class="ev-round ev-head__menu" aria-expanded="false" aria-controls="ev-menu" data-menu-btn>
             <span class="ev-sr" data-menu-label>Menüyü aç</span>
@@ -336,7 +330,7 @@ const year = new Date().getFullYear();
           ))}
         </ol>
         <div class="ev-menu__foot">
-          <a class="ev-btn ev-btn--sun" href="#on-gorusme" data-cta-location="evren_menu">Çekiminizi planlayalım <span aria-hidden="true">→</span></a>
+          <a class="ev-btn ev-btn--sun" href="#on-gorusme" data-cta-location="evren_menu">Teklif alın <span aria-hidden="true">→</span></a>
           <a class="ev-btn ev-btn--glass" href={whatsappHref} data-cta-location="evren_menu_wa"><svg class="ev-wa__mark" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d={WA_PATH} /></svg> WhatsApp</a>
           <a class="ev-link" href={`tel:${CONTACT.phoneIntl}`}>{CONTACT.phone}</a>
         </div>
@@ -390,7 +384,7 @@ const year = new Date().getFullYear();
         </p>
         <div class="ev-hero__cta">
           <a class="ev-btn ev-btn--sun" href="#on-gorusme" data-cta-location="evren_hero">
-            Çekiminizi planlayalım <span aria-hidden="true">→</span>
+            Teklif alın <span aria-hidden="true">→</span>
           </a>
           <a class="ev-btn ev-btn--glass" href="#isler" data-cta-location="evren_hero_works">
             İşleri izle
@@ -559,7 +553,7 @@ const year = new Date().getFullYear();
           ))}
         </ol>
         <p class="ev-shoot__cta">
-          <a class="ev-btn ev-btn--sun" href="#on-gorusme" data-cta-location="evren_shoot">Çekim gününüzü planlayalım <span aria-hidden="true">→</span></a>
+          <a class="ev-btn ev-btn--sun" href="#on-gorusme" data-cta-location="evren_shoot">Teklif alın <span aria-hidden="true">→</span></a>
           <a class="ev-link" href="/blog/tek-cekim-gununden-kac-icerik-cikar/">Bir çekimden kaç içerik çıkar?</a>
         </p>
       </div>
@@ -573,31 +567,7 @@ const year = new Date().getFullYear();
             </li>
           ))}
         </ul>
-        {shootReels.length > 0 && (
-          <div class="ev-shoot__rhythm ev-glass">
-            <p class="ev-shoot__rtitle"><b>Süreklilik</b> · Aytaş Home için düzenli dikey video akışı</p>
-            <ul class="ev-shoot__reels" aria-label="Aytaş Home dikey video serisi">
-              {shootReels.map((p) => (
-                <li>
-                  <button
-                    type="button"
-                    class="ev-reel"
-                    data-case-play
-                    data-yt={p.data.youtubeId}
-                    data-vertical
-                    data-title={p.data.title}
-                    data-poster={ytThumbToWebp(p.data.poster)}
-                    aria-label={`${p.data.title} videosunu izle`}
-                  >
-                    <img src={ytThumbToWebp(p.data.poster)} alt="" width="480" height="360" loading="lazy" decoding="async" />
-                    <span class="ev-reel__play" aria-hidden="true">▶</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        <figcaption class="ev-shoot__cap">Setlerimizden kamera arkası. Videolar sayfadan çıkmadan oynar.</figcaption>
+        <figcaption class="ev-shoot__cap">Setlerimizden kamera arkası.</figcaption>
       </figure>
     </section>
 
@@ -662,7 +632,7 @@ const year = new Date().getFullYear();
       <ul class="ev-team__list">
         {
           founders.map((f, i) => (
-            <li class:list={["ev-person ev-glass", { "is-mono": f.mono }]} data-rise style={`--d:${i + 1}`}>
+            <li class="ev-person ev-glass" data-rise style={`--d:${i + 1}`}>
               <Picture
                 src={f.photo}
                 alt={f.name}
@@ -1330,9 +1300,6 @@ const year = new Date().getFullYear();
   }
 
   /* ───── Buttons ───── */
-  .ev-head__short {
-    display: none;
-  }
   .ev-btn {
     position: relative;
     display: inline-flex;
@@ -1380,29 +1347,20 @@ const year = new Date().getFullYear();
     padding: 0.45rem 1.1rem;
     font-size: 0.94rem;
   }
-  /* The lead button: the sun itself. Mid-stop #b3501a keeps white text
-     ≥ 4.5:1; the glow is what draws the eye, not a louder hue. */
+  /* The lead button: one flat sun colour — no gradient, bevel or glow, so it
+     sits in the same flat language as the rest of the UI. #b3501a keeps
+     white text at 5.1:1. */
   .ev-btn--sun {
-    background:
-      radial-gradient(120% 140% at 30% -30%, rgba(255, 220, 180, 0.55), transparent 55%),
-      linear-gradient(135deg, #d56d25 0%, #b3501a 55%, #933c0c 100%);
+    background: #b3501a;
     color: #fff;
-    text-shadow: 0 1px 1px rgba(90, 30, 0, 0.35);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 225, 190, 0.6),
-      0 0 0 1px rgba(160, 70, 20, 0.35),
-      0 10px 28px -10px rgba(224, 122, 46, 0.85),
-      0 0 26px -6px rgba(255, 170, 90, 0.55);
+    box-shadow: none;
   }
   .ev-btn--sun::after {
-    background: radial-gradient(60% 120% at var(--gx, 50%) 120%, rgba(255, 230, 200, 0.55), transparent 70%);
+    display: none;
   }
   .ev-btn--sun:hover {
-    box-shadow:
-      inset 0 1px 0 rgba(255, 225, 190, 0.7),
-      0 0 0 1px rgba(160, 70, 20, 0.35),
-      0 14px 34px -10px rgba(224, 122, 46, 0.95),
-      0 0 40px -4px rgba(255, 170, 90, 0.7);
+    background: #9a4315;
+    box-shadow: none;
   }
   .ev-btn--sun:focus-visible {
     outline: 2px solid var(--ink);
@@ -1417,7 +1375,6 @@ const year = new Date().getFullYear();
     border-radius: 50%;
     background: #1fa855;
     color: #fff;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 6px 16px -8px rgba(20, 110, 55, 0.8);
     transition: transform var(--dur-fast) var(--ease-out), background var(--dur) var(--ease-out);
   }
   .ev-wa:hover {
@@ -2279,9 +2236,6 @@ const year = new Date().getFullYear();
     /* Colour, gently warmed toward the fog so both portraits share a light. */
     filter: saturate(0.92) sepia(0.1) contrast(1.02);
   }
-  .ev-person.is-mono img {
-    filter: sepia(0.6) saturate(1.5) hue-rotate(-6deg) brightness(1.06) contrast(0.96);
-  }
   .ev-person__name {
     margin: 0.85rem 0.3rem 0;
     font-weight: 560;
@@ -2791,76 +2745,6 @@ const year = new Date().getFullYear();
     font-weight: 600;
     white-space: nowrap;
   }
-  .ev-shoot__rhythm {
-    margin-top: 0.7rem;
-    padding: 0.8rem 0.8rem 0.9rem;
-  }
-  .ev-shoot__rtitle {
-    margin: 0 0.2rem 0.6rem;
-    font-size: 0.9rem;
-    color: var(--ink-2);
-  }
-  .ev-shoot__rtitle b {
-    font-family: var(--serif);
-    font-style: italic;
-    font-weight: 600;
-    font-size: 1.05rem;
-    color: var(--sun-text);
-  }
-  .ev-shoot__reels {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 0.5rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  .ev-reel {
-    position: relative;
-    display: block;
-    width: 100%;
-    aspect-ratio: 9 / 16;
-    padding: 0;
-    overflow: hidden;
-    border: 0;
-    border-radius: 0.7rem;
-    background: #1d1915;
-    cursor: pointer;
-  }
-  .ev-reel img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 600ms var(--ease-out);
-  }
-  .ev-reel:hover img {
-    transform: scale(1.06);
-  }
-  .ev-reel__play {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    display: grid;
-    place-items: center;
-    width: 2.2rem;
-    height: 2.2rem;
-    padding-left: 0.15rem;
-    border-radius: 50%;
-    background: rgba(250, 246, 240, 0.88);
-    color: var(--ink);
-    font-size: 0.8rem;
-    translate: -50% -50%;
-    box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.5);
-    transition: scale var(--dur) var(--ease-out);
-  }
-  .ev-reel:hover .ev-reel__play,
-  .ev-reel:focus-visible .ev-reel__play {
-    scale: 1.12;
-  }
-  .ev-reel:focus-visible {
-    outline: 2px solid var(--sun);
-    outline-offset: 2px;
-  }
   .ev-shoot__cap {
     margin: 0.8rem 0.3rem 0.2rem;
     font-size: 0.88rem;
@@ -2879,9 +2763,6 @@ const year = new Date().getFullYear();
     }
   }
   @media (max-width: 560px) {
-    .ev-shoot__reels {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
     .ev-shoot__intro .ev-h2 {
       text-wrap: balance;
     }
@@ -2905,18 +2786,6 @@ const year = new Date().getFullYear();
       overflow: hidden;
       text-overflow: ellipsis;
       font-size: 0.7rem;
-    }
-    /* Phones: the series is a swipeable strip, not a two-row wall. */
-    .ev-shoot__reels {
-      display: flex;
-      gap: 0.5rem;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      scrollbar-width: none;
-    }
-    .ev-shoot__reels li {
-      flex: 0 0 29%;
-      scroll-snap-align: start;
     }
   }
 
@@ -3821,12 +3690,6 @@ const year = new Date().getFullYear();
     text-overflow: ellipsis;
   }
   @media (max-width: 420px) {
-    .ev-head__long {
-      display: none;
-    }
-    .ev-head__short {
-      display: inline;
-    }
     .ev-head__bar {
       gap: 0.6rem;
       padding-left: 0.8rem;
