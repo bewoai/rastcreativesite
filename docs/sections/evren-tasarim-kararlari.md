@@ -286,3 +286,26 @@ kaliteli ve ilgi çekici iş. Kamera arkası fotoğrafları Drive'da
   Buton düz: tek renk #b3501a (beyaz metin 5,1:1), degrade/ışıma/iç gölge yok;
   hover'da koyulaşır. WhatsApp butonu da gölgesiz. "İlk görüşme ücretsiz" hero kanıt
   satırında kalıyor.
+
+### v13 — "Görüşelim", tek menü, iç sayfalar evren tonunda
+
+- **CTA:** "Görüşelim" (kısa, net); tek kaynak `EV_CTA` (`src/lib/evren.ts`).
+- **Menü sekmeleri:** her sayfada aynı dört sayfa — İşler (/projeler/) · Hizmetler ·
+  Hakkımızda · Blog; mobil menüde + İletişim. Aktif sayfa altında küçük güneş
+  (`aria-current="page"`). Ana sayfada CTA forma (#on-gorusme), iç sayfalarda
+  /iletisim/'e gider.
+- **Ortak parçalar:** `src/styles/evren.css` (fontlar, token'lar `:root`'ta, cam,
+  etiket/başlık/fısıltı, butonlar, menü, footer), `src/components/evren/EvHeader.astro`,
+  `EvFooter.astro`, `src/lib/evren.ts` (roman, WA_PATH, EV_NAV, EV_CTA). Taslak ana
+  sayfa da bunları kullanıyor — tek kaynak.
+- **BaseLayout:** GlassNav/Footer yerine EvHeader/EvFooter; içerik `.ev.ev-site`
+  içinde, sis gökyüzü + gren katmanı. Tema tek: açık (koyu tema ve tema düğmesi
+  kalktı — evren gün ışığı dünyası).
+- **Genel token'lar** (`tokens.css`) evren paletine: kâğıt #f4efe8, mürekkep #1d1915,
+  amber #b3501a (düz güneş), başlık fontu Fraunces. Böylece eski bileşenler de tona geçti.
+- **Bileşenler:** `Eyebrow` evren etiketi (✦ + çizgi; eski "Sahne 0N ·" öneki
+  otomatik düşer), `Button` düz (birincil tek renk güneş, ikincil sis camı),
+  `Section tone="ink"` siyah bant yerine aydınlık cam panel. Projeler sayfasının
+  koyu video hero'su yerine sis üzerinde başlık ("Seçili işler."). Hakkımızda yeni
+  renkli portreler.
+- Kullanılmayan kaldı (silinmedi): GlassNav, Footer, ThemeToggle, VideoHero (yalnız eski ana sayfa).

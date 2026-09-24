@@ -1,8 +1,8 @@
 ---
 import "../styles/global.css";
 import { SITE, GA4_MEASUREMENT_ID } from "../consts";
-import GlassNav from "../components/GlassNav.astro";
-import Footer from "../components/Footer.astro";
+import EvHeader from "../components/evren/EvHeader.astro";
+import EvFooter from "../components/evren/EvFooter.astro";
 import EntryOverlay from "../components/EntryOverlay.astro";
 import WebMcpTools from "../components/WebMcpTools.astro";
 
@@ -68,7 +68,7 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="light dark" />
+    <meta name="color-scheme" content="light" />
 
     <script is:inline define:vars={{ entryAnimation }}>
       try {
@@ -122,22 +122,15 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
           }
         }
 
-        const savedTheme = localStorage.getItem("rc_theme");
-        const theme =
-          savedTheme === "light" || savedTheme === "dark"
-            ? savedTheme
-            : matchMedia("(prefers-color-scheme: dark)").matches
-              ? "dark"
-              : "light";
-        root.dataset.theme = theme;
+        // The Evren world is a daylight fog — one light theme, no toggle.
+        root.dataset.theme = "light";
       } catch (e) {
         document.documentElement.classList.add("js");
         document.documentElement.dataset.theme = "light";
       }
     </script>
 
-    <meta name="theme-color" content={SITE.themeColor} media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#191612" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#e6dfd6" />
     <meta name="generator" content={Astro.generator} />
 
     {/* Google Search Console site ownership verification. */}
@@ -350,11 +343,23 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
       İçeriğe geç
     </a>
     {!bare && entryAnimation && <EntryOverlay />}
-    {!bare && <GlassNav />}
-    <main id="main">
-      <slot />
-    </main>
-    {!bare && <Footer />}
+    {
+      bare ? (
+        <main id="main">
+          <slot />
+        </main>
+      ) : (
+        <div class="ev ev-site">
+          <div class="ev-sky" aria-hidden="true" style="--fog-img:url(/evren/sis.webp)" />
+          <div class="ev-grain" aria-hidden="true" />
+          <EvHeader />
+          <main id="main">
+            <slot />
+          </main>
+          <EvFooter />
+        </div>
+      )
+    }
     <WebMcpTools />
 
     <script>

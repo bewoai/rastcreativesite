@@ -15,17 +15,18 @@
   color-scheme: light;
 
   /* ---- Color (1.2) ------------------------------------------------- */
-  --paper: #faf9f6; /* warm white — primary surface            */
-  --ink: #111110; /* headings + body text                     */
-  --ink-soft: #4a4845; /* secondary text                           */
-  --line: #e5e2dc; /* hairlines, card borders                  */
-  --line-strong: #c9bdae; /* stronger border for inputs/checkboxes    */
-  --amber: #e25303; /* "Rast Amber" — signature accent (fills/CTA bg) */
-  --amber-deep: #b84203; /* amber hover / active                     */
+  /* Evren palette (daylight fog + the Rast sun) — see src/styles/evren.css. */
+  --paper: #f4efe8; /* fog-hi — card / panel surface            */
+  --ink: #1d1915; /* headings + body text                     */
+  --ink-soft: #51493f; /* secondary text (≈7.5:1 on fog)          */
+  --line: #d9cfc2; /* hairlines, card borders                  */
+  --line-strong: #b9aa98; /* stronger border for inputs/checkboxes    */
+  --amber: #b3501a; /* the sun as a fill (CTA bg; white text 5.1:1) */
+  --amber-deep: #9a4315; /* amber hover / active                     */
   /* Amber used AS TEXT/icon on light surfaces. #E25303 on --paper is only
      3.64:1 (fails WCAG AA); --amber-deep is 5.22:1. Use this for eyebrows,
      timecodes, active nav — anywhere amber is the foreground on light. */
-  --amber-text: var(--amber-deep);
+  --amber-text: #94420f;
   --ink-band: #111110; /* intentional dark cinematic bands          */
   --on-ink: #faf9f6; /* text/icons on intentional dark bands       */
 
@@ -33,8 +34,7 @@
   /* Display and body share one grotesk (Inter). The display voice comes from
      weight + negative tracking at size, not from a second family — so the
      headline face costs zero extra bytes and the page speaks one language. */
-  --font-display: "Inter Variable", system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Fraunces Variable", "Fraunces Fallback", Georgia, serif;
   /* Inter (body/display) + Space Grotesk (utility) are self-hosted, subset,
      swap-loaded. System fonts stay as the fallback so first paint is instant
      and the swap is a near-metric match (minimal CLS). */
@@ -70,8 +70,8 @@
   /* ---- Glass / Liquid Glass (bloomy, lush) ------------------------ */
   --glass-blur: 20px;
   --glass-saturate: 1.6;
-  --glass-bg: color-mix(in srgb, var(--paper) 65%, transparent);
-  --glass-border: color-mix(in srgb, #ffffff 45%, transparent);
+  --glass-bg: rgba(250, 246, 240, 0.5);
+  --glass-border: rgba(255, 255, 255, 0.62);
   --glass-glow: 0 8px 32px -8px color-mix(in srgb, var(--amber) 12%, transparent);
 
   /* ---- Bloom / Glow ----------------------------------------------- */

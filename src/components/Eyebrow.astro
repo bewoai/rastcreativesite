@@ -1,6 +1,7 @@
 ---
-// Timecode / "slate" label (roadmap 1.4 #2): e.g. "SAHNE 01 · PORTFOLYO".
-// Space Grotesk, uppercase, tracked — a real film-set cue, not decoration.
+// Section label in the Evren voice: heavy uppercase Inter, a small sun
+// mark and a trailing hairline. Legacy "Sahne 0N · " slate prefixes are
+// dropped here so every page speaks the same language.
 interface Props {
   tone?: "amber" | "soft" | "paper";
   as?: "p" | "span" | "div";
@@ -8,30 +9,39 @@ interface Props {
 }
 
 const { tone = "amber", as: Tag = "p", class: className } = Astro.props;
+const html = (await Astro.slots.render("default")).replace(/^\s*Sahne\s+\d+\s*·\s*/i, "");
 ---
 
 <Tag class:list={["eyebrow", `eyebrow--${tone}`, className]}>
-  <slot />
+  <span class="eyebrow__mark" aria-hidden="true">✦</span><span set:html={html} />
 </Tag>
 
 <style>
   .eyebrow {
-    font-family: var(--font-utility);
-    font-size: var(--text-eyebrow);
-    font-weight: 500;
-    line-height: 1;
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-eyebrow);
-    font-variant-numeric: tabular-nums; /* timecodes don't shift */
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
     margin: 0;
+    font-family: var(--font-body);
+    font-size: 0.76rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--mute, #72675c);
   }
-  .eyebrow--amber {
-    color: var(--amber-text); /* AA-contrast amber for small text on light */
+  .eyebrow::after {
+    content: "";
+    flex: 0 1 4rem;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(114, 103, 92, 0.5), transparent);
   }
-  .eyebrow--soft {
-    color: var(--ink-soft);
+  .eyebrow__mark {
+    font-size: 0.8em;
+    color: var(--sun, #e07a2e);
+    text-shadow: 0 0 8px rgba(224, 122, 46, 0.8);
   }
   .eyebrow--paper {
-    color: color-mix(in srgb, var(--on-ink) 70%, transparent);
+    color: color-mix(in srgb, var(--on-ink) 75%, transparent);
   }
 </style>
