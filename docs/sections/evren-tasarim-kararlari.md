@@ -272,3 +272,5 @@ kaliteli ve ilgi çekici iş. Kamera arkası fotoğrafları Drive'da
   aynı. "Ücretsiz" vaadi kaybolmasın diye hero kanıt satırı "İlk görüşme ücretsiz" ile
   başlıyor (telefonda ayrı satır, CLS için sabit).
 - Ölçüm (mobil, 4× CPU + yavaş 4G): LCP 1,01 sn · CLS 0,022.
+  Not: `bts/` karelerinin tamamı gerçek çekimlerimizden; yalnızca görüntü iyileştirme
+  (enhance) uygulandı. "Setlerimizden kamera arkası" ifadesi doğru.
