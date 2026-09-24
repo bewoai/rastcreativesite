@@ -12,7 +12,7 @@
 */
 
 :root {
-  color-scheme: light;
+  color-scheme: only light;
 
   /* ---- Color (1.2) ------------------------------------------------- */
   /* Evren palette (daylight fog + the Rast sun) — see src/styles/evren.css. */

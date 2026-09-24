@@ -68,7 +68,11 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="light" />
+    {/* "only light": the Evren world is a daylight fog with photographic
+        skies. Browsers' automatic dark mode (Chrome "dark theme for web
+        contents", Samsung Internet) would flip the text light while the fog
+        images stay light — white on white. This opts the page out. */}
+    <meta name="color-scheme" content="only light" />
 
     <script is:inline define:vars={{ entryAnimation }}>
       try {

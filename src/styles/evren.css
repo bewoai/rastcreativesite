@@ -70,6 +70,8 @@ body:has(.ev) {
 
 /* ───── Tokens: sampled from the frames, one light source ───── */
 :root {
+  /* Opt out of browser auto-darkening (see BaseLayout). */
+  color-scheme: only light;
   --fog: #e6dfd6;
   --fog-hi: #f4efe8;
   --ink: #1d1915;
@@ -92,7 +94,7 @@ body:has(.ev) {
 
   position: relative;
   isolation: isolate;
-  color-scheme: light;
+  color-scheme: only light;
   background: var(--fog);
   color: var(--ink);
   font-family: var(--font-body);

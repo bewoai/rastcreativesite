@@ -309,3 +309,12 @@ kaliteli ve ilgi çekici iş. Kamera arkası fotoğrafları Drive'da
   koyu video hero'su yerine sis üzerinde başlık ("Seçili işler."). Hakkımızda yeni
   renkli portreler.
 - Kullanılmayan kaldı (silinmedi): GlassNav, Footer, ThemeToggle, VideoHero (yalnız eski ana sayfa).
+
+### v13.1 — tarayıcı otomatik koyu modu: beyaz üstüne beyaz
+
+Kullanıcı: butonlar beyaz, içindeki ve sitedeki yazılar beyaz, logo okunmuyor.
+Sebep: sayfa yalnızca açık tema bildirdiği için Chrome "web içeriği için koyu tema"
+ve Samsung Internet koyu modu sayfayı algoritmik koyulaştırıyordu; yazılar açığa
+dönüyor ama sis/gökyüzü görselleri açık kalıyordu. Düzeltme: `<meta name="color-scheme"
+content="only light">` + `:root { color-scheme: only light }` (tokens.css, evren.css,
+.ev). Chromium'da `forceDarkModeEnabled` ile doğrulandı: sayfa artık değişmeden kalıyor.
