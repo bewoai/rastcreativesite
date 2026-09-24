@@ -494,7 +494,7 @@ body:has(.ev) {
 }
 .ev-head__nav {
   display: flex;
-  gap: 1.6rem;
+  gap: clamp(1rem, 1.6vw, 1.6rem);
   margin: 0 auto;
 }
 .ev-head__nav a {
@@ -537,12 +537,12 @@ body:has(.ev) {
   align-items: center;
   gap: 0.55rem;
 }
-@media (min-width: 901px) {
+@media (min-width: 1001px) {
   .ev-menu {
     display: none !important;
   }
 }
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
   .ev-head__menu {
     display: grid;
   }

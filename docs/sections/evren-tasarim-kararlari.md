@@ -318,3 +318,10 @@ ve Samsung Internet koyu modu sayfayı algoritmik koyulaştırıyordu; yazılar 
 dönüyor ama sis/gökyüzü görselleri açık kalıyordu. Düzeltme: `<meta name="color-scheme"
 content="only light">` + `:root { color-scheme: only light }` (tokens.css, evren.css,
 .ev). Chromium'da `forceDarkModeEnabled` ile doğrulandı: sayfa artık değişmeden kalıyor.
+
+### v13.2 — menüye Ana sayfa ve İletişim
+
+Kullanıcı: sekmeler sayfalara götürüyor, Ana sayfa neden yok? Menü artık her yerde
+aynı altı sekme: Ana sayfa · İşler · Hizmetler · Hakkımızda · Blog · İletişim
+(`EV_NAV`). "/" yalnızca ana sayfada (ve taslağında) aktif. Altı sekme sığsın diye
+aralık esnek, mobil menüye geçiş 1000px. Footer da aynı listeyi kullanıyor.
