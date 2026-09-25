@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<title>Rast Creative — Dikey Tanıtım Filmi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="data:," />
+<!--
+  Rast Creative Studio — vertical brand film (1080×1920, 30 fps, 65 s).
+
+  Every pixel is a pure function of time: timeline.js exposes
+  window.__render(t) and render.mjs screenshots it frame by frame.
+  Open with ?preview to watch it live in a browser (with sound).
+
+  Visual language = the live site's "Evren" world (src/styles/evren.css):
+  fog, one peach light source (the Rast sun), Fraunces for the voice,
+  heavy Inter for UI, fog glass for every surface, Roman numerals.
+-->
+<style>
+  /* ───── Fonts: the site's own self-hosted files ───── */
+  @font-face { font-family: "Fraunces"; font-style: normal; font-weight: 100 900;
+    src: url("/public/fonts/fraunces-latin-wght-normal.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: "Fraunces"; font-style: normal; font-weight: 100 900;
+    src: url("/public/fonts/fraunces-latin-ext-wght-normal.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20AB, U+20AD-20C0, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family: "Fraunces"; font-style: italic; font-weight: 100 900;
+    src: url("/public/fonts/fraunces-latin-wght-italic.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: "Fraunces"; font-style: italic; font-weight: 100 900;
+    src: url("/public/fonts/fraunces-latin-ext-wght-italic.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20AB, U+20AD-20C0, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family: "Inter"; font-weight: 100 900;
+    src: url("/public/fonts/inter-latin-wght-normal.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: "Inter"; font-weight: 100 900;
+    src: url("/public/fonts/inter-latin-ext-wght-normal.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20AB, U+20AD-20C0, U+2C60-2C7F, U+A720-A7FF; }
+
+  :root {
+    --fog: #e6dfd6;
+    --fog-hi: #f4efe8;
+    --ink: #1d1915;
+    --ink-2: #51493f;
+    --mute: #72675c;
+    --sun: #e07a2e;
+    --sun-text: #94420f;
+    --sun-fill: #b3501a;
+    --night: #0b0908;
+    --serif: "Fraunces", Georgia, serif;
+    --sans: "Inter", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; animation: none !important; transition: none !important; }
+  html, body { background: #000; overflow: hidden; }
+  body { font-family: var(--sans); color: var(--ink); -webkit-font-smoothing: antialiased; }
+
+  #stage {
+    position: relative; width: 1080px; height: 1920px; overflow: hidden;
+    background: var(--fog); transform-origin: 0 0; isolation: isolate;
+  }
+  .abs { position: absolute; left: 0; top: 0; }
+  .full { position: absolute; inset: 0; }
+  .scene { position: absolute; inset: 0; display: none; }
+
+  /* ───── World layers ───── */
+  #fog { position: absolute; inset: 0; overflow: hidden; }
+  #fog .sky {
+    position: absolute; left: -40px; top: -40px; width: 1160px; height: 2000px;
+    background: url("/public/evren/sis.webp") 72% 50% / auto 100% no-repeat, var(--fog);
+    filter: saturate(.95);
+  }
+  #fog .wash {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(70% 45% at 82% 8%, rgba(255, 214, 176, .55), transparent 70%),
+      linear-gradient(180deg, rgba(230, 223, 214, .25), rgba(230, 223, 214, .55) 55%, rgba(236, 229, 220, .8));
+  }
+  .cloud {
+    position: absolute; left: 0; top: 0; width: 3696px; height: 1040px;
+    background: url("/public/evren/bulut-seridi.webp") 0 0 / 1848px 1040px repeat-x;
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 38%, #000 62%, transparent);
+            mask-image: linear-gradient(180deg, transparent, #000 38%, #000 62%, transparent);
+  }
+  #night {
+    position: absolute; inset: 0; opacity: 0;
+    background:
+      radial-gradient(90% 60% at 50% 42%, #221a14 0%, #120e0b 55%, #060505 100%);
+  }
+
+  /* The Rast sun: one light source for the whole film. Sized with transforms
+     only (base 1000px), so it never triggers layout. */
+  #sun { position: absolute; left: 0; top: 0; width: 0; height: 0; pointer-events: none; }
+  #sun > * { position: absolute; left: -500px; top: -500px; width: 1000px; height: 1000px; border-radius: 50%; }
+  #sun .light { background: radial-gradient(closest-side, rgba(255, 196, 140, .62), rgba(255, 206, 160, .28) 45%, transparent 100%); }
+  #sun .halo { background: radial-gradient(closest-side, rgba(255, 176, 100, .85), rgba(255, 196, 136, .42) 42%, transparent 100%); }
+  #sun .orb {
+    background: url("/public/evren/kure.webp") center / cover;
+    -webkit-mask-image: radial-gradient(closest-side, #000 40%, rgba(0,0,0,.5) 50%, transparent 64%);
+            mask-image: radial-gradient(closest-side, #000 40%, rgba(0,0,0,.5) 50%, transparent 64%);
+  }
+  #sun .bloom { background: radial-gradient(closest-side, rgba(255, 244, 222, .95), rgba(255, 214, 160, .55) 38%, rgba(255, 190, 120, .18) 70%, transparent 100%); mix-blend-mode: screen; }
+  #sun .core {
+    background: radial-gradient(circle at 42% 38%, #ffcf8f 0%, #f39a4c 32%, #e07a2e 62%, #b9531a 100%);
+    box-shadow: 0 0 0 0 transparent;
+  }
+
+  #grain {
+    position: absolute; inset: -60px; pointer-events: none; mix-blend-mode: overlay; opacity: .09;
+  }
+  #vignette {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(120% 80% at 50% 50%, transparent 55%, rgba(60, 38, 20, .22) 100%);
+  }
+  #flash {
+    position: absolute; inset: 0; opacity: 0; pointer-events: none;
+    background: radial-gradient(80% 60% at 50% 50%, #fffaf2 0%, #ffe9d2 45%, #f7dcc0 100%);
+  }
+
+  /* ───── Voice ───── */
+  .serif { font-family: var(--serif); font-weight: 600; letter-spacing: -0.02em; line-height: 1.02; }
+  .serif em { font-style: italic; font-weight: 520; color: var(--sun-text); }
+  .w { display: inline-block; will-change: transform, opacity, filter; }
+  .center { text-align: center; }
+  .label {
+    position: absolute; left: 0; right: 0; top: 262px; text-align: center;
+    font: 700 26px/1 var(--sans); letter-spacing: .24em; text-transform: uppercase; color: var(--mute);
+  }
+  .label b { color: var(--sun-text); font-weight: 800; margin-right: .5em; }
+  .label i { display: inline-block; width: 56px; height: 2px; background: currentColor; opacity: .45; vertical-align: middle; margin: 0 22px; transform-origin: center; font-style: normal; }
+  .dark .label { color: #b8aa98; }
+  .dark .label b { color: #f0a466; }
+  .title { position: absolute; left: 60px; right: 60px; top: 330px; font-size: 104px; }
+  .whisper { font-family: var(--serif); font-style: italic; font-weight: 450; color: var(--ink-2); letter-spacing: -0.01em; line-height: 1.18; }
+
+  /* ───── Material: fog glass ───── */
+  .glass {
+    position: absolute;
+    background: linear-gradient(180deg, rgba(255, 252, 247, .66), rgba(250, 244, 236, .42));
+    border: 1.5px solid rgba(255, 255, 255, .7);
+    box-shadow: 0 50px 90px -46px rgba(96, 62, 30, .45), inset 0 1.5px 0 rgba(255, 255, 255, .85);
+    -webkit-backdrop-filter: blur(22px) saturate(1.15);
+            backdrop-filter: blur(22px) saturate(1.15);
+    border-radius: 40px;
+  }
+  .glass.dim { background: linear-gradient(180deg, rgba(255, 255, 255, .09), rgba(255, 255, 255, .04)); border-color: rgba(255, 255, 255, .14); box-shadow: 0 50px 90px -40px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.12); }
+  .chip {
+    display: inline-flex; align-items: center; gap: 10px; height: 54px; padding: 0 24px; border-radius: 999px;
+    font: 650 25px/1 var(--sans); color: var(--ink); white-space: nowrap;
+    background: rgba(255, 252, 247, .62); border: 1.5px solid rgba(255, 255, 255, .8);
+    box-shadow: 0 10px 24px -14px rgba(96, 62, 30, .35);
+  }
+  .chip.sun { background: rgba(224, 122, 46, .14); border-color: rgba(224, 122, 46, .35); color: var(--sun-text); }
+  .glint {
+    position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none;
+  }
+  .glint::before {
+    content: ""; position: absolute; top: -20%; bottom: -20%; left: 0; width: 42%;
+    background: linear-gradient(100deg, transparent, rgba(255, 238, 214, .75), transparent);
+    transform: translateX(var(--gx, -150%)) skewX(-14deg);
+  }
+
+  /* ───── S1 · Hook (dark feed) ───── */
+  #feed { position: absolute; left: 100px; top: 0; width: 880px; }
+  .card {
+    position: absolute; left: 0; width: 880px; height: 1240px; border-radius: 44px; overflow: hidden;
+    background: #211a15; border: 1.5px solid rgba(255, 255, 255, .08);
+  }
+  .card .hd { position: absolute; left: 36px; top: 34px; right: 36px; height: 72px; }
+  .card .av { position: absolute; left: 0; top: 4px; width: 64px; height: 64px; border-radius: 50%; background: #3a3029; }
+  .card .l1, .card .l2 { position: absolute; left: 88px; height: 18px; border-radius: 9px; background: #3a3029; }
+  .card .l1 { top: 12px; width: 240px; } .card .l2 { top: 44px; width: 150px; opacity: .7; }
+  .card .md {
+    position: absolute; left: 0; top: 130px; width: 880px; height: 990px; overflow: hidden;
+    background: linear-gradient(115deg, #221b16 30%, #2e251e 50%, #221b16 70%) 0 0 / 300% 100%;
+  }
+  .card .ft { position: absolute; left: 36px; bottom: 36px; right: 36px; height: 50px; }
+  .card .ft span { position: absolute; top: 4px; width: 44px; height: 44px; border-radius: 50%; background: #3a3029; }
+  .card .ft span:nth-child(1) { left: 0; } .card .ft span:nth-child(2) { left: 68px; } .card .ft span:nth-child(3) { left: 136px; }
+  .card .ft span:nth-child(4) { right: 0; left: auto; border-radius: 10px; }
+  .card.hero { background: #0e0b09; border-color: rgba(255, 190, 130, .28); }
+  .card.hero .md { background: #000; }
+  .card.hero .md img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .card.hero .av { background: linear-gradient(135deg, #f3a25a, #b9531a); }
+  .card.hero .l1, .card.hero .l2, .card.hero .ft span { background: #3a2e25; }
+  #s1 .hook-words { position: absolute; left: 0; right: 0; top: 0; }
+  #s1 .hw {
+    position: absolute; left: 0; right: 0; text-align: center; color: #fff;
+    font: 850 150px/1 var(--sans); letter-spacing: -.045em;
+    text-shadow: 0 10px 50px rgba(0, 0, 0, .6);
+  }
+  #s1 .stop {
+    position: absolute; left: 0; right: 0; top: 520px; text-align: center; color: #fff; font-size: 112px;
+    text-shadow: 0 8px 40px rgba(0, 0, 0, .55);
+  }
+  #s1 .stop em { color: #ffd2a4; }
+
+  /* ───── Logo ───── */
+  #logo { position: absolute; left: 160px; top: 650px; width: 760px; height: 460.6px; }
+  #logo svg { width: 100%; height: 100%; overflow: visible; }
+  #logo .lt { transform-box: fill-box; transform-origin: 50% 50%; fill: var(--ink); }
+  #logo .dot { fill: var(--sun); opacity: 0; }
+  #s2 .place, #end .place {
+    position: absolute; left: 0; right: 0; text-align: center;
+    font: 700 26px/1 var(--sans); letter-spacing: .3em; text-transform: uppercase; color: var(--ink-2);
+  }
+  #s2 .tag { position: absolute; left: 0; right: 0; top: 1180px; text-align: center; font: 600 36px/1.3 var(--sans); color: var(--ink-2); letter-spacing: -.005em; }
+  #s2 .tag i { display: inline-block; width: 70px; height: 2px; background: var(--sun); vertical-align: middle; margin: 0 22px 6px; transform-origin: center; }
+
+  /* ───── S3 · Story ───── */
+  #s3 .line { position: absolute; left: 0; right: 0; text-align: center; font-size: 80px; white-space: nowrap; }
+  #s3 .strike { position: absolute; height: 7px; border-radius: 4px; background: var(--sun); transform-origin: 0 50%; }
+  #s3 .big { position: absolute; left: 0; right: 0; top: 880px; text-align: center; font-size: 128px; line-height: 1.04; }
+  #s3 .swoosh { position: absolute; left: 0; top: 0; overflow: visible; }
+  #s3 .after { position: absolute; left: 90px; right: 90px; top: 1250px; text-align: center; font-size: 50px; }
+  .founder { position: absolute; top: 470px; width: 450px; height: 640px; border-radius: 40px; overflow: hidden; }
+  .founder .ph { position: absolute; inset: 14px 14px 166px 14px; border-radius: 30px; overflow: hidden; }
+  .founder .ph img { position: absolute; width: 100%; height: 100%; object-fit: cover; filter: sepia(.18) saturate(.92) contrast(1.02); }
+  .founder .nm { position: absolute; left: 30px; right: 20px; bottom: 74px; font: 600 40px/1.05 var(--serif); letter-spacing: -.015em; }
+  .founder .nm { bottom: 72px; } .founder .rl { bottom: 34px; }
+  .founder .rl { position: absolute; left: 30px; bottom: 36px; font: 750 19px/1 var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--sun-text); }
+  #s3 .contact { position: absolute; left: 60px; right: 60px; top: 1190px; text-align: center; font-size: 66px; }
+
+  /* ───── S4 · Process ───── */
+  #s4 .stage { left: 80px; top: 690px; width: 920px; height: 600px; }
+  #s4 .media { position: absolute; left: 18px; top: 18px; width: 884px; height: 372px; border-radius: 28px; overflow: hidden; background: #d9cfc2; }
+  #s4 .media .shot { position: absolute; inset: 0; background-size: cover; background-position: center; }
+  #s4 .num {
+    position: absolute; left: 40px; top: 40px; width: 96px; height: 96px; border-radius: 50%;
+    display: grid; place-items: center; font: 600 44px/1 var(--serif); color: var(--ink);
+    background: rgba(255, 250, 244, .72); border: 1.5px solid rgba(255,255,255,.9); backdrop-filter: blur(12px);
+  }
+  #s4 .when { position: absolute; right: 40px; top: 52px; }
+  #s4 .txt { position: absolute; left: 50px; right: 50px; top: 418px; }
+  #s4 .txt h3 { font: 600 58px/1.05 var(--serif); letter-spacing: -.02em; }
+  #s4 .txt p { margin-top: 16px; font: 500 30px/1.42 var(--sans); color: var(--ink-2); }
+  #s4 .tl { left: 80px; top: 1320px; width: 920px; height: 250px; }
+  #s4 .ruler { position: absolute; left: 40px; right: 40px; top: 34px; height: 30px; font: 700 18px/1 var(--sans); letter-spacing: .12em; color: var(--mute); text-transform: uppercase; }
+  #s4 .ruler span { position: absolute; top: 0; }
+  #s4 .ruler span::before { content: ""; position: absolute; left: 0; top: 26px; width: 2px; height: 12px; background: currentColor; opacity: .5; }
+  #s4 .track { position: absolute; left: 40px; right: 40px; top: 84px; height: 76px; }
+  #s4 .blk { position: absolute; top: 0; height: 76px; border-radius: 16px; overflow: hidden; background: rgba(29, 25, 21, .07); border: 1.5px solid rgba(255,255,255,.6); }
+  #s4 .blk .fill { position: absolute; inset: 0; background: linear-gradient(90deg, #f0a567, #e07a2e); transform-origin: 0 50%; }
+  #s4 .blk span { position: absolute; left: 16px; top: 28px; font: 800 19px/1 var(--sans); letter-spacing: .12em; color: var(--ink); }
+  #s4 .wave { position: absolute; left: 40px; right: 40px; top: 176px; height: 40px; }
+  #s4 .wave b { position: absolute; bottom: 0; width: 5px; border-radius: 3px; background: rgba(29,25,21,.18); }
+  #s4 .wave b.on { background: rgba(224,122,46,.75); }
+  #s4 .head { position: absolute; top: 22px; width: 4px; height: 206px; margin-left: -2px; background: var(--sun); border-radius: 2px; box-shadow: 0 0 18px rgba(224, 122, 46, .6); }
+  #s4 .head::before { content: ""; position: absolute; left: -10px; top: -10px; width: 24px; height: 24px; border-radius: 50%; background: var(--sun); box-shadow: 0 0 0 6px rgba(224,122,46,.25); }
+  #s4 .total { position: absolute; right: 80px; top: 1600px; }
+  .files { position: absolute; inset: 0; background: linear-gradient(160deg, #efe6db, #e2d6c8); }
+  .file { position: absolute; bottom: 36px; }
+  .file .th { position: absolute; left: 0; bottom: 44px; border-radius: 16px; overflow: hidden; background-size: cover; background-position: center; box-shadow: 0 20px 40px -20px rgba(96,62,30,.5); border: 2px solid rgba(255,255,255,.85); }
+  .file .fn { position: absolute; left: 0; bottom: 0; font: 650 21px/1 var(--sans); color: var(--ink-2); white-space: nowrap; }
+  .file .ok { position: absolute; width: 44px; height: 44px; border-radius: 50%; background: var(--sun-fill); display: grid; place-items: center; box-shadow: 0 8px 20px -6px rgba(179,80,26,.6); }
+
+  /* ───── S5 · One set, many frames ───── */
+  #s5 .viewer { left: 60px; top: 700px; width: 960px; height: 540px; border-radius: 34px; overflow: hidden; box-shadow: 0 60px 100px -50px rgba(60,38,20,.6); border: 2px solid rgba(255,255,255,.75); }
+  #s5 .viewer .ph { position: absolute; inset: 0; background: url("/src/assets/photos/bts/magaza-showroom.jpg") center / cover; }
+  #s5 .guide { position: absolute; left: 0; top: 0; border: 3px solid #fff; box-shadow: 0 0 0 3000px rgba(24, 16, 10, .5); }
+  #s5 .guide i { position: absolute; background: rgba(255,255,255,.4); }
+  #s5 .guide .c { position: absolute; width: 36px; height: 36px; border: 7px solid #fff; }
+  #s5 .guide .c1 { left: -8px; top: -8px; border-right: 0; border-bottom: 0; }
+  #s5 .guide .c2 { right: -8px; top: -8px; border-left: 0; border-bottom: 0; }
+  #s5 .guide .c3 { left: -8px; bottom: -8px; border-right: 0; border-top: 0; }
+  #s5 .guide .c4 { right: -8px; bottom: -8px; border-left: 0; border-top: 0; }
+  #s5 .fmt {
+    position: absolute; left: 0; top: 0; height: 58px; padding: 0 24px; border-radius: 999px; white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 12px; font: 700 26px/1 var(--sans); color: #fff;
+    background: rgba(20, 14, 10, .55); border: 1.5px solid rgba(255,255,255,.3); backdrop-filter: blur(10px);
+  }
+  #s5 .fmt b { color: #ffc28a; font-weight: 800; }
+  #s5 .out { position: absolute; border-radius: 22px; overflow: hidden; background: url("/src/assets/photos/bts/magaza-showroom.jpg") no-repeat; border: 2.5px solid rgba(255,255,255,.9); box-shadow: 0 30px 50px -26px rgba(60,38,20,.6); }
+  #s5 .out span { position: absolute; left: 12px; bottom: 12px; height: 38px; padding: 0 14px; border-radius: 999px; display: grid; place-items: center; font: 800 19px/1 var(--sans); color: #fff; background: rgba(20,14,10,.6); }
+  #s5 .shutter { position: absolute; inset: 0; background: #fff; opacity: 0; }
+  #s5 .extras { position: absolute; left: 0; right: 0; top: 1180px; text-align: center; }
+  #s5 .extras .chip { margin: 0 6px; }
+
+  /* ───── S6 · Services ───── */
+  #s6 .title { font-size: 90px; }
+  #s6 .meta { position: absolute; left: 0; right: 0; top: 552px; text-align: center; font: 750 24px/1 var(--sans); letter-spacing: .26em; text-transform: uppercase; color: var(--mute); }
+  #s6 .meta b { color: var(--sun); margin: 0 .5em; }
+  .svc { left: 70px; width: 940px; height: 286px; }
+  .svc .ic { position: absolute; left: 34px; top: 38px; width: 118px; height: 118px; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 250, 244, .7); border: 1.5px solid rgba(255,255,255,.9); }
+  .svc .ic svg { width: 64px; height: 64px; overflow: visible; }
+  .svc .ic path, .svc .ic circle, .svc .ic rect { fill: none; stroke: var(--sun-text); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+  .svc .rn { position: absolute; left: 186px; top: 40px; font: 800 20px/1 var(--sans); letter-spacing: .2em; color: var(--sun-text); }
+  .svc h3 { position: absolute; left: 186px; top: 70px; font: 600 54px/1.05 var(--serif); letter-spacing: -.02em; white-space: nowrap; }
+  .svc .chips { position: absolute; left: 34px; right: 30px; top: 170px; display: flex; flex-wrap: wrap; gap: 12px; }
+  .svc .chips .chip { height: 46px; font-size: 23px; padding: 0 20px; }
+
+  /* ───── S7 · Work (dark) ───── */
+  #wall { position: absolute; left: 540px; top: 960px; width: 0; height: 0; }
+  #wall .col { position: absolute; top: 0; width: 330px; }
+  #wall .clip { position: absolute; left: 0; width: 330px; height: 587px; border-radius: 28px; overflow: hidden; background: #1a1411; border: 1.5px solid rgba(255,255,255,.1); }
+  #wall .clip img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #s7 .scrim { position: absolute; inset: 0; background: radial-gradient(78% 52% at 50% 54%, rgba(8,6,5,.86), rgba(8,6,5,.55) 62%, rgba(8,6,5,.2)); }
+  #s7 .num { position: absolute; left: 0; right: 0; text-align: center; color: #fff; font: 600 250px/1 var(--serif); letter-spacing: -.04em; }
+  #s7 .num small { display: block; margin-top: 10px; font: 750 32px/1 var(--sans); letter-spacing: .3em; text-transform: uppercase; color: #f0b27c; }
+  #s7 .sub { position: absolute; left: 0; right: 0; top: 1330px; text-align: center; color: #efe6db; font-size: 58px; }
+  #s7 .sub em { color: #ffc28a; }
+  #s7 .lt { position: absolute; left: 60px; right: 60px; top: 330px; text-align: center; color: #faf6f0; font-size: 84px; }
+  #s7 .lt em { color: #ffc28a; }
+  #board { position: absolute; left: 70px; top: 560px; width: 940px; }
+  #board .cell { position: absolute; width: 296px; height: 150px; border-radius: 22px; display: grid; place-items: center;
+    background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03)); border: 1.5px solid rgba(255,255,255,.12); }
+  #board .cell img { max-width: 200px; max-height: 84px; object-fit: contain; }
+  #board .cell img.sil { filter: brightness(0) invert(1); opacity: .9; }
+  #board .cell img.knk { filter: url(#knock); opacity: .9; }
+  #board .cell.you { border: 2px dashed rgba(240, 164, 102, .7); background: rgba(224, 122, 46, .1); color: #ffc28a; font: 700 26px/1.2 var(--sans); text-align: center; }
+
+  /* ───── S8 · Region ───── */
+  #s8 .map { left: 50px; top: 700px; width: 980px; height: 640px; overflow: hidden; }
+  #s8 .dots { position: absolute; inset: 0; background: radial-gradient(circle, rgba(29,25,21,.16) 2.2px, transparent 2.8px) 0 0 / 28px 28px; -webkit-mask-image: radial-gradient(70% 80% at 45% 45%, #000 40%, transparent 100%); mask-image: radial-gradient(70% 80% at 45% 45%, #000 40%, transparent 100%); }
+  #s8 svg { position: absolute; left: 0; top: 0; overflow: visible; }
+  #s8 .city { position: absolute; left: 0; top: 0; }
+  #s8 .city i { position: absolute; left: -11px; top: -11px; width: 22px; height: 22px; border-radius: 50%; background: var(--ink); border: 4px solid #fbf6ef; box-shadow: 0 4px 12px rgba(60,38,20,.35); }
+  #s8 .city span { position: absolute; white-space: nowrap; font: 700 30px/1 var(--sans); color: var(--ink); letter-spacing: -.005em; }
+  #s8 .dist { position: absolute; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--sun); opacity: .8; }
+  #s8 .ring { position: absolute; left: 0; top: 0; width: 200px; height: 200px; margin: -100px 0 0 -100px; border-radius: 50%; border: 3px solid rgba(224,122,46,.8); }
+  #s8 .home { position: absolute; white-space: nowrap; }
+  #s8 .home b { display: block; font: 700 34px/1 var(--sans); color: var(--ink); }
+  #s8 .home small { display: block; margin-top: 8px; font: 800 19px/1 var(--sans); letter-spacing: .2em; color: var(--sun-text); }
+  #s8 .foot { position: absolute; left: 80px; right: 80px; top: 1380px; text-align: center; font-size: 54px; }
+
+  /* ───── S9 · Manifesto + CTA ───── */
+  #s9 .mani { position: absolute; left: 0; right: 0; top: 470px; text-align: center; font-size: 186px; line-height: 1.0; transform-origin: 50% 0; }
+  #s9 .mani .row { display: block; }
+  #s9 .cta { left: 70px; top: 570px; width: 940px; height: 790px; background: linear-gradient(180deg, rgba(255,252,247,.78), rgba(250,244,236,.58)); }
+  #s9 .cta .k { position: absolute; left: 0; right: 0; top: 60px; text-align: center; font: 800 24px/1 var(--sans); letter-spacing: .26em; color: var(--sun-text); }
+  #s9 .cta h2 { position: absolute; left: 40px; right: 40px; top: 118px; text-align: center; font-size: 84px; }
+  #s9 .btn {
+    position: absolute; left: 60px; right: 60px; top: 340px; height: 132px; border-radius: 999px;
+    display: flex; align-items: center; justify-content: center; gap: 22px;
+    background: linear-gradient(180deg, #c05a20, #a8491a); color: #fff; font: 750 44px/1 var(--sans); letter-spacing: -.01em;
+    box-shadow: 0 30px 60px -24px rgba(179, 80, 26, .75), inset 0 1.5px 0 rgba(255,255,255,.35);
+  }
+  #s9 .btn .arr { font-weight: 500; }
+  #s9 .rows { position: absolute; left: 90px; right: 60px; top: 530px; }
+  #s9 .row2 { position: absolute; left: 0; display: flex; align-items: center; gap: 22px; font: 650 36px/1 var(--sans); color: var(--ink); white-space: nowrap; }
+  #s9 .row2 svg { width: 40px; height: 40px; flex: none; }
+  #s9 .row2 svg * { fill: none; stroke: var(--sun-text); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  #tap { position: absolute; left: 0; top: 0; width: 110px; height: 110px; margin: -55px 0 0 -55px; border-radius: 50%; background: rgba(255,255,255,.55); border: 3px solid rgba(255,255,255,.95); box-shadow: 0 10px 30px rgba(60,38,20,.35); opacity: 0; }
+  #ripple { position: absolute; left: 0; top: 0; width: 110px; height: 110px; margin: -55px 0 0 -55px; border-radius: 50%; border: 4px solid rgba(255,255,255,.9); opacity: 0; }
+  #end .url { position: absolute; left: 0; right: 0; top: 1190px; text-align: center; font: 750 46px/1 var(--sans); letter-spacing: .02em; color: var(--ink); }
+  #end .url b { color: var(--sun-text); }
+
+  /* preview chrome (only with ?preview) */
+  #ui { position: fixed; left: 0; right: 0; bottom: 0; display: none; gap: 12px; align-items: center; padding: 10px 16px; background: #111; color: #ddd; font: 13px/1 system-ui; z-index: 10; }
+  #ui input { flex: 1; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <!-- Directional (vertical) motion blur for the scrolling feed. -->
+    <filter id="mblur" x="-5%" y="-20%" width="110%" height="140%"><feGaussianBlur id="mblurStd" stdDeviation="0 0" /></filter>
+    <!-- Logo knockout: keep dark/coloured shapes as white, drop white fills. -->
+    <filter id="knock" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -1.418 -4.77 -0.482 0 5.67" result="k" />
+      <feComposite in="k" in2="SourceAlpha" operator="in" />
+    </filter>
+  </defs>
+</svg>
+
+<div id="stage">
+  <!-- World -->
+  <div id="fog"><div class="sky"></div><div class="wash"></div><div class="cloud" id="cloudA"></div><div class="cloud" id="cloudB"></div></div>
+  <div id="night"></div>
+  <div id="sun"><div class="light"></div><div class="halo"></div><div class="orb"></div><div class="bloom"></div><div class="core"></div></div>
+
+  <!-- I · Hook: the feed that never stops -->
+  <section class="scene" id="s1">
+    <div id="feed"></div>
+    <div class="hook-words">
+      <div class="hw" style="top:700px">Kaydır.</div>
+      <div class="hw" style="top:880px">Kaydır.</div>
+      <div class="hw" style="top:1060px">Kaydır.</div>
+    </div>
+    <p class="stop serif">Bazı işler<br><em>durdurur.</em></p>
+  </section>
+
+  <!-- II · Brand: the sun becomes the dot in "ra.st" -->
+  <section class="scene" id="s2">
+    <p class="place" style="top:1250px">Serdivan · Sakarya</p>
+    <p class="tag"><i></i>Sakarya merkezli video prodüksiyon stüdyosu<i></i></p>
+  </section>
+
+  <!-- III · Story -->
+  <section class="scene" id="s3">
+    <p class="label"><b>I</b>Biz kimiz</p>
+    <p class="line serif" style="top:520px" id="s3l1">Ajans zinciri değil.</p>
+    <p class="line serif" style="top:650px" id="s3l2">Freelancer havuzu değil.</p>
+    <div class="strike" id="s3k1"></div><div class="strike" id="s3k2"></div>
+    <p class="big serif" id="s3big">Sahaya yakın,<br>tek bir <em id="s3ekip">ekip.</em></p>
+    <svg class="swoosh" id="s3sw" width="1080" height="1920"><path id="s3swp" d="" fill="none" stroke="#e07a2e" stroke-width="9" stroke-linecap="round" /></svg>
+    <p class="after whisper" id="s3after">Keşiften teslime, muhatabınız hiç değişmez.</p>
+    <div class="founder glass" id="f1" style="left:70px">
+      <div class="ph"><img src="/src/assets/photos/muhammed-ekrem-adnan.jpg" alt="" /></div>
+      <p class="nm">Muhammed<br>Ekrem Adnan</p><p class="rl">Kurucu ortak · Yönetmen</p>
+    </div>
+    <div class="founder glass" id="f2" style="left:560px">
+      <div class="ph"><img src="/src/assets/photos/berat-degirmenci-renkli.jpg" alt="" /></div>
+      <p class="nm">Berat<br>Değirmenci</p><p class="rl">Kurucu ortak · Yönetmen</p>
+    </div>
+    <p class="contact serif" id="s3c">Projenizi doğrudan<br><em>kurucu ortaklarla</em> konuşursunuz.</p>
+  </section>
+
+  <!-- IV · Process -->
+  <section class="scene" id="s4">
+    <p class="label"><b>II</b>Süreç</p>
+    <h2 class="title serif center" id="s4t">Fikirden teslime,<br><em>tek elden.</em></h2>
+    <div class="glass stage" id="s4card">
+      <div class="media" id="s4media">
+        <div class="shot" style="background-image:url('/public/evren/durak-fikir-genis.webp')"></div>
+        <div class="shot" style="background-image:url('/src/assets/photos/bts/ofis-isik-kurulumu.jpg')"></div>
+        <div class="shot" style="background-image:url('/src/assets/photos/post-production-color-grading.jpg')"></div>
+        <div class="shot files" id="s4files">
+          <div class="file" style="left:170px"><div class="th" style="width:356px;height:200px;background-image:url('/src/assets/photos/bts/magaza-showroom.jpg')"></div><p class="fn">ana-film · 16:9</p></div>
+          <div class="file" style="left:566px"><div class="th" style="width:113px;height:200px;background-image:url('/automations/brand-film/.cache/clips/w01/0060.jpg')"></div><p class="fn">reels · 9:16</p></div>
+          <div class="file" style="left:719px"><div class="th" style="width:160px;height:200px;background-image:url('/automations/brand-film/.cache/clips/w04/0090.jpg')"></div><p class="fn">reklam · 4:5</p></div>
+        </div>
+        <div class="num" id="s4num">I</div>
+        <span class="chip when" id="s4when">1. hafta</span>
+      </div>
+      <div class="txt" id="s4txt"><h3></h3><p></p></div>
+    </div>
+    <div class="glass tl" id="s4tl">
+      <div class="ruler"><span style="left:0">1. hafta</span><span style="left:25%">2.</span><span style="left:50%">3.</span><span style="left:75%">4. hafta</span></div>
+      <div class="track" id="s4track"></div>
+      <div class="wave" id="s4wave"></div>
+      <div class="head" id="s4head"></div>
+    </div>
+    <span class="chip sun total" id="s4total">Genellikle 2–4 hafta</span>
+  </section>
+
+  <!-- V · One set, many frames -->
+  <section class="scene" id="s5">
+    <p class="label"><b>III</b>Tek çekim günü</p>
+    <h2 class="title serif center" id="s5t">Bir set,<br><em>çok kadraj.</em></h2>
+    <div class="abs viewer" id="s5v">
+      <div class="ph"></div>
+      <div class="guide" id="s5g"><i class="v1"></i><i class="v2"></i><i class="h1"></i><i class="h2"></i><span class="c c1"></span><span class="c c2"></span><span class="c c3"></span><span class="c c4"></span></div>
+      <div class="fmt" id="s5f"><b>16:9</b><span>Ana film</span></div>
+      <div class="shutter" id="s5sh"></div>
+    </div>
+    <div class="out" id="o1"><span>16:9</span></div>
+    <div class="out" id="o2"><span>4:5</span></div>
+    <div class="out" id="o3"><span>9:16</span></div>
+    <div class="extras" id="s5x"><span class="chip">+ Reklam versiyonları</span><span class="chip">+ Fotoğraf</span></div>
+  </section>
+
+  <!-- VI · Services -->
+  <section class="scene" id="s6">
+    <p class="label"><b>IV</b>Ne yapıyoruz</p>
+    <h2 class="title serif center" id="s6t">Kameradan kurguya,<br><em>tek çatı altında.</em></h2>
+    <p class="meta" id="s6m">Film<b>✦</b>Fotoğraf<b>✦</b>İçerik<b>✦</b>AI</p>
+    <div class="glass svc" id="c1" style="top:632px">
+      <div class="glint"></div>
+      <div class="ic"><svg viewBox="0 0 64 64"><rect x="6" y="18" width="36" height="28" rx="6"/><path d="M42 27 L58 19 V45 L42 37"/><circle cx="17" cy="11" r="5"/><circle cx="31" cy="11" r="5"/></svg></div>
+      <p class="rn">I / III</p><h3>Video Prodüksiyon</h3>
+      <div class="chips"><span class="chip">Reklam &amp; marka filmi</span><span class="chip">Ürün &amp; kurumsal</span><span class="chip">Medikal tanıtım</span><span class="chip">Drone</span></div>
+    </div>
+    <div class="glass svc" id="c2" style="top:942px">
+      <div class="glint"></div>
+      <div class="ic"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="24"/><path d="M42 22 L36 36 L22 42 L28 28 Z"/><circle cx="32" cy="32" r="2.5"/></svg></div>
+      <p class="rn">II / III</p><h3>Kreatif Strateji</h3>
+      <div class="chips"><span class="chip">İçerik &amp; kampanya</span><span class="chip">Senaryo</span><span class="chip">Sosyal medya yönetimi</span></div>
+    </div>
+    <div class="glass svc" id="c3" style="top:1252px">
+      <div class="glint"></div>
+      <div class="ic"><svg viewBox="0 0 64 64"><rect x="6" y="12" width="52" height="40" rx="6"/><path d="M6 24 H58 M18 12 V24 M30 12 V24 M42 12 V24"/><path d="M14 34 H34 M14 43 H46"/></svg></div>
+      <p class="rn">III / III</p><h3>Post-Prodüksiyon</h3>
+      <div class="chips"><span class="chip">Kurgu</span><span class="chip">Renk</span><span class="chip">Motion graphics</span><span class="chip">Ses tasarımı</span><span class="chip">VFX</span></div>
+    </div>
+  </section>
+
+  <!-- VII · Work (dark) -->
+  <section class="scene dark" id="s7">
+    <div id="wall"></div>
+    <div class="scrim" id="s7scrim"></div>
+    <p class="label"><b>V</b>İşler</p>
+    <p class="num" id="n1" style="top:520px"><span>0</span>+<small>marka</small></p>
+    <p class="num" id="n2" style="top:900px"><span>0</span>+<small>içerik</small></p>
+    <p class="sub serif" id="s7sub">fabrikadan kliniğe,<br><em>mağazadan sahneye.</em></p>
+    <h2 class="lt serif" id="s7lt">Kadrajımıza giren<br><em>markalar.</em></h2>
+    <div id="board"></div>
+  </section>
+
+  <!-- VIII · Region -->
+  <section class="scene" id="s8">
+    <p class="label"><b>VI</b>Bölge</p>
+    <h2 class="title serif center" id="s8t">Sakarya merkezli,<br><em>sahaya yakın.</em></h2>
+    <div class="glass map abs" id="s8map"><div class="dots"></div></div>
+    <div id="s8layer" class="full"></div>
+    <p class="foot whisper" id="s8foot">Yerinde çekim için sahaya biz geliriz.</p>
+  </section>
+
+  <!-- IX · Manifesto + CTA -->
+  <section class="scene" id="s9">
+    <p class="mani serif" id="mani"><span class="row">İyi iş</span><span class="row">kendini</span><span class="row"><em>izletir.</em></span></p>
+    <div class="glass cta" id="cta">
+      <p class="k">İLK GÖRÜŞME ÜCRETSİZ</p>
+      <h2 class="serif">Bize projenizden<br><em>bahsedin.</em></h2>
+      <div class="btn" id="btn"><span>Ücretsiz ön görüşme</span><span class="arr">→</span></div>
+      <div class="rows">
+        <p class="row2" style="top:0"><svg viewBox="0 0 40 40"><path d="M20 4a16 16 0 0 0-13.8 24.1L4 36l8.1-2.1A16 16 0 1 0 20 4Z"/><path d="M14 13c0 7 6 13 13 13l2-3-4-2-2 2c-2-1-4-3-5-5l2-2-2-4Z"/></svg>0543 838 2404</p>
+        <p class="row2" style="top:72px"><svg viewBox="0 0 40 40"><rect x="4" y="9" width="32" height="23" rx="4"/><path d="M5 11l15 11 15-11"/></svg>studio@rastcreative.com</p>
+        <p class="row2" style="top:144px"><svg viewBox="0 0 40 40"><rect x="6" y="6" width="28" height="28" rx="8"/><circle cx="20" cy="20" r="6.5"/><circle cx="28.5" cy="11.5" r="1.2"/></svg>@rastcreative</p>
+      </div>
+    </div>
+    <div id="ripple"></div><div id="tap"></div>
+  </section>
+
+  <!-- End card -->
+  <section class="scene" id="end">
+    <p class="url"><b>rast</b>creative.com</p>
+    <p class="place" style="top:1270px">Serdivan · Sakarya</p>
+  </section>
+
+  <!-- Logo lives above scenes: it is built in II and rebuilt in the end card -->
+  <div id="logo"></div>
+
+  <div id="flash"></div>
+  <div id="vignette"></div>
+  <div id="grain"></div>
+</div>
+
+<div id="ui"><button id="play">▶︎</button><input id="scrub" type="range" min="0" max="65" step="0.001" value="0" /><span id="tc">0.00</span></div>
+
+<script src="soundtrack.js"></script>
+<script src="timeline.js"></script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+# Frame sequences, rendered frames, audio stems — all regenerable.
+.cache/
+node_modules
