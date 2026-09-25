@@ -3,20 +3,22 @@
  * ------------------------------------------------------------------
  * The whole score and every sound effect are synthesised here with an
  * OfflineAudioContext — no samples, no licences to clear. Cues are written
- * against the same timeline as timeline.js (96 BPM, 1 bar = 2.5 s), so a
+ * against the same timeline as timeline.js, so a
  * whoosh lands exactly where a cloud sweeps and a tick where a chip pops.
  *
  *   window.Soundtrack.render()  → Promise<AudioBuffer>
  *   window.__audio()            → Promise<string>  (base64 16-bit WAV)
  *
- * Harmony: D major, I–V–vi–IV colour (Dadd9 · A/C# · Bm7 · Gmaj9).
+ * Harmony: B minor / D major colour; groove loop Bm · G · D · A.
+ * Music: 144 BPM melodic techno — four-on-the-floor, sidechain pump,
+ * rolling 16th bass, acid line in the dark section, drops on the cuts.
  */
 (() => {
   "use strict";
 
   const SR = 48000;
   const DUR = 65;
-  const BEAT = 60 / 96;
+  const BEAT = 60 / 144; // techno tempo: every 2.5 s cut lands on a beat, every 5 s on a bar
   const BAR = BEAT * 4;
 
   const hz = (m) => 440 * 2 ** ((m - 69) / 12);
@@ -361,74 +363,221 @@
       o.connect(lp).connect(g); out(g, { send: 0.3 });
     }
 
-    /* ═════════════ SCORE ═════════════ */
+    /* ═════════════ TECHNO KIT (144 BPM) ═════════════ */
+    // Sidechain "pump": music bus ducks under every kick.
+    // Music sits ~2.5 dB under the SFX so whooshes, ticks and pops stay on top.
+    const musicTrim = ctx.createGain(); musicTrim.gain.value = 0.75;
+    musicTrim.connect(bus);
+    const duck = ctx.createGain();
+    duck.connect(musicTrim);
+    const toDuck = (node, { pan = 0, send = 0, delay = 0, gain = 1 } = {}) => {
+      const g = ctx.createGain(); g.gain.value = gain;
+      const p = ctx.createStereoPanner(); p.pan.value = pan;
+      node.connect(g).connect(p).connect(duck);
+      if (send) { const x = ctx.createGain(); x.gain.value = send; p.connect(x).connect(verbIn); }
+      if (delay) { const x = ctx.createGain(); x.gain.value = delay; p.connect(x).connect(dlyIn); }
+    };
+    const pump = (t, depth = 0.3) => {
+      duck.gain.setTargetAtTime(depth, t, 0.004);
+      duck.gain.setTargetAtTime(1, t + 0.035, 0.075);
+    };
+    const drive = ctx.createWaveShaper();
+    { const c = new Float32Array(1024); for (let i = 0; i < 1024; i++) { const x = i / 511.5 - 1; c[i] = Math.tanh(x * 2.2) / Math.tanh(2.2); } drive.curve = c; }
+    const kickBus = ctx.createGain(); kickBus.gain.value = 0.72;
+    const kickLp = ctx.createBiquadFilter(); kickLp.type = "lowpass"; kickLp.frequency.value = 20000;
+    kickBus.connect(drive).connect(kickLp).connect(bus);
 
-    // I · Hook — clock-like tension under the scrolling feed.
-    for (let t = 0; t < 2.5; t += BEAT / 2) hat(t, 0.6 + (Math.round(t / (BEAT / 2)) % 2 ? 0 : 0.4), false, 0.3);
-    for (let t = 0; t < 2.5; t += BEAT) {
-      const g = ctx.createGain(); env(g, t, 0.004, 0.35, 0.18);
-      osc("sine", hz(38), t, 0.3).connect(g); out(g);
+    function tkick(t, vol = 1) {
+      const o = ctx.createOscillator(); o.type = "sine";
+      o.frequency.setValueAtTime(190, t);
+      o.frequency.exponentialRampToValueAtTime(52, t + 0.07);
+      o.frequency.exponentialRampToValueAtTime(42, t + 0.3);
+      o.start(t); o.stop(t + 0.45);
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + 0.002);
+      g.gain.setTargetAtTime(0.5 * vol, t + 0.01, 0.06); g.gain.setTargetAtTime(0, t + 0.14, 0.05);
+      o.connect(g).connect(kickBus);
+      const n = noiseSrc(t, 0.015);
+      const hp = ctx.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 3000;
+      const ng = ctx.createGain(); env(ng, t, 0.0005, 0.25 * vol, 0.006);
+      n.connect(hp).connect(ng).connect(kickBus);
+      pump(t);
     }
+    function snare(t, vol = 1) {
+      const n = noiseSrc(t, 0.25);
+      const bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 1900; bp.Q.value = 0.8;
+      const g = ctx.createGain(); env(g, t, 0.001, 0.22 * vol, 0.09);
+      n.connect(bp).connect(g); out(g, { send: 0.2, pan: 0.05 });
+      const o = osc("triangle", 200, t, 0.1);
+      const og = ctx.createGain(); env(og, t, 0.001, 0.18 * vol, 0.04);
+      o.connect(og); out(og);
+    }
+    function roll(a, b, vol = 1) {
+      // Snare roll that accelerates from 8ths to 32nds and swells into the drop.
+      let t = a;
+      while (t < b - 0.01) {
+        const p = (t - a) / (b - a);
+        snare(t, (0.25 + 0.75 * p * p) * vol);
+        t += p < 0.5 ? BEAT / 2 : p < 0.8 ? BEAT / 4 : BEAT / 8;
+      }
+    }
+    function ride(t, vol = 1) {
+      const n = noiseSrc(t, 0.4);
+      const bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 9000; bp.Q.value = 0.6;
+      const g = ctx.createGain(); env(g, t, 0.001, 0.05 * vol, 0.3);
+      n.connect(bp).connect(g); out(g, { pan: -0.3, send: 0.15 });
+      [5230, 7350].forEach((f) => {
+        const og = ctx.createGain(); env(og, t, 0.001, 0.006 * vol, 0.35);
+        osc("square", f, t, 0.45).connect(og); out(og, { pan: -0.3 });
+      });
+    }
+    function rbass(t, m, vol = 1, dur = BEAT / 4) {
+      // Rolling techno bass: saw + sub through a plucky low-pass.
+      const f = ctx.createBiquadFilter(); f.type = "lowpass"; f.Q.value = 4;
+      f.frequency.setValueAtTime(1300, t); f.frequency.exponentialRampToValueAtTime(240, t + 0.09);
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.2 * vol, t + 0.004);
+      g.gain.setTargetAtTime(0, t + dur * 0.75, 0.015);
+      osc("sawtooth", hz(m), t, dur + 0.1).connect(f);
+      const sub = osc("sine", hz(m), t, dur + 0.1);
+      const sg = ctx.createGain(); sg.gain.value = 1.1; sub.connect(sg).connect(g);
+      f.connect(g);
+      toDuck(g);
+    }
+    function acid(t, m, cut, vol = 1, accent = false) {
+      const f = ctx.createBiquadFilter(); f.type = "lowpass"; f.Q.value = 14;
+      f.frequency.setValueAtTime(cut * (accent ? 4.5 : 3), t);
+      f.frequency.exponentialRampToValueAtTime(cut, t + 0.11);
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.07 * vol * (accent ? 1.4 : 1), t + 0.003);
+      g.gain.setTargetAtTime(0, t + BEAT / 4 * 0.7, 0.02);
+      osc("sawtooth", hz(m), t, BEAT / 4 + 0.1).connect(f);
+      f.connect(g);
+      toDuck(g, { pan: 0.15, delay: 0.2, send: 0.1 });
+    }
+    function stab(t, chord, vol = 1, cut = 2400) {
+      const f = ctx.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = cut; f.Q.value = 2;
+      const g = ctx.createGain(); env(g, t, 0.003, 0.05 * vol, 0.16);
+      CH[chord].pad.slice(2).forEach((m, i) => {
+        for (const d of [-9, 9]) osc("sawtooth", hz(m), t, 0.4, d + i).connect(f);
+      });
+      f.connect(g);
+      toDuck(g, { send: 0.35, delay: 0.35 });
+    }
+    function seq(t, m, vol = 1, cut = 3000, pan = 0) {
+      const f = ctx.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = cut; f.Q.value = 3;
+      const g = ctx.createGain(); env(g, t, 0.002, 0.075 * vol, 0.12);
+      osc("square", hz(m), t, 0.3).connect(f);
+      const b = osc("sawtooth", hz(m + 12), t, 0.3, 6);
+      const bg = ctx.createGain(); bg.gain.value = 0.4; b.connect(bg).connect(f);
+      f.connect(g);
+      toDuck(g, { pan, send: 0.2, delay: 0.3 });
+    }
+    function sweep(a, b, up = true, vol = 1) {
+      const n = noiseSrc(a, b - a);
+      const f = ctx.createBiquadFilter(); f.type = up ? "highpass" : "lowpass"; f.Q.value = 3;
+      f.frequency.setValueAtTime(up ? 200 : 9000, a);
+      f.frequency.exponentialRampToValueAtTime(up ? 9000 : 150, b);
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, a);
+      g.gain.exponentialRampToValueAtTime(0.12 * vol, up ? b - 0.02 : a + 0.15);
+      g.gain.linearRampToValueAtTime(0, b + 0.02);
+      n.connect(f).connect(g); out(g, { send: 0.3 });
+    }
+
+    /* ═════════════ SCORE ═════════════ */
+    // One-bar chord cycle for the groove (Bm · G · D · A, two bars each).
+    const LOOP = ["Bm", "G", "D", "A"];
+    const loopChord = (t) => LOOP[Math.floor(t / (BAR * 2)) % 4];
+    const ARP = [0, 12, 7, 12, 3, 12, 7, 15]; // offsets from the chord's bass note, two octaves up
+    // Groove zones: [from, to, level] — level shapes which layers play.
+    //  0 hook (muffled) · 1 build · 2 main · 3 peak (dark wall) · 4 light (map) · 5 CTA
+    const ZONES = [
+      [0, 3.33, 0], [6.67, 10.0, 1], [10.0, 34.17, 2], [35.0, 41.67, 2],
+      [42.5, 49.17, 3], [50.0, 54.58, 4], [58.33, 62.08, 5],
+    ];
+    const zoneAt = (t) => ZONES.find(([a, b]) => t >= a - 1e-6 && t < b - 1e-6);
+
+    const S16 = BEAT / 4;
+    for (let n = 0; n * S16 < 62.1; n++) {
+      const t = n * S16;
+      const z = zoneAt(t);
+      if (!z) continue;
+      const lvl = z[2];
+      const q = n % 4;            // 16th within the beat
+      const beat = Math.floor(n / 4) % 4;
+      const bar = Math.floor(n / 16);
+      const c = loopChord(t);
+      const root = CH[c].bass;
+
+      // Kick: four on the floor (muffled in the hook, sparse in the build).
+      if (q === 0) {
+        if (lvl === 0) { kickLp.frequency.setValueAtTime(420, t); tkick(t, 0.8); }
+        else if (lvl === 1) { kickLp.frequency.setValueAtTime(mix01(t, 6.67, 10, 500, 20000), t); tkick(t, 0.85); }
+        else { kickLp.frequency.setValueAtTime(20000, t); tkick(t, lvl === 4 ? 0.85 : 1); }
+      }
+      // Claps on 2 and 4.
+      if (q === 0 && (beat === 1 || beat === 3) && lvl >= 2 && lvl !== 4) clap(t, lvl === 3 ? 1 : 0.8);
+      // Hats: 16th ticks, off-beat open hat.
+      if (lvl >= 1 || q % 2 === 0) hat(t, (q === 2 ? 0.55 : 0.28) * (lvl === 0 ? 0.8 : 1), false, 0.25);
+      if (q === 2 && lvl >= 2) hat(t, 0.75, true, -0.1);
+      if (q === 0 && (lvl === 3 || lvl === 5)) ride(t, 0.9);
+      // Rolling bass on the three 16ths after each kick.
+      if (lvl >= 1 && q !== 0) rbass(t, root + (q === 3 && beat === 3 ? 12 : 0), lvl === 1 ? 0.6 : lvl === 3 ? 1.15 : 0.95);
+      if (lvl === 0 && q === 2) rbass(t, 35, 0.5);
+      // Sequence / arp (16ths), brighter as the film opens up.
+      if (lvl >= 1 && lvl !== 3) {
+        const m = root + 24 + ARP[n % 8] - (ARP[n % 8] === 3 && c !== "Bm" ? 0 : 0);
+        const cut = lvl === 1 ? mix01(t, 6.67, 10, 600, 2600) : lvl === 4 ? 1800 : 3200 + 800 * Math.sin(t * 0.7);
+        seq(t, m, q === 0 ? 0.9 : 0.6, cut, n % 2 ? 0.35 : -0.35);
+      }
+      // Acid line in the dark section.
+      if (lvl === 3) {
+        const pat = [0, 12, 0, 7, 0, 12, 15, 12, 0, 12, 0, 10, 0, 7, 12, 19];
+        acid(t, root + 12 + pat[n % 16], mix01(t, 42.5, 49.1, 380, 1500), 1, n % 16 === 0 || n % 16 === 6 || n % 16 === 14);
+      }
+      // Chord stabs on the off-beat "and" of 2 and 4, plus a push at the bar end.
+      if (lvl >= 2 && lvl !== 4 && ((q === 2 && (beat === 1 || beat === 3)) || (q === 3 && beat === 3 && bar % 2 === 1))) stab(t, c, lvl === 3 ? 1.1 : 0.85, lvl === 3 ? 1800 : 2600);
+    }
+    function mix01(t, a, b, v0, v1) { const p = Math.max(0, Math.min(1, (t - a) / (b - a))); return v0 + (v1 - v0) * p; }
+
+    // Pads underneath, quieter and filtered — the groove carries the film now.
+    pad(3.3, 1.7, "D", { vol: 0.45, cut: 500, cutEnd: 2600, att: 1.4 });
+    pad(5.0, 2.5, "D", { vol: 0.9, cut: 3200, cutEnd: 1500, att: 0.05 });
+    pad(7.5, 2.5, "A", { vol: 0.6, cut: 1100, cutEnd: 1700 });
+    for (let t = 10; t < 54.5; t += BAR * 2) {
+      const c = loopChord(t + 0.01);
+      const dark = t >= 42 && t < 49.2;
+      pad(t, BAR * 2, c, { vol: dark ? 0.35 : 0.42, cut: dark ? 800 : 1300, cutEnd: dark ? 1100 : 1600, att: 0.2 });
+    }
+
+    // Builds and drops, locked to the cuts.
+    riser(2.9, 3.33, 0.6);
+    roll(3.75, 4.97, 0.8); riser(3.7, 4.97, 1);
+    roll(8.33, 10.0, 1); sweep(8.0, 10.0, true, 1);
+    sweep(24.9, 26.6, true, 0.6);
+    sweep(34.17, 35.0, false, 1); roll(34.17, 35.0, 0.7);
+    roll(40.83, 42.5, 1); sweep(40.5, 42.5, true, 1);
+    roll(48.33, 49.17, 0.8);
+    roll(57.5, 58.33, 1); sweep(56.9, 58.33, true, 1);
+    tkick(62.08, 1); stab(62.08, "D", 1.2, 3000);
+
+    /* ═════════════ SFX (unchanged cues) ═════════════ */
+
+    // I · Hook
     [0.62, 1.245, 1.87].forEach((t, i) => swipe(t, 0.8 + i * 0.15));
     whoosh(2.85, 0.9, 1.1, 1, 400, 5000);
     drop(3.4);
-    pad(3.3, 1.7, "D", { vol: 0.55, cut: 500, cutEnd: 2600, att: 1.4 });
-    riser(3.7, 4.97, 1);
 
     // II · Brand — the sun.
     boom(5.0, 1);
-    pad(5.0, 2.5, "D", { vol: 1.0, cut: 3200, cutEnd: 1500, att: 0.05 });
     [86, 90, 93, 98].forEach((m, i) => bell(5.0 + i * 0.09, m, 0.5, 3.5, (i - 1.5) * 0.3));
-    pad(7.5, 2.5, "A", { vol: 0.9, cut: 1300, cutEnd: 1700 });
     bell(7.55, 86, 0.9, 3, 0);
     bell(7.56, 93, 0.35, 2.5, 0.2);
     [0, 0.07, 0.14, 0.21].forEach((d, i) => tick(7.3 + d, 0.45, 3000 + i * 300, (i - 1.5) * 0.3));
     for (let i = 0; i < 8; i++) tick(7.85 + i * 0.055, 0.3, 2600 + i * 120, (i - 3.5) * 0.12);
-    for (let i = 0; i < 8; i++) pluck(8.75 + i * (BEAT / 2), CH.A.arp[i % 6] - 12, 0.5 + 0.3 * (i % 2 ? 0 : 1), (i % 2 ? 0.3 : -0.3));
     whoosh(10.0, 1.2, 0.9, -1);
-
-    // Chords, bass, arpeggio from 10 s — the groove of the film.
-    for (let i = 3; i < CHORDS.length; i++) {
-      const [t, c] = CHORDS[i];
-      if (t >= 55) break;
-      const next = CHORDS[i + 1] ? Math.min(CHORDS[i + 1][0], 55) : t + BAR;
-      const dark = t >= 42.5 && t < 50;
-      pad(t, next - t, c, { vol: dark ? 0.75 : 0.85, cut: dark ? 900 : 1500, cutEnd: dark ? 1400 : 1900, att: 0.35 });
-    }
-    const grooveZones = [
-      [10.0, 42.2, "A"], [42.5, 49.35, "B"], [50.4, 54.6, "C"], [58.8, 62.1, "D"],
-    ];
-    for (const [a, b, kind] of grooveZones) {
-      for (let t = a; t < b - 0.01; t += BEAT / 2) {
-        const step = Math.round((t - a) / (BEAT / 2)) % 8; // 8 eighths per bar
-        const c = chordAt(t + 0.01);
-        const beat = step / 2;
-        // Kick
-        if (kind === "A" && (step === 0 || step === 4 || (step === 5 && t > 17.5))) kick(t, step === 5 ? 0.6 : 0.85);
-        if (kind === "B" && step % 2 === 0) kick(t, 0.95);
-        if (kind === "C" && step === 0) kick(t, 0.6);
-        if (kind === "D" && (step === 0 || step === 4)) kick(t, 0.75);
-        // Clap on 2 and 4
-        if ((kind === "A" && t >= 17.5) || kind === "B" || kind === "D") if (step === 2 || step === 6) clap(t, kind === "B" ? 1 : 0.8);
-        // Hats
-        const swing = step % 2 ? BEAT * 0.04 : 0;
-        hat(t + swing, step % 2 ? 0.75 : 0.45, kind === "B" && step % 2 === 1, 0.22);
-        if (kind !== "C") hat(t + BEAT / 4 + swing, 0.22, false, -0.25);
-        // Bass
-        const root = CH[c].bass;
-        if (kind === "B") bass(t, step % 2 ? root + 12 : root, BEAT / 2 - 0.04, 1);
-        else if (step === 0) bass(t, root, BEAT * 1.4, 0.9);
-        else if (step === 3) bass(t, root + 12, BEAT * 0.4, 0.6);
-        else if (step === 4) bass(t, root, BEAT * 0.9, 0.8);
-        else if (step === 7) bass(t, root + 7, BEAT * 0.4, 0.55);
-        // Arp
-        if (kind !== "B" || step % 2 === 0) {
-          const notes = CH[c].arp;
-          pluck(t, notes[(step + Math.floor(beat)) % notes.length], step % 2 ? 0.55 : 0.85, step % 2 ? 0.35 : -0.35);
-        }
-        void beat;
-      }
-    }
+    boom(10.0, 0.55);
 
     // III · Story
     [10.95, 11.9].forEach((t) => { swipe(t, 0.5); tick(t + 0.02, 0.5, 1800); });
@@ -492,8 +641,9 @@
     keys(56.55, "D", 1.15);
     bell(56.6, 86, 0.6, 3.5, 0);
     pad(55.3, 3.0, "D", { vol: 0.6, cut: 800, cutEnd: 2400, att: 1.5 });
-    riser(57.7, 58.75, 0.5);
-    [58.3, 60.4].forEach((t, i) => pad(t, i ? 1.8 : 2.1, i ? "A" : "G", { vol: 0.8, cut: 1600, cutEnd: 2000, att: 0.3 }));
+    riser(57.4, 58.33, 0.6);
+    boom(58.33, 0.6);
+    [58.33, 60.4].forEach((t, i) => pad(t, i ? 1.7 : 2.07, i ? "A" : "G", { vol: 0.5, cut: 1600, cutEnd: 2000, att: 0.2 }));
     whoosh(58.9, 0.8, 0.5, 1, 300, 2400);
     // The tap.
     tick(60.35, 0.9, 1500); pop(60.37, 0.8, 380);

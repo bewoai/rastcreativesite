@@ -1,3 +1,4 @@
 # Frame sequences, rendered frames, audio stems — all regenerable.
 .cache/
 node_modules
+out/*-20mbps.mp4

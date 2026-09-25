@@ -8,6 +8,8 @@ Reels / Shorts / TikTok için: 1080×1920, 30 fps, 65 sn, H.264 + AAC, sesli.
 
 Film tamamen kodla üretilir: sahne HTML/CSS, hareket `timeline.js`, müzik ve ses
 efektleri `soundtrack.js` (WebAudio ile sentez, lisanslanacak örnek ses yok).
+Müzik: 144 BPM melodik tekno — düz dört vuruş, sidechain pompası, dönen 16'lık bas,
+karanlık işler bölümünde acid hat; drop'lar sahne kesmelerinde (10 · 35 · 42,5 · 50 · 58,3 sn).
 Görseller sitenin kendi dosyalarıdır (fontlar, fotoğraflar, logolar, gerçek iş klipleri);
 hiçbir şey kopyalanmaz, repo kökünden okunur.
 
@@ -22,7 +24,7 @@ bölümler boyunca sağ üstte anahtar ışık olur, karanlık "işler" bölüm�
 haritada Serdivan pini olur, manifestonun arkasında doğar ve kapanışta tekrar logonun
 noktasına oturur.
 
-## Akış (96 BPM · 1 ölçü = 2,5 sn)
+## Akış (sahne ızgarası 2,5 sn · müzik 144 BPM)
 
 | # | Zaman | Sahne | Ne anlatıyor |
 |---|---|---|---|
@@ -65,7 +67,8 @@ npm i --no-save playwright-core        # package.json'a yazılmaz; site bağıml
 npx playwright install chromium        # ya da CHROMIUM=/yol/chrome
 node prepare.mjs                        # proje kliplerini kare dizisine çevirir (.cache/)
 node render.mjs --stills 3.9,8.9,57.8   # kontrol kareleri → .cache/stills/
-node render.mjs                         # tam film → out/rast-creative-tanitim-dikey.mp4
+node render.mjs                         # tam film → out/rast-creative-tanitim-dikey.mp4 (6 Mbps)
+node render.mjs --master                # 20 Mbps master → out/…-20mbps.mp4 (git'e girmez, ~160 MB)
 ```
 
 - `FFMPEG` (libx264 gerekli) ve `CHROMIUM` ortam değişkenleri ikili dosya yolunu değiştirir.

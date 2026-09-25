@@ -133,7 +133,7 @@ try {
     /* ───── encode ───── */
     if (!args.from && !args.to) {
       fs.mkdirSync(outDir, { recursive: true });
-      const out = path.join(outDir, "rast-creative-tanitim-dikey.mp4");
+      const out = path.join(outDir, args.master ? "rast-creative-tanitim-dikey-20mbps.mp4" : "rast-creative-tanitim-dikey.mp4");
       await new Promise((resolve, reject) => {
         const p = spawn(ffmpeg, [
           "-y", "-loglevel", "error", "-stats",
@@ -141,10 +141,13 @@ try {
           "-i", wav,
           // Capped VBR: Reels/Shorts re-encode anyway; 6 Mbps keeps the grain
           // clean while the file stays small enough to share.
-          "-c:v", "libx264", "-preset", "slow", "-crf", "20", "-maxrate", "6M", "-bufsize", "12M", "-tune", "film",
+          // --master: 20 Mbps archive/delivery copy (same frames, higher bitrate).
+          ...(args.master
+            ? ["-c:v", "libx264", "-preset", "slow", "-b:v", "20M", "-maxrate", "26M", "-bufsize", "40M", "-tune", "film"]
+            : ["-c:v", "libx264", "-preset", "slow", "-crf", "20", "-maxrate", "6M", "-bufsize", "12M", "-tune", "film"]),
           "-pix_fmt", "yuv420p", "-profile:v", "high", "-level", "4.2",
           "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709",
-          "-c:a", "aac", "-b:a", "224k", "-ar", "48000",
+          "-c:a", "aac", "-b:a", args.master ? "320k" : "224k", "-ar", "48000",
           "-movflags", "+faststart", "-shortest", out,
         ], { stdio: "inherit" });
         p.on("exit", (c) => (c === 0 ? resolve() : reject(new Error("ffmpeg " + c))));
