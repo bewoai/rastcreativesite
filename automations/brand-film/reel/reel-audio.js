@@ -32,7 +32,8 @@
     const comp = ctx.createDynamicsCompressor();
     comp.threshold.value = -14; comp.ratio.value = 3; comp.knee.value = 8; comp.attack.value = 0.008; comp.release.value = 0.2;
     comp.connect(master).connect(ctx.destination);
-    const bus = ctx.createGain(); bus.connect(comp);            // SFX + voice
+    const bus = ctx.createGain(); bus.connect(comp);            // voice + music
+    const sfx = ctx.createGain(); sfx.gain.value = 0.4; sfx.connect(bus); // transitions sit under the music, not on top
     const music = ctx.createGain(); music.gain.value = 0.8;     // ducked under the voice
     const pumpG = ctx.createGain(); pumpG.connect(music); music.connect(bus);
 
@@ -126,6 +127,7 @@
       f.connect(g); out(g, { send: 0.45 });
     }
     function boom(t, vol = 1) {
+      vol *= 0.65;
       const o = ctx.createOscillator(); o.type = "sine"; o.frequency.setValueAtTime(75, t); o.frequency.exponentialRampToValueAtTime(30, t + 1.3); o.start(t); o.stop(t + 2.5);
       const g = ctx.createGain(); env(g, t, 0.003, 0.9 * vol, 1.7); o.connect(g); out(g, { send: 0.2 });
       const n = nsrc(t, 1.4); const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 300;
@@ -137,11 +139,12 @@
       bp.frequency.setValueAtTime(f0, a); bp.frequency.exponentialRampToValueAtTime(f1, t); bp.frequency.exponentialRampToValueAtTime(f0 * 2, a + dur);
       const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, a); g.gain.exponentialRampToValueAtTime(0.5 * vol, t); g.gain.exponentialRampToValueAtTime(0.0001, a + dur);
       const p = ctx.createStereoPanner(); p.pan.setValueAtTime(-0.8 * dir, a); p.pan.linearRampToValueAtTime(0.8 * dir, a + dur);
-      n.connect(bp).connect(g).connect(p).connect(bus); const x = ctx.createGain(); x.gain.value = 0.3; p.connect(x).connect(verbIn);
+      n.connect(bp).connect(g).connect(p).connect(sfx); const x = ctx.createGain(); x.gain.value = 0.12; p.connect(x).connect(verbIn);
     }
     function swish(t, dir = 1, vol = 1) { whoosh(t, 0.34, 0.9 * vol, dir, 900, 7500); }
-    function thump(t, vol = 1) { const o = ctx.createOscillator(); o.type = "sine"; o.frequency.setValueAtTime(110, t); o.frequency.exponentialRampToValueAtTime(45, t + 0.18); o.start(t); o.stop(t + 0.4); const g = ctx.createGain(); env(g, t, 0.002, 0.6 * vol, 0.25); o.connect(g); out(g); }
+    function thump(t, vol = 1) { const o = ctx.createOscillator(); o.type = "sine"; o.frequency.setValueAtTime(110, t); o.frequency.exponentialRampToValueAtTime(45, t + 0.18); o.start(t); o.stop(t + 0.4); const g = ctx.createGain(); env(g, t, 0.002, 0.6 * vol, 0.25); o.connect(g); out(g, { to: sfx }); }
     function riser(a, b, vol = 1) {
+      vol *= 0.6;
       const n = nsrc(a, b - a); const bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.Q.value = 1.4;
       bp.frequency.setValueAtTime(300, a); bp.frequency.exponentialRampToValueAtTime(8000, b);
       const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, a); g.gain.exponentialRampToValueAtTime(0.3 * vol, b - 0.02); g.gain.linearRampToValueAtTime(0, b + 0.02);
@@ -152,6 +155,7 @@
       o.connect(lp).connect(og); out(og, { send: 0.3 });
     }
     function reverse(a, b, vol = 1) {
+      vol *= 0.6;
       // Reverse-cymbal swell into a hit.
       const n = nsrc(a, b - a); const hp = ctx.createBiquadFilter(); hp.type = "highpass"; hp.frequency.setValueAtTime(2000, a); hp.frequency.exponentialRampToValueAtTime(5000, b);
       const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, a); g.gain.exponentialRampToValueAtTime(0.22 * vol, b - 0.01); g.gain.linearRampToValueAtTime(0, b + 0.01);
@@ -159,10 +163,10 @@
     }
     function snare(t, vol = 1) { const n = nsrc(t, 0.2); const bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 1900; bp.Q.value = 0.8; const g = ctx.createGain(); env(g, t, 0.001, 0.2 * vol, 0.08); n.connect(bp).connect(g); out(g, { send: 0.2 }); }
     function roll(a, b, vol = 1) { let t = a; while (t < b - 0.01) { const p = (t - a) / (b - a); snare(t, (0.25 + 0.75 * p * p) * vol); t += p < 0.5 ? BEAT / 2 : p < 0.8 ? BEAT / 4 : BEAT / 8; } }
-    function tick(t, vol = 1, f = 2600, pan = 0) { const g = ctx.createGain(); env(g, t, 0.001, 0.12 * vol, 0.03); osc("sine", f, t, 0.08).connect(g); out(g, { pan, send: 0.08 }); }
-    function beep(t) { [0, 0.11].forEach((o) => { const g = ctx.createGain(); env(g, t + o, 0.002, 0.07, 0.06); osc("sine", 2800, t + o, 0.12).connect(g); out(g, { pan: 0.3 }); }); }
-    function shutter(t) { [0, 0.07].forEach((o, i) => { const n = nsrc(t + o, 0.05); const bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = i ? 2600 : 3800; bp.Q.value = 1.5; const g = ctx.createGain(); env(g, t + o, 0.001, 0.35, 0.018); n.connect(bp).connect(g); out(g, { send: 0.15 }); }); }
-    function servo(t, dur) { const o = ctx.createOscillator(); o.type = "square"; o.frequency.setValueAtTime(90, t); o.frequency.linearRampToValueAtTime(150, t + dur); o.start(t); o.stop(t + dur + 0.05); const bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 900; bp.Q.value = 3; const g = ctx.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.03, t + 0.08); g.gain.setValueAtTime(0.03, t + dur - 0.08); g.gain.linearRampToValueAtTime(0, t + dur); o.connect(bp).connect(g); out(g, { pan: -0.2 }); }
+    function tick(t, vol = 1, f = 2600, pan = 0) { const g = ctx.createGain(); env(g, t, 0.001, 0.12 * vol, 0.03); osc("sine", f, t, 0.08).connect(g); out(g, { to: sfx, pan }); }
+    function beep(t) { [0, 0.11].forEach((o) => { const g = ctx.createGain(); env(g, t + o, 0.002, 0.07, 0.06); osc("sine", 2800, t + o, 0.12).connect(g); out(g, { to: sfx, pan: 0.3 }); }); }
+    function shutter(t) { [0, 0.07].forEach((o, i) => { const n = nsrc(t + o, 0.05); const bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = i ? 2600 : 3800; bp.Q.value = 1.5; const g = ctx.createGain(); env(g, t + o, 0.001, 0.35, 0.018); n.connect(bp).connect(g); out(g, { to: sfx }); }); }
+    function servo(t, dur) { const o = ctx.createOscillator(); o.type = "square"; o.frequency.setValueAtTime(90, t); o.frequency.linearRampToValueAtTime(150, t + dur); o.start(t); o.stop(t + dur + 0.05); const bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 900; bp.Q.value = 3; const g = ctx.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.03, t + 0.08); g.gain.setValueAtTime(0.03, t + dur - 0.08); g.gain.linearRampToValueAtTime(0, t + dur); o.connect(bp).connect(g); out(g, { to: sfx, pan: -0.2 }); }
     function tapeStop(t, dur = 0.45) { const o = ctx.createOscillator(); o.type = "sawtooth"; o.frequency.setValueAtTime(hz(38), t); o.frequency.exponentialRampToValueAtTime(18, t + dur); o.start(t); o.stop(t + dur); const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.setValueAtTime(1500, t); lp.frequency.exponentialRampToValueAtTime(120, t + dur); const g = ctx.createGain(); g.gain.setValueAtTime(0.25, t); g.gain.linearRampToValueAtTime(0, t + dur); o.connect(lp).connect(g); out(g); }
     function keys(t, ch, vol = 1) {
       CH[ch].pad.slice(1).forEach((m, i) => [[1, 1], [2, 0.3], [3, 0.1]].forEach(([r, a]) => { const g = ctx.createGain(); env(g, t + i * 0.014, 0.006, 0.07 * vol * a, 3 / r); osc("sine", hz(m + 12) * r, t + i * 0.014, 3.6).connect(g); out(g, { pan: (i / 4 - 0.5) * 0.5, send: 0.6 }); }));
@@ -233,18 +237,14 @@
     J.shots.forEach((s, i) => {
       const t = s.t, dir = i % 2 ? 1 : -1;
       switch (s.tr) {
-        case "flash": whoosh(t, 0.7, 0.8, dir, 400, 5000); thump(t, 0.5); break;
-        case "zoom": whoosh(t, 0.55, 0.9, dir, 200, 4000); thump(t + 0.02, 0.8); break;
-        case "whipL": swish(t, -1); break;
-        case "whipR": swish(t, 1); break;
-        case "spin": whoosh(t, 0.5, 0.9, dir, 300, 6000); swish(t + 0.05, -dir, 0.6); break;
-        case "cut": tick(t, 0.5, 1800 + i * 90, dir * 0.3); break;
-        default: break;
+        case "zoomIn": whoosh(t, 0.42, 0.6, dir, 250, 3200); thump(t + 0.01, 0.35); break;
+        case "slideL": whoosh(t, 0.36, 0.55, -1, 700, 5000); break;
+        case "slideR": whoosh(t, 0.36, 0.55, 1, 700, 5000); break;
+        case "dissolve": reverse(t - 0.45, t + 0.02, 0.35); break;
+        default: break; // cuts ride the beat, no extra sound
       }
     });
-    whoosh(2.5, 1.1, 0.9, 1, 300, 6000); reverse(1.8, 2.5, 0.8);
-    shutter(16.05); servo(16.3, 1.4); beep(17.25); whoosh(18.0, 0.9, 0.7, 1, 200, 2500);
-    whoosh(20.5, 0.5, 0.6, -1, 800, 6000); // the fabric pull
+    shutter(16.05); servo(16.3, 1.4); beep(17.25); whoosh(18.0, 0.8, 0.45, 1, 200, 2200);
 
     /* ═════════ Voice-over (ElevenLabs) with ducking ═════════ */
     const vo = await (await fetch(`${BASE}/.cache/reel/vo-timing.json`)).json();

@@ -1,5 +1,5 @@
 {
- "note": "t = filmdeki başlangıç (sn), d = süre, src = kaynak (public/videos/projeler/<src>.mp4 ya da sources'taki Drive dosyası ya da photo), in = kaynaktaki giriş (sn), sp = hız (<0.8 ara kare üretilir), z = kadraj büyütme, oy = büyütmenin dikey odağı (0 üst – 1 alt) (filigran/yazı dışarıda kalsın), cx = yatay kaynakta dikey kesitin konumu (0 sol – 1 sağ), tr = bu plana GİRİŞ geçişi, tag = köşe etiketi",
+ "note": "t = filmdeki başlangıç (sn), d = süre, src = kaynak (public/videos/projeler/<src>.mp4 ya da sources'taki Drive dosyası ya da photo), in = kaynaktaki giriş (sn), sp = hız (<0.8 ara kare üretilir), z = kadraj büyütme, oy = büyütmenin dikey odağı (0 üst – 1 alt) (filigran/yazı dışarıda kalsın), cx = yatay kaynakta dikey kesitin konumu (0 sol – 1 sağ), tr = bu plana GİRİŞ geçişi (dissolve · zoomIn · slideL/R · lcd · dip · cut), tag = köşe etiketi",
  "sources": {
   "ballet": {
    "drive": "1y6JUh7dDiTHvjy9-9aVNRclJfkzA2EUL",
@@ -37,7 +37,7 @@
    "in": 2.05,
    "sp": 1.0,
    "z": 1.05,
-   "tr": "flash"
+   "tr": "dissolve"
   },
   {
    "id": "s03",
@@ -47,7 +47,7 @@
    "in": 3.3,
    "sp": 0.55,
    "z": 1.05,
-   "tr": "zoom"
+   "tr": "zoomIn"
   },
   {
    "id": "s04",
@@ -58,7 +58,7 @@
    "sp": 0.8,
    "z": 1.0,
    "cx": 0.5,
-   "tr": "zoom",
+   "tr": "zoomIn",
    "tag": "ALTOTEKS · TEKSTİL"
   },
   {
@@ -70,7 +70,7 @@
    "sp": 0.7,
    "z": 1.0,
    "cx": 0.5,
-   "tr": "whipL",
+   "tr": "zoomIn",
    "tag": "CANEX · ÜRETİM"
   },
   {
@@ -82,7 +82,7 @@
    "sp": 0.8,
    "z": 1.0,
    "cx": 0.5,
-   "tr": "zoom"
+   "tr": "zoomIn"
   },
   {
    "id": "s07",
@@ -92,7 +92,7 @@
    "in": 10.6,
    "sp": 0.6,
    "z": 1.0,
-   "tr": "flash",
+   "tr": "dissolve",
    "tag": "CANDLELIT BALLET · SAPANCA"
   },
   {
@@ -103,7 +103,7 @@
    "in": 5.0,
    "sp": 0.9,
    "z": 1.26,
-   "tr": "whipR",
+   "tr": "cut",
    "tag": "AYTAŞ HOME",
    "oy": 0.4
   },
@@ -115,7 +115,7 @@
    "in": 5.2,
    "sp": 0.5,
    "z": 1.0,
-   "tr": "zoom",
+   "tr": "zoomIn",
    "tag": "ADATIP × SAKARYASPOR"
   },
   {
@@ -132,7 +132,7 @@
     0.68,
     3.4
    ],
-   "tr": "flash",
+   "tr": "dissolve",
    "tag": "SETTE · RAST CREATIVE"
   },
   {
@@ -160,7 +160,7 @@
     0.5,
     1.2
    ],
-   "tr": "whipL",
+   "tr": "cut",
    "tag": "SETTE · RAST CREATIVE"
   },
   {
@@ -171,7 +171,7 @@
    "in": 0.9,
    "sp": 1.0,
    "z": 1.42,
-   "tr": "zoom",
+   "tr": "zoomIn",
    "tag": "AYTAŞ HOME",
    "oy": 0.64
   },
@@ -183,7 +183,7 @@
    "in": 12.6,
    "sp": 1.0,
    "z": 1.0,
-   "tr": "flash"
+   "tr": "zoomIn"
   },
   {
    "id": "m02",
@@ -194,7 +194,7 @@
    "sp": 1.0,
    "z": 1.0,
    "cx": 0.5,
-   "tr": "whipL"
+   "tr": "cut"
   },
   {
    "id": "m03",
@@ -204,7 +204,7 @@
    "in": 16.0,
    "sp": 1.0,
    "z": 1.1,
-   "tr": "zoom"
+   "tr": "cut"
   },
   {
    "id": "m04",
@@ -215,7 +215,7 @@
    "sp": 1.0,
    "z": 1.0,
    "cx": 0.5,
-   "tr": "whipR"
+   "tr": "cut"
   },
   {
    "id": "m05",
@@ -225,7 +225,7 @@
    "in": 15.0,
    "sp": 1.0,
    "z": 1.1,
-   "tr": "flash"
+   "tr": "cut"
   },
   {
    "id": "m06",
@@ -235,7 +235,7 @@
    "in": 6.4,
    "sp": 1.0,
    "z": 1.0,
-   "tr": "zoom"
+   "tr": "cut"
   },
   {
    "id": "m07",
@@ -245,7 +245,7 @@
    "in": 16.8,
    "sp": 1.0,
    "z": 1.0,
-   "tr": "whipL"
+   "tr": "zoomIn"
   },
   {
    "id": "m08",
@@ -256,7 +256,7 @@
    "sp": 1.0,
    "z": 1.0,
    "cx": 0.5,
-   "tr": "spin"
+   "tr": "cut"
   },
   {
    "id": "m09",
@@ -266,7 +266,7 @@
    "in": 18.8,
    "sp": 1.0,
    "z": 1.1,
-   "tr": "flash"
+   "tr": "zoomIn"
   },
   {
    "id": "m10",
@@ -277,7 +277,7 @@
    "sp": 1.0,
    "z": 1.0,
    "cx": 0.5,
-   "tr": "whipR"
+   "tr": "cut"
   },
   {
    "id": "m11",
@@ -287,7 +287,7 @@
    "in": 16.6,
    "sp": 1.0,
    "z": 1.26,
-   "tr": "zoom",
+   "tr": "cut",
    "oy": 0.4
   },
   {
@@ -298,7 +298,7 @@
    "in": 23.8,
    "sp": 1.0,
    "z": 1.0,
-   "tr": "whipL"
+   "tr": "cut"
   },
   {
    "id": "m13",
@@ -309,7 +309,7 @@
    "sp": 1.0,
    "z": 1.0,
    "cx": 0.5,
-   "tr": "flash"
+   "tr": "cut"
   },
   {
    "id": "m14",
@@ -360,7 +360,7 @@
    "in": 19.4,
    "sp": 1.0,
    "z": 1.26,
-   "tr": "zoom",
+   "tr": "zoomIn",
    "oy": 0.4
   },
   {
@@ -381,7 +381,7 @@
    "in": 0.1,
    "sp": 0.7,
    "z": 1.0,
-   "tr": "flash"
+   "tr": "dissolve"
   }
  ],
  "end": {

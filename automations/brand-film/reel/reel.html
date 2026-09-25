@@ -21,6 +21,7 @@
   html, body { background: #000; overflow: hidden; }
   #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #000; transform-origin: 0 0; isolation: isolate; font-family: "Inter", sans-serif; }
   .layer { position: absolute; inset: 0; overflow: hidden; will-change: transform, opacity, filter; }
+  .layer .cp { position: absolute; inset: 0; transform-origin: 50% 50%; }
   .layer img { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
   .layer img.photo { width: auto; height: auto; }
   #grade { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: soft-light; opacity: .32;
@@ -43,7 +44,6 @@
   #cap { position: absolute; left: 70px; right: 70px; top: 1290px; text-align: center; pointer-events: none;
     font: 800 60px/1.18 "Inter"; letter-spacing: -.015em; color: #fff; text-shadow: 0 4px 24px rgba(0,0,0,.75), 0 1px 3px rgba(0,0,0,.6); }
   #cap .w { display: inline-block; margin: 0 .14em; transform-origin: 50% 80%; }
-  #cap .w.on { color: #ffc27e; }
 
   #end { position: absolute; inset: 0; display: none; }
   #end .l1 { position: absolute; left: 0; right: 0; top: 620px; text-align: center; color: #f4eee5; font: 600 132px/1 "Fraunces"; letter-spacing: -.02em; }

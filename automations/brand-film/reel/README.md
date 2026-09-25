@@ -20,8 +20,8 @@ Yalnızca stüdyonun gerçek işleri kullanıldı. Çıktı: `../out/rast-creati
 | 30–34 | Letterbox, müzik kesilir: bale, sonra dünyaya geri dönüş | "Çünkü iyi bir iş… anlatılmaz." |
 | 34–40 | Işık patlaması → "İyi iş / kendini izletir." → logo, güneş noktası iner | "Kendini izletir." · "Rast Creative Studio." |
 
-Geçişler (shots.json `tr`): ışık patlaması, zoom-through, yönlü hareket bulanıklıklı whip pan,
-90° dönüş, kamera monitörüne dalış, siyaha iniş. Her geçişin kendi SFX'i var (reel-audio.js).
+Geçişler (shots.json `tr`): vuruşta temiz kesme, 16 kopyalı gerçek radyal hareket bulanıklığıyla zoom-through,
+sakin anlarda çözülme, kamera monitörüne dalış, siyaha iniş. SFX müziğin altında (-8 dB).
 Müzik 120 BPM re minör (Dm · B♭ · F · C); tek majör akor "kendini izletir."de çalar.
 Seslendirme konuşurken müzik otomatik alçalır; altyazılar kelime kelime gelir.
 
@@ -31,7 +31,7 @@ Seslendirme konuşurken müzik otomatik alçalır; altyazılar kelime kelime gel
 - Stüdyonun Drive arşivi (bağlantıyla paylaşılan klasör): Candlelit Ballet, Altoteks, Canex,
   Adatıp × Sakaryaspor — `shots.json → sources` içindeki Drive ID'leriyle `prepare-reel.mjs` indirir.
 - Set fotoğrafları: `src/assets/photos/bts/`
-- Seslendirme: ElevenLabs · **Mustafa Silici** · `eleven_multilingual_v2` → `vo/*.mp3` (repoda, yeniden üretmeye gerek yok)
+- Seslendirme: ElevenLabs · **Onur Büyü** (imaj reklam anlatıcısı) · `eleven_multilingual_v2` → `vo/*.mp3` (repoda, yeniden üretmeye gerek yok)
 
 ## Yeniden üretmek
 

@@ -39,11 +39,26 @@
   }
 
   // Half-width of each transition window (seconds either side of the cut).
-  const W = { cut: 0, fadein: 0, flash: 0.14, zoom: 0.2, whipL: 0.17, whipR: 0.17, spin: 0.18, lcd: 0.4, dip: 0.45 };
+  const W = { cut: 0, fadein: 0, dissolve: 0.3, zoomIn: 0.15, slideL: 0.19, slideR: 0.19, lcd: 0.4, dip: 0.45 };
+  const N = 16; // copies per layer for real (accumulated) motion blur
 
   let SHOTS = [], MAN = {}, VO = [], END = { t: 34.35, d: 5.65 };
   let pending = [];
-  const layers = [0, 1, 2].map((i) => ({ el: $("#L" + i), img: $("#L" + i + " img"), blur: $(`#mb${i}s`), src: "" }));
+  const layers = [0, 1, 2].map((i) => {
+    const el = $("#L" + i);
+    el.innerHTML = "";
+    const copies = Array.from({ length: N }, (_, k) => {
+      const c = document.createElement("div");
+      c.className = "cp";
+      const img = document.createElement("img");
+      img.alt = "";
+      c.append(img);
+      c.style.opacity = String(1 / (k + 1)); // running average of k+1 copies
+      el.append(c);
+      return { el: c, img };
+    });
+    return { el, copies, src: "" };
+  });
   const photos = {};
   const flash = $("#flash"), leak = $("#leak"), dark = $("#dark"), grain = $("#grain"), bars = $("#bars");
   const tag = $("#tag"), tagText = $("#tag span"), cap = $("#cap"), end = $("#end");
@@ -55,76 +70,79 @@
     return `${BASE}/.cache/reel/${s.id}/${String(f).padStart(4, "0")}.jpg`;
   }
   function draw(L, s, t, fx) {
-    // fx: { x, y, s, r, o, bx, by, bright, blurAll }
+    // fx: { x, y, s, o, bright, zb (radial smear), mx (horizontal smear px), blurAll }
     const lt = t - s.t;
     L.el.style.display = "block";
-    let src, imgTf;
+    let src, imgTf, photo = false;
     if (s.src === "photo") {
       const ph = photos[s.photo];
-      src = ph.src;
+      src = ph.src; photo = true;
       const [x0, y0, s0, x1, y1, s1] = s.kb;
       const p = E.ioS(clamp(lt / s.d, 0, 1.15) / 1.15);
       // s10 dives into the camera monitor: the push keeps accelerating through the cut.
-      const k = mix(s0, s1, s.tr === "flash" && s.id === "s10" ? E.inC(clamp(lt / s.d, 0, 1.2)) : p) * (1920 / ph.h);
+      const k = mix(s0, s1, s.id === "s10" ? E.inC(clamp(lt / s.d, 0, 1.2)) : p) * (1920 / ph.h);
       const fx0 = mix(x0, x1, p), fy0 = mix(y0, y1, p);
       let tx = 540 - fx0 * ph.w * k, ty = 960 - fy0 * ph.h * k;
       tx = Math.min(0, Math.max(1080 - ph.w * k, tx));
       ty = Math.min(0, Math.max(1920 - ph.h * k, ty));
       imgTf = `translate(${tx.toFixed(1)}px,${ty.toFixed(1)}px) scale(${k.toFixed(4)})`;
-      L.img.className = "photo";
     } else {
       src = frameSrc(s, lt);
-      const z = (s.z || 1) * (1 + 0.035 * clamp(lt / Math.max(0.5, s.d)));
+      const z = (s.z || 1) * (1 + 0.03 * clamp(lt / Math.max(0.5, s.d)));
       const oy = s.oy ?? 0.5;
       imgTf = `translate(${(540 * (1 - z)).toFixed(1)}px,${(1920 * oy * (1 - z)).toFixed(1)}px) scale(${z.toFixed(4)})`;
-      L.img.className = "";
     }
-    if (L.src !== src) { L.src = src; L.img.src = src; pending.push(L.img.decode().catch(() => {})); }
-    L.img.style.transform = imgTf;
-    // Montage cuts land with a small punch.
-    const punch = s.id[0] === "m" && s.tr !== "cut" ? 1 + 0.045 * (1 - E.outC(P(lt, 0, 0.22))) : 1;
-    const sc = (fx.s ?? 1) * punch;
-    L.el.style.transform = `translate3d(${(fx.x || 0).toFixed(1)}px,${(fx.y || 0).toFixed(1)}px,0) rotate(${(fx.r || 0).toFixed(2)}deg) scale(${sc.toFixed(4)})`;
+    const zb = fx.zb || 0, mx = fx.mx || 0;
+    const n = zb > 0.004 || Math.abs(mx) > 2 ? N : 1;
+    L.copies.forEach((c, k) => {
+      const on = k < n;
+      c.el.style.display = on ? "block" : "none";
+      if (!on) return;
+      if (L.src !== src || c.img.getAttribute("src") !== src) { c.img.src = src; pending.push(c.img.decode().catch(() => {})); }
+      c.img.className = photo ? "photo" : "";
+      c.img.style.transform = imgTf;
+      const f = n > 1 ? k / (n - 1) : 0;
+      c.el.style.transform = `translateX(${(mx * (f - 0.5)).toFixed(1)}px) scale(${(1 + zb * f).toFixed(4)})`;
+      c.el.style.opacity = String(1 / (k + 1));
+    });
+    L.src = src;
+    const punch = s.id[0] === "m" && s.tr === "cut" ? 1 + 0.025 * (1 - E.outC(P(lt, 0, 0.16))) : 1;
+    L.el.style.transform = `translate3d(${(fx.x || 0).toFixed(1)}px,${(fx.y || 0).toFixed(1)}px,0) scale(${((fx.s ?? 1) * punch).toFixed(4)})`;
     L.el.style.opacity = String(fx.o ?? 1);
-    L.blur.setAttribute("stdDeviation", `${(fx.bx || 0).toFixed(1)} ${(fx.by || 0).toFixed(1)}`);
-    const grade = `contrast(1.07) saturate(1.06) brightness(${(fx.bright ?? 1).toFixed(3)})`;
-    const mb = (fx.bx || 0) > 0.3 || (fx.by || 0) > 0.3 ? ` url(#mb${layers.indexOf(L)})` : "";
     const ba = fx.blurAll > 0.2 ? ` blur(${fx.blurAll.toFixed(1)}px)` : "";
-    L.el.style.filter = grade + mb + ba;
+    L.el.style.filter = `contrast(1.06) saturate(1.05) brightness(${(fx.bright ?? 1).toFixed(3)})${ba}`;
   }
 
   /* ───────────── transitions ───────────── */
   // u: 0 → 1 across the window, 0.5 = the cut. Returns [fxOut, fxIn].
   function trans(type, u) {
-    const a = u < 0.5, v = Math.abs(u - 0.5) * 2; // v: 1 at edges, 0 at the cut
+    const x = clamp(u * 2), y = clamp(u * 2 - 1); // x: outgoing half, y: incoming half
     switch (type) {
-      case "flash": {
-        const b = 1 + 1.6 * (1 - v) ** 2;
-        return [a ? { bright: b } : { o: 0 }, a ? { o: 0 } : { bright: b, s: 1 + 0.06 * (1 - v) }];
+      case "zoomIn": {
+        // Push through: outgoing accelerates in with a radial smear, incoming lands and settles.
+        if (u < 0.5) { const p = E.inC(x); return [{ s: 1 + 0.6 * p, zb: 0.1 * p, blurAll: 2.5 * p }, { o: 0 }]; }
+        const p = E.outC(y); return [{ o: 0 }, { s: 1.22 - 0.22 * p, zb: 0.1 * (1 - p), blurAll: 2.5 * (1 - p) }];
       }
-      case "zoom": {
-        if (a) { const p = E.inC(1 - v); return [{ s: 1 + 0.8 * p, blurAll: 16 * p, bright: 1 + 0.25 * p }, { o: 0 }]; }
-        const p = E.outC(1 - v); return [{ o: 0 }, { s: 1.6 - 0.6 * p, blurAll: 16 * (1 - p), bright: 1.25 - 0.25 * p }];
-      }
-      case "whipL": case "whipR": {
-        const dir = type === "whipL" ? -1 : 1;
+      case "slideL": case "slideR": {
+        // One continuous strip; the smear follows the speed of the move.
+        const dir = type === "slideL" ? -1 : 1;
         const p = E.ioC(u);
-        const vel = 1080 * 6 * p * (1 - p); // ∝ derivative of ioC
-        return [{ x: dir * 1080 * p, bx: vel * 0.045 }, { x: dir * 1080 * (p - 1), bx: vel * 0.045 }];
+        const smear = dir * 280 * Math.sin(Math.PI * u) ** 2; // strongest at the cut, where the move is fastest
+        return [{ x: dir * 1080 * p, s: 1.04, mx: smear }, { x: dir * 1080 * (p - 1), s: 1.04, mx: smear }];
       }
-      case "spin": {
-        if (a) { const p = E.inC(1 - v); return [{ r: 90 * p, s: 1 + 0.5 * p, blurAll: 20 * p }, { o: 0 }]; }
-        const p = E.outC(1 - v); return [{ o: 0 }, { r: -90 * (1 - p), s: 1.5 - 0.5 * p, blurAll: 20 * (1 - p) }];
+      case "dissolve": {
+        const p = E.ioS(u);
+        return [{ o: 1 }, { o: p, s: 1.04 - 0.04 * p }];
       }
       case "lcd": {
         const p = E.ioS(P(u, 0.25, 0.8));
-        return [{ o: 1 - p, blurAll: 6 * p }, { o: p, s: 1.18 - 0.18 * E.outC(u), blurAll: 6 * (1 - p) }];
+        return [{ o: 1, blurAll: 5 * p }, { o: p, s: 1.18 - 0.18 * E.outC(u), blurAll: 5 * (1 - p) }];
       }
       case "dip": {
-        return [a ? { o: v, blurAll: 10 * (1 - v) } : { o: 0 }, a ? { o: 0 } : { o: E.outC(v), blurAll: 12 * (1 - v) }];
+        return [u < 0.5 ? { o: 1 - x } : { o: 0 }, u < 0.5 ? { o: 0 } : { o: E.outC(y) }];
       }
       default:
-        return [a ? {} : { o: 0 }, a ? { o: 0 } : {}];
+        return [u < 0.5 ? {} : { o: 0 }, u < 0.5 ? { o: 0 } : {}];
     }
   }
 
@@ -132,10 +150,8 @@
   function drawOverlays(t, cutInfo) {
     // Flash overlay peaks on flash cuts; small leaks on zooms.
     let fl = 0, lk = 0;
-    if (cutInfo && cutInfo.type === "flash") fl = (1 - cutInfo.v) ** 2 * 0.92;
-    if (cutInfo && (cutInfo.type === "zoom" || cutInfo.type === "spin")) lk = (1 - cutInfo.v) * 0.8;
     // The final blow-out into the end card.
-    if (t > 34.0 && t < 35.1) fl = Math.max(fl, t < 34.35 ? E.inQ(P(t, 34.0, 34.35)) : 1 - E.outC(P(t, 34.35, 35.1)));
+    if (t > 33.9 && t < 35.2) fl = 0.72 * (t < 34.35 ? E.ioS(P(t, 33.9, 34.35)) : 1 - E.outC(P(t, 34.35, 35.2)));
     flash.style.opacity = fl.toFixed(3);
     leak.style.opacity = lk.toFixed(3);
     leak.style.transform = `translateX(${(Math.sin(t * 3) * 80).toFixed(1)}px)`;
@@ -188,8 +204,7 @@
       const w = c.ws[k];
       const p = E.outExpo(P(t, w.a - 0.06, w.a + 0.18));
       el.style.opacity = (p * out).toFixed(3);
-      el.style.transform = `translateY(${((1 - p) * 26).toFixed(1)}px) scale(${mix(0.86, 1, p).toFixed(3)})`;
-      el.classList.toggle("on", t >= w.a && t < w.b + 0.08);
+      el.style.transform = `translateY(${((1 - p) * 12).toFixed(1)}px)`;
     });
   }
 

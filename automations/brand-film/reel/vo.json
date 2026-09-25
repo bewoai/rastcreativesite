@@ -1,17 +1,76 @@
 {
-  "note": "Seslendirme metni. start = saniye cinsinden yerleşim; max = satırın sığması gereken süre. Ses: ElevenLabs · Mustafa Silici (fg8pljYEn5ahwjyOQaro) · eleven_multilingual_v2.",
-  "voice": { "id": "fg8pljYEn5ahwjyOQaro", "name": "Mustafa Silici", "model": "eleven_multilingual_v2" },
+  "note": "Seslendirme metni. start = saniye cinsinden yerleşim; max = satırın sığması gereken süre. Ses: ElevenLabs · Onur Büyü (L7EcC4y7BGM74ObLiXoF) · eleven_multilingual_v2.",
+  "voice": {
+    "id": "L7EcC4y7BGM74ObLiXoF",
+    "name": "Onur Büyü",
+    "model": "eleven_multilingual_v2"
+  },
   "lines": [
-    { "id": "l01", "start": 0.7,  "max": 3.2, "text": "Her hikâye… bir ışıkla başlar." },
-    { "id": "l02", "start": 4.3,  "max": 3.6, "text": "Biz o ışığı bulmak için sahaya iniyoruz." },
-    { "id": "l03", "start": 8.3,  "max": 1.9, "text": "Bir fabrikanın ritmi…" },
-    { "id": "l04", "start": 10.35,"max": 1.9, "text": "bir sahnenin ışığı…" },
-    { "id": "l05", "start": 12.4, "max": 1.9, "text": "bir mağazanın sıcaklığı…" },
-    { "id": "l06", "start": 14.45,"max": 1.7, "text": "bir sahanın nabzı." },
-    { "id": "l07", "start": 16.35,"max": 3.0, "text": "Kadrajı kuruyor, ışığı bekliyor…" },
-    { "id": "l08", "start": 19.5, "max": 2.5, "text": "ve hikâyeyi kurguda tamamlıyoruz." },
-    { "id": "l09", "start": 30.4, "max": 3.6, "text": "Çünkü iyi bir iş… anlatılmaz." },
-    { "id": "l10", "start": 34.5, "max": 2.2, "text": "Kendini izletir." },
-    { "id": "l11", "start": 37.3, "max": 2.2, "text": "Rast Creative Studio." }
+    {
+      "id": "l01",
+      "start": 0.7,
+      "max": 3.2,
+      "text": "Her hikâye… bir ışıkla başlar."
+    },
+    {
+      "id": "l02",
+      "start": 4.3,
+      "max": 3.6,
+      "text": "Biz o ışığı bulmak için sahaya iniyoruz."
+    },
+    {
+      "id": "l03",
+      "start": 8.3,
+      "max": 1.9,
+      "text": "Bir fabrikanın ritmi…"
+    },
+    {
+      "id": "l04",
+      "start": 10.35,
+      "max": 1.9,
+      "text": "bir sahnenin ışığı…"
+    },
+    {
+      "id": "l05",
+      "start": 12.4,
+      "max": 1.9,
+      "text": "bir mağazanın sıcaklığı…"
+    },
+    {
+      "id": "l06",
+      "start": 14.45,
+      "max": 1.7,
+      "text": "bir sahanın nabzı."
+    },
+    {
+      "id": "l07",
+      "start": 16.35,
+      "max": 3.0,
+      "text": "Kadrajı kuruyor, ışığı bekliyor…"
+    },
+    {
+      "id": "l08",
+      "start": 19.5,
+      "max": 2.5,
+      "text": "ve hikâyeyi kurguda tamamlıyoruz."
+    },
+    {
+      "id": "l09",
+      "start": 30.4,
+      "max": 3.6,
+      "text": "Çünkü iyi bir iş… anlatılmaz."
+    },
+    {
+      "id": "l10",
+      "start": 34.5,
+      "max": 2.2,
+      "text": "Kendini izletir."
+    },
+    {
+      "id": "l11",
+      "start": 37.3,
+      "max": 2.2,
+      "text": "Rast Creative Studio."
+    }
   ]
 }
