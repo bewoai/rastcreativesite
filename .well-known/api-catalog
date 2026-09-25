@@ -1,0 +1,50 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://rastcreative.com/api/site.json",
+      "service-desc": [
+        {
+          "href": "https://rastcreative.com/openapi.json",
+          "type": "application/vnd.oai.openapi+json"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://rastcreative.com/agent-docs",
+          "type": "text/html",
+          "hreflang": ["tr"]
+        }
+      ],
+      "status": [
+        {
+          "href": "https://rastcreative.com/api/status.json",
+          "type": "application/json"
+        }
+      ]
+    },
+    {
+      "anchor": "https://rastcreative.com/api/services.json",
+      "service-desc": [{ "href": "https://rastcreative.com/openapi.json", "type": "application/vnd.oai.openapi+json" }],
+      "service-doc": [{ "href": "https://rastcreative.com/agent-docs", "type": "text/html", "hreflang": ["tr"] }],
+      "status": [{ "href": "https://rastcreative.com/api/status.json", "type": "application/json" }]
+    },
+    {
+      "anchor": "https://rastcreative.com/api/projects.json",
+      "service-desc": [{ "href": "https://rastcreative.com/openapi.json", "type": "application/vnd.oai.openapi+json" }],
+      "service-doc": [{ "href": "https://rastcreative.com/agent-docs", "type": "text/html", "hreflang": ["tr"] }],
+      "status": [{ "href": "https://rastcreative.com/api/status.json", "type": "application/json" }]
+    },
+    {
+      "anchor": "https://rastcreative.com/api/locations.json",
+      "service-desc": [{ "href": "https://rastcreative.com/openapi.json", "type": "application/vnd.oai.openapi+json" }],
+      "service-doc": [{ "href": "https://rastcreative.com/agent-docs", "type": "text/html", "hreflang": ["tr"] }],
+      "status": [{ "href": "https://rastcreative.com/api/status.json", "type": "application/json" }]
+    },
+    {
+      "anchor": "https://rastcreative.com/api/faq.json",
+      "service-desc": [{ "href": "https://rastcreative.com/openapi.json", "type": "application/vnd.oai.openapi+json" }],
+      "service-doc": [{ "href": "https://rastcreative.com/agent-docs", "type": "text/html", "hreflang": ["tr"] }],
+      "status": [{ "href": "https://rastcreative.com/api/status.json", "type": "application/json" }]
+    }
+  ]
+}
