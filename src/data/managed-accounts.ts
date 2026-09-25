@@ -1,5 +1,5 @@
 /**
- * Instagram accounts we run end to end (content, shoots, posting, ads).
+ * Social accounts we run end to end (content, shoots, posting, ads).
  * Rendered as profile-style cards on /projeler/ and on each brand page.
  * Instagram offers no official profile embed, so the card is ours: our own
  * work from that account, a few headline numbers, and a link out.
@@ -11,9 +11,11 @@ import lgErdem from "../assets/logos/erdem-caliskan.png";
 export interface ManagedAccount {
   /** Must match the projects' `client` field. */
   client: string;
+  platform: "instagram" | "youtube";
   handle: string;
   url: string;
-  logo: ImageMetadata;
+  /** Logo for the avatar; without one, the client's initials are shown. */
+  logo?: ImageMetadata;
   role: string;
   since?: string;
   stats?: { value: string; label: string }[];
@@ -24,6 +26,7 @@ export interface ManagedAccount {
 export const MANAGED_ACCOUNTS: ManagedAccount[] = [
   {
     client: "Aytaş Home",
+    platform: "instagram",
     handle: "aytashomeoutlet",
     url: "https://www.instagram.com/aytashomeoutlet/",
     logo: lgAytas,
@@ -38,10 +41,18 @@ export const MANAGED_ACCOUNTS: ManagedAccount[] = [
   },
   {
     client: "Dr. Erdem Çalışkan",
+    platform: "instagram",
     handle: "dr.erdem.caliskan",
     url: "https://www.instagram.com/dr.erdem.caliskan/",
     logo: lgErdem,
     role: "Video içerik, hesap yönetimi ve web sitesi",
     siteHref: "https://serdivanestetik.com/",
+  },
+  {
+    client: "Op. Dr. Duygu Cebecik Özmüş",
+    platform: "youtube",
+    handle: "duygucebecikopdr",
+    url: "https://www.youtube.com/@duygucebecikopdr",
+    role: "YouTube gebelik bilgilendirme serisi: çekim, kurgu ve yayın",
   },
 ];

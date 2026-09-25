@@ -18,23 +18,38 @@ interface Props {
 const { account, projects, showCase = true } = Astro.props;
 const caseHref = showCase ? account.caseHref : undefined;
 // Newest first: the strip should look like the account's latest posts.
+const yt = account.platform === "youtube";
+// Instagram: the newest vertical reels. YouTube: the newest wide episodes.
 const reels = projects
-  .filter((p) => p.data.vertical && !p.data.externalUrl)
+  .filter((p) => !p.data.externalUrl && (yt ? !p.data.vertical : p.data.vertical))
   .sort((a, b) => b.data.order - a.data.order)
-  .slice(0, 6);
+  .slice(0, yt ? 4 : 6);
+const platformName = yt ? "YouTube" : "Instagram";
+const initials = account.client
+  .replace(/^(Op\.\s*)?Dr\.\s*/, "")
+  .split(/\s+/)
+  .slice(0, 2)
+  .map((w) => w[0])
+  .join("");
+const cover = (p: CollectionEntry<"projects">) =>
+  p.data.poster.replace(/maxresdefault\.jpg$/, "hqdefault.jpg");
 ---
 
-<article class="ig ev-glass" aria-label={`${account.client} Instagram hesabı`}>
+<article class:list={["ig ev-glass", { "ig--yt": yt }]} aria-label={`${account.client} ${platformName} hesabı`}>
   <header class="ig__head">
     <span class="ig__avatar">
-      <Image src={account.logo} alt={`${account.client} logosu`} height={56} densities={[1.5, 2]} class="ig__logo" />
+      {account.logo ? (
+        <Image src={account.logo} alt={`${account.client} logosu`} height={56} densities={[1.5, 2]} class="ig__logo" />
+      ) : (
+        <span class="ig__initials" aria-hidden="true">{initials}</span>
+      )}
     </span>
     <div class="ig__who">
-      <p class="ig__handle">@{account.handle}</p>
+      <p class="ig__handle">@{account.handle}<span class="ig__platform">{platformName}</span></p>
       <p class="ig__role">{account.role}{account.since && ` · ${account.since}'dan beri`}</p>
     </div>
     <a class="ig__follow" href={account.url} target="_blank" rel="noopener noreferrer">
-      Instagram'da gör <span aria-hidden="true">↗</span>
+      {platformName}'da gör <span aria-hidden="true">↗</span>
     </a>
   </header>
 
@@ -44,7 +59,7 @@ const reels = projects
         {reels.map((p) => (
           <li>
             <a href={`/projeler/${p.id}/`} class="ig__tile" aria-label={p.data.title}>
-              <img src={p.data.poster} alt="" width="240" height="426" loading="lazy" decoding="async" />
+              <img src={cover(p)} alt="" width={yt ? 320 : 240} height={yt ? 180 : 426} loading="lazy" decoding="async" />
               <span class="ig__play" aria-hidden="true">▶</span>
             </a>
           </li>
@@ -156,6 +171,28 @@ const reels = projects
     padding: 0;
     list-style: none;
   }
+  .ig--yt .ig__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ig--yt .ig__tile {
+    aspect-ratio: 16 / 9;
+  }
+  .ig__initials {
+    font-family: var(--serif, var(--font-display));
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: var(--sun-text, var(--amber-text));
+  }
+  .ig__platform {
+    margin-left: 0.5rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    background: rgba(29, 25, 21, 0.08);
+    font-size: 0.7rem;
+    font-weight: 600;
+    vertical-align: middle;
+    color: var(--ink-2, var(--ink-soft));
+  }
   .ig__tile {
     position: relative;
     display: block;
@@ -220,7 +257,7 @@ const reels = projects
     .ig__follow {
       margin-left: 0;
     }
-    .ig__grid {
+    .ig:not(.ig--yt) .ig__grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }

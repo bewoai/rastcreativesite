@@ -194,12 +194,28 @@ const brands = [
   // No logo files yet: set as a serif wordmark in the plate's own voice.
   { src: null, name: "Op. Dr. Duygu Cebecik Özmüş", word: "Dr. Duygu Cebecik", mode: "word" },
   { src: null, name: "Duru Optik", word: "Duru Optik", mode: "word" },
-  { src: null, name: "Hörnhauss", word: "Hörnhauss", mode: "word" },
 ] as const;
 
 const founders = [
-  { name: "Muhammed Ekrem Adnan", role: "Kurucu ortak · Video director", photo: muhammedPhoto },
-  { name: "Berat Değirmenci", role: "Kurucu ortak · Video director", photo: beratPhoto },
+  {
+    name: "Muhammed Ekrem Adnan",
+    role: "Kurucu ortak · Video director",
+    photo: muhammedPhoto,
+    links: [
+      { label: "LinkedIn", href: "https://www.linkedin.com/in/muhammed-al-sheikhly-2a6b01209/" },
+      { label: "Instagram", href: "https://www.instagram.com/muhammed_the_artist/" },
+    ],
+  },
+  {
+    name: "Berat Değirmenci",
+    role: "Kurucu ortak · Video director",
+    photo: beratPhoto,
+    links: [
+      { label: "LinkedIn", href: "https://www.linkedin.com/in/beratdegirmenci/" },
+      { label: "Instagram", href: "https://www.instagram.com/bewonami/" },
+      { label: "Portfolyo", href: "https://beratdegirmenci.studio/" },
+    ],
+  },
 ];
 
 // Four orbit stops. Durations mirror the verified "genellikle 2–4 hafta".
@@ -601,6 +617,11 @@ const year = new Date().getFullYear();
               />
               <p class="ev-person__name">{f.name}</p>
               <p class="ev-person__role">{f.role}</p>
+              <p class="ev-person__links">
+                {f.links.map((l) => (
+                  <a href={l.href} target="_blank" rel="noreferrer" aria-label={`${f.name} — ${l.label}`}>{l.label} <span aria-hidden="true">↗</span></a>
+                ))}
+              </p>
             </li>
           ))
         }
@@ -1627,6 +1648,24 @@ const year = new Date().getFullYear();
     font-family: var(--serif);
     font-size: 1.45rem;
     line-height: 1.1;
+  }
+  .ev-person__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.9rem;
+    margin: 0.3rem 0.3rem 0;
+  }
+  .ev-person__links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--sun-text);
+    text-decoration: none;
+  }
+  .ev-person__links a:hover {
+    text-decoration: underline;
   }
   .ev-person__role {
     margin: 0.2rem 0.3rem 0;

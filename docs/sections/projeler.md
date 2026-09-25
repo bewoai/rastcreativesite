@@ -23,3 +23,10 @@ açığı, kitle/coğrafya dağılımı ve iç yol haritası müşteride kaldı.
 ## Marka levhası (ana sayfa)
 Logo dosyası olmayan müşteriler (Duygu Cebecik, Duru Optik, Hörnhauss) serif isim olarak
 basılıyor (`mode: "word"`); logo gelince `src` ile değiştirilir.
+
+## Güncelleme (25 Eylül)
+- Yönetilen hesaplara Duygu Cebecik Özmüş YouTube kanalı (@duygucebecikopdr) eklendi;
+  kart artık `platform: "instagram" | "youtube"` alıyor (YouTube'da yatay bölümler, logo yoksa baş harfler).
+- Hörnhauss marka levhasından çıkarıldı (projelerde kalıyor).
+- Ekip linkleri: Muhammed → LinkedIn, Instagram; Berat → LinkedIn, Instagram, portfolyo
+  (beratdegirmenci.studio). Ana sayfa ekip kartları ve Hakkımızda; Person şemasında `sameAs`.
