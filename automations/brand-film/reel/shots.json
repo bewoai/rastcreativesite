@@ -1,0 +1,391 @@
+{
+ "note": "t = filmdeki başlangıç (sn), d = süre, src = kaynak (public/videos/projeler/<src>.mp4 ya da sources'taki Drive dosyası ya da photo), in = kaynaktaki giriş (sn), sp = hız (<0.8 ara kare üretilir), z = kadraj büyütme, oy = büyütmenin dikey odağı (0 üst – 1 alt) (filigran/yazı dışarıda kalsın), cx = yatay kaynakta dikey kesitin konumu (0 sol – 1 sağ), tr = bu plana GİRİŞ geçişi, tag = köşe etiketi",
+ "sources": {
+  "ballet": {
+   "drive": "1y6JUh7dDiTHvjy9-9aVNRclJfkzA2EUL",
+   "name": "Candlelit Ballet · Candles and Echoes"
+  },
+  "altoteks": {
+   "drive": "1fB7kvdcWkHz0q7tB0oDYeEpzUmfedp0a",
+   "name": "Altoteks tanıtım filmi (16:9)"
+  },
+  "canex": {
+   "drive": "1Bil6tr5ZIA4CC5ZYiyaWCiqejGtqy1fA",
+   "name": "Canex tanıtım filmi (16:9, 60p)"
+  },
+  "sakaryaspor": {
+   "drive": "1XeE1sLga4WywDSoM88j24Y7UmybWlB8o",
+   "name": "Adatıp × Sakaryaspor (50p)"
+  }
+ },
+ "shots": [
+  {
+   "id": "s01",
+   "t": 0.0,
+   "d": 2.5,
+   "src": "duru-optik-tanitim",
+   "in": 0.0,
+   "sp": 0.62,
+   "z": 1.0,
+   "tr": "fadein"
+  },
+  {
+   "id": "s02",
+   "t": 2.5,
+   "d": 1.5,
+   "src": "duru-optik-tanitim",
+   "in": 2.05,
+   "sp": 1.0,
+   "z": 1.05,
+   "tr": "flash"
+  },
+  {
+   "id": "s03",
+   "t": 4.0,
+   "d": 2.0,
+   "src": "duru-optik-tanitim",
+   "in": 3.3,
+   "sp": 0.55,
+   "z": 1.05,
+   "tr": "zoom"
+  },
+  {
+   "id": "s04",
+   "t": 6.0,
+   "d": 2.0,
+   "src": "altoteks",
+   "in": 4.5,
+   "sp": 0.8,
+   "z": 1.0,
+   "cx": 0.5,
+   "tr": "zoom",
+   "tag": "ALTOTEKS · TEKSTİL"
+  },
+  {
+   "id": "s05",
+   "t": 8.0,
+   "d": 1.2,
+   "src": "canex",
+   "in": 60.0,
+   "sp": 0.7,
+   "z": 1.0,
+   "cx": 0.5,
+   "tr": "whipL",
+   "tag": "CANEX · ÜRETİM"
+  },
+  {
+   "id": "s06",
+   "t": 9.2,
+   "d": 1.1,
+   "src": "altoteks",
+   "in": 28.0,
+   "sp": 0.8,
+   "z": 1.0,
+   "cx": 0.5,
+   "tr": "zoom"
+  },
+  {
+   "id": "s07",
+   "t": 10.3,
+   "d": 2.1,
+   "src": "ballet",
+   "in": 10.6,
+   "sp": 0.6,
+   "z": 1.0,
+   "tr": "flash",
+   "tag": "CANDLELIT BALLET · SAPANCA"
+  },
+  {
+   "id": "s08",
+   "t": 12.4,
+   "d": 2.0,
+   "src": "aytas-home-sinematik-magaza",
+   "in": 5.0,
+   "sp": 0.9,
+   "z": 1.26,
+   "tr": "whipR",
+   "tag": "AYTAŞ HOME",
+   "oy": 0.4
+  },
+  {
+   "id": "s09",
+   "t": 14.4,
+   "d": 1.6,
+   "src": "sakaryaspor",
+   "in": 5.2,
+   "sp": 0.5,
+   "z": 1.0,
+   "tr": "zoom",
+   "tag": "ADATIP × SAKARYASPOR"
+  },
+  {
+   "id": "s10",
+   "t": 16.0,
+   "d": 2.0,
+   "src": "photo",
+   "photo": "sokak-kadraj",
+   "kb": [
+    0.62,
+    0.62,
+    1.0,
+    0.675,
+    0.68,
+    3.4
+   ],
+   "tr": "flash",
+   "tag": "SETTE · RAST CREATIVE"
+  },
+  {
+   "id": "s11",
+   "t": 18.0,
+   "d": 1.5,
+   "src": "newlife-davet-salonu",
+   "in": 1.7,
+   "sp": 0.75,
+   "z": 1.05,
+   "tr": "lcd",
+   "tag": "NEWLIFE DAVET SALONU"
+  },
+  {
+   "id": "s12",
+   "t": 19.5,
+   "d": 1.0,
+   "src": "photo",
+   "photo": "ofis-isik-kurulumu",
+   "kb": [
+    0.5,
+    0.5,
+    1.05,
+    0.52,
+    0.5,
+    1.2
+   ],
+   "tr": "whipL",
+   "tag": "SETTE · RAST CREATIVE"
+  },
+  {
+   "id": "s13",
+   "t": 20.5,
+   "d": 1.5,
+   "src": "aytas-home-yapay-zeka-kurgu",
+   "in": 0.9,
+   "sp": 1.0,
+   "z": 1.42,
+   "tr": "zoom",
+   "tag": "AYTAŞ HOME",
+   "oy": 0.64
+  },
+  {
+   "id": "m01",
+   "t": 22.0,
+   "d": 0.5,
+   "src": "ballet",
+   "in": 12.6,
+   "sp": 1.0,
+   "z": 1.0,
+   "tr": "flash"
+  },
+  {
+   "id": "m02",
+   "t": 22.5,
+   "d": 0.5,
+   "src": "canex",
+   "in": 110.0,
+   "sp": 1.0,
+   "z": 1.0,
+   "cx": 0.5,
+   "tr": "whipL"
+  },
+  {
+   "id": "m03",
+   "t": 23.0,
+   "d": 0.5,
+   "src": "hornhauss-tanitim",
+   "in": 16.0,
+   "sp": 1.0,
+   "z": 1.1,
+   "tr": "zoom"
+  },
+  {
+   "id": "m04",
+   "t": 23.5,
+   "d": 0.5,
+   "src": "altoteks",
+   "in": 36.0,
+   "sp": 1.0,
+   "z": 1.0,
+   "cx": 0.5,
+   "tr": "whipR"
+  },
+  {
+   "id": "m05",
+   "t": 24.0,
+   "d": 0.5,
+   "src": "duru-optik-tanitim",
+   "in": 15.0,
+   "sp": 1.0,
+   "z": 1.1,
+   "tr": "flash"
+  },
+  {
+   "id": "m06",
+   "t": 24.5,
+   "d": 0.5,
+   "src": "sakaryaspor",
+   "in": 6.4,
+   "sp": 1.0,
+   "z": 1.0,
+   "tr": "zoom"
+  },
+  {
+   "id": "m07",
+   "t": 25.0,
+   "d": 0.5,
+   "src": "ballet",
+   "in": 16.8,
+   "sp": 1.0,
+   "z": 1.0,
+   "tr": "whipL"
+  },
+  {
+   "id": "m08",
+   "t": 25.5,
+   "d": 0.5,
+   "src": "canex",
+   "in": 140.0,
+   "sp": 1.0,
+   "z": 1.0,
+   "cx": 0.5,
+   "tr": "spin"
+  },
+  {
+   "id": "m09",
+   "t": 26.0,
+   "d": 0.5,
+   "src": "hornhauss-tanitim",
+   "in": 18.8,
+   "sp": 1.0,
+   "z": 1.1,
+   "tr": "flash"
+  },
+  {
+   "id": "m10",
+   "t": 26.5,
+   "d": 0.5,
+   "src": "altoteks",
+   "in": 180.0,
+   "sp": 1.0,
+   "z": 1.0,
+   "cx": 0.5,
+   "tr": "whipR"
+  },
+  {
+   "id": "m11",
+   "t": 27.0,
+   "d": 0.5,
+   "src": "aytas-home-sinematik-magaza",
+   "in": 16.6,
+   "sp": 1.0,
+   "z": 1.26,
+   "tr": "zoom",
+   "oy": 0.4
+  },
+  {
+   "id": "m12",
+   "t": 27.5,
+   "d": 0.5,
+   "src": "ballet",
+   "in": 23.8,
+   "sp": 1.0,
+   "z": 1.0,
+   "tr": "whipL"
+  },
+  {
+   "id": "m13",
+   "t": 28.0,
+   "d": 0.5,
+   "src": "canex",
+   "in": 44.0,
+   "sp": 1.0,
+   "z": 1.0,
+   "cx": 0.5,
+   "tr": "flash"
+  },
+  {
+   "id": "m14",
+   "t": 28.5,
+   "d": 0.25,
+   "src": "hornhauss-tanitim",
+   "in": 5.6,
+   "sp": 1.0,
+   "z": 1.1,
+   "tr": "cut"
+  },
+  {
+   "id": "m15",
+   "t": 28.75,
+   "d": 0.25,
+   "src": "altoteks",
+   "in": 132.0,
+   "sp": 1.0,
+   "z": 1.0,
+   "cx": 0.5,
+   "tr": "cut"
+  },
+  {
+   "id": "m16",
+   "t": 29.0,
+   "d": 0.25,
+   "src": "duru-optik-tanitim",
+   "in": 26.0,
+   "sp": 1.0,
+   "z": 1.1,
+   "tr": "cut"
+  },
+  {
+   "id": "m17",
+   "t": 29.25,
+   "d": 0.25,
+   "src": "ballet",
+   "in": 11.2,
+   "sp": 1.0,
+   "z": 1.0,
+   "tr": "cut"
+  },
+  {
+   "id": "m18",
+   "t": 29.5,
+   "d": 0.5,
+   "src": "aytas-home-sinematik-magaza",
+   "in": 19.4,
+   "sp": 1.0,
+   "z": 1.26,
+   "tr": "zoom",
+   "oy": 0.4
+  },
+  {
+   "id": "s14",
+   "t": 30.0,
+   "d": 2.6,
+   "src": "ballet",
+   "in": 19.6,
+   "sp": 0.45,
+   "z": 1.0,
+   "tr": "dip"
+  },
+  {
+   "id": "s15",
+   "t": 32.6,
+   "d": 1.8,
+   "src": "duru-optik-tanitim",
+   "in": 0.1,
+   "sp": 0.7,
+   "z": 1.0,
+   "tr": "flash"
+  }
+ ],
+ "end": {
+  "t": 34.35,
+  "d": 5.65
+ }
+}

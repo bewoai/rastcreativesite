@@ -50,7 +50,11 @@ const server = http.createServer((req, res) => {
   fs.createReadStream(p).pipe(res);
 });
 await new Promise((r) => server.listen(0, "127.0.0.1", r));
-const URL0 = `http://127.0.0.1:${server.address().port}/automations/brand-film/composition.html`;
+// --page reel/reel.html --name reel renders the Reel with the same pipeline.
+const PAGE = args.page || "composition.html";
+const NAME = args.name ? String(args.name) : "";
+const URL0 = `http://127.0.0.1:${server.address().port}/automations/brand-film/${PAGE}`;
+const OUTNAME = NAME ? "rast-creative-reels" : "rast-creative-tanitim-dikey";
 
 const browser = await chromium.launch({
   executablePath: process.env.CHROMIUM || undefined,
@@ -73,12 +77,12 @@ try {
   if (args["audio-only"]) {
     const page = await openPage();
     const b64 = await page.evaluate(() => window.__audio());
-    fs.writeFileSync(path.join(cache, "soundtrack.wav"), Buffer.from(b64, "base64"));
-    console.log("✓ soundtrack.wav");
+    fs.writeFileSync(path.join(cache, NAME ? `${NAME}-audio.wav` : "soundtrack.wav"), Buffer.from(b64, "base64"));
+    console.log("✓ audio");
   } else if (args.stills) {
     /* ───── stills for checking ───── */
     const page = await openPage();
-    const dir = path.join(cache, "stills");
+    const dir = path.join(cache, NAME ? `stills-${NAME}` : "stills");
     fs.mkdirSync(dir, { recursive: true });
     for (const s of String(args.stills).split(",")) {
       const t = Number(s);
@@ -89,7 +93,7 @@ try {
     }
   } else {
     /* ───── frames ───── */
-    const framesDir = path.join(cache, "frames");
+    const framesDir = path.join(cache, NAME ? `frames-${NAME}` : "frames");
     fs.mkdirSync(framesDir, { recursive: true });
     const total = Math.round(meta.duration * meta.fps);
     const first = Math.round(Number(args.from || 0) * meta.fps);
@@ -122,7 +126,7 @@ try {
     );
 
     /* ───── soundtrack ───── */
-    const wav = path.join(cache, "soundtrack.wav");
+    const wav = path.join(cache, NAME ? `${NAME}-audio.wav` : "soundtrack.wav");
     if (args.force || args.audio || !fs.existsSync(wav)) {
       const page = await openPage();
       const b64 = await page.evaluate(() => window.__audio());
@@ -133,7 +137,7 @@ try {
     /* ───── encode ───── */
     if (!args.from && !args.to) {
       fs.mkdirSync(outDir, { recursive: true });
-      const out = path.join(outDir, args.master ? "rast-creative-tanitim-dikey-20mbps.mp4" : "rast-creative-tanitim-dikey.mp4");
+      const out = path.join(outDir, `${OUTNAME}${args.master ? "-20mbps" : ""}.mp4`);
       await new Promise((resolve, reject) => {
         const p = spawn(ffmpeg, [
           "-y", "-loglevel", "error", "-stats",
