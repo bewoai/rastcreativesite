@@ -47,9 +47,9 @@ const credits = [
   ["Kategori", d.category],
 ].filter(([, v]) => v) as [string, string][];
 
-// Pick a video provider (Vimeo wins if both are set). Poster-only otherwise.
-const provider = d.vimeoId ? "vimeo" : d.youtubeId ? "youtube" : null;
-const videoId = d.vimeoId ?? d.youtubeId;
+// Pick a video provider (Vimeo wins, then YouTube, then a self-hosted file).
+const provider = d.vimeoId ? "vimeo" : d.youtubeId ? "youtube" : d.video ? "file" : null;
+const videoId = d.vimeoId ?? d.youtubeId ?? d.video;
 const uploadDate = d.publishDate ? `${d.publishDate}T00:00:00+03:00` : undefined;
 
 // Timecode ("MM:SS" / "HH:MM:SS") → ISO 8601 ("PT7M3S") for VideoObject.duration.
@@ -74,14 +74,20 @@ const videoObject =
         thumbnailUrl: [new URL(d.poster, SITE.url).href],
         uploadDate,
         ...(videoDuration ? { duration: videoDuration } : {}),
-        embedUrl:
-          provider === "vimeo"
-            ? `https://player.vimeo.com/video/${videoId}`
-            : `https://www.youtube.com/embed/${videoId}`,
+        ...(provider === "file"
+          ? {}
+          : {
+              embedUrl:
+                provider === "vimeo"
+                  ? `https://player.vimeo.com/video/${videoId}`
+                  : `https://www.youtube.com/embed/${videoId}`,
+            }),
         contentUrl:
           provider === "vimeo"
             ? `https://vimeo.com/${videoId}`
-            : `https://www.youtube.com/watch?v=${videoId}`,
+            : provider === "youtube"
+              ? `https://www.youtube.com/watch?v=${videoId}`
+              : new URL(videoId, SITE.url).href,
       }
     : undefined;
 
@@ -134,7 +140,7 @@ const pageJsonLd = [
               height="900"
               class="poster__img"
             />
-            <span class="poster__note">Video yakında eklenecek</span>
+            {!d.siteUrl && <span class="poster__note">Video yakında eklenecek</span>}
           </div>
         )
       }
@@ -143,6 +149,15 @@ const pageJsonLd = [
     <div class="detail">
       <div class="detail__desc">
         <Content />
+        {
+          d.siteUrl && (
+            <p class="detail__site">
+              <Button href={d.siteUrl} target="_blank" rel="noopener" arrow>
+                Siteyi ziyaret et
+              </Button>
+            </p>
+          )
+        }
       </div>
       {
         credits.length > 0 && (
@@ -166,11 +181,25 @@ const pageJsonLd = [
     <aside class="proj-cta">
       <div>
         <Eyebrow>Benzer bir proje</Eyebrow>
-        <p class="proj-cta__title">Bu formatta içerik planlayalım.</p>
-        <p class="proj-cta__text">
-          {d.category} kategorisinde markanıza uygun çekim kapsamını, teslim formatlarını
-          ve yayın mecralarını birlikte netleştirelim.
-        </p>
+        {
+          d.siteUrl ? (
+            <>
+              <p class="proj-cta__title">Siteniz de böyle çalışsın.</p>
+              <p class="proj-cta__text">
+                Tasarımı, içeriği ve sitede kullanılacak video ve fotoğrafları tek ekip olarak
+                hazırlayalım.
+              </p>
+            </>
+          ) : (
+            <>
+              <p class="proj-cta__title">Bu formatta içerik planlayalım.</p>
+              <p class="proj-cta__text">
+                {d.category} kategorisinde markanıza uygun çekim kapsamını, teslim formatlarını
+                ve yayın mecralarını birlikte netleştirelim.
+              </p>
+            </>
+          )
+        }
       </div>
       <div class="proj-cta__actions">
         <Button href={PRIMARY_CTA.href} arrow>{PRIMARY_CTA.label}</Button>
@@ -233,6 +262,9 @@ const pageJsonLd = [
   }
   .media {
     margin-bottom: 2.5rem;
+  }
+  .detail__site {
+    margin: 1.5rem 0 0;
   }
   .poster {
     position: relative;

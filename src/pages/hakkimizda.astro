@@ -10,8 +10,8 @@ import { PRIMARY_CTA, SITE } from "../consts";
 import { BUSINESS_ID, breadcrumb } from "../lib/schema";
 import { groupByBrand } from "../lib/brands";
 import equipPhoto from "../assets/photos/studio-lighting.jpg";
-import muhammedPhoto from "../assets/photos/muhammed-al-sheikhly-2026.jpg";
-import beratPhoto from "../assets/photos/berat-degirmenci-2026.jpg";
+import muhammedPhoto from "../assets/photos/muhammed-ekrem-adnan.jpg";
+import beratPhoto from "../assets/photos/berat-degirmenci-renkli.jpg";
 
 const crumbs = breadcrumb([
   { name: "Ana Sayfa", path: "/" },
@@ -102,10 +102,14 @@ const projectProof = [
 
 const teamMembers = [
   {
-    name: "Muhammed Al Sheikhly",
+    name: "Muhammed Ekrem Adnan",
     role: "Kurucu Ortak / Video Director",
     photo: muhammedPhoto,
     linkedin: "https://www.linkedin.com/in/muhammed-al-sheikhly-2a6b01209/",
+    links: [
+      { icon: "linkedin", label: "LinkedIn", href: "https://www.linkedin.com/in/muhammed-al-sheikhly-2a6b01209/" },
+      { icon: "instagram", label: "Instagram", href: "https://www.instagram.com/muhammed_the_artist/" },
+    ],
     focus: "Animasyon, storyboard ve görsel anlatı tarafında projeye katkı sağlar.",
     bio:
       "Dumlupınar Üniversitesi Güzel Sanatlar ve Stüdyo Sanatları eğitimiyle güçlü bir görsel anlatı temeline sahip. Adatıp Hastanesi'nde yaratıcı videografi ve kısa video üretim süreçlerine katkı sağlıyor; animasyon, After Effects, storyboard ve kurgu bilgisini hikaye odaklı video üretimine taşıyor.",
@@ -116,6 +120,11 @@ const teamMembers = [
     role: "Kurucu Ortak / Video Director",
     photo: beratPhoto,
     linkedin: "https://www.linkedin.com/in/beratdegirmenci/",
+    links: [
+      { icon: "linkedin", label: "LinkedIn", href: "https://www.linkedin.com/in/beratdegirmenci/" },
+      { icon: "instagram", label: "Instagram", href: "https://www.instagram.com/bewonami/" },
+      { icon: "arrow-up-right", label: "Portfolyo", href: "https://beratdegirmenci.studio/" },
+    ],
     focus: "Teknik süreçler, dijital reklam planlama ve prodüksiyon akışını düzenli tutar.",
     bio:
       "Adatıp Hastanesi'nde video operasyonları ve podcast prodüksiyonları üzerine çalışıyor. Yönetim Bilişim Sistemleri eğitimiyle süreç planlama, teknik altyapı ve dijital reklam tarafındaki bilgisini prodüksiyon akışlarına dahil ediyor; markalar için daha düzenli, ölçülebilir ve etkili görsel içerikler üretmeye odaklanıyor.",
@@ -164,6 +173,7 @@ const pageJsonLd = [
         name: member.name,
         jobTitle: member.role,
         url: member.linkedin,
+        sameAs: member.links.map((l) => l.href),
         worksFor: { "@id": `${SITE.url}#organization` },
         knowsAbout: member.highlights,
       })),
@@ -184,7 +194,7 @@ const pageJsonLd = [
         <Eyebrow>Şirketin Kurucuları</Eyebrow>
         <h1 class="team-hero__title">Rast Creative’in kurucu ortakları.</h1>
         <p class="team-hero__text">
-          Rast Creative Studio, Muhammed Al Sheikhly ve Berat Değirmenci tarafından yönetilen
+          Rast Creative Studio, Muhammed Ekrem Adnan ve Berat Değirmenci tarafından yönetilen
           genç bir video prodüksiyon ajansıdır. Her projede markanın ne anlatmak istediğini,
           videonun nerede kullanılacağını ve teslimden sonra nasıl sonuç üretmesi gerektiğini
           baştan planlarız.
@@ -238,14 +248,14 @@ const pageJsonLd = [
                       <li>{highlight}</li>
                     ))}
                   </ul>
-                  {
-                    member.linkedin && (
-                      <a class="member-card__link" href={member.linkedin} target="_blank" rel="noreferrer" aria-label={`${member.name} LinkedIn profili`}>
-                        <Icon name="linkedin" size={16} />
-                        <span>Bağlantı Kur</span>
+                  <div class="member-card__links">
+                    {member.links.map((l) => (
+                      <a class="member-card__link" href={l.href} target="_blank" rel="noreferrer" aria-label={`${member.name} — ${l.label}`}>
+                        <Icon name={l.icon} size={16} />
+                        <span>{l.label}</span>
                       </a>
-                    )
-                  }
+                    ))}
+                  </div>
                 </div>
               </div>
             </article>
@@ -820,8 +830,14 @@ const pageJsonLd = [
     border-color: color-mix(in srgb, var(--ink) 15%, var(--line));
     background: color-mix(in srgb, var(--ink) 3%, transparent);
   }
+  .member-card__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
   .member-card__link {
     display: inline-flex;
+    min-height: 2.75rem;
     align-items: center;
     gap: 0.5rem;
     padding: 0.6rem 1.2rem;

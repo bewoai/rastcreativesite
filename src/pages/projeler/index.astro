@@ -8,12 +8,18 @@ import SectionHeading from "../../components/SectionHeading.astro";
 import { breadcrumb } from "../../lib/schema";
 import { groupByBrand, brandHref } from "../../lib/brands";
 import { PROJECT_CATEGORIES } from "../../consts";
+import InstagramCard from "../../components/evren/InstagramCard.astro";
+import { MANAGED_ACCOUNTS } from "../../data/managed-accounts";
 
 const projects = (await getCollection("projects"))
   .filter((p) => !p.data.draft && !p.data.hidden)
   .sort((a, b) => a.data.order - b.data.order);
 
 const brands = groupByBrand(projects);
+const accounts = MANAGED_ACCOUNTS.map((a) => ({
+  account: a,
+  projects: projects.filter((p) => p.data.client === a.client),
+}));
 
 // Only categories that actually have brands, in canonical order.
 const sections = PROJECT_CATEGORIES.map((c) => ({
@@ -39,6 +45,19 @@ const crumbs = breadcrumb([
         <p>Markalar için ürettiğimiz filmler, reklamlar ve sosyal medya serileri — kategoriye ve markaya göre düzenli.</p>
       </Fragment>
     </SectionHeading>
+  </Section>
+
+  {/* Accounts we run every week: the continuity half of the work. */}
+  <Section space="tight">
+    <SectionHeading eyebrow="Sosyal medya yönetimi">
+      Yönettiğimiz hesaplar
+      <Fragment slot="intro">
+        <p>Tek seferlik video değil, her hafta yayında olan hesaplar: çekim, kurgu, paylaşım ve reklam bizden.</p>
+      </Fragment>
+    </SectionHeading>
+    <div class="accounts">
+      {accounts.map((a) => <InstagramCard account={a.account} projects={a.projects} />)}
+    </div>
   </Section>
 
   <Section space="tight">
@@ -81,6 +100,12 @@ const crumbs = breadcrumb([
   .proj-head :global(.sh__title em) {
     font-weight: 460;
     color: var(--amber-text);
+  }
+  .accounts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 30rem), 1fr));
+    gap: clamp(1rem, 2vw, 1.5rem);
+    margin-top: 1.6rem;
   }
   .catnav {
     display: flex;

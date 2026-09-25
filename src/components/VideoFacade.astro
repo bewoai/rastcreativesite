@@ -2,9 +2,9 @@
 import Icon from "./Icon.astro";
 
 interface Props {
-  /** Which player to load on click. */
-  provider: "vimeo" | "youtube";
-  /** Vimeo numeric ID or YouTube video ID. */
+  /** Which player to load on click ("file" = self-hosted mp4). */
+  provider: "vimeo" | "youtube" | "file";
+  /** Vimeo numeric ID, YouTube video ID, or the mp4 path for "file". */
   videoId: string;
   /** Used for the iframe title + play button label. */
   title: string;
@@ -107,12 +107,17 @@ const { provider, videoId, title, poster, posterAlt, vertical = false, class: cl
   }
 
   /* Once activated, the injected iframe fills the box. */
-  .facade :global(.facade__iframe) {
+  .facade :global(.facade__iframe),
+  .facade :global(.facade__video) {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     border: 0;
+  }
+  .facade :global(.facade__video) {
+    object-fit: contain;
+    background: #000;
   }
 </style>
 
@@ -154,10 +159,23 @@ const { provider, videoId, title, poster, posterAlt, vertical = false, class: cl
         const id = facade.dataset.videoId;
         const provider = facade.dataset.provider ?? "vimeo";
         if (!id) return;
-        const iframe = buildIframe(provider, id, facade.dataset.title ?? "");
-        facade.replaceChildren(iframe);
+        let player: HTMLElement;
+        if (provider === "file") {
+          // Self-hosted film: the browser's own player, sound on.
+          const video = document.createElement("video");
+          video.src = id;
+          video.controls = true;
+          video.autoplay = true;
+          video.playsInline = true;
+          video.className = "facade__video";
+          video.setAttribute("aria-label", facade.dataset.title ?? "Video");
+          player = video;
+        } else {
+          player = buildIframe(provider, id, facade.dataset.title ?? "");
+        }
+        facade.replaceChildren(player);
         facade.classList.add("is-active");
-        iframe.focus();
+        player.focus();
       },
       { once: true },
     );
