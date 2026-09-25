@@ -1,0 +1,227 @@
+---
+/**
+ * A managed Instagram account as a profile-style card: who, what we do there,
+ * a strip of the reels we made for it (playable on their project pages), a
+ * few numbers and the way out to Instagram / the case study.
+ */
+import type { CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
+import type { ManagedAccount } from "../../data/managed-accounts";
+
+interface Props {
+  account: ManagedAccount;
+  /** That client's projects; the vertical ones fill the grid. */
+  projects: CollectionEntry<"projects">[];
+  /** Off on the case study page itself. */
+  showCase?: boolean;
+}
+const { account, projects, showCase = true } = Astro.props;
+const caseHref = showCase ? account.caseHref : undefined;
+// Newest first: the strip should look like the account's latest posts.
+const reels = projects
+  .filter((p) => p.data.vertical && !p.data.externalUrl)
+  .sort((a, b) => b.data.order - a.data.order)
+  .slice(0, 6);
+---
+
+<article class="ig ev-glass" aria-label={`${account.client} Instagram hesabı`}>
+  <header class="ig__head">
+    <span class="ig__avatar">
+      <Image src={account.logo} alt={`${account.client} logosu`} height={56} densities={[1.5, 2]} class="ig__logo" />
+    </span>
+    <div class="ig__who">
+      <p class="ig__handle">@{account.handle}</p>
+      <p class="ig__role">{account.role}{account.since && ` · ${account.since}'dan beri`}</p>
+    </div>
+    <a class="ig__follow" href={account.url} target="_blank" rel="noopener noreferrer">
+      Instagram'da gör <span aria-hidden="true">↗</span>
+    </a>
+  </header>
+
+  {
+    reels.length > 0 && (
+      <ul class="ig__grid">
+        {reels.map((p) => (
+          <li>
+            <a href={`/projeler/${p.id}/`} class="ig__tile" aria-label={p.data.title}>
+              <img src={p.data.poster} alt="" width="240" height="426" loading="lazy" decoding="async" />
+              <span class="ig__play" aria-hidden="true">▶</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  {
+    account.stats && (
+      <dl class="ig__stats">
+        {account.stats.map((s) => (
+          <div>
+            <dt>{s.label}</dt>
+            <dd>{s.value}</dd>
+          </div>
+        ))}
+      </dl>
+    )
+  }
+
+  {
+    (caseHref || account.siteHref) && (
+      <p class="ig__more">
+        {caseHref && (
+          <a class="ev-link" href={caseHref}>
+            4 aylık vaka çalışması <span aria-hidden="true">→</span>
+          </a>
+        )}
+        {account.siteHref && (
+          <a class="ev-link" href={account.siteHref} target="_blank" rel="noopener">
+            Web sitesi de bizden <span aria-hidden="true">↗</span>
+          </a>
+        )}
+      </p>
+    )
+  }
+</article>
+
+<style>
+  .ig {
+    display: grid;
+    gap: 1rem;
+    padding: clamp(1rem, 2.4vw, 1.4rem);
+  }
+  .ig::before {
+    display: none;
+  }
+  .ig__head {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+  .ig__avatar {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 3.6rem;
+    height: 3.6rem;
+    border-radius: 50%;
+    background: #fff;
+    /* Instagram's story ring, in the sun's colours. */
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #e07a2e;
+    overflow: hidden;
+  }
+  .ig__avatar :global(.ig__logo) {
+    width: 78%;
+    height: auto;
+    object-fit: contain;
+  }
+  .ig__who {
+    min-width: 0;
+  }
+  .ig__handle {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--ink);
+  }
+  .ig__role {
+    margin: 0.1rem 0 0;
+    font-size: 0.86rem;
+    color: var(--ink-2, var(--ink-soft));
+  }
+  .ig__follow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex: none;
+    margin-left: auto;
+    min-height: 2.6rem;
+    padding: 0 1rem;
+    border-radius: 999px;
+    background: var(--ink);
+    color: #fff;
+    font-size: 0.88rem;
+    font-weight: 620;
+    text-decoration: none;
+  }
+  .ig__follow:hover {
+    background: #3a322a;
+  }
+  .ig__grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ig__tile {
+    position: relative;
+    display: block;
+    aspect-ratio: 9 / 16;
+    overflow: hidden;
+    border-radius: 0.55rem;
+    background: #1d1915;
+  }
+  .ig__tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 600ms var(--ease-out);
+  }
+  .ig__tile:hover img {
+    transform: scale(1.06);
+  }
+  .ig__play {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.45rem;
+    font-size: 0.7rem;
+    color: #fff;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+  }
+  .ig__stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+    gap: 0.6rem;
+    margin: 0;
+  }
+  /* Values first and top-aligned, whatever their labels wrap to. */
+  .ig__stats div {
+    display: flex;
+    flex-direction: column;
+  }
+  .ig__stats dd {
+    order: -1;
+  }
+  .ig__stats dd {
+    margin: 0;
+    font-family: var(--serif, var(--font-display));
+    font-weight: 600;
+    font-size: 1.5rem;
+    line-height: 1.1;
+    color: var(--sun-text, var(--amber-text));
+  }
+  .ig__stats dt {
+    font-size: 0.8rem;
+    color: var(--ink-2, var(--ink-soft));
+  }
+  .ig__more {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.4rem;
+    margin: 0;
+  }
+  @media (max-width: 560px) {
+    .ig__head {
+      flex-wrap: wrap;
+    }
+    .ig__follow {
+      margin-left: 0;
+    }
+    .ig__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

@@ -7,6 +7,8 @@ import ProjectCard from "../../../components/ProjectCard.astro";
 import ProjectsNote from "../../../components/ProjectsNote.astro";
 import { breadcrumb } from "../../../lib/schema";
 import { groupByBrand } from "../../../lib/brands";
+import InstagramCard from "../../../components/evren/InstagramCard.astro";
+import { MANAGED_ACCOUNTS } from "../../../data/managed-accounts";
 
 export async function getStaticPaths() {
   const projects = (await getCollection("projects")).filter(
@@ -19,6 +21,7 @@ export async function getStaticPaths() {
 }
 
 const { brand } = Astro.props;
+const account = MANAGED_ACCOUNTS.find((a) => a.client === brand.name);
 
 const crumbs = breadcrumb([
   { name: "Ana Sayfa", path: "/" },
@@ -39,6 +42,12 @@ const crumbs = breadcrumb([
     <SectionHeading eyebrow={`${brand.category} · ${brand.count} içerik`} as="h1">
       {brand.name}
     </SectionHeading>
+
+    {account && (
+      <div class="brand-ig">
+        <InstagramCard account={account} projects={brand.projects} />
+      </div>
+    )}
 
     <div class="grid-cards">
       {
@@ -63,6 +72,10 @@ const crumbs = breadcrumb([
 </BaseLayout>
 
 <style>
+  .brand-ig {
+    margin: 1.4rem 0 2rem;
+    max-width: 44rem;
+  }
   .back {
     display: inline-flex;
     align-items: center;

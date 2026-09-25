@@ -23,8 +23,8 @@ import { Image, Picture } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Logo from "../components/Logo.astro";
 import Icon from "../components/Icon.astro";
-import beratPhoto from "../assets/photos/berat-degirmenci-2026.jpg";
-import muhammedPhoto from "../assets/photos/muhammed-al-sheikhly-2026.jpg";
+import beratPhoto from "../assets/photos/berat-degirmenci-renkli.jpg";
+import muhammedPhoto from "../assets/photos/muhammed-ekrem-adnan.jpg";
 import stopPrep from "../assets/photos/bts/ofis-isik-kurulumu.jpg";
 import stopSet from "../assets/photos/bts/sokak-kadraj.jpg";
 import btsMedical from "../assets/photos/bts/medikal-radyoterapi.jpg";
@@ -52,6 +52,7 @@ import lgAltoteks from "../assets/logos/altoteks.png";
 import lgCandles from "../assets/logos/candlesandechoes.png";
 import lgMar from "../assets/logos/marstudyo.png";
 import lgParhad from "../assets/logos/parhad.png";
+import lgErdem from "../assets/logos/erdem-caliskan.png";
 import {
   CONTACT,
   NAV,
@@ -188,11 +189,16 @@ const brands = [
   { src: lgParhad, name: "PARHAD", mode: "ink" },
   { src: lgNewlife, name: "New Life", mode: "ink" },
   { src: lgCandles, name: "Candles and Echoes", mode: "ink" },
-  { src: lgMar, name: "Mar Studyo", mode: "ink" },
+  { src: lgMar, name: "Mars Stüdyo", mode: "ink" },
+  { src: lgErdem, name: "Dr. Erdem Çalışkan", mode: "ink" },
+  // No logo files yet: set as a serif wordmark in the plate's own voice.
+  { src: null, name: "Op. Dr. Duygu Cebecik Özmüş", word: "Dr. Duygu Cebecik", mode: "word" },
+  { src: null, name: "Duru Optik", word: "Duru Optik", mode: "word" },
+  { src: null, name: "Hörnhauss", word: "Hörnhauss", mode: "word" },
 ] as const;
 
 const founders = [
-  { name: "Muhammed Al Sheikhly", role: "Kurucu ortak · Video director", photo: muhammedPhoto },
+  { name: "Muhammed Ekrem Adnan", role: "Kurucu ortak · Video director", photo: muhammedPhoto },
   { name: "Berat Değirmenci", role: "Kurucu ortak · Video director", photo: beratPhoto },
 ];
 
@@ -539,16 +545,20 @@ const year = new Date().getFullYear();
           brands.map((b, i) => (
             <li class:list={["ev-plate__cell", `is-${b.mode}`]} data-rise style={`--d:${i % 6}`}>
               <span class="ev-plate__no" aria-hidden="true">{roman(i + 1)}</span>
-              <Image
-                src={b.src}
-                alt={`${b.name} logosu`}
-                height={56}
-                densities={[1.5, 2]}
-                quality={75}
-                loading="lazy"
-                decoding="async"
-                class="ev-plate__logo"
-              />
+              {b.src ? (
+                <Image
+                  src={b.src}
+                  alt={`${b.name} logosu`}
+                  height={56}
+                  densities={[1.5, 2]}
+                  quality={75}
+                  loading="lazy"
+                  decoding="async"
+                  class="ev-plate__logo"
+                />
+              ) : (
+                <span class="ev-plate__word" aria-hidden="true">{"word" in b ? b.word : b.name}</span>
+              )}
               <span class="ev-plate__name">{b.name}</span>
             </li>
           ))
@@ -2442,6 +2452,26 @@ const year = new Date().getFullYear();
     opacity: 1;
     transform: scale(1.05);
   }
+  /* Clients without a logo file: their name, engraved in the serif. */
+  .ev-plate__word {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 2.6rem;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.2rem;
+    line-height: 1.1;
+    text-align: center;
+    color: var(--ink);
+    opacity: 0.72;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+    transition: opacity var(--dur) var(--ease-out), transform 500ms var(--ease-out);
+  }
+  .ev-plate__cell:hover .ev-plate__word {
+    opacity: 1;
+    transform: scale(1.05);
+  }
   .ev-plate__name {
     font-family: var(--font-body);
     font-weight: 560;
@@ -2450,11 +2480,11 @@ const year = new Date().getFullYear();
     text-align: center;
     line-height: 1.2;
   }
-  /* 16 marks: 8 × 2 on wide screens, 4 × 4 in between, and on phones a
+  /* 20 marks: 5 × 4 on wide screens, 4 × 5 in between, and on phones a
      tight 2-column plate with the marks alone (names stay for readers). */
   @media (min-width: 1100px) {
     .ev-plate {
-      grid-template-columns: repeat(8, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
     }
     .ev-plate__cell {
       min-height: 9rem;

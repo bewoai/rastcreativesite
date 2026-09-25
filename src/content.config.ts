@@ -15,10 +15,16 @@ const projects = defineCollection({
       "Kurumsal",
       "Medikal",
       "Sosyal Medya",
+      "Web",
     ]),
     vimeoId: z.string().optional(),
     youtubeId: z.string().optional(), // YouTube video ID (e.g. "dQw4w9WgXcQ")
     externalUrl: z.string().optional(), // links out instead of playing (e.g. Instagram)
+    // Self-hosted film (root-relative, e.g. "/videos/projeler/x.mp4"). Used
+    // when the piece is not on YouTube/Vimeo; plays in the site's own player.
+    video: z.string().optional(),
+    // Live URL for web projects (shown as "Siteyi ziyaret et").
+    siteUrl: z.string().url().optional(),
     vertical: z.boolean().default(false), // 9:16 reels/shorts (YouTube Shorts)
     poster: z.string(), // root-relative path or full URL (e.g. YouTube thumbnail)
     posterAlt: z.string().optional(),
