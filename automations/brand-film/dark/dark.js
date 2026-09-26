@@ -365,7 +365,7 @@
     const k = t < b(24.6) ? -1 : Math.min(4, Math.floor((t - b(24.6)) / BT + 1e-6));
     el.onodes.forEach((n, i) => {
       const lit = i <= k, hit = lit ? Math.exp(-(t - b(24.6 + i)) * 5) : 0;
-      sa(n.ring, { fill: lit ? "none" : "#0b0908", stroke: lit ? `rgba(255, 150, 80, ${(0.6 + 0.4 * hit).toFixed(3)})` : "rgba(255,255,255,.25)", r: (20 + 8 * hit).toFixed(2) });
+      sa(n.ring, { fill: lit || i === 0 ? "none" : "#0b0908", stroke: lit ? `rgba(255, 150, 80, ${(0.6 + 0.4 * hit).toFixed(3)})` : "rgba(255,255,255,.25)", r: (20 + 8 * hit).toFixed(2) });
       sa(n.dot, { opacity: lit ? "1" : "0" });
       sa(n.num, { fill: lit ? "#ff8a3d" : "rgba(244, 238, 229, .4)" });
     });
