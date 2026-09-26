@@ -4,7 +4,7 @@
  *   ELEVENLABS_API_KEY=… node automations/brand-film/reel/voice.mjs
  *
  * Reads vo.json and writes one mp3 per line to vo/ (committed: the current
- * takes were made with ElevenLabs, voice Onur Büyü, eleven_multilingual_v2).
+ * takes were made with ElevenLabs, voice Aykut Akkaşoğlu, eleven_multilingual_v2).
  * Re-run only to change the script. With ELEVENLABS_API_KEY it calls the API; Without a key it
  * falls back to a placeholder neural voice via voice_edge.py so the edit can
  * be built and timed anyway. reel-audio.js trims leading silence and places
@@ -20,7 +20,7 @@ const out = path.join(here, "vo");
 fs.mkdirSync(out, { recursive: true });
 const { lines } = JSON.parse(fs.readFileSync(path.join(here, "vo.json"), "utf8"));
 const key = process.env.ELEVENLABS_API_KEY;
-const voice = process.env.ELEVENLABS_VOICE_ID || "L7EcC4y7BGM74ObLiXoF"; // Onur Büyü
+const voice = process.env.ELEVENLABS_VOICE_ID || "VtLFdkOJSt8TuXqwEzD8"; // Aykut Akkaşoğlu
 
 for (const [i, l] of lines.entries()) {
   const file = path.join(out, `${l.id}.mp3`);

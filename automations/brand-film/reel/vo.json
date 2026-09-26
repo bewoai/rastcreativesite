@@ -1,8 +1,8 @@
 {
-  "note": "Seslendirme metni. start = saniye cinsinden yerleşim; max = satırın sığması gereken süre. Ses: ElevenLabs · Onur Büyü (L7EcC4y7BGM74ObLiXoF) · eleven_multilingual_v2.",
+  "note": "Seslendirme metni. start = saniye cinsinden yerleşim; max = satırın sığması gereken süre. Ses: ElevenLabs · Aykut Akkaşoğlu (VtLFdkOJSt8TuXqwEzD8) · eleven_multilingual_v2.",
   "voice": {
-    "id": "L7EcC4y7BGM74ObLiXoF",
-    "name": "Onur Büyü",
+    "id": "VtLFdkOJSt8TuXqwEzD8",
+    "name": "Aykut Akkaşoğlu",
     "model": "eleven_multilingual_v2"
   },
   "lines": [
