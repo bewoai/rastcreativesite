@@ -54,7 +54,8 @@ await new Promise((r) => server.listen(0, "127.0.0.1", r));
 const PAGE = args.page || "composition.html";
 const NAME = args.name ? String(args.name) : "";
 const URL0 = `http://127.0.0.1:${server.address().port}/automations/brand-film/${PAGE}`;
-const OUTNAME = NAME ? "rast-creative-reels" : "rast-creative-tanitim-dikey";
+// --out <file stem> names the mp4 (default: the Reel / the brand film).
+const OUTNAME = args.out ? String(args.out) : NAME ? "rast-creative-reels" : "rast-creative-tanitim-dikey";
 
 const browser = await chromium.launch({
   executablePath: process.env.CHROMIUM || undefined,

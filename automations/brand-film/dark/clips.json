@@ -1,0 +1,16 @@
+{
+  "clips": [
+    { "id": "g1", "src": "ballet", "in": 12.6, "d": 3.2, "size": [400, 712], "name": "CANDLELIT BALLET" },
+    { "id": "g2", "src": "canex", "in": 110, "d": 3.2, "size": [400, 712], "name": "CANEX" },
+    { "id": "g3", "src": "hornhauss-tanitim", "in": 16, "d": 3.2, "size": [400, 712], "name": "HORNHAUSS" },
+    { "id": "g4", "src": "altoteks", "in": 4.5, "d": 3.2, "size": [400, 712], "name": "ALTOTEKS" },
+    { "id": "g5", "src": "duru-optik-tanitim", "in": 15, "d": 3.2, "size": [400, 712], "name": "DURU OPTİK" },
+    { "id": "g6", "src": "sakaryaspor", "in": 6.4, "d": 3.2, "size": [400, 712], "name": "ADATIP × SAKARYASPOR" },
+    { "id": "g7", "src": "aytas-home-sinematik-magaza", "in": 16.6, "d": 3.2, "size": [400, 712], "name": "AYTAŞ HOME" },
+    { "id": "g8", "src": "newlife-davet-salonu", "in": 1.7, "d": 3.2, "size": [400, 712], "name": "NEWLIFE DAVET SALONU" },
+    { "id": "f1", "src": "altoteks", "in": 180, "d": 0.8, "size": [1080, 1920], "cx": 0.5 },
+    { "id": "f2", "src": "ballet", "in": 16.8, "d": 0.8, "size": [1080, 1920] },
+    { "id": "f3", "src": "canex", "in": 140, "d": 0.8, "size": [1080, 1920], "cx": 0.5 },
+    { "id": "f4", "src": "sakaryaspor", "in": 5.4, "d": 0.8, "size": [1080, 1920] }
+  ]
+}
