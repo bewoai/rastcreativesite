@@ -1,0 +1,15 @@
+{
+  "studio": { "name": "RAST CREATIVE", "place": "SERDİVAN", "district": "Serdivan", "off": [-26, 14] },
+  "sakarya": [
+    { "id": "s1", "name": "DR. ERDEM ÇALIŞKAN", "place": "SERDİVAN", "district": "Serdivan", "off": [22, -26], "src": "dr-erdem-caliskan-kimdir", "in": 12, "cy": 0.32 },
+    { "id": "s2", "name": "DURU OPTİK", "place": "SAKARYA", "district": "Adapazarı", "off": [-20, -30], "src": "duru-optik-tanitim", "in": 15 },
+    { "id": "s3", "name": "NEWLIFE DAVET SALONU", "place": "SAKARYA", "district": "Erenler", "off": [16, 18], "src": "newlife-davet-salonu", "in": 1.7 },
+    { "id": "s4", "name": "AYTAŞ HOME", "place": "SAKARYA", "district": "Adapazarı", "off": [40, 30], "src": "aytas-home-sinematik-magaza", "in": 16.6 },
+    { "id": "s5", "name": "ADATIP × SAKARYASPOR", "place": "SAKARYA", "district": "Adapazarı", "off": [-6, 58], "src": "sakaryaspor", "in": 6.4 },
+    { "id": "s6", "name": "CANDLES AND ECHOES", "place": "SAPANCA", "district": "Sapanca", "off": [0, 0], "src": "ballet", "in": 12.6 }
+  ],
+  "turkey": [
+    { "id": "t1", "name": "ALTOTEKS", "place": "TEKİRDAĞ", "province": "Tekirdağ", "src": "altoteks", "in": 4.5 },
+    { "id": "t2", "name": "CANEX", "place": "ADIYAMAN", "province": "Adıyaman", "src": "canex", "in": 110 }
+  ]
+}
