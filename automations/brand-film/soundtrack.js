@@ -9,16 +9,18 @@
  *   window.Soundtrack.render()  → Promise<AudioBuffer>
  *   window.__audio()            → Promise<string>  (base64 16-bit WAV)
  *
- * Harmony: B minor / D major colour; groove loop Bm · G · D · A.
- * Music: 144 BPM melodic techno — four-on-the-floor, sidechain pump,
- * rolling 16th bass, acid line in the dark section, drops on the cuts.
+ * Harmony: D major; pop loop D · A · Bm · G (two bars each).
+ * Music: energetic future-bass pop on the 144 BPM grid, played half-time —
+ * punchy kick/clap backbeat, driving hats, a sung-like lead hook, gated
+ * supersaw chords and a big chord drop in the work section. Every cut in
+ * timeline.js still lands on a beat.
  */
 (() => {
   "use strict";
 
   const SR = 48000;
   const DUR = 65;
-  const BEAT = 60 / 144; // techno tempo: every 2.5 s cut lands on a beat, every 5 s on a bar
+  const BEAT = 60 / 144; // 144 grid, half-time feel: every 2.5 s cut lands on a beat, every 5 s on a bar
   const BAR = BEAT * 4;
 
   const hz = (m) => 440 * 2 ** ((m - 69) / 12);
@@ -485,18 +487,74 @@
       n.connect(f).connect(g); out(g, { send: 0.3 });
     }
 
+    /* ═════════════ POP KIT ═════════════ */
+    function supersaw(t, chord, dur, vol = 1, cut = 3200, dive = 0) {
+      // Gated future-bass chord: 5 detuned saws per note; optional pitch dive-in.
+      const f = ctx.createBiquadFilter(); f.type = "lowpass"; f.Q.value = 0.8;
+      f.frequency.setValueAtTime(cut * 1.4, t); f.frequency.exponentialRampToValueAtTime(cut, t + 0.08);
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.035 * vol, t + 0.006);
+      g.gain.setTargetAtTime(0.026 * vol, t + 0.02, 0.06);
+      g.gain.setTargetAtTime(0, t + dur, 0.025);
+      CH[chord].pad.slice(1).forEach((m, i) => {
+        for (const d of [-19, -8, 0, 8, 19]) {
+          const o = osc("sawtooth", hz(m + (m < 57 ? 12 : 0)), t, dur + 0.2, d + (R() - 0.5) * 4);
+          if (dive) { o.detune.setValueAtTime(d - dive, t); o.detune.linearRampToValueAtTime(d, t + 0.07); }
+          const p = ctx.createStereoPanner(); p.pan.value = (d / 19) * 0.6;
+          o.connect(p).connect(f);
+        }
+      });
+      f.connect(g);
+      toDuck(g, { send: 0.25, delay: 0.12 });
+    }
+    function lead(t, m, dur, vol = 1, bright = 1) {
+      // The hook: square + saw, soft attack, a touch of vibrato, dotted-8th delay.
+      const f = ctx.createBiquadFilter(); f.type = "lowpass"; f.Q.value = 1.5;
+      f.frequency.setValueAtTime(1800 * bright, t); f.frequency.linearRampToValueAtTime(3600 * bright, t + 0.05);
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.075 * vol, t + 0.012);
+      g.gain.setTargetAtTime(0.055 * vol, t + 0.03, 0.08);
+      g.gain.setTargetAtTime(0, t + dur, 0.03);
+      const lfo = osc("sine", 5.5, t, dur + 0.2); const lg = ctx.createGain(); lg.gain.value = dur > 0.4 ? 9 : 0;
+      for (const [type, d, a] of [["square", -6, 0.6], ["sawtooth", 7, 0.5], ["sine", 0, 0.5]]) {
+        const o = osc(type, hz(m), t, dur + 0.2, d); lfo.connect(lg).connect(o.detune);
+        const og = ctx.createGain(); og.gain.value = a; o.connect(og).connect(f);
+      }
+      f.connect(g);
+      toDuck(g, { send: 0.2, delay: 0.3 });
+    }
+    function sub(t, m, dur, vol = 1) {
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.32 * vol, t + 0.008);
+      g.gain.setTargetAtTime(0.26 * vol, t + 0.03, 0.12); g.gain.setTargetAtTime(0, t + dur, 0.02);
+      osc("sine", hz(m), t, dur + 0.2).connect(g);
+      const f = ctx.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 700;
+      const s2 = osc("sawtooth", hz(m + 12), t, dur + 0.2); const sg = ctx.createGain(); sg.gain.value = 0.12; s2.connect(sg).connect(f).connect(g);
+      toDuck(g, { gain: 1 });
+    }
+    function shaker(t, vol = 1) {
+      const n = noiseSrc(t, 0.05); const hp = ctx.createBiquadFilter(); hp.type = "bandpass"; hp.frequency.value = 7000; hp.Q.value = 0.7;
+      const g = ctx.createGain(); env(g, t, 0.004, 0.035 * vol, 0.03); n.connect(hp).connect(g); out(g, { pan: -0.35 });
+    }
+
     /* ═════════════ SCORE ═════════════ */
-    // One-bar chord cycle for the groove (Bm · G · D · A, two bars each).
-    const LOOP = ["Bm", "G", "D", "A"];
-    const loopChord = (t) => LOOP[Math.floor(t / (BAR * 2)) % 4];
-    const ARP = [0, 12, 7, 12, 3, 12, 7, 15]; // offsets from the chord's bass note, two octaves up
-    // Groove zones: [from, to, level] — level shapes which layers play.
-    //  0 hook (muffled) · 1 build · 2 main · 3 peak (dark wall) · 4 light (map) · 5 CTA
+    const LOOP = ["D", "A", "Bm", "G"];
+    const loopChord = (t) => LOOP[Math.floor((t + 1e-6) / (BAR * 2)) % 4];
+    // The hook: two bars per chord, [16th, midi, length in 16ths].
+    const MEL = {
+      D: [[0, 69, 2], [3, 66, 2], [6, 69, 2], [8, 71, 2], [10, 69, 2], [12, 66, 2], [14, 64, 2], [16, 62, 5], [22, 64, 2], [24, 66, 6]],
+      A: [[0, 76, 2], [3, 73, 2], [6, 69, 2], [8, 71, 2], [10, 73, 2], [12, 76, 2], [14, 74, 2], [16, 73, 5], [22, 71, 2], [24, 69, 6]],
+      Bm: [[0, 78, 2], [3, 74, 2], [6, 71, 2], [8, 73, 2], [10, 74, 2], [12, 78, 2], [14, 76, 2], [16, 74, 5], [22, 73, 2], [24, 71, 6]],
+      G: [[0, 74, 2], [3, 71, 2], [6, 67, 2], [8, 69, 2], [10, 71, 2], [12, 74, 2], [14, 76, 2], [16, 78, 5], [22, 76, 2], [24, 73, 6]],
+    };
+    // Energy zones: [from, to, level]
+    //  0 hook tease · 1 build · 2 groove + hook · 3 DROP (work) · 4 dawn breakdown · 5 final chorus
     const ZONES = [
-      [0, 3.33, 0], [6.67, 10.0, 1], [10.0, 34.17, 2], [35.0, 41.67, 2],
+      [0, 3.33, 0], [3.33, 5.0, 1], [5.0, 10.0, 2], [10.0, 34.17, 2], [35.0, 41.67, 2],
       [42.5, 49.17, 3], [50.0, 54.58, 4], [58.33, 62.08, 5],
     ];
     const zoneAt = (t) => ZONES.find(([a, b]) => t >= a - 1e-6 && t < b - 1e-6);
+    function mix01(t, a, b, v0, v1) { const p = Math.max(0, Math.min(1, (t - a) / (b - a))); return v0 + (v1 - v0) * p; }
 
     const S16 = BEAT / 4;
     for (let n = 0; n * S16 < 62.1; n++) {
@@ -504,51 +562,61 @@
       const z = zoneAt(t);
       if (!z) continue;
       const lvl = z[2];
-      const q = n % 4;            // 16th within the beat
-      const beat = Math.floor(n / 4) % 4;
-      const bar = Math.floor(n / 16);
-      const c = loopChord(t);
-      const root = CH[c].bass;
+      const s = n % 16, bar = Math.floor(n / 16), s32 = n % 32;
+      const c = loopChord(t), root = CH[c].bass;
+      const big = lvl === 3 || lvl === 5;
 
-      // Kick: four on the floor (muffled in the hook, sparse in the build).
-      if (q === 0) {
-        if (lvl === 0) { kickLp.frequency.setValueAtTime(420, t); tkick(t, 0.8); }
-        else if (lvl === 1) { kickLp.frequency.setValueAtTime(mix01(t, 6.67, 10, 500, 20000), t); tkick(t, 0.85); }
-        else { kickLp.frequency.setValueAtTime(20000, t); tkick(t, lvl === 4 ? 0.85 : 1); }
+      if (lvl === 0) {
+        // Tease: filtered chord pulses on 8ths and a ticking hat — the film opens on the groove's promise.
+        if (s % 2 === 0) supersaw(t, c, S16 * 1.2, 0.55, mix01(t, 0, 3.3, 500, 1600));
+        if (s % 2 === 0) hat(t, 0.3, false, 0.25);
+        continue;
       }
-      // Claps on 2 and 4.
-      if (q === 0 && (beat === 1 || beat === 3) && lvl >= 2 && lvl !== 4) clap(t, lvl === 3 ? 1 : 0.8);
-      // Hats: 16th ticks, off-beat open hat.
-      if (lvl >= 1 || q % 2 === 0) hat(t, (q === 2 ? 0.55 : 0.28) * (lvl === 0 ? 0.8 : 1), false, 0.25);
-      if (q === 2 && lvl >= 2) hat(t, 0.75, true, -0.1);
-      if (q === 0 && (lvl === 3 || lvl === 5)) ride(t, 0.9);
-      // Rolling bass on the three 16ths after each kick.
-      if (lvl >= 1 && q !== 0) rbass(t, root + (q === 3 && beat === 3 ? 12 : 0), lvl === 1 ? 0.6 : lvl === 3 ? 1.15 : 0.95);
-      if (lvl === 0 && q === 2) rbass(t, 35, 0.5);
-      // Sequence / arp (16ths), brighter as the film opens up.
-      if (lvl >= 1 && lvl !== 3) {
-        const m = root + 24 + ARP[n % 8] - (ARP[n % 8] === 3 && c !== "Bm" ? 0 : 0);
-        const cut = lvl === 1 ? mix01(t, 6.67, 10, 600, 2600) : lvl === 4 ? 1800 : 3200 + 800 * Math.sin(t * 0.7);
-        seq(t, m, q === 0 ? 0.9 : 0.6, cut, n % 2 ? 0.35 : -0.35);
+      if (lvl === 1) {
+        // Build: kick on every beat, filter opening, 16th hats.
+        if (s % 4 === 0) { kickLp.frequency.setValueAtTime(mix01(t, 3.33, 5, 600, 20000), t); tkick(t, 0.8); }
+        hat(t, 0.25 + 0.3 * (s % 2 === 0), false, 0.25);
+        if (s % 2 === 0) supersaw(t, c, S16 * 1.2, 0.6, mix01(t, 3.33, 5, 1400, 4000));
+        continue;
       }
-      // Acid line in the dark section.
-      if (lvl === 3) {
-        const pat = [0, 12, 0, 7, 0, 12, 15, 12, 0, 12, 0, 10, 0, 7, 12, 19];
-        acid(t, root + 12 + pat[n % 16], mix01(t, 42.5, 49.1, 380, 1500), 1, n % 16 === 0 || n % 16 === 6 || n % 16 === 14);
+      kickLp.frequency.setValueAtTime(20000, t);
+      // Drums — half-time backbeat with a pushed kick.
+      const kicks = lvl === 4 ? [0] : big ? [0, 3, 7, 10] : [0, 7, 10];
+      if (kicks.includes(s)) tkick(t, lvl === 4 ? 0.7 : 1);
+      if (s === 8 && lvl !== 4) { clap(t, big ? 1.1 : 0.9); snare(t, big ? 0.9 : 0.7); }
+      if (lvl !== 4 && s === 15 && bar % 2 === 1) snare(t, 0.35);
+      // Hats: 8ths, 16th runs at bar ends, open hat on the off-beat.
+      if (s % 2 === 0 || (lvl >= 2 && lvl !== 4 && s >= 12 && bar % 2 === 1)) hat(t, (s % 4 === 2 ? 0.55 : 0.32) * (lvl === 4 ? 0.6 : 1), false, 0.25);
+      if (s === 6 || s === 14) hat(t, lvl === 4 ? 0.3 : 0.6, true, -0.1);
+      if (lvl !== 4) shaker(t, s % 4 === 2 ? 1 : 0.6);
+      if (big && s === 0) ride(t, 0.8);
+      // Bass: sub on the kicks, octave pop before the snare.
+      if (lvl !== 4) {
+        if (s === 0) sub(t, root, S16 * 6, 1);
+        if (s === 7) sub(t, root + 12, S16 * 2, 0.7);
+        if (s === 10) sub(t, root, S16 * 5, 0.9);
+      } else if (s === 0) sub(t, root, S16 * 14, 0.6);
+      // Chords.
+      if (big) {
+        // The drop: future-bass chord rhythm with pitch dive-in.
+        if ([0, 3, 6, 10, 12].includes(s)) supersaw(t, c, S16 * (s === 12 ? 3.5 : 2.4), 1.25, 5200, s === 0 ? 260 : 0);
+      } else if (lvl === 4) {
+        if (s === 0) pad(t, BAR * 0.98, c, { vol: 0.8, cut: 1400, cutEnd: 2400, att: 0.3 });
+      } else if ([0, 3, 6, 10, 12].includes(s)) supersaw(t, c, S16 * 1.3, 0.7, 2600);
+      // The hook (from the second phrase of the groove; octave up in the drops).
+      const phraseOn = lvl === 2 ? t >= 10 : true;
+      if (phraseOn) for (const [pos, m, len] of MEL[c]) if (pos === s32) {
+        if (lvl === 4) pluck(t, m + 12, 0.8, 0);
+        else lead(t, m + (big ? 12 : 0), S16 * len * 0.92, big ? 1 : 0.85, big ? 1.3 : 1);
+        if (big) pluck(t, m + 24, 0.5, 0.3);
       }
-      // Chord stabs on the off-beat "and" of 2 and 4, plus a push at the bar end.
-      if (lvl >= 2 && lvl !== 4 && ((q === 2 && (beat === 1 || beat === 3)) || (q === 3 && beat === 3 && bar % 2 === 1))) stab(t, c, lvl === 3 ? 1.1 : 0.85, lvl === 3 ? 1800 : 2600);
     }
-    function mix01(t, a, b, v0, v1) { const p = Math.max(0, Math.min(1, (t - a) / (b - a))); return v0 + (v1 - v0) * p; }
 
-    // Pads underneath, quieter and filtered — the groove carries the film now.
-    pad(3.3, 1.7, "D", { vol: 0.45, cut: 500, cutEnd: 2600, att: 1.4 });
-    pad(5.0, 2.5, "D", { vol: 0.9, cut: 3200, cutEnd: 1500, att: 0.05 });
-    pad(7.5, 2.5, "A", { vol: 0.6, cut: 1100, cutEnd: 1700 });
-    for (let t = 10; t < 54.5; t += BAR * 2) {
+    // Soft bed under the groove so the chord changes read even between hits.
+    for (let t = 5.0; t < 49.2; t += BAR * 2) {
       const c = loopChord(t + 0.01);
-      const dark = t >= 42 && t < 49.2;
-      pad(t, BAR * 2, c, { vol: dark ? 0.35 : 0.42, cut: dark ? 800 : 1300, cutEnd: dark ? 1100 : 1600, att: 0.2 });
+      if (t > 41.6 && t < 42.5) continue;
+      pad(t, BAR * 2, c, { vol: 0.28, cut: 1100, cutEnd: 1500, att: 0.2 });
     }
 
     // Builds and drops, locked to the cuts.
@@ -560,7 +628,7 @@
     roll(40.83, 42.5, 1); sweep(40.5, 42.5, true, 1);
     roll(48.33, 49.17, 0.8);
     roll(57.5, 58.33, 1); sweep(56.9, 58.33, true, 1);
-    tkick(62.08, 1); stab(62.08, "D", 1.2, 3000);
+    tkick(62.08, 1); supersaw(62.08, "D", 1.2, 1.4, 5200, 260);
 
     /* ═════════════ SFX (unchanged cues) ═════════════ */
 
