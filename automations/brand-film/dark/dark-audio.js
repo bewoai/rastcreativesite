@@ -6,7 +6,7 @@
  *   b0–8   heartbeat in the dark        b8–16  the set boots, filter opens
  *   b16    drop (light burst)           b16–48 groove + acid, build into
  *   b48–52 four slams                   b52–   end card, tail
- * SFX (typing, blips, swishes) sit on their own bus well under the music.
+ * SFX (aperture clicks, blips, swishes) sit on their own bus well under the music.
  *
  *   window.DarkAudio.render() → AudioBuffer
  *   window.__audio()          → base64 WAV
@@ -164,7 +164,6 @@
     function heart(t, vol = 1) { [0, 0.19].forEach((o, i) => { const s = ctx.createOscillator(); s.type = "sine"; s.frequency.setValueAtTime(72, t + o); s.frequency.exponentialRampToValueAtTime(38, t + o + 0.15); s.start(t + o); s.stop(t + o + 0.35); const g = ctx.createGain(); env(g, t + o, 0.004, (i ? 0.32 : 0.55) * vol, 0.22); s.connect(g); out(g); }); }
     function bell(t, m, vol = 1, dec = 2.4, pan = 0) { [[1, 1], [2, 0.4], [3.01, 0.2], [4.2, 0.1]].forEach(([r, a], i) => { const g = ctx.createGain(); env(g, t, 0.003, 0.07 * vol * a, dec / (1 + i * 0.6)); osc("sine", hz(m) * r, t, dec + 0.5).connect(g); out(g, { pan, send: 0.6, delay: 0.3 }); }); }
     // SFX
-    function key(t, vol = 1) { const n = nsrc(t, 0.03); const bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 3200 + R() * 1800; bp.Q.value = 2; const g = ctx.createGain(); env(g, t, 0.0005, 0.25 * vol, 0.012); n.connect(bp).connect(g); out(g, { to: sfx, pan: (R() - 0.5) * 0.4 }); }
     function blip(t, f = 1800, vol = 1, pan = 0) { const g = ctx.createGain(); env(g, t, 0.002, 0.1 * vol, 0.08); osc("sine", f, t, 0.15).connect(g); out(g, { to: sfx, pan, send: 0.2 }); }
     function swish(t, vol = 1, dir = 1) {
       const dur = 0.3, a = t - dur * 0.55, n = nsrc(a, dur + 0.1);
@@ -172,6 +171,11 @@
       const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, a); g.gain.exponentialRampToValueAtTime(0.35 * vol, t); g.gain.exponentialRampToValueAtTime(0.0001, a + dur);
       const p = ctx.createStereoPanner(); p.pan.setValueAtTime(-0.7 * dir, a); p.pan.linearRampToValueAtTime(0.7 * dir, a + dur);
       n.connect(bp).connect(g).connect(p).connect(sfx);
+    }
+    function click(t, vol = 1) {
+      const n = nsrc(t, 0.03); const bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 2400; bp.Q.value = 3;
+      const g = ctx.createGain(); env(g, t, 0.0005, 0.4 * vol, 0.014); n.connect(bp).connect(g); out(g, { to: sfx, send: 0.15 });
+      const o = ctx.createGain(); env(o, t, 0.001, 0.12 * vol, 0.03); osc("triangle", 180, t, 0.06).connect(o); out(o, { to: sfx });
     }
     function zap(t, vol = 1) { const o = ctx.createOscillator(); o.type = "square"; o.frequency.setValueAtTime(2400, t); o.frequency.exponentialRampToValueAtTime(120, t + 0.12); o.start(t); o.stop(t + 0.14); const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 3000; const g = ctx.createGain(); env(g, t, 0.001, 0.06 * vol, 0.08); o.connect(lp).connect(g); out(g, { to: sfx }); }
 
@@ -194,12 +198,10 @@
       else rumble(b(n + 0.5), CH.Fm.bass, 0.8);
     }
     for (let n = 8; n < 15; n += 0.25) hat(b(n), 0.12, false, -0.25);
-    // typing (SFX) under the terminal lines
-    for (let k = 0; k < 34; k++) key(b(8.3) + (b(1.3) * k) / 34 + (R() - 0.5) * 0.01, 0.7);
-    [9.75, 10.25, 10.75, 11.25, 12.25].forEach((n, i) => blip(b(n), 1400 + i * 120, 0.55, 0.2));
-    blip(b(11.75), 660, 0.7, -0.2);
+    // the aperture: one mechanical click per f-stop, then the shutter closes
+    for (let n = 9; n < 16; n++) click(b(n), 0.6 + (n - 9) * 0.06);
+    click(b(15.5), 1.3); click(b(15.5) + 0.035, 0.9);
     riser(b(12), b(16), 1); roll(b(14), b(15.5), 0.9); reverse(b(15), b(16), 1.1);
-    blip(b(15), 2093, 0.8); blip(b(15) + 0.09, 2637, 0.8);
 
     // C–F · drop + groove (b16–48)
     boom(b(16), 1.1); braam(b(16), 0.75, 2.2); crash(b(16), 1);

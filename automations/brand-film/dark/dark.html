@@ -40,52 +40,12 @@
   #halo { position: absolute; left: 0; top: 0; width: 700px; height: 700px; margin: -350px 0 0 -350px; border-radius: 50%; pointer-events: none; z-index: 5; mix-blend-mode: screen;
     background: radial-gradient(circle, rgba(255, 170, 100, .55) 0, rgba(255, 120, 50, .22) 18%, rgba(255, 90, 30, .07) 42%, transparent 70%); }
 
-  /* ── HUD ── */
-  #hud { position: absolute; inset: 0; z-index: 8; pointer-events: none; font: 500 22px/1 var(--mono); letter-spacing: .08em; color: var(--dim); }
-  #hud .br { position: absolute; width: 44px; height: 44px; border-color: rgba(244, 238, 229, .5); border-style: solid; border-width: 0; }
-  #hud .tl { left: 44px; top: 96px; border-left-width: 2px; border-top-width: 2px; }
-  #hud .tr { right: 44px; top: 96px; border-right-width: 2px; border-top-width: 2px; }
-  #hud .bl { left: 44px; top: 1476px; border-left-width: 2px; border-bottom-width: 2px; }
-  #hud .bR { right: 44px; top: 1476px; border-right-width: 2px; border-bottom-width: 2px; }
-  #hud .t1 { position: absolute; left: 70px; top: 122px; color: var(--ink); }
-  #hud .t1 b { color: var(--ember); font-weight: 700; }
-  #hud .t2 { position: absolute; right: 70px; top: 122px; text-align: right; }
-  #hud .t2 i { display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: #ff3b2f; margin-right: 12px; vertical-align: -1px; box-shadow: 0 0 10px #ff3b2f; }
-  #hud .t3 { position: absolute; left: 70px; top: 1452px; }
-  #hud .t4 { position: absolute; left: 70px; top: 1422px; color: var(--ink); }
-  #hud .t4 b { color: var(--ember); }
-  #hud .ruler { position: absolute; left: 70px; right: 70px; top: 162px; height: 10px; opacity: .5;
-    background: repeating-linear-gradient(90deg, rgba(244, 238, 229, .6) 0 2px, transparent 2px 24px); -webkit-mask-image: linear-gradient(90deg, transparent, #000 20%, #000 80%, transparent); }
-
   /* ── A · intro ── */
-  .line { position: absolute; left: 0; right: 0; overflow: hidden; text-align: center; font: 900 124px/1.08 "Inter"; letter-spacing: -.035em; padding: 0 20px; }
+  .line { position: absolute; left: 0; right: 0; overflow: hidden; text-align: center; font: 900 100px/1.08 "Inter"; letter-spacing: -.035em; padding: 0 20px; }
   .line span { display: inline-block; }
   .line em { font-style: normal; color: var(--ember); text-shadow: 0 0 30px rgba(255, 138, 61, .8); }
   .line.out span { color: transparent; -webkit-text-stroke: 2.5px rgba(244, 238, 229, .85); }
   .kicker { position: absolute; left: 0; right: 0; text-align: center; font: 500 26px/1 var(--mono); letter-spacing: .22em; color: var(--dim); }
-
-  /* ── B · terminal ── */
-  #term { position: absolute; left: 80px; width: 920px; top: 560px; height: 760px; border-radius: 26px; overflow: hidden;
-    background: linear-gradient(180deg, rgba(34, 26, 22, .82), rgba(14, 11, 10, .9)); border: 1.5px solid rgba(255, 190, 140, .18);
-    box-shadow: 0 40px 120px rgba(0, 0, 0, .8), inset 0 1px 0 rgba(255, 255, 255, .06); }
-  #term .bar { height: 76px; display: flex; align-items: center; gap: 14px; padding: 0 30px; border-bottom: 1px solid rgba(255, 255, 255, .07); font: 500 24px/1 var(--mono); color: var(--dim); }
-  #term .bar i { width: 16px; height: 16px; border-radius: 50%; background: rgba(255, 255, 255, .16); }
-  #term .bar i:first-child { background: var(--ember); box-shadow: 0 0 10px var(--ember); }
-  #term .bar span { margin-left: 18px; }
-  #term .body { padding: 34px 40px; font: 500 29px/1.75 var(--mono); color: var(--ink); white-space: pre; }
-  #term .body .l { height: 1.75em; }
-  #term .body .p { color: var(--ember); }
-  #term .body .ok { color: #9fe0a8; }
-  #term .body .d { color: var(--dim); }
-  #term .body .rec { color: #ff5a4a; }
-  #term .cur { display: inline-block; width: .6em; height: 1.05em; background: var(--ember); vertical-align: -.18em; margin-left: 2px; }
-  #prog { position: absolute; left: 40px; right: 40px; bottom: 70px; }
-  #prog .track { height: 12px; border-radius: 6px; background: rgba(255, 255, 255, .08); overflow: hidden; }
-  #prog .fill { height: 100%; width: 0; border-radius: 6px; background: linear-gradient(90deg, #7a3510, var(--ember2) 60%, #ffc27d); box-shadow: 0 0 20px rgba(255, 138, 61, .8); }
-  #prog .row { display: flex; justify-content: space-between; margin-bottom: 18px; font: 600 26px/1 var(--mono); color: var(--dim); }
-  #prog .row b { color: var(--ink); font-weight: 700; }
-  #ready { position: absolute; left: 0; right: 0; top: 1390px; text-align: center; font: 900 64px/1 "Inter"; letter-spacing: .02em; }
-  #ready em { font-style: normal; color: var(--ember); }
 
   /* ── C · reveal ── */
   #logoC { position: absolute; left: 110px; top: 700px; width: 860px; height: 521.2px; }
@@ -94,45 +54,53 @@
   #tagC { position: absolute; left: 0; right: 0; top: 1290px; text-align: center; font: 600 28px/1 "Inter"; letter-spacing: .5em; padding-left: .5em; color: var(--ink); }
   #subC { position: absolute; left: 0; right: 0; top: 1346px; text-align: center; font: 500 22px/1 var(--mono); letter-spacing: .2em; color: var(--dim); }
 
-  /* ── D · pipeline ── */
-  #pipeH { position: absolute; left: 90px; top: 300px; font: 900 112px/1.02 "Inter"; letter-spacing: -.035em; }
-  #pipeH .line2 em { font-style: normal; color: var(--ember); }
-  #pipeH div { overflow: hidden; }
-  #pipeH span { display: inline-block; }
-  #pipeT { position: absolute; right: 90px; top: 318px; text-align: right; font: 500 22px/1.6 var(--mono); color: var(--dim); }
-  #pipeT b { display: block; font: 700 40px/1.2 var(--mono); color: var(--ink); letter-spacing: .02em; }
-  #rail { position: absolute; left: 148px; top: 620px; width: 4px; height: 680px; border-radius: 2px; background: rgba(255, 255, 255, .1); }
-  #railF { position: absolute; left: 0; top: 0; width: 100%; height: 0; border-radius: 2px; background: linear-gradient(180deg, #7a3510, var(--ember)); box-shadow: 0 0 16px var(--ember); }
-  .node { position: absolute; left: 150px; height: 0; }
-  .node .ring { position: absolute; left: -34px; top: -34px; width: 68px; height: 68px; border-radius: 50%; border: 3px solid rgba(255, 255, 255, .2); background: #0b0908; }
-  .node .ring::after { content: ""; position: absolute; inset: 14px; border-radius: 50%; background: var(--ember); opacity: var(--on, 0); box-shadow: 0 0 20px var(--ember); }
-  .node .num { position: absolute; left: 70px; top: -48px; font: 600 22px/1 var(--mono); color: var(--dim); letter-spacing: .1em; }
-  .node .nm { position: absolute; left: 68px; top: -24px; font: 900 70px/1 "Inter"; letter-spacing: -.03em; white-space: nowrap; }
-  .node .sb { position: absolute; left: 72px; top: 56px; font: 500 24px/1 var(--mono); color: var(--dim); white-space: nowrap; }
-  .node .ck { position: absolute; left: 700px; top: -22px; height: 44px; padding: 0 20px; border-radius: 22px; display: flex; align-items: center; gap: 10px;
-    font: 700 22px/1 var(--mono); letter-spacing: .08em; color: #0b0908; background: var(--ember); box-shadow: 0 0 24px rgba(255, 138, 61, .55); white-space: nowrap; }
+  /* ── vector layer (rings, iris, orbit, shockwaves) — all on the centre axis ── */
+  #fx { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; z-index: 7; pointer-events: none; overflow: visible; }
+  #fx .thin { fill: none; stroke: rgba(244, 238, 229, .22); stroke-width: 1.5; }
+  #fx .amb { fill: none; stroke: #ff8a3d; stroke-width: 3; stroke-linecap: round; filter: drop-shadow(0 0 8px rgba(255, 138, 61, .9)); }
+  #fx .tick { stroke: rgba(244, 238, 229, .35); stroke-width: 2; }
+  #fx .sat { fill: #ffc793; filter: drop-shadow(0 0 6px #ff9a4d); }
+  #fx .ctext { font: 700 30px "Inter"; letter-spacing: .02em; fill: rgba(244, 238, 229, .5); }
+  #fx .blade { stroke: rgba(255, 175, 120, .5); stroke-width: 2; }
+  #fx .node { fill: #0b0908; stroke: rgba(255, 255, 255, .25); stroke-width: 3; }
+  #fx .nnum { font: 600 24px "DejaVu Sans Mono", monospace; fill: rgba(244, 238, 229, .5); letter-spacing: .08em; }
+  .ctr { position: absolute; left: 0; right: 0; text-align: center; }
+  .mono { font-family: "DejaVu Sans Mono", "Liberation Mono", monospace; }
+
+  /* ── B · aperture ── */
+  #fstop { top: 1316px; font: 700 64px/1 "DejaVu Sans Mono", monospace; color: var(--ember); letter-spacing: .02em; text-shadow: 0 0 24px rgba(255, 138, 61, .6); }
+  #fstopK { top: 1400px; font: 600 22px/1 "Inter"; letter-spacing: .5em; padding-left: .5em; color: var(--dim); }
+
+  /* ── D · orbit process ── */
+  #stepW { top: 900px; font: 900 92px/1.1 "Inter"; letter-spacing: -.03em; overflow: hidden; height: 104px; }
+  #stepW span { display: inline-block; }
+  #stepS { top: 1016px; font: 500 24px/1 "DejaVu Sans Mono", monospace; letter-spacing: .12em; color: var(--dim); }
+  #stepN { top: 850px; font: 600 24px/1 "DejaVu Sans Mono", monospace; letter-spacing: .2em; color: var(--ember); }
+  #pipeF { top: 1340px; font: 600 26px/1 "Inter"; letter-spacing: .42em; padding-left: .42em; color: var(--ink); }
+  #pipeF b { color: var(--ember); }
 
   /* ── E · gallery ring ── */
-  #galH { position: absolute; left: 0; right: 0; top: 300px; text-align: center; font: 900 112px/1 "Inter"; letter-spacing: -.035em; }
+  #galH { position: absolute; left: 0; right: 0; top: 340px; text-align: center; font: 900 112px/1 "Inter"; letter-spacing: -.035em; }
   #galH em { font-style: normal; color: var(--ember); }
-  #galK { position: absolute; left: 0; right: 0; top: 262px; text-align: center; font: 500 24px/1 var(--mono); letter-spacing: .22em; color: var(--dim); }
+  #galK { position: absolute; left: 0; right: 0; top: 300px; text-align: center; font: 500 24px/1 var(--mono); letter-spacing: .22em; color: var(--dim); }
   #ringWrap { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; perspective: 1700px; perspective-origin: 540px 960px; }
-  #ring { position: absolute; left: 540px; top: 925px; width: 0; height: 0; transform-style: preserve-3d; }
+  #ring { position: absolute; left: 540px; top: 960px; width: 0; height: 0; transform-style: preserve-3d; }
   .card { position: absolute; left: -150px; top: -267px; width: 300px; height: 533px; border-radius: 22px; overflow: hidden; backface-visibility: hidden;
     border: 1.5px solid rgba(255, 190, 140, .35); background: #111; }
   .card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .card .sh { position: absolute; inset: 0; background: #050404; }
   .card .gl { position: absolute; inset: 0; background: linear-gradient(115deg, transparent 40%, rgba(255, 220, 190, .18) 50%, transparent 60%); mix-blend-mode: screen; }
-  #galN { position: absolute; left: 0; right: 0; top: 1385px; text-align: center; font: 700 30px/1 var(--mono); letter-spacing: .16em; color: var(--ink); }
+  #galN { position: absolute; left: 0; right: 0; top: 1400px; text-align: center; font: 700 30px/1 var(--mono); letter-spacing: .16em; color: var(--ink); }
   #galN i { display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: var(--ember); box-shadow: 0 0 10px var(--ember); margin-right: 16px; vertical-align: 3px; }
 
   /* ── F · wall ── */
-  #wall { position: absolute; left: 0; right: 0; top: 250px; }
+  #wall { position: absolute; left: -200px; right: -200px; top: 250px; height: 1344px; transform-origin: 740px 710px; transform: rotate(-8deg); }
+  #wallM { position: absolute; inset: 0; -webkit-mask-image: linear-gradient(180deg, transparent 12%, #000 22%, #000 70%, transparent 80%); }
   .wrow { position: absolute; left: 0; white-space: nowrap; font: 900 104px/1 "Inter"; letter-spacing: -.035em; color: transparent; -webkit-text-stroke: 2px rgba(244, 238, 229, .16); }
   .wrow b { font-weight: 900; color: var(--ember); -webkit-text-stroke: 0; margin: 0 .28em; opacity: .35; }
   .wrow.hi { color: var(--ink); -webkit-text-stroke: 0; text-shadow: 0 0 40px rgba(255, 150, 80, .35); }
   .wrow.hi b { opacity: 1; text-shadow: 0 0 22px var(--ember); }
-  #wallK { position: absolute; left: 70px; top: 204px; font: 500 22px/1 var(--mono); letter-spacing: .2em; color: var(--dim); z-index: 2; }
+  #wallK { position: absolute; left: 0; right: 0; text-align: center; top: 300px; font: 500 22px/1 var(--mono); letter-spacing: .2em; color: var(--dim); z-index: 2; }
 
   /* ── G · slam ── */
   #slam { position: absolute; left: 0; right: 0; top: 0; height: 1920px; }
@@ -144,17 +112,16 @@
   #slamK { position: absolute; left: 0; right: 0; top: 1330px; text-align: center; font: 600 24px/1 var(--mono); letter-spacing: .28em; color: var(--dim); }
 
   /* ── H · end ── */
-  #logoH { position: absolute; left: 190px; top: 470px; width: 700px; height: 424.2px; }
-  #endL { position: absolute; left: 0; right: 0; top: 1000px; text-align: center; font: italic 440 100px/1.05 "Fraunces"; letter-spacing: -.02em; color: var(--ink); }
+  #logoH { position: absolute; left: 190px; top: 748px; width: 700px; height: 424.2px; }
+  #endL { position: absolute; left: 0; right: 0; top: 520px; text-align: center; font: italic 440 100px/1.05 "Fraunces"; letter-spacing: -.02em; color: var(--ink); }
   #endL em { color: #ffb46b; text-shadow: 0 0 50px rgba(255, 150, 70, .45); }
-  #endP { position: absolute; left: 50%; top: 1200px; transform: translateX(-50%); height: 96px; padding: 0 48px; border-radius: 48px; display: flex; align-items: center; gap: 18px; white-space: nowrap;
+  #endP { position: absolute; left: 50%; top: 1250px; transform: translateX(-50%); height: 96px; padding: 0 48px; border-radius: 48px; display: flex; align-items: center; gap: 18px; white-space: nowrap;
     border: 2px solid rgba(255, 150, 80, .7); background: rgba(255, 138, 61, .08); box-shadow: 0 0 40px rgba(255, 138, 61, .25), inset 0 0 24px rgba(255, 138, 61, .12); font: 800 42px/1 "Inter"; letter-spacing: .01em; }
   #endP b { color: var(--ember); font-weight: 800; }
-  #endS { position: absolute; left: 0; right: 0; top: 1336px; text-align: center; font: 600 24px/1.7 var(--mono); letter-spacing: .18em; color: var(--dim); }
+  #endS { position: absolute; left: 0; right: 0; top: 1382px; text-align: center; font: 600 24px/1.7 var(--mono); letter-spacing: .18em; color: var(--dim); }
   #endS b { color: var(--ink); font-weight: 600; }
 
   /* ── film layers ── */
-  #wipe { position: absolute; left: 0; right: 0; height: 3px; top: -10px; z-index: 9; background: linear-gradient(90deg, transparent, #ffd2a4 20%, #fff 50%, #ffd2a4 80%, transparent); box-shadow: 0 0 30px 8px rgba(255, 140, 60, .6); opacity: 0; }
   #bloom { position: absolute; inset: 0; z-index: 9; pointer-events: none; opacity: 0; mix-blend-mode: screen; background: radial-gradient(60% 40% at 50% 52%, rgba(255, 190, 130, .95), rgba(255, 110, 40, .4) 50%, transparent 80%); }
   #scan { position: absolute; inset: 0; z-index: 10; pointer-events: none; opacity: .07; background: repeating-linear-gradient(180deg, rgba(0, 0, 0, .9) 0 2px, transparent 2px 5px); }
   #vignette { position: absolute; inset: 0; z-index: 10; pointer-events: none; background: radial-gradient(100% 70% at 50% 50%, transparent 50%, rgba(0, 0, 0, .7) 100%); }
@@ -171,23 +138,19 @@
   <div id="rays"></div>
   <div id="dust"></div>
 
-  <!-- A · "Her hikâye karanlıkta başlar." -->
+  <!-- A · "Her hikâye karanlıkta başlar." — words above and below the sun -->
   <section class="scene" id="A">
-    <p class="kicker" id="aK" style="top:760px">// KARANLIK ODA</p>
-    <div class="line" id="a1" style="top:840px"><span>HER HİKÂYE</span></div>
-    <div class="line out" id="a2" style="top:980px"><span>KARANLIKTA</span></div>
-    <div class="line" id="a3" style="top:1120px"><span>BAŞLAR<em>.</em></span></div>
+    <div class="line" id="a1" style="top:440px"><span>HER HİKÂYE</span></div>
+    <div class="line out" id="a2" style="top:548px"><span>KARANLIKTA</span></div>
+    <div class="line" id="a3" style="top:1300px"><span>BAŞLAR<em>.</em></span></div>
   </section>
 
-  <!-- B · the studio boots: brief → set → edit → render -->
+  <!-- B · the light is gathered: an aperture closes step by step (f-stops) -->
   <section class="scene" id="B">
-    <p class="kicker" id="bK" style="top:480px">// SET KURULUYOR</p>
-    <div id="term">
-      <div class="bar"><i></i><i></i><i></i><span>rast@studio — ~/yeni-proje</span></div>
-      <div class="body" id="tb"></div>
-      <div id="prog"><div class="row"><span>render --final</span><b id="pct">0%</b></div><div class="track"><div class="fill" id="pf"></div></div></div>
-    </div>
-    <p id="ready">IŞIK <em>HAZIR.</em></p>
+    <div class="line" id="b1" style="top:372px"><span>IŞIĞI</span></div>
+    <div class="line" id="b2" style="top:480px"><span>TOPLUYORUZ<em>.</em></span></div>
+    <p class="ctr" id="fstop">f/1.4</p>
+    <p class="ctr" id="fstopK">DİYAFRAM</p>
   </section>
 
   <!-- C · light burst → logo -->
@@ -197,17 +160,18 @@
     <p id="subC">SAKARYA · VİDEO PRODÜKSİYON &amp; KREATİF AJANS</p>
   </section>
 
-  <!-- D · idea → screen pipeline -->
+  <!-- D · idea → screen, one orbit -->
   <section class="scene" id="D">
-    <div id="pipeH"><div class="line1"><span>FİKİRDEN</span></div><div class="line2"><span>EKRANA<em>.</em></span></div></div>
-    <p id="pipeT">SÜRE<b id="tc">00:00:00</b></p>
-    <div id="rail"><div id="railF"></div></div>
-    <div id="nodes"></div>
+    <div id="pipeH"><div class="line" id="d1" style="top:330px"><span>FİKİRDEN</span></div><div class="line" id="d2" style="top:438px"><span>EKRANA<em>.</em></span></div></div>
+    <p class="ctr mono" id="stepN">01 / 05</p>
+    <p class="ctr" id="stepW"><span></span></p>
+    <p class="ctr" id="stepS"></p>
+    <p class="ctr" id="pipeF">TEK EKİP <b>·</b> TEK ÇATI</p>
   </section>
 
   <!-- E · real work on a ring -->
   <section class="scene" id="E">
-    <p id="galK">// GERÇEK İŞLER · GERÇEK MARKALAR</p>
+    <p id="galK">GERÇEK İŞLER · GERÇEK MARKALAR</p>
     <p id="galH">SAHNE <em>BİZDE.</em></p>
     <div id="ringWrap"><div id="ring"></div></div>
     <p id="galN"><i></i><span></span></p>
@@ -215,8 +179,8 @@
 
   <!-- F · the service wall -->
   <section class="scene" id="F">
-    <p id="wallK">// NE YAPIYORUZ</p>
-    <div id="wall"></div>
+    <div id="wallM"><div id="wall"></div></div>
+    <p id="wallK">NE YAPIYORUZ</p>
   </section>
 
   <!-- G · footage-filled slams -->
@@ -227,25 +191,17 @@
 
   <!-- H · end card -->
   <section class="scene" id="H">
-    <div class="logo" id="logoH"></div>
     <p id="endL">Işığı <em>biz kurarız.</em></p>
+    <div class="logo" id="logoH"></div>
     <div id="endP"><span><b>rast</b>creative.com</span></div>
-    <p id="endS">ÜCRETSİZ ÖN GÖRÜŞME<br><b>0543 838 2404</b></p>
+    <p id="endS">ÜCRETSİZ ÖN GÖRÜŞME · <b>0543 838 2404</b></p>
   </section>
 
   <div id="halo"></div>
   <div id="sun"></div>
   <div id="flare"></div>
+  <svg id="fx" viewBox="0 0 1080 1920"></svg>
 
-  <div id="hud">
-    <div class="br tl"></div><div class="br tr"></div><div class="br bl"></div><div class="br bR"></div>
-    <p class="t1">RAST<b>/</b>CREATIVE</p>
-    <p class="t2"><i></i><span id="htc">00:00:00:00</span></p>
-    <div class="ruler"></div>
-    <p class="t4" id="hsc"></p>
-    <p class="t3">40.77°N · 30.40°E · SAKARYA</p>
-  </div>
-  <div id="wipe"></div>
   <div id="bloom"></div>
   <div id="scan"></div>
   <div id="vignette"></div>

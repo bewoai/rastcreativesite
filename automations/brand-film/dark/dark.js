@@ -2,14 +2,16 @@
  * Rast Creative — "Karanlık Oda" · picture engine
  * ------------------------------------------------------------------
  * A dark room with one light: the ra.st dot of the logo. The sun travels
- * through every scene (intro → progress head → logo → pipeline → end card),
- * so the cuts stay seamless without any zoom move.
+ * through every scene (centre → behind the aperture → logo → around the
+ * orbit → end card), so the cuts stay seamless without any zoom move.
+ * Everything sits on the centre axis inside the Instagram safe zone
+ * (content y 280–1480); the logo is dead centre (540, 960).
  *
  * 128 BPM, one bar = 4 beats = 1.875 s. Scenes sit on bars:
  *   A  b0–8   "Her hikâye karanlıkta başlar."
- *   B  b8–16  the studio boots (terminal + render bar)
+ *   B  b8–16  "Işığı topluyoruz." — an aperture closes stop by stop
  *   C  b16–24 light burst → logo
- *   D  b24–32 idea → screen pipeline
+ *   D  b24–32 idea → screen: five steps on one orbit
  *   E  b32–40 real work on a ring (one card per beat)
  *   F  b40–48 service wall, one row lit per beat
  *   G  b48–52 footage-filled slams
@@ -48,8 +50,10 @@
   };
 
   const SC = { A: [0, b(8)], B: [b(8), b(16)], C: [b(16), b(24)], D: [b(24), b(32)], E: [b(32), b(40)], F: [b(40), b(48)], G: [b(48), b(52)], H: [b(52), DUR] };
-  const LABEL = { A: "01 — KARANLIK", B: "02 — SET", C: "03 — IŞIK", D: "04 — SÜREÇ", E: "05 — İŞLER", F: "06 — HİZMETLER", G: "07 — VURUŞ", H: "08 — RAST" };
-  const CUTS = [8, 24, 32, 40, 48, 52].map(b);
+  const CX = 540, CY = 960;
+  const SVGNS = "http://www.w3.org/2000/svg";
+  const mk = (tag, attrs = {}, parent) => { const n = document.createElementNS(SVGNS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); if (parent) parent.append(n); return n; };
+  const sa = (n, o) => { for (const k in o) { const v = String(o[k]); if (n.getAttribute(k) !== v) n.setAttribute(k, v); } };
 
   let CLIPS = {}, MAN = {}, pending = [];
   const el = {};
@@ -74,45 +78,97 @@
     }
   }
   const logoDot = (left, top, width) => { const s = width / VB.w; return { x: left + (DOT.x - VB.x) * s, y: top + (DOT.y - VB.y) * s, d: 2 * DOT.r * s }; };
-  const DOT_C = logoDot(110, 700, 860), DOT_H = logoDot(190, 470, 700);
+  const DOT_C = logoDot(110, 700, 860), DOT_H = logoDot(190, 748, 700);
 
-  /* ───── B · terminal lines ───── */
-  const TERM = [
-    [8.3, `<span class="p">$</span> rast yeni-proje --marka <span class="ok">"siz"</span>`, 1.3],
-    [9.75, `<span class="d">→</span> brief okunuyor ........ <span class="ok">✓</span>`],
-    [10.25, `<span class="d">→</span> senaryo yazılıyor ..... <span class="ok">✓</span>`],
-    [10.75, `<span class="d">→</span> ekip + ekipman ........ <span class="ok">✓</span>`],
-    [11.25, `<span class="d">→</span> ışık kuruluyor ........ <span class="ok">✓</span>`],
-    [11.75, `<span class="d">→</span> kamera ................ <span class="rec">● REC</span>`],
-    [12.25, `<span class="d">→</span> kurgu · renk · ses .... <span class="ok">✓</span>`],
-  ];
-  // Visible prefix of an HTML line (tags are free, characters count).
-  function typed(html, n) {
-    let out = "", c = 0;
-    for (let i = 0; i < html.length && c < n; ) {
-      if (html[i] === "<") { const j = html.indexOf(">", i); out += html.slice(i, j + 1); i = j + 1; continue; }
-      out += html[i++]; c++;
+  /* ───── B · aperture ───── */
+  const IR = 252;                                   // iris rim radius
+  const FST = ["f/1.4", "f/2", "f/2.8", "f/4", "f/5.6", "f/8", "f/11", "f/16"];
+  function aperture(t) {
+    // Open until b9, then one stop per beat; shut at b15.5; blown open by the drop.
+    if (t < b(9)) return { a: IR, k: 0 };
+    if (t < b(15.5)) {
+      const s = (t - b(9)) / BT, k = Math.min(7, Math.floor(s) + 1), f = s - Math.floor(s);
+      const from = IR * 0.94 / Math.SQRT2 ** (k - 1), to = IR * 0.94 / Math.SQRT2 ** k;
+      return { a: mix(k === 1 ? IR : from, to, E.outExpo(clamp(f / 0.16))), k };
     }
-    return out.replace(/<span[^>]*>$/, "") + (out.split("<span").length > out.split("</span>").length ? "</span>" : "");
+    if (t < b(16)) return { a: mix(IR * 0.94 / Math.SQRT2 ** 7, 0, E.outC(P(t, b(15.5), b(15.5) + 0.09))), k: 7 };
+    return { a: mix(0, IR * 1.4, E.outExpo(P(t, b(16), b(16) + 0.3))), k: 7 };
   }
-  const textLen = (html) => html.replace(/<[^>]+>/g, "").length;
+  function irisGeom(a, rot) {
+    const V = Array.from({ length: 8 }, (_, k) => { const th = ((k * 45 + rot) * Math.PI) / 180; return [CX + a * Math.cos(th), CY + a * Math.sin(th)]; });
+    const hole = "M" + V.map((v) => v[0].toFixed(2) + "," + v[1].toFixed(2)).join("L") + "Z";
+    const rim = `M${CX - IR},${CY}a${IR},${IR} 0 1,0 ${2 * IR},0a${IR},${IR} 0 1,0 ${-2 * IR},0Z`;
+    const lines = V.map((v, k) => {
+      const w = V[(k + 1) % 8]; let ux = w[0] - v[0], uy = w[1] - v[1]; const L = Math.hypot(ux, uy) || 1; ux /= L; uy /= L;
+      if (a < 0.5) { const th = ((k * 45 + rot + 90) * Math.PI) / 180; ux = Math.cos(th); uy = Math.sin(th); }
+      const px = v[0] - CX, py = v[1] - CY, d = px * ux + py * uy, s = -d + Math.sqrt(Math.max(0, d * d - (px * px + py * py) + IR * IR));
+      return [v[0], v[1], v[0] + ux * s, v[1] + uy * s];
+    });
+    return { d: rim + hole, lines };
+  }
 
-  /* ───── D · pipeline ───── */
+  /* ───── D · orbit process ───── */
   const NODES = [
-    ["01", "FİKİR", "brief · strateji", "✓ ONAY"],
-    ["02", "SENARYO", "metin · storyboard", "✓ YAZILDI"],
-    ["03", "ÇEKİM", "set · ışık · drone", "● REC"],
-    ["04", "KURGU", "renk · ses · motion", "✓ BİTTİ"],
-    ["05", "YAYIN", "reels · reklam · web", "✓ CANLI"],
+    ["FİKİR", "brief · strateji"],
+    ["SENARYO", "metin · storyboard"],
+    ["ÇEKİM", "set · ışık · drone"],
+    ["KURGU", "renk · ses · motion"],
+    ["YAYIN", "reels · reklam · web"],
   ];
-  const NY = (i) => 620 + i * 170;
+  const OR = 300;
+  const orbitAngle = (t) => {
+    if (t < b(24.6)) return -90;
+    // Travel to node i during the half beat before b(24.6 + i), land on the beat.
+    if (t < b(29.6)) { const s = (t - b(24.6)) / BT + 0.55, k = Math.floor(s), f = s - k; return -90 + 72 * clamp(k - 1 + E.ioC(clamp(f / 0.55)), 0, 4); }
+    return 198 + 72 * E.ioC(P(t, b(29.6), b(31)));
+  };
+  const onOrbit = (deg, r = OR) => ({ x: CX + r * Math.cos((deg * Math.PI) / 180), y: CY + r * Math.sin((deg * Math.PI) / 180) });
 
   /* ───── F · wall ───── */
   const WALL = ["REKLAM FİLMİ", "MARKA FİLMİ", "REELS", "DRONE", "FOTOĞRAF", "SENARYO", "KURGU", "RENK", "MOTION", "SES TASARIMI", "SOSYAL MEDYA", "VFX"];
-  const WALL_HI = [3, 7, 1, 9, 5, 10, 2, 6];
+  const WALL_HI = [4, 7, 3, 8, 5, 2, 6, 5];
 
   /* ───── G · slams ───── */
   const SLAM = [["FİKİR", "f1", "ALTOTEKS"], ["IŞIK", "f2", "CANDLELIT BALLET"], ["EMEK", "f3", "CANEX"], ["RAST", "f4", "ADATIP × SAKARYASPOR"]];
+
+  /* ───── vector layer ───── */
+  function buildFx() {
+    const fx = el.fx, defs = mk("defs", {}, fx);
+    const gr = mk("radialGradient", { id: "irisFill", cx: CX, cy: CY, r: IR, gradientUnits: "userSpaceOnUse" }, defs);
+    mk("stop", { offset: "0", "stop-color": "#2a1c14" }, gr); mk("stop", { offset: "1", "stop-color": "#0d0a09" }, gr);
+    mk("path", { id: "cpath", d: `M${CX},${CY} m-306,0 a306,306 0 1,1 612,0 a306,306 0 1,1 -612,0` }, defs);
+    // A · rings, dial ticks, satellites
+    const gA = el.gA = mk("g", {}, fx);
+    el.rings = [118, 184, 246].map((r) => mk("circle", { cx: CX, cy: CY, r, class: "thin", pathLength: 1, "stroke-dasharray": "1 1", transform: `rotate(-90 ${CX} ${CY})` }, gA));
+    el.ticks = mk("g", {}, gA);
+    for (let k = 0; k < 90; k++) { const th = (k * 4 * Math.PI) / 180, r0 = 268, r1 = k % 15 === 0 ? 290 : 278; mk("line", { x1: CX + r0 * Math.cos(th), y1: CY + r0 * Math.sin(th), x2: CX + r1 * Math.cos(th), y2: CY + r1 * Math.sin(th), class: "tick" }, el.ticks); }
+    el.sats = [[118, 70, 0], [184, -42, 2], [246, 28, 4.2]].map(([r, v, p]) => ({ c: mk("circle", { r: 5, class: "sat" }, gA), r, v, p }));
+    // B · aperture, progress arc, circular text
+    const gB = el.gB = mk("g", {}, fx);
+    el.ctext = mk("g", {}, gB);
+    const tx = mk("text", { class: "ctext" }, el.ctext);
+    const tp = mk("textPath", { href: "#cpath", textLength: String(2 * Math.PI * 306 - 4), lengthAdjust: "spacing" }, tx);
+    tp.textContent = "FİKİR • SENARYO • IŞIK • ÇEKİM • KURGU • RENK • SES • MOTION • ";
+    el.parc = mk("circle", { cx: CX, cy: CY, r: 278, class: "amb", pathLength: 1, "stroke-dasharray": "0 1", transform: `rotate(-90 ${CX} ${CY})` }, gB);
+    mk("circle", { cx: CX, cy: CY, r: 278, class: "thin" }, gB);
+    el.iris = mk("path", { fill: "url(#irisFill)", "fill-rule": "evenodd" }, gB);
+    el.blades = Array.from({ length: 8 }, () => mk("line", { class: "blade" }, gB));
+    mk("circle", { cx: CX, cy: CY, r: IR, fill: "none", stroke: "rgba(255, 175, 120, .45)", "stroke-width": 2.5 }, gB);
+    // D · orbit
+    const gD = el.gD = mk("g", {}, fx);
+    mk("circle", { cx: CX, cy: CY, r: OR, class: "thin" }, gD);
+    el.oarc = mk("circle", { cx: CX, cy: CY, r: OR, class: "amb", pathLength: 1, "stroke-dasharray": "0 1", transform: `rotate(-90 ${CX} ${CY})` }, gD);
+    el.onodes = NODES.map((_, i) => {
+      const deg = -90 + 72 * i, p = onOrbit(deg), q = onOrbit(deg, OR + 58);
+      const ring = mk("circle", { cx: p.x, cy: p.y, r: 20, class: "node" }, gD);
+      const dot = mk("circle", { cx: p.x, cy: p.y, r: 8, fill: "#ff8a3d", opacity: 0 }, gD);
+      const num = mk("text", { x: q.x, y: q.y + 8, "text-anchor": "middle", class: "nnum" }, gD); num.textContent = "0" + (i + 1);
+      return { ring, dot, num };
+    });
+    // Shockwave ring, fired on the cuts.
+    el.shock = mk("circle", { cx: CX, cy: CY, r: 0, fill: "none", stroke: "#ffb070", "stroke-width": 3, opacity: 0 }, fx);
+  }
+  const SHOCKS = [[8, CX, CY], [16, 0, 0], [24, CX, CY], [32, CX, CY], [40, CX, CY], [48, CX, CY], [52, 0, 1]];
 
   async function init() {
     const J = await (await fetch(`${BASE}/dark/clips.json`)).json();
@@ -126,24 +182,16 @@
     for (const id of ["A", "B", "C", "D", "E", "F", "G", "H"]) el[id] = $("#" + id);
     Object.assign(el, {
       glow: $("#glow"), grid: $("#grid"), rays: $("#rays"), dust: $("#dust"), sun: $("#sun"), halo: $("#halo"), flare: $("#flare"),
-      hud: $("#hud"), htc: $("#htc"), hsc: $("#hsc"), rec: $("#hud .t2 i"), wipe: $("#wipe"), bloom: $("#bloom"), black: $("#black"),
-      tb: $("#tb"), pf: $("#pf"), pct: $("#pct"), term: $("#term"), ready: $("#ready"),
+      bloom: $("#bloom"), black: $("#black"), fx: $("#fx"),
+      fstop: $("#fstop"), fstopK: $("#fstopK"),
       logoC: $("#logoC"), tagC: $("#tagC"), subC: $("#subC"),
-      railF: $("#railF"), tc: $("#tc"), pipeT: $("#pipeT"),
+      stepW: $("#stepW span"), stepS: $("#stepS"), stepN: $("#stepN"), pipeF: $("#pipeF"),
       ring: $("#ring"), galN: $("#galN span"), galH: $("#galH"), galK: $("#galK"),
       wall: $("#wall"), wallK: $("#wallK"),
       slamW: $("#slamW"), slamO: $("#slamO"), slamK: $("#slamK"),
       logoH: $("#logoH"), endL: $("#endL"), endP: $("#endP"), endS: $("#endS"),
     });
-    // Terminal rows.
-    el.rows = TERM.map(() => { const d = document.createElement("div"); d.className = "l"; el.tb.append(d); return d; });
-    // Pipeline nodes.
-    el.nodes = NODES.map(([n, nm, sb, ck], i) => {
-      const d = document.createElement("div"); d.className = "node"; d.style.top = NY(i) + "px";
-      d.innerHTML = `<div class="ring"></div><p class="num">${n}</p><p class="nm">${nm}</p><p class="sb">${sb}</p><p class="ck">${ck}</p>`;
-      $("#nodes").append(d);
-      return { d, ring: d.querySelector(".ring"), nm: d.querySelector(".nm"), sb: d.querySelector(".sb"), num: d.querySelector(".num"), ck: d.querySelector(".ck") };
-    });
+    buildFx();
     // Ring cards.
     el.cards = J.clips.filter((c) => c.id[0] === "g").map((c, i, a) => {
       const d = document.createElement("div"); d.className = "card";
@@ -166,7 +214,7 @@
     show(el.G, true);
     el.slams = SLAM.map(([w]) => {
       el.slamO.style.fontSize = "200px"; el.slamO.innerHTML = `<span>${w}.</span>`;
-      const k = 960 / el.slamO.firstChild.getBoundingClientRect().width; el.slamO._w = null; return 200 * k;
+      const k = 900 / el.slamO.firstChild.getBoundingClientRect().width; el.slamO._w = null; return 200 * k;
     });
     show(el.G, false);
     // Dust.
@@ -187,39 +235,22 @@
   const beatPulse = (t, from, to, k = 7) => { if (t < from || t >= to) return 0; const x = (t - from) % BT; return Math.exp(-x * k); };
 
   function sunPath(t) {
-    // A: centre high → B: progress head → C: logo dot → D: rail head → E: gone → H: end logo dot.
-    const A = { x: 540, y: 640, s: 1 };
-    const barY = 560 + 760 - 70 - 6, bx = (p) => 120 + 840 * p;
-    const pr = progress(t);
-    if (t < b(7.6)) {
+    // Centre → behind the aperture → logo dot → around the orbit → gone → end logo dot.
+    if (t < b(8)) {
       const ign = E.outExpo(P(t, 0.12, 0.9));
       const flick = t < 0.9 ? 0.75 + 0.25 * Math.sin(t * 90) * Math.sin(t * 37) : 1;
-      return { ...A, s: ign * flick, g: ign * (0.55 + 0.45 * P(t, 0.9, b(6))) };
+      return { x: CX, y: CY, s: ign * flick * 1.2, g: ign * (0.55 + 0.45 * P(t, 0.9, b(6))) };
     }
-    if (t < b(8.6)) { const p = E.ioC(P(t, b(7.6), b(8.6))); return { x: mix(A.x, bx(0), p), y: mix(A.y, barY, p), s: mix(1, 0.5, p), g: mix(1, 0.45, p) }; }
-    if (t < b(15)) return { x: bx(pr), y: barY, s: 0.5 + 0.2 * pr, g: 0.45 + 0.35 * pr };
-    if (t < b(16)) { const p = E.ioC(P(t, b(15), b(15.85))); return { x: mix(bx(1), DOT_C.x, p), y: mix(barY, DOT_C.y, p), s: mix(0.7, DOT_C.d / 52, p), g: mix(0.8, 1.2, p) }; }
+    if (t < b(15.6)) { const o = aperture(t).a / IR; return { x: CX, y: CY, s: 1.35, g: 0.25 + 0.75 * o }; }
+    if (t < b(16)) { const p = E.ioC(P(t, b(15.6), b(16))); return { x: mix(CX, DOT_C.x, p), y: mix(CY, DOT_C.y, p), s: mix(1.35, DOT_C.d / 52, p), g: 0.2 }; }
     if (t < b(23.4)) return { x: DOT_C.x, y: DOT_C.y, s: DOT_C.d / 52, g: 1 };
-    if (t < b(24.4)) { const p = E.ioC(P(t, b(23.4), b(24.4))); return { x: mix(DOT_C.x, 150, p), y: mix(DOT_C.y, NY(0), p), s: mix(DOT_C.d / 52, 0.62, p), g: mix(1, 0.7, p) }; }
-    if (t < b(31.5)) { const y = railY(t); return { x: 150, y, s: 0.62, g: 0.7 }; }
-    if (t < b(32)) { const p = E.inC(P(t, b(31.5), b(32))); return { x: 150, y: NY(4), s: 0.62 * (1 - p), g: 0.7 * (1 - p) }; }
-    if (t < b(52)) return { x: 540, y: 960, s: 0, g: 0 };
+    const top = onOrbit(-90);
+    if (t < b(24.4)) { const p = E.ioC(P(t, b(23.4), b(24.4))); return { x: mix(DOT_C.x, top.x, p), y: mix(DOT_C.y, top.y, p), s: mix(DOT_C.d / 52, 0.7, p), g: mix(1, 0.75, p) }; }
+    if (t < b(32)) { const q = onOrbit(orbitAngle(t)), f = 1 - E.inC(P(t, b(31.3), b(32))); return { x: q.x, y: q.y, s: 0.7 * f, g: 0.75 * f }; }
+    if (t < b(52)) return { x: CX, y: CY, s: 0, g: 0 };
     const p = E.outExpo(P(t, b(52), b(53)));
     return { x: DOT_H.x, y: DOT_H.y, s: (DOT_H.d / 52) * p, g: p };
   }
-  function progress(t) {
-    // A render bar that breathes: fast, a stall, then the last push.
-    const x = P(t, b(12.5), b(15));
-    return clamp(E.ioS(clamp(x * 1.25)) * 0.62 + E.outC(P(x, 0.55, 1)) * 0.38);
-  }
-  function railY(t) {
-    // One node per beat from b25, each step eased.
-    const s = clamp((t - b(24.6)) / BT, 0, 4);
-    const k = Math.floor(s), f = s - k;
-    return NY(Math.min(4, k + E.outExpo(clamp(f / 0.55))));
-  }
-
-  const tcode = (t) => { const f = Math.floor(t * FPS); const s = Math.floor(f / FPS); return `00:00:${String(s).padStart(2, "0")}:${String(f % FPS).padStart(2, "0")}`; };
 
   function renderAt(t) {
     const scene = Object.keys(SC).find((k) => t >= SC[k][0] && t < SC[k][1]) || "H";
@@ -234,7 +265,7 @@
     st(el.sun, { transform: `translate3d(${S.x.toFixed(1)}px, ${S.y.toFixed(1)}px, 0) scale(${S.s.toFixed(4)})`, opacity: S.s > 0.01 ? "1" : "0",
       boxShadow: `0 0 ${(30 + 40 * g).toFixed(0)}px ${(6 + 10 * g).toFixed(0)}px rgba(255, 140, 60, ${(0.4 + 0.3 * clamp(g)).toFixed(3)})` });
     st(el.halo, { transform: `translate3d(${S.x.toFixed(1)}px, ${S.y.toFixed(1)}px, 0) scale(${(0.35 + 0.9 * g).toFixed(3)})`, opacity: String(clamp(g * 1.1).toFixed(3)) });
-    const gx = scene === "E" || scene === "F" || scene === "G" ? 540 : S.x, gy = scene === "E" ? 990 : scene === "F" || scene === "G" ? 960 : S.y;
+    const gx = scene === "E" || scene === "F" || scene === "G" ? CX : S.x, gy = scene === "E" || scene === "F" || scene === "G" ? CY : S.y;
     const ga = scene === "E" ? 0.22 + kick * 0.3 : scene === "F" ? 0.12 + kick * 0.2 : scene === "G" ? 0.1 + kick * 0.25 : 0.3 * g;
     st(el.glow, { background: `radial-gradient(900px 900px at ${gx.toFixed(0)}px ${gy.toFixed(0)}px, rgba(255, 110, 40, ${ga.toFixed(3)}), rgba(120, 36, 8, ${(ga * 0.45).toFixed(3)}) 45%, transparent 75%)` });
     st(el.grid, { opacity: String((0.05 + 0.06 * clamp(g)).toFixed(3)), backgroundPosition: `20px ${(20 - t * 14).toFixed(1)}px`,
@@ -252,15 +283,18 @@
       st(m.i, { transform: `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) scale(${m.s.toFixed(2)})`, opacity: String((m.a * dv * (0.3 + 0.7 * near) * P(t, 0.5, 2)).toFixed(3)) });
     }
 
-    /* HUD */
-    st(el.hud, { opacity: String((P(t, 0.3, 1.2) * (scene === "G" ? 0.5 : 1)).toFixed(3)) });
-    el.htc.textContent = tcode(t);
-    st(el.rec, { opacity: Math.floor(t / BT) % 2 ? "0.25" : "1" });
-    el.hsc.innerHTML = `SAHNE <b>${LABEL[scene]}</b>`;
-    // Light line sweeps on the bar cuts.
-    let wy = -10, wo = 0;
-    for (const c of CUTS) { const p = P(t, c - 0.05, c + 0.16); if (p > 0 && p < 1) { wy = mix(-10, 1930, E.ioS(p)); wo = Math.sin(p * Math.PI); } }
-    st(el.wipe, { top: wy.toFixed(1) + "px", opacity: (wo * 0.7).toFixed(3) });
+    /* shockwave ring on the cuts */
+    let so = 0;
+    for (const [n, x, y] of SHOCKS) {
+      const p = P(t, b(n), b(n) + 0.7);
+      if (p > 0 && p < 1) {
+        const c = y === 1 ? DOT_H : x === 0 ? DOT_C : { x, y };
+        sa(el.shock, { cx: c.x.toFixed(1), cy: c.y.toFixed(1), r: mix(30, 1150, E.outC(p)).toFixed(1), "stroke-width": (1 + 5 * (1 - p)).toFixed(2) });
+        so = 0.85 * (1 - p) ** 1.5;
+      }
+    }
+    sa(el.shock, { opacity: so.toFixed(3) });
+    show(el.gA, scene === "A"); show(el.gB, scene === "B"); show(el.gD, scene === "D");
     st(el.black, { opacity: String(Math.max(1 - P(t, 0.02, 0.12), P(t, DUR - 0.45, DUR - 0.05)).toFixed(3)) });
 
     if (scene === "A") sceneA(t);
@@ -274,42 +308,36 @@
   }
 
   function sceneA(t) {
-    st($("#aK"), { opacity: String((P(t, 0.8, 1.3) * (1 - P(t, b(7), b(7.6)))).toFixed(3)) });
     rise($("#a1 span"), t, b(2), 0.45, b(7.5));
     rise($("#a2 span"), t, b(4), 0.45, b(7.55));
     rise($("#a3 span"), t, b(6), 0.45, b(7.6));
     // The hollow word fills with light for a beat when the kick lands.
     const f = beatPulse(t, b(5), b(7.5), 6);
     st($("#a2 span"), { webkitTextStroke: `2.5px rgba(244, 238, 229, ${(0.6 + 0.4 * f).toFixed(3)})`, textShadow: `0 0 ${(30 * f).toFixed(0)}px rgba(255, 138, 61, ${(0.7 * f).toFixed(3)})` });
+    // Rings draw on around the sun, the dial turns, satellites orbit.
+    const out = 1 - E.inC(P(t, b(7.4), b(8)));
+    el.rings.forEach((r, i) => { const p = E.ioC(P(t, 0.5 + i * 0.35, 2.2 + i * 0.35)); sa(r, { "stroke-dasharray": `${p.toFixed(4)} 1`, opacity: out.toFixed(3) }); });
+    const tk = P(t, 1.2, 2.4);
+    sa(el.ticks, { transform: `rotate(${(t * 5).toFixed(2)} ${CX} ${CY})`, opacity: (tk * out * (0.7 + 0.3 * beatPulse(t, b(4), b(8), 5))).toFixed(3) });
+    for (const s of el.sats) { const th = ((t * s.v + s.p * 57) * Math.PI) / 180; sa(s.c, { cx: (CX + s.r * Math.cos(th)).toFixed(1), cy: (CY + s.r * Math.sin(th)).toFixed(1), opacity: (P(t, 1.5 + s.p * 0.2, 2.5 + s.p * 0.2) * out).toFixed(3) }); }
   }
 
   function sceneB(t) {
-    const open = E.outExpo(P(t, b(8), b(8.8)));
-    const close = E.inC(P(t, b(15), b(15.7)));
-    st(el.term, { clipPath: `inset(${((1 - open) * 50).toFixed(2)}% 0 ${((1 - open) * 50).toFixed(2)}% 0 round 26px)`, opacity: String((1 - close).toFixed(3)),
-      transform: `translate3d(0, ${(close * -60).toFixed(1)}px, 0)` });
-    st($("#bK"), { opacity: String((P(t, b(8.4), b(9)) * (1 - close)).toFixed(3)) });
-    let last = -1;
-    TERM.forEach(([bt, html, dur], i) => {
-      const a = b(bt);
-      if (t < a) { if (el.rows[i].innerHTML) el.rows[i].innerHTML = ""; return; }
-      last = i;
-      const n = dur ? Math.floor(textLen(html) * P(t, a, a + b(dur))) : 1e9;
-      const h = n >= 1e9 ? html : typed(html, n);
-      if (el.rows[i]._h !== h) { el.rows[i].innerHTML = h; el.rows[i]._h = h; }
-    });
-    // cursor on the newest row
-    el.rows.forEach((r, i) => { const c = r.querySelector(".cur"); if (c && i !== last) c.remove(); });
-    if (last >= 0) {
-      let c = el.rows[last].querySelector(".cur");
-      if (!c) { c = document.createElement("i"); c.className = "cur"; el.rows[last].append(c); }
-      c.style.opacity = Math.floor(t / (BT / 2)) % 2 ? "0" : "1";
-    }
-    const pr = progress(t);
-    st(el.pf, { width: (pr * 100).toFixed(2) + "%" });
-    el.pct.textContent = Math.round(pr * 100) + "%";
-    const rd = E.outExpo(P(t, b(15), b(15.5)));
-    st(el.ready, { opacity: String(rd.toFixed(3)), transform: `translate3d(0, ${((1 - rd) * 30).toFixed(1)}px, 0)`, letterSpacing: `${(0.02 + 0.1 * (1 - rd)).toFixed(3)}em` });
+    rise($("#b1 span"), t, b(8.5), 0.45, b(15.3));
+    rise($("#b2 span"), t, b(9), 0.45, b(15.35));
+    const { a, k } = aperture(t);
+    const g = irisGeom(a, 22 * (1 - a / IR) + (t - b(8)) * 3);
+    sa(el.iris, { d: g.d });
+    g.lines.forEach((l, i) => sa(el.blades[i], { x1: l[0].toFixed(2), y1: l[1].toFixed(2), x2: l[2].toFixed(2), y2: l[3].toFixed(2) }));
+    const on = E.outExpo(P(t, b(8), b(8.8)));
+    sa(el.gB, { opacity: on.toFixed(3) });
+    sa(el.parc, { "stroke-dasharray": `${(k / 7).toFixed(4)} 1` });
+    sa(el.ctext, { transform: `rotate(${(-(t - b(8)) * 14).toFixed(2)} ${CX} ${CY})` });
+    el.fstop.textContent = FST[k];
+    const fo = E.outExpo(P(t, b(9), b(9.6))) * (1 - P(t, b(15.4), b(15.8)));
+    const kick = t >= b(9) && t < b(15.5) ? Math.exp(-((t - b(9)) % BT) * 9) : 0;
+    st(el.fstop, { opacity: fo.toFixed(3), transform: `translate3d(0, ${(-8 * kick).toFixed(1)}px, 0)` });
+    st(el.fstopK, { opacity: (fo * 0.9).toFixed(3) });
   }
 
   function sceneC(t) {
@@ -328,26 +356,33 @@
   }
 
   function sceneD(t) {
-    rise($("#pipeH .line1 span"), t, b(24), 0.45);
-    rise($("#pipeH .line2 span"), t, b(24.5), 0.45);
-    st(el.pipeT, { opacity: String(P(t, b(25), b(25.5)).toFixed(3)) });
-    el.tc.textContent = (() => { const x = Math.max(0, t - b(24.5)) * 11.3; const h = Math.floor(x / 3600), mi = Math.floor(x / 60) % 60, s = Math.floor(x) % 60; return [h, mi, s].map((v) => String(v).padStart(2, "0")).join(":"); })();
-    const y = railY(t);
-    st(el.railF, { height: Math.max(0, y - NY(0)).toFixed(1) + "px", opacity: t > b(24.6) ? "1" : "0" });
-    el.nodes.forEach((n, i) => {
-      const a = b(24.3 + i * 0.25);
-      const e = E.outExpo(P(t, a, a + 0.5));
-      st(n.d, { opacity: String(e.toFixed(3)), transform: `translate3d(${((1 - e) * -60).toFixed(1)}px, 0, 0)` });
-      const lit = t >= b(24.6 + i) - 0.02 ? 1 : 0;
-      const hit = lit ? Math.exp(-(t - b(24.6 + i)) * 5) : 0;
-      n.ring.style.setProperty("--on", String(lit));
-      st(n.ring, { borderColor: lit ? `rgba(255, 150, 80, ${(0.6 + 0.4 * hit).toFixed(3)})` : "rgba(255,255,255,.2)", boxShadow: lit ? `0 0 ${(18 + 40 * hit).toFixed(0)}px rgba(255, 138, 61, ${(0.4 + 0.5 * hit).toFixed(3)})` : "none" });
-      st(n.nm, { color: lit ? "#f4eee5" : "rgba(244, 238, 229, .28)" });
-      const ck = E.outExpo(P(t, b(24.6 + i) + 0.04, b(24.6 + i) + 0.4));
-      st(n.ck, { opacity: String(ck.toFixed(3)), transform: `translate3d(${((1 - ck) * 30).toFixed(1)}px, 0, 0)`, background: i === 2 ? "#ff4a3a" : "", boxShadow: i === 2 ? "0 0 24px rgba(255, 74, 58, .6)" : "" });
+    rise($("#d1 span"), t, b(24), 0.45);
+    rise($("#d2 span"), t, b(24.5), 0.45);
+    const ang = orbitAngle(t);
+    const on = E.outExpo(P(t, b(24), b(24.8)));
+    sa(el.gD, { opacity: on.toFixed(3) });
+    sa(el.oarc, { "stroke-dasharray": `${((ang + 90) / 360).toFixed(4)} 1`, opacity: t > b(24.6) ? "1" : "0" });
+    const k = t < b(24.6) ? -1 : Math.min(4, Math.floor((t - b(24.6)) / BT + 1e-6));
+    el.onodes.forEach((n, i) => {
+      const lit = i <= k, hit = lit ? Math.exp(-(t - b(24.6 + i)) * 5) : 0;
+      sa(n.ring, { fill: lit ? "none" : "#0b0908", stroke: lit ? `rgba(255, 150, 80, ${(0.6 + 0.4 * hit).toFixed(3)})` : "rgba(255,255,255,.25)", r: (20 + 8 * hit).toFixed(2) });
+      sa(n.dot, { opacity: lit ? "1" : "0" });
+      sa(n.num, { fill: lit ? "#ff8a3d" : "rgba(244, 238, 229, .4)" });
     });
+    // The step name in the middle of the orbit, one per beat.
+    if (k >= 0) {
+      const [w, sub] = NODES[k];
+      if (el.stepW._w !== w) { el.stepW.textContent = w; el.stepW._w = w; el.stepS.textContent = sub; el.stepN.textContent = `0${k + 1} / 05`; }
+      const a = b(24.6 + k), last = k === 4;
+      rise(el.stepW, t, a, 0.35, last ? b(31.3) : a + BT - 0.1, 0.1);
+      const e = E.outC(P(t, a + 0.05, a + 0.3)) * (last ? 1 - P(t, b(31.2), b(31.6)) : 1 - P(t, a + BT - 0.12, a + BT - 0.02));
+      st(el.stepS, { opacity: (e * 0.9).toFixed(3) }); st(el.stepN, { opacity: e.toFixed(3) });
+    } else { st(el.stepS, { opacity: "0" }); st(el.stepN, { opacity: "0" }); st(el.stepW, { transform: "translate3d(0,112%,0)" }); }
+    const pf = E.outExpo(P(t, b(30), b(30.8)));
+    st(el.pipeF, { opacity: pf.toFixed(3), letterSpacing: `${mix(0.8, 0.42, pf).toFixed(3)}em` });
     const out = E.inC(P(t, b(31.4), b(32)));
     st(el.D, { opacity: String((1 - out).toFixed(3)) });
+    sa(el.gD, { opacity: (on * (1 - out)).toFixed(3) });
   }
 
   function sceneE(t) {
@@ -389,7 +424,7 @@
       r.classList.toggle("hi", on);
       st(r, { transform: `translate3d(${(x + (1 - e) * dir * -300).toFixed(1)}px, 0, 0)`, opacity: String(e.toFixed(3)) });
     });
-    st(el.wallK, { opacity: String(P(t, b(40.3), b(41)).toFixed(3)) });
+    st(el.wallK, { opacity: String((P(t, b(40.3), b(41)) * 0.9).toFixed(3)) });
   }
 
   function sceneG(t) {
@@ -408,7 +443,7 @@
     }
     st(el.slamW, { backgroundImage: `url(${src})`, backgroundPosition: `0px ${(-(top + drift)).toFixed(1)}px`, filter: `brightness(${(1.15 + 0.4 * Math.exp(-local * 9)).toFixed(3)}) saturate(1.1)` });
     st(el.slamO, { opacity: String((0.8 * Math.exp(-local * 3)).toFixed(3)) });
-    el.slamK.textContent = `// ${name}`;
+    el.slamK.textContent = name;
     st(el.slamK, { opacity: String(E.outC(P(local, 0.05, 0.2)).toFixed(3)) });
   }
 
