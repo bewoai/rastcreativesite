@@ -1,5 +1,5 @@
 {
- "note": "t = filmdeki başlangıç (sn), d = süre, src = kaynak (public/videos/projeler/<src>.mp4 ya da sources'taki Drive dosyası ya da photo), in = kaynaktaki giriş (sn), sp = hız (<0.8 ara kare üretilir), z = kadraj büyütme, oy = büyütmenin dikey odağı (0 üst – 1 alt) (filigran/yazı dışarıda kalsın), cx = yatay kaynakta dikey kesitin konumu (0 sol – 1 sağ), tr = bu plana GİRİŞ geçişi (dissolve · zoomIn · slideL/R · lcd · dip · cut), tag = köşe etiketi",
+ "note": "t = filmdeki başlangıç (sn), d = süre, src = kaynak (public/videos/projeler/<src>.mp4 ya da sources'taki Drive dosyası ya da photo), in = kaynaktaki giriş (sn), sp = hız (<0.8 ara kare üretilir), z = kadraj büyütme, oy = büyütmenin dikey odağı (0 üst – 1 alt) (filigran/yazı dışarıda kalsın), cx = yatay kaynakta dikey kesitin konumu (0 sol – 1 sağ), tr = bu plana GİRİŞ geçişi (cut · dissolve · lcd · dip), tag = köşe etiketi",
  "sources": {
   "ballet": {
    "drive": "1y6JUh7dDiTHvjy9-9aVNRclJfkzA2EUL",
@@ -47,7 +47,7 @@
    "in": 3.3,
    "sp": 0.55,
    "z": 1.05,
-   "tr": "zoomIn"
+   "tr": "cut"
   },
   {
    "id": "s04",
@@ -58,7 +58,7 @@
    "sp": 0.8,
    "z": 1.0,
    "cx": 0.5,
-   "tr": "zoomIn",
+   "tr": "cut",
    "tag": "ALTOTEKS · TEKSTİL"
   },
   {
@@ -70,7 +70,7 @@
    "sp": 0.7,
    "z": 1.0,
    "cx": 0.5,
-   "tr": "zoomIn",
+   "tr": "cut",
    "tag": "CANEX · ÜRETİM"
   },
   {
@@ -82,7 +82,7 @@
    "sp": 0.8,
    "z": 1.0,
    "cx": 0.5,
-   "tr": "zoomIn"
+   "tr": "cut"
   },
   {
    "id": "s07",
@@ -115,7 +115,7 @@
    "in": 5.2,
    "sp": 0.5,
    "z": 1.0,
-   "tr": "zoomIn",
+   "tr": "cut",
    "tag": "ADATIP × SAKARYASPOR"
   },
   {
@@ -171,7 +171,7 @@
    "in": 0.9,
    "sp": 1.0,
    "z": 1.42,
-   "tr": "zoomIn",
+   "tr": "cut",
    "tag": "AYTAŞ HOME",
    "oy": 0.64
   },
@@ -183,7 +183,7 @@
    "in": 12.6,
    "sp": 1.0,
    "z": 1.0,
-   "tr": "zoomIn"
+   "tr": "cut"
   },
   {
    "id": "m02",
@@ -245,7 +245,7 @@
    "in": 16.8,
    "sp": 1.0,
    "z": 1.0,
-   "tr": "zoomIn"
+   "tr": "cut"
   },
   {
    "id": "m08",
@@ -266,7 +266,7 @@
    "in": 18.8,
    "sp": 1.0,
    "z": 1.1,
-   "tr": "zoomIn"
+   "tr": "cut"
   },
   {
    "id": "m10",
@@ -360,7 +360,7 @@
    "in": 19.4,
    "sp": 1.0,
    "z": 1.26,
-   "tr": "zoomIn",
+   "tr": "cut",
    "oy": 0.4
   },
   {

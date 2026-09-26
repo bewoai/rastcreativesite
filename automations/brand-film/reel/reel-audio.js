@@ -237,7 +237,6 @@
     J.shots.forEach((s, i) => {
       const t = s.t, dir = i % 2 ? 1 : -1;
       switch (s.tr) {
-        case "zoomIn": whoosh(t, 0.42, 0.6, dir, 250, 3200); thump(t + 0.01, 0.35); break;
         case "slideL": whoosh(t, 0.36, 0.55, -1, 700, 5000); break;
         case "slideR": whoosh(t, 0.36, 0.55, 1, 700, 5000); break;
         case "dissolve": reverse(t - 0.45, t + 0.02, 0.35); break;
