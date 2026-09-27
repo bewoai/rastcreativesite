@@ -1,30 +1,33 @@
-# "Bir Saniye" — projeksiyon ışığında bir teşekkür
+# "Bir Saniye" — gece 01:47, bir Reels konuşuyor
 
-Instagram için 9:16, 38 saniye, 60 fps. Seslendirmeli (ElevenLabs · Özgür Esat Şentürk), beyaz altyazılı.
+Instagram için 9:16, 38 saniye, 60 fps. Seslendirme: ElevenLabs · **Can** (`SacdY6cqu2yrF7ExGIOe`).
 Çıktı: `../out/rast-creative-bir-saniye.mp4`.
 
 ## Fikir
 
-Video, izleyicinin onu kaydırmak üzere olduğunu biliyor ve onunla konuşuyor. Karanlık bir salon,
-tek bir projektör (lambası Rast'ın güneşi) ve bir perde. Her şey perdeye yansıyor:
+Gece 01:47. Karanlık, flu bir yatak odası; odadaki tek ışık elde tutulan telefon. Başparmak akışı
+kaydırıyor, bizim Reels'e geliyor ve Reels konuşmaya başlıyor. Seslendirmenin her kelimesi Reels'in
+içinde beyaz yazı olarak beliriyor (ayrı altyazı yok).
 
 | Saniye | Görüntü | Ses |
 |---|---|---|
-| 0–9 | Perdede bekleyen bir el gölgesi, köşede işleyen sayaç | "Bu videoyu muhtemelen kaydıracaksın… Ama hâlâ buradasın." |
-| 9–14 | Tek çizgi = 1 saniye → 24 çentik | "O zaman sana bir sır vereyim. Bir saniye… yirmi dört karedir." |
-| 14–17 | Işığın önünden gerçek bir film şeridi geçer | "Ve her karenin arkasında birinin gecesi var." |
-| 17–24 | Dört kare, dört gece: 03:14 fikir · 06:12 gün doğumu · çekim 7 · kurgu v11 | "Sabaha kadar yazılmış bir fikir…" |
-| 24–30 | El kaydırır… geri gelir · tek bir kare "1/24" | "Sen bunu bir saniyede geçersin. Olsun. Biz o bir saniye için çalışıyoruz." |
-| 30–34 | Parmak iki kez dokunur, perdede kalp | "Bu saniyeyi bize ayırdığın için… teşekkürler." |
-| 34–38 | Lamba sönerken logonun noktasına iner | "Rast Creative." · rastcreative.com |
+| 0–1 | Ekran uyanır, iki hızlı kaydırma, bizim Reels | telefonun küçük sesleri |
+| 1–10 | Başparmak bekler, tereddüt eder, durur · sayaç | "Bu videoyu muhtemelen kaydıracaksın… Ama hâlâ buradasın. O zaman sana bir sır vereyim." |
+| 10–13 | Çizgi = 1 saniye → 24 çentik | "Bir saniye… yirmi dört karedir." |
+| 13–17 | Reels'te bir film şeridi akar | "Ve her karenin arkasında birinin gecesi var." |
+| 17–24 | Dört kare: 03:14 fikir · 06:12 gün doğumu · çekim 7 · kurgu v11 | "Sabaha kadar yazılmış bir fikir…" |
+| 24–27 | Başparmak kaydırır, sonraki gönderi… geri getirir | "Sen bunu bir saniyede geçersin. Olsun." |
+| 27–33 | "1 / 24" · çift dokunuş, kalp, beğeni kırmızı | "Biz o bir saniye için çalışıyoruz. Bu saniyeyi bize ayırdığın için… teşekkürler." |
+| 33–38 | Ekran kararır, profil fotoğrafındaki güneş logonun noktasına iner | "Rast Creative." · rastcreative.com |
 
-Çizgiler saniyede 12 kez "kaynar" (el çizimi hissi), perde 24 fps titrer, toz ve çizik film dokusu.
-Müzik: projektör motoru + saniyede 24 tık, la minör keçe piyano; tek çözülme "teşekkürler"de do majöre.
+Ses: oda tonu, uzaktan geçen arabalar, kaydırma/dokunma/titreşim sesleri; la minör keçe piyano,
+tek çözülme "teşekkürler"de do majöre. Müzik seslendirme altında otomatik kısılır.
+Zoom yok; her şey merkez eksende ve güvenli alanda.
 
 ## Dosyalar
 
 - `timing.js`: seslendirme zamanları ve sahne ipuçları (görüntü ve ses aynı saati okur)
-- `second.js` görüntü · `second-audio.js` ses · `vo/*.mp3` seslendirme (repoda)
+- `second.js` görüntü · `second-audio.js` ses · `vo/*.mp3` seslendirme · `samples/` ses denemeleri
 
 ```bash
 cd automations/brand-film

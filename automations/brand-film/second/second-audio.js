@@ -1,9 +1,10 @@
 /*
  * Rast Creative — "Bir Saniye" · sound
  * ------------------------------------------------------------------
- * A projector (motor hum + 24 clicks a second — the film's own heartbeat),
- * a felt piano in A minor that only resolves to C major on "teşekkürler",
- * and the voice-over on top with the music ducking under it.
+ * 01:47 in a quiet room: room tone, a far-off city, the phone's own small
+ * sounds (flicks, taps, a haptic buzz on the double tap), a felt piano in
+ * A minor that only resolves to C major on "teşekkürler", and the voice-over
+ * on top with the music ducking under it.
  * Cue times come from timing.js (window.SECOND), shared with the picture.
  *
  *   window.SecondAudio.render() → AudioBuffer
@@ -77,33 +78,31 @@
     function swell(a, b, vol = 1) { const n = nsrc(a, b - a); const hp = ctx.createBiquadFilter(); hp.type = "bandpass"; hp.Q.value = 0.8; hp.frequency.setValueAtTime(400, a); hp.frequency.exponentialRampToValueAtTime(3000, b); const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, a); g.gain.exponentialRampToValueAtTime(0.12 * vol, b - 0.02); g.gain.linearRampToValueAtTime(0, b + 0.02); n.connect(hp).connect(g); out(g, { send: 0.5 }); }
     function pop(t, vol = 1) { const o = ctx.createOscillator(); o.type = "sine"; o.frequency.setValueAtTime(420, t); o.frequency.exponentialRampToValueAtTime(900, t + 0.08); o.start(t); o.stop(t + 0.2); const g = ctx.createGain(); env(g, t, 0.003, 0.18 * vol, 0.1); o.connect(g); out(g, { to: sfx, send: 0.3 }); }
 
-    /* ───── the projector ───── */
-    const on = C.lampOn, off = C.lampOff;
-    thump(on, 0.8, 90); click(on, 1.2, 1200, 1.5); swell(on - 0.05, on + 0.5, 0.6);
-    { // motor hum
-      const f = ctx.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 220;
-      const g = ctx.createGain(); g.gain.setValueAtTime(0, on); g.gain.linearRampToValueAtTime(0.05, on + 0.6); g.gain.setValueAtTime(0.05, off); g.gain.linearRampToValueAtTime(0, off + 0.9);
-      const o = osc("sawtooth", 48, on, off - on + 1); o.frequency.setValueAtTime(48, off); o.frequency.exponentialRampToValueAtTime(18, off + 0.9);
-      o.connect(f).connect(g); out(g, { to: sfx });
-      const n = nsrc(on, off - on + 1); const bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 900; bp.Q.value = 0.6;
-      const ng = ctx.createGain(); ng.gain.setValueAtTime(0, on); ng.gain.linearRampToValueAtTime(0.02, on + 0.6); ng.gain.setValueAtTime(0.02, off); ng.gain.linearRampToValueAtTime(0, off + 0.8);
-      n.connect(bp).connect(ng); out(ng, { to: sfx });
+    /* ───── the room at night ───── */
+    { // room tone + distant city
+      const n = nsrc(0, DUR); const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 380;
+      const g = ctx.createGain(); g.gain.setValueAtTime(0, 0); g.gain.linearRampToValueAtTime(0.05, 1.2); g.gain.setValueAtTime(0.05, DUR - 2); g.gain.linearRampToValueAtTime(0, DUR);
+      n.connect(lp).connect(g); out(g, { to: sfx });
+      const h = osc("sine", 50, 0, DUR); const hg = ctx.createGain(); hg.gain.value = 0.012; h.connect(hg); out(hg, { to: sfx });
+      [[6.2, 0.5], [19.5, 0.35], [28.4, 0.4]].forEach(([t, v]) => { // a car passing far away
+        const c = nsrc(t, 3.2); const bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.Q.value = 0.7; bp.frequency.setValueAtTime(300, t); bp.frequency.linearRampToValueAtTime(700, t + 1.6); bp.frequency.linearRampToValueAtTime(260, t + 3.2);
+        const cg = ctx.createGain(); cg.gain.setValueAtTime(0.0001, t); cg.gain.exponentialRampToValueAtTime(0.05 * v, t + 1.6); cg.gain.exponentialRampToValueAtTime(0.0001, t + 3.2);
+        c.connect(bp).connect(cg); out(cg, { to: sfx, pan: -0.4 });
+      });
     }
-    // 24 clicks a second; louder while the strip runs, winding down when the lamp goes out
-    for (let t = on + 0.2; t < off + 0.9; ) {
-      const strip = t > C.strip[0] && t < C.strip[1] ? 1.8 : 1;
-      const fade = Math.min(1, (t - on) / 0.8) * (t > off ? 1 - (t - off) / 0.9 : 1);
-      click(t, 0.12 * strip * fade, 2600 + R() * 600, 3, -0.15);
-      t += t > off ? (1 / 24) * (1 + (t - off) * 3) : 1 / 24;
-    }
-    thump(off, 0.6, 80); click(off, 1, 900, 1.2);
+    // phone: wake, flicks, taps, haptics, lock
+    click(C.wake, 0.35, 3200, 3); tick(C.wake + 0.02, 0.25, 1800);
+    const flick = (t, v = 1) => { whoosh(t + 0.08, 0.28, 0.35 * v, 1500, 7000); click(t - 0.1, 0.18 * v, 4200, 4); };
+    C.doom.forEach((t) => flick(t, 0.9));
+    function buzz(t, dur = 0.08, vol = 1) { const o = osc("square", 170, t, dur); const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 300; const g = ctx.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.08 * vol, t + 0.005); g.gain.setValueAtTime(0.08 * vol, t + dur - 0.01); g.gain.linearRampToValueAtTime(0, t + dur); o.connect(lp).connect(g); out(g, { to: sfx }); }
+    click(C.screenOff, 0.7, 2200, 2); thump(C.screenOff, 0.3, 120);
 
     /* ───── score ───── */
     // I · the finger waits (1–9): almost nothing — a low A, two notes.
     pad(1.0, 8.0, "Am", { vol: 0.35, cut: 400, cut2: 700, att: 3 });
     piano(C.hesitate, 76, 0.5, 0.2); piano(C.freeze, 72, 0.7, -0.2); piano(C.freeze + 0.02, 64, 0.5, 0.2);
-    for (let k = 0; k < 4; k++) tick(1.2 + k, 0.35, 3200);
-    tick(3.2, 0.6, 3600); // two seconds
+    for (let k = 0; k < 4; k++) tick(C.land + k, 0.28, 3200);
+    tick(C.land + 2, 0.5, 3600); // two seconds
     // II · the secret (9–14)
     swell(9.6, C.rulerDraw, 0.8);
     tick(C.rulerDraw, 0.9, 2000); bell(C.rulerDraw + 0.02, 81, 0.5, 2.5);
@@ -117,26 +116,26 @@
       chord(t, c, 0.8); pad(t, end - t, c, { vol: 0.6, cut: 1100, cut2: 1500, att: 0.3 });
       const arp = CH[c].slice(1).concat(CH[c].slice(2).map((m) => m + 12));
       for (let k = 0, tt = t + 0.42; tt < end - 0.1; k++, tt += 0.21) piano(tt, arp[k % arp.length] + 12, 0.28, k % 2 ? 0.4 : -0.4, 1.6);
-      click(t, 0.9, 1400, 1.2); thump(t, 0.35, 70);            // frame advance
+      tick(t, 0.35, 2400);                                        // next frame
     });
     { // the clapper
       const n = nsrc(C.clap, 0.08); const bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 1600; bp.Q.value = 1.2;
       const g = ctx.createGain(); env(g, C.clap, 0.0005, 0.9, 0.04); n.connect(bp).connect(g); out(g, { to: sfx, send: 0.3 });
     }
     // IV · the swipe… "olsun." (24.2–30)
-    whoosh(C.swipe + 0.15, 0.45, 1.1, 700, 8000);
+    flick(C.swipe, 1.2); flick(C.backIn, 0.8);
     piano(C.backIn, 69, 0.8, 0); pad(C.backIn, 3.4, "Fmaj7", { vol: 0.7, cut: 700, cut2: 1300, att: 1 });
     chord(C.oneFrame, "C", 0.55, 0.06); bell(C.oneFrame + 0.1, 84, 0.4, 3);
     for (let t = C.oneFrame + 0.8; t < C.tapIn; t += 60 / 72) heart(t, 0.35);
     // V · two taps, a heart, "teşekkürler" — the only resolution
     pad(C.tapIn, 2.7, "G", { vol: 0.6, cut: 800, cut2: 2000, att: 1.5 });
-    C.taps.forEach((t) => { thump(t, 0.5, 160); click(t, 0.5, 3000, 2); });
-    pop(C.heart, 1); bell(C.heart + 0.05, 88, 0.4, 1.8, 0.2);
+    C.taps.forEach((t) => { thump(t, 0.35, 160); click(t, 0.45, 3000, 2); });
+    buzz(C.heart, 0.09, 1); pop(C.heart, 1); bell(C.heart + 0.05, 88, 0.4, 1.8, 0.2);
     chord(C.thanks, "Cadd9", 1.1, 0.05);
     pad(C.thanks, DUR - C.thanks - 1.6, "Cadd9", { vol: 1, cut: 1800, cut2: 900, att: 0.4 });
     [76, 79, 84, 88, 91].forEach((m, i) => bell(C.thanks + 0.1 + i * 0.09, m, 0.35, 3.2, (i - 2) * 0.3));
     // VI · the logo
-    thump(C.logo, 0.5, 60); bell(C.logo + 0.05, 84, 0.6, 4); bell(C.logo + 0.2, 91, 0.35, 3.5, 0.3);
+    thump(C.logo, 0.4, 60); bell(C.logo + 0.05, 84, 0.6, 4); bell(C.logo + 0.2, 91, 0.35, 3.5, 0.3);
     piano(C.logo + 1.3, 72, 0.5); piano(C.logo + 1.32, 76, 0.4); piano(C.logo + 1.34, 79, 0.35);
 
     /* ───── voice-over, music ducks under it ───── */

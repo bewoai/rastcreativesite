@@ -1,34 +1,34 @@
 /*
  * "Bir Saniye" — the shared clock. Picture (second.js) and sound (second-audio.js)
- * both read this, so every caption, cue and cut sits on the voice.
+ * both read this, so every word, swipe and tap sits on the voice.
  *   at     film time the speech starts (s)
  *   lead   silence at the head of the mp3, skipped on playback
  *   speech length of the spoken part
- *   parts  [offset from `at`, caption]
- * Voice: ElevenLabs · Özgür Esat Şentürk (ENCGnYnwJuI9qJKMYfei) · eleven_multilingual_v2
+ *   parts  [offset from `at`, on-screen line]
+ * Voice: ElevenLabs · Can (SacdY6cqu2yrF7ExGIOe) · eleven_multilingual_v2
  */
 window.SECOND = {
   DUR: 38,
   LINES: [
-    { id: "v01", at: 1.2, lead: 0, speech: 1.97, parts: [[0, "Bu videoyu muhtemelen kaydıracaksın."]] },
-    { id: "v02", at: 3.9, lead: 0.2, speech: 1.75, parts: [[0, "Genelde bir, iki saniye sürer…"]] },
-    { id: "v03", at: 6.6, lead: 0, speech: 1.38, parts: [[0, "Ama hâlâ buradasın."]] },
-    { id: "v04", at: 9.0, lead: 0, speech: 1.38, parts: [[0, "O zaman sana bir sır vereyim."]] },
-    { id: "v05", at: 11.0, lead: 0, speech: 2.25, parts: [[0, "Bir saniye…"], [1.29, "yirmi dört karedir."]] },
-    { id: "v06", at: 13.9, lead: 0, speech: 2.37, parts: [[0, "Ve her karenin arkasında birinin gecesi var."]] },
-    { id: "v07", at: 17.0, lead: 0, speech: 6.41, parts: [[0, "Sabaha kadar yazılmış bir fikir."], [2.44, "Beklenen bir gün doğumu."], [3.98, "Yedinci deneme."], [5.39, "On birinci kurgu."]] },
-    { id: "v08", at: 24.4, lead: 0, speech: 2.25, parts: [[0, "Sen bunu bir saniyede geçersin."], [1.82, "Olsun."]] },
-    { id: "v09", at: 27.3, lead: 0, speech: 1.97, parts: [[0, "Biz o bir saniye için çalışıyoruz."]] },
-    { id: "v10", at: 30.2, lead: 0, speech: 3.27, parts: [[0, "Bu saniyeyi bize ayırdığın için…"], [2.57, "teşekkürler."]] },
-    { id: "v11", at: 34.6, lead: 0, speech: 0.82, parts: [[0, "Rast Creative."]] },
+    { id: "v01", at: 1.3, lead: 0.1, speech: 1.75, parts: [[0, "Bu videoyu muhtemelen kaydıracaksın."]] },
+    { id: "v02", at: 3.8, lead: 0, speech: 1.8, parts: [[0, "Genelde bir, iki saniye sürer…"]] },
+    { id: "v03", at: 6.4, lead: 0.17, speech: 1.03, parts: [[0, "Ama hâlâ buradasın."]] },
+    { id: "v04", at: 8.6, lead: 0, speech: 1.27, parts: [[0, "O zaman sana bir sır vereyim."]] },
+    { id: "v05", at: 10.6, lead: 0, speech: 2.46, parts: [[0, "Bir saniye…"], [1.59, "yirmi dört karedir."]] },
+    { id: "v06", at: 13.6, lead: 0, speech: 2.18, parts: [[0, "Ve her karenin arkasında birinin gecesi var."]] },
+    { id: "v07", at: 16.6, lead: 0, speech: 6.93, parts: [[0, "Sabaha kadar yazılmış bir fikir."], [2.64, "Beklenen bir gün doğumu."], [4.76, "Yedinci deneme."], [6.02, "On birinci kurgu."]] },
+    { id: "v08", at: 24.3, lead: 0, speech: 2.1, parts: [[0, "Sen bunu bir saniyede geçersin."], [1.74, "Olsun."]] },
+    { id: "v09", at: 27.2, lead: 0, speech: 1.89, parts: [[0, "Biz o bir saniye için çalışıyoruz."]] },
+    { id: "v10", at: 30.0, lead: 0, speech: 2.5, parts: [[0, "Bu saniyeyi bize ayırdığın için…"], [1.9, "teşekkürler."]] },
+    { id: "v11", at: 34.2, lead: 0.18, speech: 0.74, parts: [[0, "Rast Creative."]] },
   ],
   // picture cues the sound follows
   CUE: {
-    lampOn: 0.3, handIn: 1.5, hesitate: 4.3, freeze: 6.6, handOut: 9.2,
-    rulerDraw: 11.0, ticks: 12.29, strip: [13.7, 17.0],
-    frames: [17.0, 19.44, 20.98, 22.39], clap: 21.3, frameEnd: 24.2,
-    swipe: 25.2, backIn: 26.2, oneFrame: 27.3,
-    tapIn: 30.0, taps: [31.3, 31.55], heart: 31.6, thanks: 32.77,
-    lampOff: 34.0, logo: 35.0,
+    wake: 0.2, doom: [0.4, 0.8], land: 1.1, hesitate: 4.3, freeze: 6.4, rest: 8.6,
+    rulerDraw: 10.6, ticks: 12.19, strip: [13.4, 16.6],
+    frames: [16.6, 19.24, 21.36, 22.62], clap: 21.9, frameEnd: 23.9,
+    swipe: 24.9, backIn: 26.0, oneFrame: 27.2,
+    tapIn: 29.6, taps: [30.9, 31.12], heart: 31.15, thanks: 31.9,
+    screenOff: 33.7, logo: 34.8,
   },
 };

@@ -6,60 +6,57 @@
 <link rel="icon" href="data:," />
 <!--
   Rast Creative Studio — "Bir Saniye" (1080×1920, 60 fps, 38 s).
-  A dark cinema, one projector beam (its lamp is the Rast sun), one screen.
-  The film knows you are about to scroll: a hand's shadow waits on the screen,
-  one second opens into 24 frames, and every frame is somebody's night.
-  Engine: second.js · sound + voice-over: second-audio.js · voice: vo/*.mp3
+  01:47, a dark bedroom, a phone held above the bed — the only light in the room.
+  A thumb is about to scroll past a Reel; the Reel talks back.
+  Engine: second.js · sound + voice-over: second-audio.js · clock: timing.js · voice: vo/*.mp3
 -->
 <style>
   @font-face { font-family: "Fraunces"; font-style: italic; font-weight: 100 900; src: url("/public/fonts/fraunces-latin-wght-italic.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
   @font-face { font-family: "Fraunces"; font-style: italic; font-weight: 100 900; src: url("/public/fonts/fraunces-latin-ext-wght-italic.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20AB, U+20AD-20C0, U+2C60-2C7F, U+A720-A7FF; }
   @font-face { font-family: "Inter"; font-weight: 100 900; src: url("/public/fonts/inter-latin-wght-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
   @font-face { font-family: "Inter"; font-weight: 100 900; src: url("/public/fonts/inter-latin-ext-wght-normal.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20AB, U+20AD-20C0, U+2C60-2C7F, U+A720-A7FF; }
-  :root { --ember: #ff8a3d; --ink: #f4eee5; --dim: rgba(244, 238, 229, .55); --line: #2a1a10; --mono: "DejaVu Sans Mono", "Liberation Mono", monospace; }
+  :root { --ember: #ff8a3d; --ink: #f4eee5; --dim: rgba(244, 238, 229, .55); --mono: "DejaVu Sans Mono", "Liberation Mono", monospace; }
   * { box-sizing: border-box; margin: 0; padding: 0; animation: none !important; transition: none !important; }
   html, body { background: #000; overflow: hidden; }
-  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #060403; transform-origin: 0 0; isolation: isolate; font-family: "Inter", sans-serif; color: var(--ink); }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #04050a; transform-origin: 0 0; isolation: isolate; font-family: "Inter", sans-serif; color: var(--ink); }
 
-  /* the room */
-  #room { position: absolute; inset: 0; background: radial-gradient(900px 700px at 540px 940px, rgba(80, 48, 24, .35), transparent 70%); }
-  #beam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; mix-blend-mode: screen; }
-  #dust { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; mix-blend-mode: screen; }
+  /* the room, out of focus */
+  #room { position: absolute; inset: 0; filter: blur(10px); }
+  #room .wall { position: absolute; inset: 0; background: linear-gradient(180deg, #070a14 0%, #05070d 55%, #030308 100%); }
+  #room .win { position: absolute; left: -40px; top: 120px; width: 420px; height: 620px; border-radius: 8px; overflow: hidden;
+    background: linear-gradient(180deg, #0d1630 0%, #111a33 60%, #1a1a2a 100%); box-shadow: inset 0 0 0 14px #06070c; }
+  #room .win i { position: absolute; border-radius: 50%; }
+  #room .curtain { position: absolute; left: 330px; top: 80px; width: 150px; height: 780px; background: linear-gradient(90deg, #06070c, #0b0d16 50%, #05060a); border-radius: 0 0 40px 40px; }
+  #room .bed { position: absolute; left: -100px; right: -100px; bottom: -80px; height: 620px; border-radius: 50% 50% 0 0 / 30% 30% 0 0;
+    background: radial-gradient(60% 50% at 50% 10%, #1b2236 0%, #0c0f19 60%, #06070b 100%); }
+  #room .fold { position: absolute; height: 40px; border-radius: 50%; background: rgba(120, 150, 210, .07); }
+  #spill { position: absolute; inset: 0; mix-blend-mode: screen; pointer-events: none; }
 
-  /* the screen */
-  #screen { position: absolute; left: 120px; top: 560px; width: 840px; height: 760px; overflow: hidden; border-radius: 6px;
-    box-shadow: 0 0 120px rgba(255, 190, 130, .12); }
-  #scrBase { position: absolute; inset: 0; background: radial-gradient(75% 70% at 50% 48%, #f3e7d3 0%, #e6d4b8 55%, #b69b78 100%); }
-  #scr svg { position: absolute; left: 0; top: 0; width: 840px; height: 760px; overflow: visible; }
-  #scr { position: absolute; inset: 0; }
-  #scr .ln { fill: none; stroke: var(--line); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
-  #scr .thin { fill: none; stroke: var(--line); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-  #scr .fill { fill: var(--line); }
-  #scr .amb { fill: #e07a2e; }
-  #scr .txt { font: 700 30px var(--mono); fill: var(--line); letter-spacing: .06em; }
-  #scr .big { font: 800 64px "Inter"; fill: var(--line); letter-spacing: -.01em; }
-  #timer { font: 700 46px var(--mono); }
-  #hand { filter: blur(7px); }
-  #scrFx { position: absolute; inset: 0; pointer-events: none; }
-  #scrShade { position: absolute; inset: 0; pointer-events: none; background: #000; opacity: 0; }
-  #scrVig { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(80% 75% at 50% 50%, transparent 55%, rgba(40, 22, 10, .45) 100%); }
+  /* the phone */
+  #phone { position: absolute; left: 280px; top: 360px; width: 520px; height: 1080px; transform-origin: 260px 540px; }
+  #body { position: absolute; inset: 0; border-radius: 70px; background: linear-gradient(135deg, #1d1e24, #0b0b0f 40%, #15161b); box-shadow: 0 30px 80px rgba(0, 0, 0, .7), inset 0 0 0 2px rgba(255, 255, 255, .08); }
+  #scr { position: absolute; left: 18px; top: 18px; width: 484px; height: 1044px; border-radius: 54px; overflow: hidden; background: #000; }
+  #scr svg { position: absolute; left: 0; top: 0; width: 484px; height: 1044px; overflow: visible; }
+  #lhand { position: absolute; left: -70px; top: 540px; width: 160px; height: 560px; overflow: visible; }
 
-  /* film strip, physically in the beam */
-  #strip { position: absolute; left: 380px; top: 0; width: 320px; height: 1920px; overflow: hidden; display: none;
-    -webkit-mask-image: linear-gradient(180deg, transparent 20%, #000 30%, #000 63%, transparent 69.5%); }
-  #stripIn { position: absolute; left: 0; top: 0; width: 320px; }
-  .fr { position: relative; width: 320px; height: 250px; background: #1b120c; border-left: 34px solid #120b07; border-right: 34px solid #120b07; }
-  .fr::before, .fr::after { content: ""; position: absolute; top: 0; bottom: 0; width: 14px; background: repeating-linear-gradient(180deg, transparent 0 22px, rgba(255, 210, 160, .55) 22px 40px, transparent 40px 62px); }
-  .fr::before { left: -24px; } .fr::after { right: -24px; }
-  .fr .pic { position: absolute; left: 8px; right: 8px; top: 10px; bottom: 10px; background: #f0e2c8; overflow: hidden; opacity: .9; }
-  .fr .pic svg { width: 100%; height: 100%; }
-  .fr .n { position: absolute; right: 12px; bottom: 14px; font: 700 18px var(--mono); color: #f0e2c8; opacity: .8; }
-
-  /* captions */
-  #cap { position: absolute; left: 60px; right: 60px; top: 1370px; text-align: center; font: 700 46px/1.25 "Inter"; letter-spacing: -.005em; color: #fff; text-shadow: 0 3px 18px rgba(0, 0, 0, .8); }
+  /* reel content */
+  .ln { fill: none; stroke: #f4eee5; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+  .thin { fill: none; stroke: #f4eee5; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  .fill { fill: #f4eee5; }
+  .amb { fill: #ff8a3d; }
+  .txt { font: 700 30px "DejaVu Sans Mono", monospace; fill: #f4eee5; letter-spacing: .04em; }
+  .big { font: 800 64px "Inter"; fill: #f4eee5; }
+  .ui { font: 700 26px "Inter"; fill: #fff; }
+  .uis { font: 500 21px "Inter"; fill: rgba(255, 255, 255, .92); }
+  .ico { fill: none; stroke: #fff; stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; }
+  #say { position: absolute; left: 30px; right: 30px; top: 190px; height: 250px; display: flex; align-items: center; justify-content: center; text-align: center;
+    font: 800 44px/1.16 "Inter"; letter-spacing: -.015em; color: #fff; }
+  #say > div { width: 100%; }
+  #say .w { display: inline-block; margin: 0 .1em; }
+  #say.small { top: 170px; height: 140px; font-size: 34px; }
 
   /* end */
-  #lens { position: absolute; left: 0; top: 0; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%; z-index: 5;
+  #dot { position: absolute; left: 0; top: 0; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%; z-index: 5;
     background: radial-gradient(circle at 40% 35%, #fff4e2, #ffd09a 25%, #ff9a4f 55%, #e07a2e 80%, #b9531a); }
   #halo { position: absolute; left: 0; top: 0; width: 700px; height: 700px; margin: -350px 0 0 -350px; border-radius: 50%; mix-blend-mode: screen; z-index: 4;
     background: radial-gradient(circle, rgba(255, 190, 120, .6) 0, rgba(255, 130, 60, .25) 18%, rgba(255, 90, 30, .07) 42%, transparent 70%); }
@@ -72,8 +69,9 @@
     border: 2px solid rgba(255, 150, 80, .7); background: rgba(255, 138, 61, .08); box-shadow: 0 0 40px rgba(255, 138, 61, .25); font: 800 38px/1 "Inter"; }
   #endP b { color: var(--ember); }
 
-  #grain { position: absolute; inset: -60px; pointer-events: none; mix-blend-mode: overlay; opacity: .12; }
-  #vignette { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(100% 70% at 50% 50%, transparent 45%, rgba(0, 0, 0, .75) 100%); }
+  #hands { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: visible; pointer-events: none; }
+  #grain { position: absolute; inset: -60px; pointer-events: none; mix-blend-mode: overlay; opacity: .1; }
+  #vignette { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(90% 65% at 50% 48%, transparent 45%, rgba(0, 0, 0, .8) 100%); }
   #black { position: absolute; inset: 0; pointer-events: none; background: #000; opacity: 1; }
   #ui { position: fixed; left: 0; right: 0; bottom: 0; display: none; gap: 12px; align-items: center; padding: 10px 16px; background: #111; color: #ddd; font: 13px/1 system-ui; z-index: 20; }
   #ui input { flex: 1; }
@@ -81,23 +79,23 @@
 </head>
 <body>
 <div id="stage">
-  <div id="room"></div>
-  <div id="screen">
-    <div id="scrBase"></div>
-    <div id="scr"><svg id="scrSvg" viewBox="0 0 840 760"></svg></div>
-    <canvas id="scrFx" width="840" height="760"></canvas>
-    <div id="scrVig"></div>
-    <div id="scrShade"></div>
+  <div id="room"><div class="wall"></div><div class="win" id="win"></div><div class="curtain"></div><div class="bed"></div></div>
+  <canvas id="spill" width="1080" height="1920"></canvas>
+  <div id="phone">
+    <div id="body"></div>
+    <div id="scr">
+      <svg id="feed" viewBox="0 0 484 1044"></svg>
+      <div id="say"></div>
+      <svg id="chrome" viewBox="0 0 484 1044"></svg>
+    </div>
+    <svg id="lhand" viewBox="0 0 160 560"></svg>
   </div>
-  <canvas id="beam" width="1080" height="1920"></canvas>
-  <div id="strip"><div id="stripIn"></div></div>
-  <canvas id="dust" width="1080" height="1920"></canvas>
-  <p id="cap"></p>
+  <svg id="hands" viewBox="0 0 1080 1920"></svg>
   <div id="logo"></div>
   <p id="endL">Hikâyenizi <em>o bir saniyeye</em> sığdıralım.</p>
   <div id="endP"><span><b>rast</b>creative.com</span></div>
   <div id="halo"></div>
-  <div id="lens"></div>
+  <div id="dot"></div>
   <div id="vignette"></div>
   <div id="grain"></div>
   <div id="black"></div>
