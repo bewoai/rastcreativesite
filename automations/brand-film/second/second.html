@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<title>Rast Creative — Bir Saniye</title>
+<link rel="icon" href="data:," />
+<!--
+  Rast Creative Studio — "Bir Saniye" (1080×1920, 60 fps, 38 s).
+  A dark cinema, one projector beam (its lamp is the Rast sun), one screen.
+  The film knows you are about to scroll: a hand's shadow waits on the screen,
+  one second opens into 24 frames, and every frame is somebody's night.
+  Engine: second.js · sound + voice-over: second-audio.js · voice: vo/*.mp3
+-->
+<style>
+  @font-face { font-family: "Fraunces"; font-style: italic; font-weight: 100 900; src: url("/public/fonts/fraunces-latin-wght-italic.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: "Fraunces"; font-style: italic; font-weight: 100 900; src: url("/public/fonts/fraunces-latin-ext-wght-italic.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20AB, U+20AD-20C0, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family: "Inter"; font-weight: 100 900; src: url("/public/fonts/inter-latin-wght-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: "Inter"; font-weight: 100 900; src: url("/public/fonts/inter-latin-ext-wght-normal.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20AB, U+20AD-20C0, U+2C60-2C7F, U+A720-A7FF; }
+  :root { --ember: #ff8a3d; --ink: #f4eee5; --dim: rgba(244, 238, 229, .55); --line: #2a1a10; --mono: "DejaVu Sans Mono", "Liberation Mono", monospace; }
+  * { box-sizing: border-box; margin: 0; padding: 0; animation: none !important; transition: none !important; }
+  html, body { background: #000; overflow: hidden; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #060403; transform-origin: 0 0; isolation: isolate; font-family: "Inter", sans-serif; color: var(--ink); }
+
+  /* the room */
+  #room { position: absolute; inset: 0; background: radial-gradient(900px 700px at 540px 940px, rgba(80, 48, 24, .35), transparent 70%); }
+  #beam { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; mix-blend-mode: screen; }
+  #dust { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; mix-blend-mode: screen; }
+
+  /* the screen */
+  #screen { position: absolute; left: 120px; top: 560px; width: 840px; height: 760px; overflow: hidden; border-radius: 6px;
+    box-shadow: 0 0 120px rgba(255, 190, 130, .12); }
+  #scrBase { position: absolute; inset: 0; background: radial-gradient(75% 70% at 50% 48%, #f3e7d3 0%, #e6d4b8 55%, #b69b78 100%); }
+  #scr svg { position: absolute; left: 0; top: 0; width: 840px; height: 760px; overflow: visible; }
+  #scr { position: absolute; inset: 0; }
+  #scr .ln { fill: none; stroke: var(--line); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+  #scr .thin { fill: none; stroke: var(--line); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  #scr .fill { fill: var(--line); }
+  #scr .amb { fill: #e07a2e; }
+  #scr .txt { font: 700 30px var(--mono); fill: var(--line); letter-spacing: .06em; }
+  #scr .big { font: 800 64px "Inter"; fill: var(--line); letter-spacing: -.01em; }
+  #timer { font: 700 46px var(--mono); }
+  #hand { filter: blur(7px); }
+  #scrFx { position: absolute; inset: 0; pointer-events: none; }
+  #scrShade { position: absolute; inset: 0; pointer-events: none; background: #000; opacity: 0; }
+  #scrVig { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(80% 75% at 50% 50%, transparent 55%, rgba(40, 22, 10, .45) 100%); }
+
+  /* film strip, physically in the beam */
+  #strip { position: absolute; left: 380px; top: 0; width: 320px; height: 1920px; overflow: hidden; display: none;
+    -webkit-mask-image: linear-gradient(180deg, transparent 20%, #000 30%, #000 63%, transparent 69.5%); }
+  #stripIn { position: absolute; left: 0; top: 0; width: 320px; }
+  .fr { position: relative; width: 320px; height: 250px; background: #1b120c; border-left: 34px solid #120b07; border-right: 34px solid #120b07; }
+  .fr::before, .fr::after { content: ""; position: absolute; top: 0; bottom: 0; width: 14px; background: repeating-linear-gradient(180deg, transparent 0 22px, rgba(255, 210, 160, .55) 22px 40px, transparent 40px 62px); }
+  .fr::before { left: -24px; } .fr::after { right: -24px; }
+  .fr .pic { position: absolute; left: 8px; right: 8px; top: 10px; bottom: 10px; background: #f0e2c8; overflow: hidden; opacity: .9; }
+  .fr .pic svg { width: 100%; height: 100%; }
+  .fr .n { position: absolute; right: 12px; bottom: 14px; font: 700 18px var(--mono); color: #f0e2c8; opacity: .8; }
+
+  /* captions */
+  #cap { position: absolute; left: 60px; right: 60px; top: 1370px; text-align: center; font: 700 46px/1.25 "Inter"; letter-spacing: -.005em; color: #fff; text-shadow: 0 3px 18px rgba(0, 0, 0, .8); }
+
+  /* end */
+  #lens { position: absolute; left: 0; top: 0; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%; z-index: 5;
+    background: radial-gradient(circle at 40% 35%, #fff4e2, #ffd09a 25%, #ff9a4f 55%, #e07a2e 80%, #b9531a); }
+  #halo { position: absolute; left: 0; top: 0; width: 700px; height: 700px; margin: -350px 0 0 -350px; border-radius: 50%; mix-blend-mode: screen; z-index: 4;
+    background: radial-gradient(circle, rgba(255, 190, 120, .6) 0, rgba(255, 130, 60, .25) 18%, rgba(255, 90, 30, .07) 42%, transparent 70%); }
+  #logo { position: absolute; left: 190px; top: 748px; width: 700px; height: 424.2px; opacity: 0; }
+  #logo svg { width: 100%; height: 100%; overflow: visible; }
+  #logo .lt { fill: var(--ink); }
+  #endL { position: absolute; left: 0; right: 0; top: 1236px; text-align: center; font: italic 440 60px/1.15 "Fraunces"; opacity: 0; }
+  #endL em { color: #ffb46b; }
+  #endP { position: absolute; left: 50%; top: 1352px; height: 84px; padding: 0 42px; border-radius: 42px; display: flex; align-items: center; white-space: nowrap; opacity: 0;
+    border: 2px solid rgba(255, 150, 80, .7); background: rgba(255, 138, 61, .08); box-shadow: 0 0 40px rgba(255, 138, 61, .25); font: 800 38px/1 "Inter"; }
+  #endP b { color: var(--ember); }
+
+  #grain { position: absolute; inset: -60px; pointer-events: none; mix-blend-mode: overlay; opacity: .12; }
+  #vignette { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(100% 70% at 50% 50%, transparent 45%, rgba(0, 0, 0, .75) 100%); }
+  #black { position: absolute; inset: 0; pointer-events: none; background: #000; opacity: 1; }
+  #ui { position: fixed; left: 0; right: 0; bottom: 0; display: none; gap: 12px; align-items: center; padding: 10px 16px; background: #111; color: #ddd; font: 13px/1 system-ui; z-index: 20; }
+  #ui input { flex: 1; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="room"></div>
+  <div id="screen">
+    <div id="scrBase"></div>
+    <div id="scr"><svg id="scrSvg" viewBox="0 0 840 760"></svg></div>
+    <canvas id="scrFx" width="840" height="760"></canvas>
+    <div id="scrVig"></div>
+    <div id="scrShade"></div>
+  </div>
+  <canvas id="beam" width="1080" height="1920"></canvas>
+  <div id="strip"><div id="stripIn"></div></div>
+  <canvas id="dust" width="1080" height="1920"></canvas>
+  <p id="cap"></p>
+  <div id="logo"></div>
+  <p id="endL">Hikâyenizi <em>o bir saniyeye</em> sığdıralım.</p>
+  <div id="endP"><span><b>rast</b>creative.com</span></div>
+  <div id="halo"></div>
+  <div id="lens"></div>
+  <div id="vignette"></div>
+  <div id="grain"></div>
+  <div id="black"></div>
+</div>
+<div id="ui"><button id="play">▶︎</button><input id="scrub" type="range" min="0" max="38" step="0.001" value="0" /><span id="tcu">0.00</span></div>
+<script src="timing.js"></script>
+<script src="second-audio.js"></script>
+<script src="second.js"></script>
+</body>
+</html>
