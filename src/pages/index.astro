@@ -1229,7 +1229,9 @@ const year = new Date().getFullYear();
     .ev-hero {
       justify-content: flex-start;
       min-height: 100svh;
-      padding: max(11rem, calc(100svh - 32rem)) var(--pad) 3.5rem;
+      /* Never above the monitor's bottom edge (top 9.4rem + 16:9 screen +
+         caption), however tall the phone: the title used to rise under it. */
+      padding: max(calc(9.4rem + min(58vw, 15rem) * 0.5625 + 4.2rem), calc(100svh - 32rem)) var(--pad) 3.5rem;
     }
     /* Taller than the hero and lifted, so the sun sits in the open sky
        above the words instead of behind them. */
