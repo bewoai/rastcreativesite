@@ -59,7 +59,8 @@ const OUTNAME = args.out ? String(args.out) : NAME ? "rast-creative-reels" : "ra
 
 const browser = await chromium.launch({
   executablePath: process.env.CHROMIUM || undefined,
-  args: ["--force-color-profile=srgb", "--font-render-hinting=none", "--disable-lcd-text"],
+  // swiftshader: deterministic software WebGL for the Three.js films (cekim-3d)
+  args: ["--force-color-profile=srgb", "--font-render-hinting=none", "--disable-lcd-text", "--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"],
 });
 async function openPage() {
   const page = await browser.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
