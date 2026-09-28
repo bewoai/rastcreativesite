@@ -351,3 +351,20 @@ Build çıktısı (211 sayfa) tarandı ve `main` ile karşılaştırıldı.
 - Sonraya kalan (eski, bu PR dışı): bölge sayfalarının bir kısmında title 65+ /
   description 165+ karakter; bazı proje açıklamaları 70 karakterden kısa; ana sayfa
   H2'leri şiirsel — etiketler anahtar kelimeyi taşıyor, istenirse H2'lere de eklenebilir.
+
+### v14.2 — Mobil performans (PageSpeed: Perf 79, INP 1.732 ms)
+
+Saha verisinde INP çok yüksekti; sebep her karede yeniden boyanan pahalı katmanlardı.
+- `.ev-grain`: `mix-blend-mode: multiply` kaldırıldı (opaklık 0.06). Tam ekran blend,
+  her scroll/tap karesinde tüm sayfayı yeniden birleştiriyordu.
+- Mobilde (≤760px) `.ev-glass` üzerindeki `backdrop-filter` kapatıldı, yerine yarı opak
+  krem zemin kullanıldı. Header barı ve menü camı korundu.
+- Hero kelime ve `[data-rise]` girişlerinden `filter: blur()` çıkarıldı; hareket artık yalnızca opacity ve transform.
+- İlk ekran dışındaki bölümlere (`.ev-works` hariç) `content-visibility: auto` verildi.
+- `set.webp` 480px genişliğe indirildi (34 → 21 KB).
+- Honeypot inputuna `aria-hidden` ve label eklendi (a11y "label" hatası).
+- BaseLayout'a `leanFonts` prop'u eklendi. Ana sayfa Space Grotesk ve Inter latin-ext
+  fontlarını önden yüklemiyor; bu fontlar ilk ekranda kullanılmıyor.
+- Lokal Lighthouse (mobil): Perf 85 → 88, A11y 97 → 100, TBT ~160 → 0 ms, ana thread
+  3,3 → 1,4 sn, LCP 4,0 → 3,7 sn. Gerçek tarayıcıda LCP = FCP ≈ 0,3 sn; kalan LCP
+  farkı simülasyondaki yavaş 4G + font yüklemelerinden geliyor.

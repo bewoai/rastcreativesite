@@ -286,6 +286,7 @@ const year = new Date().getFullYear();
 
 <BaseLayout
   bare
+  leanFonts
   jsonLd={pageJsonLd}
   preloadFonts={[
     "/fonts/fraunces-latin-wght-normal.woff2",
@@ -940,7 +941,7 @@ const year = new Date().getFullYear();
             <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
             <input type="hidden" name="subject" value="Yeni ön görüşme talebi — rastcreative.com" />
             <input type="hidden" name="from_name" value={SITE.name} />
-            <input type="checkbox" name="botcheck" class="ev-sr" tabindex="-1" autocomplete="off" />
+            <input type="checkbox" name="botcheck" class="ev-sr" tabindex="-1" autocomplete="off" aria-hidden="true" aria-label="Bu alanı boş bırakın" />
 
             <p class="ev-form__line">
               Merhaba, <span class="ev-nw">ben
@@ -1360,6 +1361,13 @@ const year = new Date().getFullYear();
     .ev-dolly__cloud--near {
       display: none;
     }
+  }
+
+  /* Scenes below the first screen skip rendering work until they approach
+     the viewport (they are all far below the hero). */
+  .ev-sec:not(.ev-works) {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 900px;
   }
 
   /* ───── Sections ───── */
@@ -2984,7 +2992,6 @@ const year = new Date().getFullYear();
       from {
         opacity: 0;
         transform: translateY(0.35em);
-        filter: blur(10px);
       }
     }
     .ev-hero__lede,
@@ -2999,13 +3006,11 @@ const year = new Date().getFullYear();
     html.js .ev [data-rise]:not(.is-in) {
       opacity: 0;
       transform: translateY(20px);
-      filter: blur(4px);
     }
     html.js .ev [data-rise] {
       transition:
         opacity 650ms var(--ease-out),
         transform 650ms var(--ease-out),
-        filter 650ms var(--ease-out),
         box-shadow 700ms var(--ease-out);
       transition-delay: calc(var(--d, 0) * 80ms);
     }
