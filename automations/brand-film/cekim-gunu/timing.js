@@ -3,7 +3,6 @@
  * both read this. 120 BPM: every cut sits on a beat (0.5 s).
  *   SHOTS  id · film [a, b) · src in-point (s) · optional speed map
  *   WORDS  white captions, centred, inside the safe zone
- *   BURST  manga speed-line hits [t, cx, cy]
  */
 window.CEKIM = {
   DUR: 30, FPS: 30, BPM: 120,
@@ -14,7 +13,7 @@ window.CEKIM = {
     { id: "s04", a: 8.5, b: 10.5, in: 0.6 },           // inside the car
     { id: "s05", a: 10.5, b: 13.0, in: 0.0, ramp: [1.3, 0.45, 1.9] }, // slow through the gap, then snap
     { id: "s06", a: 13.0, b: 15.5, in: 0.3 },          // catch + fist bump
-    { id: "s07", a: 15.5, b: 17.5, in: 0.5 },          // clinic, clapper
+    { id: "s07", a: 15.5, b: 17.5, in: 0.3 },          // clinic, clapper
     { id: "s08", a: 17.5, b: 21.5, in: 0.0 },          // the doctor: "ten seconds?"
     { id: "s09", a: 21.5, b: 23.5, in: 0.8 },          // Enter
     { id: "s10", a: 23.5, b: 27.5, in: 0.0 },          // jaws dropped
@@ -26,9 +25,8 @@ window.CEKIM = {
     { a: 18.0, b: 21.3, text: "“Sadece on saniye mi?”", quote: true },
     { a: 21.75, b: 23.35, text: "kurguda." },
   ],
-  BURST: [],            // filled in cekim.js from CUE (centre points per shot)
   CUE: {
-    glint: 3.35, drop: 4.5, truck: 11.8, snap: 11.8, bump: 14.6, clap: 16.05,
+    glint: 3.35, drop: 4.5, truck: 11.8, snap: 11.8, bump: 13.8, clap: 15.92,
     enter: 23.42, freeze: 23.5, beeps: [24.4, 25.4, 26.4], logo: 27.5, line: 28.3, pill: 28.8,
   },
 };

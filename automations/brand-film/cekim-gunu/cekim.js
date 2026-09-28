@@ -31,8 +31,8 @@
 
   // Impact hits: [time, centre x, centre y, life, flash strength]
   const HITS = [
-    [C.bump, 560, 1010, 0.42, 0.35],
-    [C.clap, 700, 1180, 0.36, 0.3],
+    [C.bump, 600, 1020, 0.42, 0.35],
+    [C.clap, 660, 1080, 0.36, 0.3],
     [C.enter, 570, 1350, 0.12, 0.85],
     [C.freeze, 540, 720, 0.55, 0.25],
     [C.logo, 540, 960, 0.5, 0],

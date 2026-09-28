@@ -1,5 +1,5 @@
 /**
- * Çekim Günü step 1 — turn the Kling clips (.cache/cekim/src/sNN.mp4) into
+ * Çekim Günü step 1 — turn the Kling clips (cekim-gunu/clips/sNN.mp4, or .cache/cekim/src/) into
  * 1080×1920 JPEG sequences under .cache/cekim/<id>/ that the page steps through.
  * Clips come from Kling as ~1076×1924 @ 24 fps; they are cover-cropped to the
  * stage and resampled to 30 fps (60 fps motion-interpolated for the slow-mo shot).
@@ -19,7 +19,7 @@ const SHOTS = { s01: 30, s02: 30, s03: 30, s04: 30, s05: 60, s06: 30, s07: 30, s
 
 const manifest = {};
 for (const [id, fps] of Object.entries(SHOTS)) {
-  const src = path.join(cache, "src", `${id}.mp4`);
+  const src = [path.join(cache, "src", `${id}.mp4`), path.join(here, "clips", `${id}.mp4`)].find((p) => fs.existsSync(p)) ?? path.join(here, "clips", `${id}.mp4`);
   if (!fs.existsSync(src)) throw new Error(`klip yok: ${src}`);
   const dir = path.join(cache, id);
   if (!fs.existsSync(dir) || process.argv.includes("--force")) {
