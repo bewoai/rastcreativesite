@@ -34,6 +34,8 @@ interface Props {
   preloadFonts?: string[];
   /** Responsive LCP image preloads, e.g. a portrait poster for phones only. */
   preloadImages?: { href: string; media?: string }[];
+  /** Only Inter latin up front (pages whose first screen needs nothing else). */
+  leanFonts?: boolean;
 }
 
 const {
@@ -48,6 +50,7 @@ const {
   preloadImage,
   preloadFonts = [],
   preloadImages = [],
+  leanFonts = false,
   entryAnimation = false,
 } = Astro.props;
 
@@ -174,11 +177,11 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
     {/* Inter carries BOTH body and display, so its two subsets are the
         headline font too — preload them or the h1 swaps in late. */}
     <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin-wght-normal.woff2" crossorigin />
-    <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin-ext-wght-normal.woff2" crossorigin />
+    {!leanFonts && <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin-ext-wght-normal.woff2" crossorigin />}
     {/* Space Grotesk (UI/buttons/metadata) — preload both subsets so above-the-fold
         labels (incl. Turkish İ/ş in latin-ext) don't swap in late on first load. */}
-    <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk-latin-wght-normal.woff2" crossorigin />
-    <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk-latin-ext-wght-normal.woff2" crossorigin />
+    {!leanFonts && <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk-latin-wght-normal.woff2" crossorigin />}
+    {!leanFonts && <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk-latin-ext-wght-normal.woff2" crossorigin />}
 
     <!-- Open Graph -->
     <meta property="og:type" content={ogType} />
