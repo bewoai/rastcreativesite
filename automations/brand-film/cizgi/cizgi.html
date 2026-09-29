@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<title>Rast Creative — Tek Çizgi</title>
+<link rel="icon" href="data:," />
+<!--
+  Rast Creative Studio — "Tek Çizgi" (1080×1920, 30 fps, 20 s, seamless loop).
+  Engine: cizgi.js (Canvas 2D, hairline paths) · sound: cizgi-audio.js · clock: timing.js
+-->
+<style>
+  @font-face { font-family: "Fraunces"; font-style: italic; font-weight: 100 900; src: url("/public/fonts/fraunces-latin-wght-italic.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: "Fraunces"; font-style: italic; font-weight: 100 900; src: url("/public/fonts/fraunces-latin-ext-wght-italic.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20AB, U+20AD-20C0, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family: "Inter"; font-weight: 100 900; src: url("/public/fonts/inter-latin-wght-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  * { margin: 0; padding: 0; animation: none !important; transition: none !important; }
+  html, body { background: #0b0a09; overflow: hidden; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; transform-origin: 0 0; }
+  #c { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  #ui { position: fixed; left: 0; right: 0; bottom: 0; display: none; gap: 12px; align-items: center; padding: 10px 16px; background: #111; color: #ddd; font: 13px/1 system-ui; z-index: 20; }
+  #ui input { flex: 1; }
+</style>
+</head>
+<body>
+<div id="stage"><canvas id="c" width="1080" height="1920"></canvas></div>
+<div id="ui"><button id="play">▶︎</button><input id="scrub" type="range" min="0" max="20" step="0.001" value="0" /><span id="tcu">0.00</span></div>
+<script src="timing.js"></script>
+<script src="cizgi-audio.js"></script>
+<script src="cizgi.js"></script>
+</body>
+</html>
