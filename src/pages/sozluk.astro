@@ -1,0 +1,162 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/Section.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import Button from "../components/Button.astro";
+import { PRIMARY_CTA, SITE } from "../consts";
+import { breadcrumb } from "../lib/schema";
+import { GLOSSARY } from "../data/glossary";
+
+const title = "Video Prodüksiyon Sözlüğü";
+const description =
+  "Video prodüksiyon sözlüğü: B-roll, kurgu, renk düzenleme, storyboard, Reels, drone ve 40 temel terimin kısa ve anlaşılır tanımları.";
+const terms = [...GLOSSARY].sort((a, b) => a.term.localeCompare(b.term, "tr"));
+const letterOf = (term: string) => (/\d/.test(term[0]) ? "0–9" : term[0].toLocaleUpperCase("tr"));
+const groups = terms.reduce<{ letter: string; items: typeof terms }[]>((acc, t) => {
+  const letter = letterOf(t.term);
+  if (acc.at(-1)?.letter !== letter) acc.push({ letter, items: [] });
+  acc.at(-1)!.items.push(t);
+  return acc;
+}, []);
+const letterId = (l: string) => `harf-${l === "0–9" ? "0-9" : l}`;
+const url = new URL("/sozluk/", SITE.url).href;
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Sözlük", path: "/sozluk/" },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "DefinedTermSet",
+    "@id": `${url}#set`,
+    name: "Video Prodüksiyon Sözlüğü",
+    url,
+    hasDefinedTerm: terms.map((t) => ({
+      "@type": "DefinedTerm",
+      name: t.term,
+      ...(t.alt ? { alternateName: t.alt } : {}),
+      description: t.definition,
+      url: `${url}#${t.slug}`,
+      inDefinedTermSet: `${url}#set`,
+    })),
+  },
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <Section width="narrow">
+    <SectionHeading as="h1" eyebrow="Sözlük">
+      Video prodüksiyon sözlüğü
+      <Fragment slot="intro">
+        <p>
+          Çekim, kurgu ve sosyal medya videolarında en sık geçen terimlerin kısa ve sade tanımları.
+          Bir teklifte ya da toplantıda duyduğunuz bir kelimeyi buradan hızlıca bulabilirsiniz.
+        </p>
+      </Fragment>
+    </SectionHeading>
+
+    <nav class="letters" aria-label="Harfler">
+      {groups.map((g) => <a href={`#${letterId(g.letter)}`}>{g.letter}</a>)}
+    </nav>
+
+    {
+      groups.map((g) => (
+        <section class="group" aria-labelledby={letterId(g.letter)}>
+          <h2 class="term__letter" id={letterId(g.letter)}>{g.letter}</h2>
+          <dl>
+            {g.items.map((t) => (
+              <div class="term" id={t.slug}>
+                <dt class="term__name">
+                  {t.term}
+                  {t.alt && <span class="term__alt"> · {t.alt}</span>}
+                </dt>
+                <dd class="term__def">
+                  {t.definition}
+                  {t.link && (
+                    <>
+                      {" "}
+                      <a href={t.link.href}>{t.link.label} →</a>
+                    </>
+                  )}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      ))
+    }
+
+    <div class="cta-inline">
+      <p>Projenizde bu terimlerin hangisine ihtiyacınız olduğunu birlikte netleştirelim.</p>
+      <Button href={PRIMARY_CTA.href} size="lg" arrow>Görüşelim</Button>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .letters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 1.8rem;
+  }
+  .letters a {
+    display: inline-grid;
+    place-items: center;
+    min-width: 2.2rem;
+    height: 2.2rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-family: var(--font-utility);
+    font-size: 0.9rem;
+    color: var(--ink);
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+  .letters a:hover {
+    border-color: var(--amber);
+  }
+  .group {
+    margin-top: 2rem;
+  }
+  .term {
+    padding: 1.1rem 0;
+    border-top: 1px solid var(--line);
+    scroll-margin-top: 6rem;
+  }
+  .term__letter {
+    display: block;
+    margin-bottom: 0.2rem;
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    color: var(--amber-text);
+    scroll-margin-top: 6rem;
+  }
+  .term__name {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--ink);
+  }
+  .term__alt {
+    font-family: var(--font-utility);
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .term__def {
+    margin-top: 0.35rem;
+    max-width: 62ch;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .term__def a {
+    color: var(--amber-text);
+    white-space: nowrap;
+  }
+  .cta-inline {
+    display: grid;
+    justify-items: start;
+    gap: 1rem;
+    margin-top: 2.6rem;
+    color: var(--ink-soft);
+  }
+</style>
