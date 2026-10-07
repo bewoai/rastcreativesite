@@ -126,3 +126,9 @@ Astro’nun `trailingSlash: "always"` ayarı üretim rotalarını tanımlar. Hos
 
 - `/sozluk/` sayfasında 40 terim var. Veri: `src/data/glossary.ts`.
 - Schema: DefinedTermSet ve DefinedTerm. Her terimin `#slug` çapası var; ilgili blog/sektör sayfasına link veriliyor. Footer'da "Sözlük" linki var.
+
+## Ekip profilleri ve yazar kimliği (2026-10-07)
+
+- Ekip verisi `src/data/team.ts` dosyasında tek kaynak; `/hakkimizda/`, `/ekip/<slug>/` ve blog yazar şeması buradan besleniyor.
+- `/ekip/berat-degirmenci/` ve `/ekip/muhammed-ekrem-adnan/` sayfaları ProfilePage + Person şeması taşıyor (sameAs: LinkedIn, Instagram, portfolyo).
+- Blog yazılarında yazar adı profil sayfasına `rel="author"` ile bağlanıyor; BlogPosting.author artık profil URL'si, unvan ve sameAs bilgisini içeriyor.
