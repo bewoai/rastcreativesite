@@ -8,8 +8,8 @@ import ContactForm from "../components/ContactForm.astro";
 import { CONTACT } from "../consts";
 import { localBusiness, organization, webSite, breadcrumb } from "../lib/schema";
 
-const mapsQuery = encodeURIComponent(`Rast Creative Studio ${CONTACT.city}`);
-const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
+// Opens the Google Business Profile: map, route and reviews in one place.
+const mapsUrl = CONTACT.googleShare;
 
 // Contact is the strongest local-SEO page: full LocalBusiness + breadcrumb.
 const pageJsonLd = [
@@ -81,8 +81,8 @@ const pageJsonLd = [
         <a href={mapsUrl} target="_blank" rel="noopener noreferrer" class="map">
           <span class="map__pin"><Icon name="home" size={20} /></span>
           <span class="map__text">
-            <strong>Haritada aç</strong>
-            <span>{CONTACT.city}</span>
+            <strong>Google'da aç</strong>
+            <span>{CONTACT.city} · harita, yorumlar</span>
           </span>
           <Icon name="arrow-up-right" size={18} class="map__ext" />
         </a>

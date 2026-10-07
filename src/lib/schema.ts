@@ -102,7 +102,8 @@ export const localBusiness = {
       },
     })),
   },
-  sameAs: SOCIAL.map((s) => s.href),
+  hasMap: CONTACT.googleProfile,
+  sameAs: [...SOCIAL.map((s) => s.href), CONTACT.googleProfile],
 };
 
 /** Organization identity node for GEO / entity recognition. */
@@ -125,7 +126,7 @@ export const organization = {
     addressRegion: CONTACT.addressRegion,
     addressCountry: CONTACT.addressCountry,
   },
-  sameAs: SOCIAL.map((s) => s.href),
+  sameAs: [...SOCIAL.map((s) => s.href), CONTACT.googleProfile],
   knowsAbout: [
     "Sakarya video çekimi",
     "video prodüksiyon",
