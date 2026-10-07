@@ -38,7 +38,8 @@ if (urls.length === 0) {
   console.log("IndexNow: no changed pages.");
   process.exit(0);
 }
-const res = await fetch("https://api.indexnow.org/indexnow", {
+// Bing shares submissions with the other IndexNow engines.
+const res = await fetch("https://www.bing.com/indexnow", {
   method: "POST",
   headers: { "Content-Type": "application/json; charset=utf-8" },
   body: JSON.stringify({
