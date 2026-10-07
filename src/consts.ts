@@ -7,7 +7,7 @@ export const SITE = {
   name: "Rast Creative Studio",
   shortName: "Rast Creative",
   /** Home-page <title>. Inner pages pass their own `title` to BaseLayout. */
-  defaultTitle: "Rast Creative Studio | Sakarya Video Prodüksiyon ve Kreatif Ajans",
+  defaultTitle: "Rast Creative | Sakarya Video Prodüksiyon ve Kreatif Ajans",
   /** `%s` is replaced by the page title on inner pages. */
   titleTemplate: "%s — Rast Creative Studio",
   description:

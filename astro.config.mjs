@@ -24,6 +24,10 @@ export default defineConfig({
 
   build: { inlineStylesheets: 'always' },
 
+  // Homepage case posters come from YouTube; fetch and resize them at build
+  // time so phones get a ~40 KB WebP instead of a 120–330 KB maxres frame.
+  image: { domains: ['i.ytimg.com'] },
+
   vite: {
     plugins: [tailwindcss()],
     optimizeDeps: {
