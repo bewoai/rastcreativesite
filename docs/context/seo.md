@@ -99,3 +99,13 @@ Astro’nun `trailingSlash: "always"` ayarı üretim rotalarını tanımlar. Hos
   - **Video çekimi:** Serdivan, Darıca, İzmit, Düzce.
   - **Drone çekimi:** Sapanca, Kocaeli, Gebze, Sakarya.
   - Toplamda 24 sayfa özel içeriğe sahip.
+- **3. tur (2026-10-07):** 6–13 gösterim alan 26 sayfa daha kısa özel içerikle kapsandı. Toplam 50 sayfa özel içerikli.
+- **Blog (2026-10-07):** Arama verisindeki boşluklar için üç yazı eklendi:
+  - "reklam senaryosu nedir"
+  - "drone çekim ücreti"
+  - sosyal medya yönetimi fiyatı
+  - Yazılarda rakam verilmedi; fiyat aralığı yayınlama kararı müşteride.
+- **Ana sayfa H2'leri:** Üç başlığa anahtar kelime eklendi:
+  - "Çekim, kurgu, strateji: tek ekip."
+  - "Video çekimi hakkında sorular."
+  - "Sakarya'da sahadayız."
