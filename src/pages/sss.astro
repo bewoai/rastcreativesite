@@ -1,0 +1,121 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/Section.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import Button from "../components/Button.astro";
+import { PRIMARY_CTA } from "../consts";
+import { breadcrumb, faqPage } from "../lib/schema";
+import { FAQ_GROUPS } from "../data/faq-hub";
+
+const title = "Sık Sorulan Sorular: Video Çekimi, Fiyat, Teslim";
+const description =
+  "Video çekimi, fiyat, teslim süresi, revizyon, formatlar, sosyal medya yönetimi ve hizmet bölgeleri hakkında sık sorulan soruların kısa ve net cevapları.";
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Sık sorulan sorular", path: "/sss/" },
+  ]),
+  faqPage(FAQ_GROUPS.flatMap((g) => g.items.map((i) => ({ question: i.q, answer: i.a })))),
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <Section width="narrow">
+    <SectionHeading as="h1" eyebrow="SSS">
+      Sık sorulan sorular
+      <Fragment slot="intro">
+        <p>Video çekimi, fiyat, teslim ve sosyal medya yönetimi hakkında en çok sorulanlar. Cevabını bulamadığınız soruyu bize doğrudan sorabilirsiniz.</p>
+      </Fragment>
+    </SectionHeading>
+
+    <nav class="toc" aria-label="Konular">
+      {FAQ_GROUPS.map((g) => <a href={`#${g.id}`}>{g.title}</a>)}
+    </nav>
+
+    {
+      FAQ_GROUPS.map((g) => (
+        <section class="group" id={g.id} aria-labelledby={`${g.id}-title`}>
+          <h2 class="group__title" id={`${g.id}-title`}>{g.title}</h2>
+          <dl class="faq">
+            {g.items.map((i) => (
+              <div class="faq__item">
+                <dt class="faq__q">{i.q}</dt>
+                <dd class="faq__a">
+                  {i.a}
+                  {i.link && (
+                    <>
+                      {" "}
+                      <a href={i.link.href}>{i.link.label} →</a>
+                    </>
+                  )}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      ))
+    }
+
+    <div class="cta-inline">
+      <p>Sorunuz burada yok mu?</p>
+      <Button href={PRIMARY_CTA.href} size="lg" arrow>Görüşelim</Button>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.8rem;
+  }
+  .toc a {
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.9rem;
+    color: var(--ink);
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+  .toc a:hover {
+    border-color: var(--amber);
+  }
+  .group {
+    margin-top: 2.6rem;
+    scroll-margin-top: 6rem;
+  }
+  .group__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 1.15rem + 1vw, 1.85rem);
+    color: var(--ink);
+  }
+  .faq {
+    margin-top: 0.8rem;
+  }
+  .faq__item {
+    padding: 1rem 0;
+    border-top: 1px solid var(--line);
+  }
+  .faq__q {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .faq__a {
+    margin-top: 0.35rem;
+    max-width: 64ch;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .faq__a a {
+    color: var(--amber-text);
+  }
+  .cta-inline {
+    display: grid;
+    justify-items: start;
+    gap: 0.8rem;
+    margin-top: 2.8rem;
+    color: var(--ink-soft);
+  }
+</style>

@@ -4,7 +4,7 @@
  * Only facts we actually have are emitted — no invented address/hours/geo.
  */
 import { SITE, CONTACT, SOCIAL } from "../consts";
-import { getTeamMember } from "../data/team";
+import { TEAM, getTeamMember } from "../data/team";
 
 const abs = (path: string) => new URL(path, SITE.url).href;
 
@@ -128,6 +128,13 @@ export const organization = {
     addressCountry: CONTACT.addressCountry,
   },
   sameAs: [...SOCIAL.map((s) => s.href), CONTACT.googleProfile],
+  founder: TEAM.map((m) => ({
+    "@type": "Person",
+    name: m.name,
+    jobTitle: m.role,
+    url: `${SITE.url}/ekip/${m.slug}/`,
+    sameAs: m.links.map((l) => l.href),
+  })),
   knowsAbout: [
     "Sakarya video çekimi",
     "video prodüksiyon",
