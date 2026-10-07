@@ -12,6 +12,7 @@ import { PRIMARY_CTA } from "../consts";
 import { breadcrumb, BUSINESS_ID, faqPage } from "../lib/schema";
 import bannerPhoto from "../assets/photos/hizmetler-hero.jpg";
 import { SEO_SERVICES } from "../data/seo-services";
+import { SECTORS } from "../data/sectors";
 import { AREA_INDEX_LOCATION_SLUGS, SEO_LOCATIONS } from "../data/locations";
 
 const services = (await getCollection("services")).sort((a, b) => a.data.order - b.data.order);
@@ -233,6 +234,27 @@ const pageJsonLd = [
       services={seoServiceGroups}
       locations={seoCoreLocations}
     />
+  </Section>
+
+  <Section width="narrow" space="tight">
+    <SectionHeading eyebrow="Sektörler">
+      Sektörünüze göre çalışma şekli
+      <Fragment slot="intro">
+        <p>Sağlıktan sanayiye, her sektör için nasıl planladığımızı ve gerçek işlerimizi görün.</p>
+      </Fragment>
+    </SectionHeading>
+    <ul class="sector-links">
+      {
+        SECTORS.map((sector) => (
+          <li>
+            <a href={`/sektorler/${sector.slug}/`}>
+              {sector.heading}
+              <Icon name="arrow-up-right" size={14} />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
   </Section>
 
   <Section width="narrow" space="tight">
@@ -543,5 +565,23 @@ const pageJsonLd = [
     .use-cases {
       grid-column: 2;
     }
+  }
+  .sector-links {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: 1.4rem;
+  }
+  .sector-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 1.05rem;
+    color: var(--ink);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.15rem;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .sector-links a:hover {
+    color: var(--amber-text);
   }
 </style>

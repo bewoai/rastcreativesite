@@ -109,3 +109,15 @@ Astro’nun `trailingSlash: "always"` ayarı üretim rotalarını tanımlar. Hos
   - "Çekim, kurgu, strateji: tek ekip."
   - "Video çekimi hakkında sorular."
   - "Sakarya'da sahadayız."
+
+## Sektör sayfaları (2026-10-07)
+
+- `/sektorler/` hub sayfası ve 5 sektör sayfası eklendi. Veri: `src/data/sectors.ts`. Şablon: `src/pages/sektorler/[sektor].astro`.
+- Sektörler ve kanıt olarak gösterilen projeler:
+  - Doktor/klinik: Duygu Hoca, Dr. Erdem, PARHAD
+  - Fabrika/sanayi: Altoteks, Mavi Vatan, Meteors, Chint, Canex, Federal
+  - Mağaza/perakende: Aytaş, Duru Optik
+  - Mekan/etkinlik: Newlife, Hörnhauss, Candles and Echoes
+  - YouTube/eğitim: Duygu Hoca, Mars Stüdyo
+- Projeler `clients` alanıyla eşleşiyor. Yeni bir sektör projesi eklenince ilgili sektörün `clients` listesine eklenmeli.
+- Linkler: footer'da "Sektörler", hizmetler sayfasında sektör listesi.

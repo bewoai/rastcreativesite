@@ -1,0 +1,386 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Section from "../../components/Section.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import Button from "../../components/Button.astro";
+import Icon from "../../components/Icon.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+import { PRIMARY_CTA, CONTACT, SITE } from "../../consts";
+import { breadcrumb, faqPage, BUSINESS_ID } from "../../lib/schema";
+import { SECTORS, type Sector } from "../../data/sectors";
+import { getCollection } from "astro:content";
+
+export function getStaticPaths() {
+  return SECTORS.map((sector) => ({ params: { sektor: sector.slug }, props: { sector } }));
+}
+
+const { sector } = Astro.props as { sector: Sector };
+const path = `/sektorler/${sector.slug}/`;
+
+// Real proof: the projects we shot for clients in this sector, varied by client.
+const all = (await getCollection("projects"))
+  .filter((p) => !p.data.draft && !p.data.hidden && sector.clients.includes(p.data.client ?? ""))
+  .sort((a, b) => a.data.order - b.data.order);
+const perClient = new Map<string, number>();
+const projects = all
+  .filter((p) => {
+    const n = perClient.get(p.data.client!) ?? 0;
+    perClient.set(p.data.client!, n + 1);
+    return n < 2;
+  })
+  .slice(0, 6);
+
+const others = SECTORS.filter((s) => s.slug !== sector.slug);
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Sektörler", path: "/sektorler/" },
+    { name: sector.name, path },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: sector.heading,
+    serviceType: sector.heading,
+    description: sector.description,
+    provider: { "@id": BUSINESS_ID },
+    areaServed: ["Sakarya", "Kocaeli", "Düzce", "Türkiye"],
+    url: new URL(path, SITE.url).href,
+  },
+  faqPage(sector.faqs),
+  ...(projects.length
+    ? [
+        {
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: `${sector.heading} — referans projeler`,
+          itemListElement: projects.map((p, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            url: new URL(p.data.externalUrl ?? `/projeler/${p.id}/`, SITE.url).href,
+            name: p.data.title,
+          })),
+        },
+      ]
+    : []),
+];
+---
+
+<BaseLayout title={sector.title} description={sector.description} jsonLd={jsonLd}>
+  <Section width="narrow">
+    <a href="/sektorler/" class="back">← Tüm sektörler</a>
+    <SectionHeading as="h1" eyebrow={`Sektörler · ${sector.name}`}>
+      {sector.heading}
+      <Fragment slot="intro">
+        <p>{sector.tagline}.</p>
+      </Fragment>
+    </SectionHeading>
+
+    <div class="prose">
+      {sector.intro.map((t) => <p>{t}</p>)}
+    </div>
+
+    <h2 class="block__title">Neler üretiyoruz?</h2>
+    <ul class="benefits">
+      {
+        sector.deliverables.map((d) => (
+          <li class="benefit" data-reveal>
+            <Icon name="arrow-right" size={18} class="benefit__ic" />
+            <div>
+              <h3 class="benefit__title">{d.title}</h3>
+              <p class="benefit__text">{d.text}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="fit" data-reveal>
+      <h2 class="fit__title">Çekim günü nasıl planlanıyor?</h2>
+      <ol class="steps">
+        {sector.process.map((step) => <li>{step}</li>)}
+      </ol>
+    </div>
+
+    <div class="cta-inline">
+      <Button href={PRIMARY_CTA.href} size="lg" arrow>Görüşelim</Button>
+      <a href={`tel:${CONTACT.phoneIntl}`} class="phone">
+        <Icon name="contact" size={18} /> {CONTACT.phone}
+      </a>
+    </div>
+  </Section>
+
+  {
+    projects.length > 0 && (
+      <Section width="narrow" space="tight">
+        <SectionHeading eyebrow="Gerçek işler">
+          Bu sektörde çektiklerimiz
+          <Fragment slot="intro">
+            <p>{sector.clients.join(", ")} için ürettiğimiz işlerden bir seçki.</p>
+          </Fragment>
+        </SectionHeading>
+        <div class="projects-grid">
+          {projects.map((p) => (
+            <ProjectCard
+              href={p.data.externalUrl ?? `/projeler/${p.id}/`}
+              title={p.data.title}
+              category={p.data.category}
+              poster={p.data.poster}
+              posterAlt={p.data.posterAlt}
+              client={p.data.client}
+              year={p.data.year}
+              timecode={p.data.duration}
+              vertical={p.data.vertical}
+              summary={p.data.summary}
+            />
+          ))}
+        </div>
+      </Section>
+    )
+  }
+
+  <Section width="narrow" space="tight">
+    <SectionHeading eyebrow="Sık sorulanlar">{sector.heading} hakkında</SectionHeading>
+    <dl class="faq">
+      {
+        sector.faqs.map((f) => (
+          <div class="faq__item" data-reveal>
+            <dt class="faq__q">{f.question}</dt>
+            <dd class="faq__a">{f.answer}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Section>
+
+  <Section width="narrow" space="tight">
+    <div class="links">
+      <div class="links__col">
+        <h2 class="links__title">İlgili hizmetler ve rehberler</h2>
+        <ul class="links__list">
+          {
+            [...sector.services, ...sector.posts].map((l) => (
+              <li>
+                <a href={l.href}>
+                  {l.label}
+                  <Icon name="arrow-up-right" size={14} />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="links__col">
+        <h2 class="links__title">Diğer sektörler</h2>
+        <ul class="links__list">
+          {
+            others.map((s) => (
+              <li>
+                <a href={`/sektorler/${s.slug}/`}>
+                  {s.heading}
+                  <Icon name="arrow-up-right" size={14} />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 1.2rem;
+    font-family: var(--font-utility);
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .back:hover {
+    color: var(--amber-text);
+  }
+  .prose {
+    margin-top: 1.8rem;
+    font-size: 1.1rem;
+    line-height: var(--leading-body);
+    color: var(--ink-soft);
+    max-width: 62ch;
+  }
+  .prose p + p {
+    margin-top: 1rem;
+  }
+  .block__title {
+    margin: 2.6rem 0 0.2rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 1.1rem + 1vw, 1.75rem);
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .steps {
+    display: grid;
+    gap: 0.7rem;
+    margin-top: 1rem;
+    padding-left: 1.3rem;
+    list-style: decimal;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .steps li::marker {
+    color: var(--amber-text);
+    font-weight: 600;
+  }
+  .benefits {
+    list-style: none;
+    margin: 2.5rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 1.2rem;
+  }
+  .benefit {
+    display: flex;
+    gap: 0.8rem;
+    padding: 1.2rem 1.3rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--amber) 3%, transparent);
+  }
+  .benefit__ic {
+    margin-top: 0.25rem;
+    flex: none;
+    color: var(--amber-text);
+  }
+  .benefit__title {
+    margin: 0 0 0.3rem;
+    font-size: 1.05rem;
+  }
+  .benefit__text {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+    line-height: var(--leading-body);
+  }
+  .cta-inline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.6rem;
+    margin-top: 2.5rem;
+  }
+  .fit {
+    margin-top: 2.5rem;
+    padding: 1.4rem clamp(1.15rem, 4vw, 1.8rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--amber) 4%, transparent);
+  }
+  .fit__title {
+    margin: 0 0 1rem;
+    font-family: var(--font-utility);
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+  }
+  .fit__list {
+    display: grid;
+    gap: 0.75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .fit__list li {
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .fit__list li::before {
+    content: "";
+    display: inline-block;
+    width: 0.48rem;
+    height: 0.48rem;
+    margin-right: 0.65rem;
+    border-radius: 999px;
+    background: var(--amber);
+    vertical-align: 0.08em;
+  }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    margin-top: 2rem;
+  }
+  .phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-utility);
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .phone:hover {
+    color: var(--amber-text);
+  }
+  .faq {
+    margin: 2rem 0 0;
+    display: grid;
+    gap: 1.2rem;
+  }
+  .faq__item {
+    border-top: 1px solid var(--line);
+    padding-top: 1.2rem;
+  }
+  .faq__q {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  .faq__a {
+    margin: 0;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .links {
+    display: grid;
+    gap: 2rem;
+    margin-top: 1rem;
+  }
+  .links__title {
+    font-size: 1rem;
+    font-family: var(--font-utility);
+    letter-spacing: 0.02em;
+    margin: 0 0 1rem;
+    color: var(--ink);
+  }
+  .links__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .links__list a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.98rem;
+    color: var(--ink-soft);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .links__list a:hover {
+    color: var(--amber-text);
+  }
+  @media (min-width: 700px) {
+    .links {
+      grid-template-columns: 1fr 1fr;
+    }
+    .projects-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .benefits {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
