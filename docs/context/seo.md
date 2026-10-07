@@ -54,3 +54,12 @@ Astro’nun `trailingSlash: "always"` ayarı üretim rotalarını tanımlar. Hos
 - [x] API/RSS/discovery çıktılarında page ve endpoint ayrımı korunuyor — 2026-09-10
 - [ ] Mobil ve `prefers-reduced-motion` smoke testi
 - [ ] Prod Lighthouse’ta LCP/CLS ve SEO regresyonu yok
+
+## Google İşletme Profili ve backlink kaydı
+
+- **Google İşletme Profili** (2026-10-07):
+  - Bilgi Grafiği kimliği `/g/11zxk4gs4x`.
+  - `CONTACT.googleProfile` LocalBusiness `hasMap` ve LocalBusiness/Organization `sameAs` alanlarında kullanılıyor.
+  - İletişim sayfasındaki "Google'da aç" kartı `CONTACT.googleShare` kısa linkine gidiyor; harita, yorumlar ve yol tarifi orada.
+- **Backlinkler:**
+  - serdivanestetik.com (Dr. Erdem Çalışkan) footer'ında "Created by Rast Creative" var. Link dofollow ve `https://rastcreative.com` adresine gidiyor (2026-10-07'de doğrulandı).

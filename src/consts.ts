@@ -82,6 +82,11 @@ export const SOCIAL: readonly NavItem[] = [
  */
 export const CONTACT = {
   city: "Serdivan, Sakarya",
+  /** Google Business Profile (Knowledge Graph id /g/11zxk4gs4x, 2026-10-07).
+   *  `googleProfile` is the stable entity URL for schema sameAs/hasMap;
+   *  `googleShare` is the short link people tap (opens map, reviews, route). */
+  googleProfile: "https://www.google.com/search?kgmid=/g/11zxk4gs4x",
+  googleShare: "https://share.google/MQDL2FMsZUpXjq6Vp",
   addressLocality: "Serdivan",
   addressRegion: "Sakarya",
   addressCountry: "TR",
