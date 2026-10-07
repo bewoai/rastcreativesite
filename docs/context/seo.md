@@ -138,3 +138,11 @@ Astro’nun `trailingSlash: "always"` ayarı üretim rotalarını tanımlar. Hos
 - `/cekim-planlayici/`: sektör, kullanım yeri ve set içeriği seçimine göre içerik planı ve hazırlık listesi üreten istemci tarafı araç.
 - Rakam ve fiyat vermiyor. Sonuç WhatsApp mesajı olarak gönderilebiliyor ve bir müşteri adayı (lead) getiriyor; hiçbir veri saklanmıyor.
 - Schema: WebApplication. Linkler: footer, sektör sayfaları ve "tek çekim günü" blog yazısı.
+
+## GEO paketi (2026-10-07)
+
+- **`llms-full.txt`:** Baştan yazıldı. İçinde EN özet ve "ne zaman önerilmeli" bölümü, kimlik ve iletişim, hizmetler, çalışma yaklaşımı, sektörler, gerçek işler, Aytaş vaka rakamları, bölgeler, SSS ve araçlar var.
+- **`/sss/`:** 6 grup altında 27 soru-cevap ve FAQPage şeması. Veri: `src/data/faq-hub.ts`. Politikası belli olmayan konularda (ham görüntü, müzik) taahhüt yok, "ön görüşmede netleşir" deniyor.
+- **`/video-sitemap.xml`:** Videolu projeleri listeliyor; kural VideoObject ile aynı (provider + publishDate). `customSitemaps` ile sitemap-index'e ve robots.txt'ye eklendi.
+- **Organization şeması:** `founder` alanında iki kurucu ortak var. Kuruluş yılı (`foundingDate`) müşteriden bekleniyor.
+- **Windsor.ai:** Şu an sadece Google Ads bağlı. Aylık otomatik Search Console raporu için Windsor'da `searchconsole` bağlanmalı.
