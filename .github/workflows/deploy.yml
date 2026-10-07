@@ -54,6 +54,11 @@ jobs:
         run: |
           ls -la dist
           test -f dist/index.html
+          echo "${{ github.sha }}" > dist/build-id.txt
+
+      - name: Snapshot previous deploy (for IndexNow diff)
+        continue-on-error: true
+        run: git clone --quiet --depth 1 --branch deploy "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" prev-deploy
 
       - name: Publish built site to `deploy` branch
         uses: peaceiris/actions-gh-pages@v4
@@ -63,3 +68,15 @@ jobs:
           publish_branch: deploy
           force_orphan: true # keep the deploy branch a clean snapshot of dist/
           commit_message: "deploy: built site from ${{ github.sha }}"
+
+      # Tell Bing/Yandex (IndexNow) which pages changed. Waits until Hostinger
+      # serves this build (build-id.txt = this commit), never fails the deploy.
+      - name: IndexNow ping
+        continue-on-error: true
+        timeout-minutes: 8
+        run: |
+          for i in $(seq 1 40); do
+            [ "$(curl -fsS https://rastcreative.com/build-id.txt 2>/dev/null)" = "${{ github.sha }}" ] && break
+            sleep 10
+          done
+          node scripts/indexnow.mjs dist prev-deploy
