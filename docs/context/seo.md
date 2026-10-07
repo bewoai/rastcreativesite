@@ -63,3 +63,13 @@ Astro’nun `trailingSlash: "always"` ayarı üretim rotalarını tanımlar. Hos
   - İletişim sayfasındaki "Google'da aç" kartı `CONTACT.googleShare` kısa linkine gidiyor; harita, yorumlar ve yol tarifi orada.
 - **Backlinkler:**
   - serdivanestetik.com (Dr. Erdem Çalışkan) footer'ında "Created by Rast Creative" var. Link dofollow ve `https://rastcreative.com` adresine gidiyor (2026-10-07'de doğrulandı).
+
+## IndexNow (Bing / ChatGPT search / Copilot / Yandex)
+
+- **Anahtar dosyası:** `public/61a4c518938445e3800655abeb959f8b.txt`. Anahtar herkese açık olacak şekilde tasarlanmıştır, gizli değildir.
+- **Deploy akışı** (`.github/workflows/deploy.yml`):
+  - Build'e `build-id.txt` (commit SHA) yazılır.
+  - Yayından önce eski `deploy` dalı `prev-deploy/` klasörüne alınır.
+  - Hostinger yeni build'i sunmaya başlayınca `scripts/indexnow.mjs` yalnızca HTML'i değişen ve indexlenebilir sayfaları gönderir.
+  - Adım `continue-on-error` olduğundan deploy'u hiçbir zaman düşürmez.
+- **Kısa yorum linki:** `/yorum/` adresi `.htaccess` içinde 302 ile Google İşletme Profili'ne gider. İşletme panelindeki resmi "yorum iste" linki alınınca hedef o linkle değiştirilmeli.
