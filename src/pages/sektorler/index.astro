@@ -1,0 +1,123 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Section from "../../components/Section.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import Button from "../../components/Button.astro";
+import Icon from "../../components/Icon.astro";
+import { PRIMARY_CTA, SITE } from "../../consts";
+import { breadcrumb } from "../../lib/schema";
+import { SECTORS } from "../../data/sectors";
+
+const title = "Sektörlere Göre Video Prodüksiyon";
+const description =
+  "Sağlık, sanayi, perakende, mekan/etkinlik ve eğitim sektörleri için video çekimi ve sosyal medya içeriği. Her sektörde gerçek projelerimizi inceleyin.";
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Sektörler", path: "/sektorler/" },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: title,
+    itemListElement: SECTORS.map((s, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: new URL(`/sektorler/${s.slug}/`, SITE.url).href,
+      name: s.heading,
+    })),
+  },
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <Section width="narrow">
+    <SectionHeading as="h1" eyebrow="Sektörler">
+      Sektörünüze göre video prodüksiyon
+      <Fragment slot="intro">
+        <p>
+          Her sektörün izleyicisi, kararı ve çekim koşulları farklı. Aşağıda en çok çalıştığımız
+          alanlarda nasıl planladığımızı ve o sektörde çektiğimiz gerçek işleri bulabilirsiniz.
+        </p>
+      </Fragment>
+    </SectionHeading>
+
+    <ul class="sectors">
+      {
+        SECTORS.map((s) => (
+          <li class="sector" data-reveal>
+            <a href={`/sektorler/${s.slug}/`}>
+              <span class="sector__name">{s.name}</span>
+              <h2 class="sector__title">{s.heading}</h2>
+              <p class="sector__text">{s.tagline}.</p>
+              <span class="sector__more">
+                İncele <Icon name="arrow-up-right" size={14} />
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="cta-inline">
+      <Button href={PRIMARY_CTA.href} size="lg" arrow>Görüşelim</Button>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .sectors {
+    display: grid;
+    gap: 1rem;
+    margin-top: 2.2rem;
+  }
+  .sector a {
+    display: grid;
+    gap: 0.4rem;
+    padding: 1.3rem 1.4rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg, 1rem);
+    background: color-mix(in srgb, var(--paper) 70%, transparent);
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      transform var(--dur-fast) var(--ease-out);
+  }
+  .sector a:hover {
+    border-color: var(--amber);
+    transform: translateY(-2px);
+  }
+  .sector__name {
+    font-family: var(--font-utility);
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--amber-text);
+  }
+  .sector__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.65rem);
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .sector__text {
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .sector__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: var(--font-utility);
+    font-size: 0.9rem;
+    color: var(--ink);
+  }
+  .cta-inline {
+    margin-top: 2.4rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sector a:hover {
+      transform: none;
+    }
+  }
+</style>
