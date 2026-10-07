@@ -37,7 +37,7 @@ RewriteRule ^iletisim-1/?$ https://rastcreative.com/iletisim/ [R=301,L]
 
 # Short link for review requests (WhatsApp, cards). 302 on purpose: swap the
 # target for the official "write a review" link from the Business Profile.
-RewriteRule ^yorum/?$ https://share.google/MQDL2FMsZUpXjq6Vp [R=302,L]
+RewriteRule ^yorum/?$ https://g.page/r/Cb4qjKXCuFnWEBM/review [R=302,L]
 
 # Deleted/External-only projects redirect to main projects index
 RewriteRule ^projeler/aytas-home-sosyal-medya/?$ https://rastcreative.com/projeler/ [R=301,L]
