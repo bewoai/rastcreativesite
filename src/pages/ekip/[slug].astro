@@ -1,0 +1,219 @@
+---
+import { getCollection } from "astro:content";
+import { Picture } from "astro:assets";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Section from "../../components/Section.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import Button from "../../components/Button.astro";
+import Icon from "../../components/Icon.astro";
+import { PRIMARY_CTA, SITE } from "../../consts";
+import { breadcrumb, person } from "../../lib/schema";
+import { TEAM, type TeamMember } from "../../data/team";
+import { SECTORS } from "../../data/sectors";
+
+export function getStaticPaths() {
+  return TEAM.map((member) => ({ params: { slug: member.slug }, props: { member } }));
+}
+
+const { member } = Astro.props as { member: TeamMember };
+const path = `/ekip/${member.slug}/`;
+const posts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft && p.data.author === member.name)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const title = `${member.name} — ${member.role}`;
+const description = `${member.name}, Rast Creative Studio kurucu ortağı ve video yönetmeni. ${member.focus}`;
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Hakkımızda", path: "/hakkimizda/" },
+    { name: member.name, path },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    url: new URL(path, SITE.url).href,
+    name: title,
+    mainEntity: {
+      ...person(member.name),
+      description: member.bio,
+      knowsAbout: member.highlights,
+      image: new URL(member.photo.src, SITE.url).href,
+    },
+  },
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <Section width="narrow">
+    <a href="/hakkimizda/" class="back">← Ekip ve stüdyo</a>
+
+    <div class="profile">
+      <Picture
+        src={member.photo}
+        alt={`${member.name}, ${member.role}`}
+        widths={[240, 480]}
+        sizes="(max-width: 700px) 9rem, 12rem"
+        formats={["avif", "webp"]}
+        class="profile__photo"
+        loading="eager"
+      />
+      <div>
+        <SectionHeading as="h1" eyebrow={member.role}>
+          {member.name}
+          <Fragment slot="intro">
+            <p>{member.focus}</p>
+          </Fragment>
+        </SectionHeading>
+        <div class="profile__links">
+          {
+            member.links.map((l) => (
+              <a href={l.href} target="_blank" rel="me noreferrer">
+                <Icon name={l.icon} size={16} />
+                <span>{l.label}</span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>{member.bio}</p>
+    </div>
+
+    <h2 class="block__title">Uzmanlık alanları</h2>
+    <ul class="tags">
+      {member.highlights.map((h) => <li>{h}</li>)}
+    </ul>
+
+    <h2 class="block__title">Çalıştığı sektörler</h2>
+    <ul class="link-list">
+      {
+        SECTORS.map((s) => (
+          <li>
+            <a href={`/sektorler/${s.slug}/`}>
+              {s.heading} <Icon name="arrow-up-right" size={14} />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    {
+      posts.length > 0 && (
+        <>
+          <h2 class="block__title">Yazıları</h2>
+          <ul class="link-list">
+            {posts.map((p) => (
+              <li>
+                <a href={`/blog/${p.id}/`}>
+                  {p.data.title} <Icon name="arrow-up-right" size={14} />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </>
+      )
+    }
+
+    <div class="cta-inline">
+      <Button href={PRIMARY_CTA.href} size="lg" arrow>Görüşelim</Button>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .back {
+    display: inline-flex;
+    margin-bottom: 1.2rem;
+    font-family: var(--font-utility);
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .back:hover {
+    color: var(--amber-text);
+  }
+  .profile {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.6rem;
+    align-items: start;
+  }
+  .profile :global(.profile__photo) {
+    width: 12rem;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: 1rem;
+  }
+  @media (max-width: 700px) {
+    .profile {
+      grid-template-columns: 1fr;
+    }
+    .profile :global(.profile__photo) {
+      width: 9rem;
+    }
+  }
+  .profile__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1.2rem;
+  }
+  .profile__links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.9rem;
+    color: var(--ink);
+  }
+  .profile__links a:hover {
+    border-color: var(--amber);
+  }
+  .prose {
+    margin-top: 2rem;
+    max-width: 62ch;
+    font-size: 1.1rem;
+    line-height: var(--leading-body);
+    color: var(--ink-soft);
+  }
+  .block__title {
+    margin: 2.4rem 0 0.8rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.6rem);
+    color: var(--ink);
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .tags li {
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--amber) 10%, var(--paper));
+    font-size: 0.9rem;
+    color: var(--ink);
+  }
+  .link-list {
+    display: grid;
+    gap: 0.55rem;
+  }
+  .link-list a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--ink);
+    border-bottom: 1px solid var(--line);
+  }
+  .link-list a:hover {
+    color: var(--amber-text);
+  }
+  .cta-inline {
+    margin-top: 2.6rem;
+  }
+</style>

@@ -1,4 +1,5 @@
 ---
+import { getTeamMember } from "../../data/team";
 import { getCollection, render } from "astro:content";
 import { Image, getImage } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -42,6 +43,8 @@ const blogPosting = {
   mainEntityOfPage: new URL(`/blog/${entry.id}/`, SITE.url).href,
 };
 
+const author = getTeamMember(d.author);
+
 const pageJsonLd = [
   breadcrumb([
     { name: "Ana Sayfa", path: "/" },
@@ -61,7 +64,13 @@ const pageJsonLd = [
         <Eyebrow tone="soft" as="div">Blog</Eyebrow>
         <h1 class="article__title">{d.title}</h1>
         <p class="article__meta">
-          <span class="article__author">{d.author}</span>
+          {
+            author ? (
+              <a class="article__author" href={`/ekip/${author.slug}/`} rel="author">{d.author}</a>
+            ) : (
+              <span class="article__author">{d.author}</span>
+            )
+          }
           <span aria-hidden="true">·</span>
           <time datetime={d.pubDate.toISOString()}>{fmt(d.pubDate)}</time>
           {

@@ -4,6 +4,7 @@
  * Only facts we actually have are emitted — no invented address/hours/geo.
  */
 import { SITE, CONTACT, SOCIAL } from "../consts";
+import { getTeamMember } from "../data/team";
 
 const abs = (path: string) => new URL(path, SITE.url).href;
 
@@ -192,12 +193,14 @@ export function toPlainText(md: string): string {
 
 /** Person identity node for authors and founders. */
 export function person(name: string) {
+  const member = getTeamMember(name);
   return {
     "@context": "https://schema.org",
     "@type": "Person",
     "@id": `${SITE.url}#person-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
     name,
-    url: `${SITE.url}/hakkimizda/`,
+    url: member ? `${SITE.url}/ekip/${member.slug}/` : `${SITE.url}/hakkimizda/`,
+    ...(member ? { jobTitle: member.role, sameAs: member.links.map((l) => l.href) } : {}),
     worksFor: { "@id": BUSINESS_ID },
   };
 }

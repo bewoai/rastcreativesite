@@ -10,8 +10,7 @@ import { PRIMARY_CTA, SITE } from "../consts";
 import { BUSINESS_ID, breadcrumb } from "../lib/schema";
 import { groupByBrand } from "../lib/brands";
 import equipPhoto from "../assets/photos/studio-lighting.jpg";
-import muhammedPhoto from "../assets/photos/muhammed-ekrem-adnan.jpg";
-import beratPhoto from "../assets/photos/berat-degirmenci-renkli.jpg";
+import { TEAM } from "../data/team";
 
 const crumbs = breadcrumb([
   { name: "Ana Sayfa", path: "/" },
@@ -100,37 +99,7 @@ const projectProof = [
   },
 ];
 
-const teamMembers = [
-  {
-    name: "Muhammed Ekrem Adnan",
-    role: "Kurucu Ortak / Video Director",
-    photo: muhammedPhoto,
-    linkedin: "https://www.linkedin.com/in/muhammed-al-sheikhly-2a6b01209/",
-    links: [
-      { icon: "linkedin", label: "LinkedIn", href: "https://www.linkedin.com/in/muhammed-al-sheikhly-2a6b01209/" },
-      { icon: "instagram", label: "Instagram", href: "https://www.instagram.com/muhammed_the_artist/" },
-    ],
-    focus: "Animasyon, storyboard ve görsel anlatı tarafında projeye katkı sağlar.",
-    bio:
-      "Dumlupınar Üniversitesi Güzel Sanatlar ve Stüdyo Sanatları eğitimiyle güçlü bir görsel anlatı temeline sahip. Adatıp Hastanesi'nde yaratıcı videografi ve kısa video üretim süreçlerine katkı sağlıyor; animasyon, After Effects, storyboard ve kurgu bilgisini hikaye odaklı video üretimine taşıyor.",
-    highlights: ["Video yönetmenliği", "Animasyon", "After Effects", "Storyboard", "Kurgu"],
-  },
-  {
-    name: "Berat Değirmenci",
-    role: "Kurucu Ortak / Video Director",
-    photo: beratPhoto,
-    linkedin: "https://www.linkedin.com/in/beratdegirmenci/",
-    links: [
-      { icon: "linkedin", label: "LinkedIn", href: "https://www.linkedin.com/in/beratdegirmenci/" },
-      { icon: "instagram", label: "Instagram", href: "https://www.instagram.com/bewonami/" },
-      { icon: "arrow-up-right", label: "Portfolyo", href: "https://beratdegirmenci.studio/" },
-    ],
-    focus: "Teknik süreçler, dijital reklam planlama ve prodüksiyon akışını düzenli tutar.",
-    bio:
-      "Adatıp Hastanesi'nde video operasyonları ve podcast prodüksiyonları üzerine çalışıyor. Yönetim Bilişim Sistemleri eğitimiyle süreç planlama, teknik altyapı ve dijital reklam tarafındaki bilgisini prodüksiyon akışlarına dahil ediyor; markalar için daha düzenli, ölçülebilir ve etkili görsel içerikler üretmeye odaklanıyor.",
-    highlights: ["Video operasyonları", "Podcast prodüksiyonu", "Meta reklamları", "Teknik süreçler", "Kurgu"],
-  },
-];
+const teamMembers = TEAM;
 
 const teamStats = [
   { value: "2", label: "Kurucu ortak" },
@@ -172,7 +141,7 @@ const pageJsonLd = [
         "@type": "Person",
         name: member.name,
         jobTitle: member.role,
-        url: member.linkedin,
+        url: `${SITE.url}/ekip/${member.slug}/`,
         sameAs: member.links.map((l) => l.href),
         worksFor: { "@id": `${SITE.url}#organization` },
         knowsAbout: member.highlights,
@@ -238,7 +207,7 @@ const pageJsonLd = [
               <div class="member-card__body">
                 <div>
                   <p class="member-card__role">{member.role}</p>
-                  <h3 class="member-card__name">{member.name}</h3>
+                  <h3 class="member-card__name"><a href={`/ekip/${member.slug}/`}>{member.name}</a></h3>
                   <p class="member-card__focus">{member.focus}</p>
                   <p class="member-card__bio">{member.bio}</p>
                 </div>
@@ -1072,5 +1041,11 @@ const pageJsonLd = [
     .member-card__photo-container {
       aspect-ratio: 4 / 3;
     }
+  }
+  .member-card__name a {
+    color: inherit;
+  }
+  .member-card__name a:hover {
+    color: var(--amber-text);
   }
 </style>
