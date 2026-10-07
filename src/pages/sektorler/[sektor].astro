@@ -160,7 +160,7 @@ const jsonLd = [
         <h2 class="links__title">İlgili hizmetler ve rehberler</h2>
         <ul class="links__list">
           {
-            [...sector.services, ...sector.posts].map((l) => (
+            [...sector.services, ...sector.posts, { label: "Çekim günü planlayıcı", href: "/cekim-planlayici/" }].map((l) => (
               <li>
                 <a href={l.href}>
                   {l.label}
