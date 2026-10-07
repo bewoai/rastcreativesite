@@ -121,3 +121,8 @@ Astro’nun `trailingSlash: "always"` ayarı üretim rotalarını tanımlar. Hos
   - YouTube/eğitim: Duygu Hoca, Mars Stüdyo
 - Projeler `clients` alanıyla eşleşiyor. Yeni bir sektör projesi eklenince ilgili sektörün `clients` listesine eklenmeli.
 - Linkler: footer'da "Sektörler", hizmetler sayfasında sektör listesi.
+
+## Sözlük (2026-10-07)
+
+- `/sozluk/` sayfasında 40 terim var. Veri: `src/data/glossary.ts`.
+- Schema: DefinedTermSet ve DefinedTerm. Her terimin `#slug` çapası var; ilgili blog/sektör sayfasına link veriliyor. Footer'da "Sözlük" linki var.
