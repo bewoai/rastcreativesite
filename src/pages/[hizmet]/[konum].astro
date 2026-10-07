@@ -10,6 +10,7 @@ import { breadcrumb, faqPage, BUSINESS_ID } from "../../lib/schema";
 import { SEO_SERVICES, getService, type SeoService } from "../../data/seo-services";
 import { SEO_LOCATIONS, getLocation, type SeoLocation } from "../../data/locations";
 import { getServiceAudience } from "../../data/service-audience";
+import { getLocationContent } from "../../data/location-content";
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
@@ -28,12 +29,15 @@ interface Props {
 }
 const { service, location } = Astro.props as Props;
 const audience = getServiceAudience(service.slug);
+const extra = getLocationContent(service.slug, location.slug);
 
 const title = `${location.name} ${service.name} ${service.seoTitleSuffix}`;
 const pageHeading = `${location.name} ${service.name}`;
 const faqHeading = `${location.name} ${service.name} hakkında`;
 const path = `/${service.slug}/${location.slug}/`;
-const description = `${location.name} ${service.name.toLocaleLowerCase('tr')} — ${service.tagline}. ${location.loc} sinema standardında prodüksiyon. Projenizi anlatın, birlikte planlayalım.`;
+const description =
+  extra?.description ??
+  `${location.name} ${service.name.toLocaleLowerCase('tr')} — ${service.tagline}. ${location.loc} sinema standardında prodüksiyon. Projenizi anlatın, birlikte planlayalım.`;
 
 // City/service-specific FAQ — distinct text per page (anti-doorway).
 const firstSentence = location.blurb.split(". ")[0] + ".";
@@ -62,6 +66,8 @@ const faqs = [
     question: `Videoları hangi formatlarda teslim ediyorsunuz?`,
     answer: `Aynı çekimden yatay ana film, dikey Reels/Shorts ve kısa reklam kurgularını birlikte hazırlayabiliyoruz; web sitesi, Instagram, YouTube ve Meta reklamları için uygun oran ve sürelerde teslim ederiz.`,
   },
+  // Page-specific questions for the pages people actually land on.
+  ...(extra?.faqs ?? []),
 ];
 
 const jsonLd = [
@@ -144,10 +150,18 @@ if (projectsItemList) jsonLd.push(projectsItemList);
 
     <div class="prose">
       <div class="geo-summary">
-        <strong>Özet:</strong> Rast Creative Studio, {location.name} ve çevre illerde {service.name.toLocaleLowerCase('tr')} projelerinize (senaryo, çekim, kurgu) ücretsiz ön görüşme ve net fiyat landırmayla anahtar teslim çözüm sunan profesyonel bir ajanstır. Aşağıda inceleyeceğiniz projeler, yetkinliğimizin gerçek referanslarıdır.
+        <strong>Özet:</strong> Rast Creative Studio, {location.name} ve çevre illerde {service.name.toLocaleLowerCase('tr')} projelerinize (senaryo, çekim, kurgu) ücretsiz ön görüşme ve net fiyatlandırmayla anahtar teslim çözüm sunan profesyonel bir ajanstır. Aşağıda inceleyeceğiniz projeler, yetkinliğimizin gerçek referanslarıdır.
       </div>
       <p>{service.intro}</p>
       <p>{location.blurb}</p>
+      {
+        extra && (
+          <>
+            <h2 class="extra__title">{extra.heading}</h2>
+            {extra.paragraphs.map((t) => <p>{t}</p>)}
+          </>
+        )
+      }
     </div>
 
     <ul class="benefits">
@@ -173,7 +187,7 @@ if (projectsItemList) jsonLd.push(projectsItemList);
 
     <div class="cta-inline">
       <Button href={PRIMARY_CTA.href} size="lg" arrow>
-        {location.name} için teklif al
+        {location.name} için görüşelim
       </Button>
       <a href={`tel:${CONTACT.phoneIntl}`} class="phone">
         <Icon name="contact" size={18} /> {CONTACT.phone}
@@ -289,6 +303,13 @@ if (projectsItemList) jsonLd.push(projectsItemList);
   }
   .prose p + p {
     margin-top: 1rem;
+  }
+  .extra__title {
+    margin: 2.2rem 0 0.8rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 1.1rem + 1vw, 1.75rem);
+    line-height: 1.2;
+    color: var(--ink);
   }
   .geo-summary {
     font-size: 1.05rem;

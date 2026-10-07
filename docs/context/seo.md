@@ -72,4 +72,23 @@ Astro’nun `trailingSlash: "always"` ayarı üretim rotalarını tanımlar. Hos
   - Yayından önce eski `deploy` dalı `prev-deploy/` klasörüne alınır.
   - Hostinger yeni build'i sunmaya başlayınca `scripts/indexnow.mjs` yalnızca HTML'i değişen ve indexlenebilir sayfaları gönderir.
   - Adım `continue-on-error` olduğundan deploy'u hiçbir zaman düşürmez.
-- **Kısa yorum linki:** `/yorum/` adresi `.htaccess` içinde 302 ile Google İşletme Profili'ne gider. İşletme panelindeki resmi "yorum iste" linki alınınca hedef o linkle değiştirilmeli.
+- **Kısa yorum linki:** `/yorum/` → `https://g.page/r/Cb4qjKXCuFnWEBM/review`. Yönlendirme `.htaccess` içinde 302 ile yapılıyor ve resmi yorum formunu açıyor (2026-10-07).
+
+## Search Console bulguları (Tem–Eki 2026) ve bölge sayfası kararı
+
+- **Toplam:** 60 tıklama, ~2.500 gösterim.
+- **Bölge sayfalarının payı:** Hizmet × konum sayfaları 28 tıklama ve 1.819 gösterim getiriyor; tıklama alan küçük ilçeler bile var (Erenler, Bolu, Akyazı vb.). **Karar: bölge sayfaları indexte kalıyor.** Benzerlik (~%90) indeksten çıkarılarak değil, içerik eklenerek düşürülüyor.
+- **Sayfaya özel içerik:** `src/data/location-content.ts` gerçek gösterim alan sayfalara elle yazılmış bölüm, ek SSS ve gerekirse meta açıklama ekliyor. Şu an kapsananlar:
+  - sosyal-medya-icerigi/hendek ve /sakarya
+  - video-cekimi/sakarya, /gebze ve /kocaeli
+  - tanitim-filmi/sakarya
+  - reklam-filmi/sakarya
+- **Hedef sorgular:**
+
+  | Sorgu | Sıra (Eki) | Not |
+  |---|---|---|
+  | hendek sosyal medya | 7,6 | 669 gösterim, 0 tıklama |
+  | sakarya video çekimi | 14 | |
+  | sakarya tanıtım filmi | 7,9 | |
+  | sakarya sosyal medya | 48 | |
+  | sakarya reklam çekimi | 14 | |
