@@ -286,6 +286,190 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
       "Drone planları tek başına değil, yerden yapılan çekimlerle birlikte bir hikâyenin parçası olarak kurgulandığında en güçlü sonucu veriyor; bu yüzden havadan ve yerden çekimi aynı günde planlamayı öneriyoruz.",
     ],
   },
+  // ── Round 3 (next tier, 6–13 impressions) ──
+
+  "sosyal-medya-icerigi/golcuk": {
+    heading: "Gölcük'te sosyal medya yönetimi",
+    paragraphs: [
+      "Gölcük'te otomotiv ve denizcilik sanayisinin çevresinde büyüyen tedarikçi firmalar, sahil hattındaki kafe ve restoranlar ve yerel perakende işletmeleri için sosyal medya ihtiyacı farklı. Kurumsal firmalarda güven ve işveren markası, yerel işletmelerde ise çevredeki müşteriye görünür olmak öne çıkıyor.",
+      "İçerik planını işletmenin müşterisine göre kurup ayın videolarını planlı bir çekim gününde topluca üretiyoruz.",
+    ],
+  },
+  "sosyal-medya-icerigi/basiskele": {
+    heading: "Başiskele'de sosyal medya yönetimi",
+    paragraphs: [
+      "Başiskele'nin hızla büyüyen konut bölgeleri; restoran, kafe, spor salonu, klinik ve emlak ofisi gibi yerel hizmet işletmelerinin sayısını artırıyor. Bu işletmeler için sosyal medya, mahalledeki müşteriye ulaşmanın en hızlı yolu.",
+      "Mekanı, ekibi ve hizmeti gösteren kısa dikey videolarla düzenli bir paylaşım akışı kuruyor, isterseniz bölgeye hedefli Meta reklamlarını da yönetiyoruz.",
+    ],
+  },
+  "sosyal-medya-icerigi/sapanca": {
+    heading: "Sapanca'da sosyal medya: oteller ve mekanlar için",
+    paragraphs: [
+      "Sapanca'da sosyal medya, konaklama ve etkinlik işletmeleri için doğrudan rezervasyon kanalı. Misafirler oteli, bungalovu ya da kahvaltı mekanını önce Instagram'da görüp karar veriyor; bu yüzden içeriklerin sezonu, manzarayı ve deneyimi yansıtması gerekiyor.",
+      "Mevsim geçişlerine göre planlanan çekim günleriyle aylarca kullanılacak video ve fotoğraf arşivi oluşturuyoruz.",
+    ],
+  },
+  "sosyal-medya-icerigi/bolu": {
+    heading: "Bolu'da sosyal medya yönetimi",
+    paragraphs: [
+      "Bolu'da sosyal medya içeriği en çok doğa turizmi, konaklama ve yöresel ürün işletmeleri için önem taşıyor. Abant, Gölcük ve kayak merkezleri çevresindeki işletmeler sezon başlamadan önce içerik hazırlığını tamamladığında rezervasyon dönemine hazır giriyor.",
+      "Çekim günlerini sezona göre planlayıp yaz ve kış içeriklerini önceden hazırlayabiliyoruz.",
+    ],
+  },
+  "sosyal-medya-icerigi/serdivan": {
+    heading: "Serdivan'da sosyal medya yönetimi",
+    paragraphs: [
+      "Stüdyomuz Serdivan'da olduğu için buradaki markalarla çalışmak en pratik senaryo: çekim günlerini kısa sürede planlayabiliyor, gerektiğinde ay içinde ek içerik için hızlıca gelebiliyoruz.",
+      "Üniversite çevresindeki kafe ve restoranlardan klinik ve mağazalara kadar Serdivan'daki işletmeler için aylık içerik planı, Reels çekimi, paylaşım ve rapor tek ekipten yürüyor.",
+    ],
+  },
+  "sosyal-medya-icerigi/kocaeli": {
+    heading: "Kocaeli'nde sosyal medya yönetimi",
+    paragraphs: [
+      "Kocaeli'de sosyal medya ihtiyacı iki uçta toplanıyor: İzmit ve Gebze hattındaki sanayi ve B2B firmaları için kurumsal güven içerikleri, ilçelerdeki yerel işletmeler için ise müşteriye görünür olmayı sağlayan kısa videolar.",
+      "Her iki durumda da yaklaşımımız aynı: aylık içerik planı, planlı çekim günü, kurgu, paylaşım takvimi ve aylık rapor.",
+    ],
+  },
+  "sosyal-medya-icerigi/karasu": {
+    heading: "Karasu'da sosyal medya yönetimi",
+    paragraphs: [
+      "Karasu'daki işletmeler için sosyal medya, yaz sezonunda yoğunlaşan ziyaretçi trafiğini yakalamanın en etkili yolu. Restoranlar, oteller, plaj işletmeleri ve yazlık projeleri için sezon öncesi hazırlanan içerikler, sezon boyunca düzenli paylaşım sağlıyor.",
+      "Sezonu ve kış dönemini ayrı planlayarak hesabın yıl boyu canlı kalmasını sağlıyoruz.",
+    ],
+  },
+  "reklam-filmi/gebze": {
+    heading: "Gebze'de reklam filmi çekimi",
+    paragraphs: [
+      "Gebze'deki firmaların reklam filmleri çoğunlukla ürün lansmanları, B2B satış kampanyaları ve dijital reklamlar için çekiliyor. Burada reklamın görevi, ürünü ya da hizmeti kısa sürede net bir faydayla anlatmak.",
+      "Aynı çekimden LinkedIn, YouTube ve Meta reklamları için farklı süre ve oranlarda versiyonlar hazırlıyoruz.",
+    ],
+  },
+  "reklam-filmi/izmit": {
+    heading: "İzmit'te reklam filmi çekimi",
+    paragraphs: [
+      "İzmit'te perakende, sağlık, eğitim ve hizmet sektöründeki markalar için reklam filmlerini dijital mecralara göre kurguluyoruz: ilk saniyede dikkat çeken bir açılış, tek bir mesaj ve net bir çağrı.",
+      "Çekimi aynı gün içinde tamamlayıp reklamın farklı versiyonlarını kurguda hazırlıyoruz.",
+    ],
+  },
+  "reklam-filmi/darica": {
+    heading: "Darıca'da reklam filmi ve sosyal medya reklamı",
+    paragraphs: [
+      "Darıca'daki yerel işletmeler için reklam filmi genellikle Instagram ve Facebook reklamlarında kullanılan kısa dikey videolar anlamına geliyor. Mekanı, ürünü ya da kampanyayı birkaç saniyede anlatan kurgular, çevredeki doğru kitleye gösterildiğinde en iyi sonucu veriyor.",
+      "Reklam videosunu çekip, isterseniz reklam kurulumu ve takibini de birlikte yürütüyoruz.",
+    ],
+  },
+  "reklam-filmi/arifiye": {
+    heading: "Arifiye'de reklam filmi çekimi",
+    paragraphs: [
+      "Arifiye, ulaşım bağlantıları ve sanayi yatırımlarıyla ürün ve hizmet reklamlarının çekildiği bir bölge. Showroom, üretim alanı ve ürün detaylarını tek çekim gününde planlayarak reklam ve sosyal medya versiyonlarını birlikte çıkarıyoruz.",
+      "Serdivan'a çok yakın olduğu için çekim gününü esnek planlayabiliyoruz.",
+    ],
+  },
+  "reklam-filmi/kartepe": {
+    heading: "Kartepe'de reklam filmi çekimi",
+    paragraphs: [
+      "Kartepe'de reklam filmi taleplerinin önemli kısmı otel, kayak ve doğa turizmi işletmelerinden geliyor. Bu reklamlarda sezonun atmosferi ve misafir deneyimi ön planda; kar, orman ve manzara planlarını havadan ve yerden çekimle birlikte kurguluyoruz.",
+      "Sezon kampanyaları için reklamı önceden hazırlayıp farklı mecralara uygun versiyonlarla teslim ediyoruz.",
+    ],
+  },
+  "video-cekimi/sapanca": {
+    heading: "Sapanca'da video çekimi",
+    paragraphs: [
+      "Sapanca'da video çekimlerimizin çoğu otel, bungalov, restoran, düğün ve etkinlik mekanları için. Göl manzarası ve doğa en güçlü görsel unsur olduğu için çekimi ışığın en iyi olduğu saatlere göre planlıyoruz.",
+      "Tek çekim gününden tanıtım videosu, sosyal medya kesitleri ve fotoğraflar birlikte çıkıyor; gerekirse drone planlarıyla mekanın konumunu gösteriyoruz.",
+    ],
+  },
+  "video-cekimi/hendek": {
+    heading: "Hendek'te video çekimi",
+    paragraphs: [
+      "Hendek'te video çekimi talepleri büyük ölçüde organize sanayi bölgelerindeki üretim tesislerinden geliyor: tesis tanıtımı, üretim süreci, iş güvenliği ve işe alım videoları. Çekimi üretimi aksatmayacak şekilde vardiyalara göre planlıyoruz.",
+      "Aynı gün içinde kurumsal film, sosyal medya kesitleri ve gerekirse drone planları birlikte çekilebiliyor.",
+    ],
+  },
+  "video-cekimi/erenler": {
+    heading: "Erenler'de video çekimi",
+    paragraphs: [
+      "Erenler, sanayi tesisleri ve Adapazarı'na yakın ticari dokusuyla hem kurumsal hem yerel işletme çekimlerinin yapıldığı bir ilçe. Serdivan'dan kısa sürede ulaşıp çekimi aynı gün tamamlıyoruz.",
+      "Ürün, tesis ve ekip çekimlerini tek günde planlayarak ana video ile sosyal medya içeriklerini birlikte üretiyoruz.",
+    ],
+  },
+  "video-cekimi/adapazari": {
+    heading: "Adapazarı'nda video çekimi",
+    paragraphs: [
+      "Adapazarı, Sakarya'nın ticaret merkezi; mağazalar, klinikler, restoranlar ve hizmet işletmeleri için tanıtım ve sosyal medya videoları en sık çektiğimiz işler arasında. Stüdyomuza çok yakın olduğu için çekim günlerini kısa sürede planlayabiliyoruz.",
+      "Bir çekim gününden ana tanıtım videosu, dikey Reels kesitleri ve fotoğraflar birlikte çıkıyor.",
+    ],
+  },
+  "tanitim-filmi/erenler": {
+    heading: "Erenler'de tanıtım filmi",
+    paragraphs: [
+      "Erenler'deki üretim ve sanayi firmaları için tanıtım filmi; müşteriye, tedarikçiye ve potansiyel çalışana firmanın kapasitesini ve güvenilirliğini anlatan temel iletişim aracı. Filmi üretim akışına, ekibe ve kalite süreçlerine odaklayarak kuruyoruz.",
+      "Ana filmin yanında fuar ve sosyal medya için kısa versiyonlar da hazırlıyoruz.",
+    ],
+  },
+  "tanitim-filmi/izmit": {
+    heading: "İzmit'te tanıtım filmi",
+    paragraphs: [
+      "İzmit'te tanıtım filmlerini sanayi firmaları, sağlık ve eğitim kurumları ile köklü yerel markalar için çekiyoruz. Filmin nerede kullanılacağını (web sitesi, fuar, sunum, sosyal medya) baştan netleştirip anlatımı ona göre kuruyoruz.",
+      "Gerekirse röportajlar, tesis içi planlar ve havadan görüntüler tek prodüksiyonda birleşiyor.",
+    ],
+  },
+  "tanitim-filmi/akyazi": {
+    heading: "Akyazı'da tanıtım filmi",
+    paragraphs: [
+      "Akyazı'da tanıtım filmi talepleri termal tesisler, doğa turizmi işletmeleri ve tarımsal üretim yapan firmalardan geliyor. Bu filmlerde mekanın atmosferi ve üretimin hikâyesi öne çıkıyor.",
+      "Çekimi ışık ve mevsime göre planlayıp, ana filmin yanında sosyal medya için kısa kesitler de hazırlıyoruz.",
+    ],
+  },
+  "tanitim-filmi/basiskele": {
+    heading: "Başiskele'de tanıtım filmi",
+    paragraphs: [
+      "Başiskele'de tanıtım filmi en çok konut projeleri, sağlık ve eğitim kurumları ile yerel markalar için çekiliyor. Körfez manzarası ve gelişen yapılaşma, özellikle gayrimenkul tanıtımlarında güçlü bir görsel zemin sağlıyor.",
+      "Proje tanıtımlarında yer çekimlerini drone planlarıyla tamamlıyoruz.",
+    ],
+  },
+  "drone-cekimi/hendek": {
+    heading: "Hendek'te drone çekimi",
+    paragraphs: [
+      "Hendek'teki organize sanayi bölgelerinde drone çekimi, büyük tesislerin ölçeğini ve yerleşimini göstermek için kullanılıyor. Havadan açılış planları, kurumsal tanıtım filmlerinin ve web sitesi videolarının en güçlü sahneleri oluyor.",
+      "Uçuş öncesinde tesis yönetimiyle güvenlik ve izin koşullarını birlikte netleştiriyoruz.",
+    ],
+  },
+  "drone-cekimi/adapazari": {
+    heading: "Adapazarı'nda drone çekimi",
+    paragraphs: [
+      "Adapazarı'nda drone çekimlerini gayrimenkul projeleri, ticari binalar, etkinlikler ve kurumsal tanıtımlar için yapıyoruz. Şehir merkezinde uçuş kuralları ve çevre güvenliği daha fazla dikkat gerektirdiği için çekimi önceden planlıyoruz.",
+      "Havadan planları yer çekimiyle aynı gün yaparak tek prodüksiyonda tamamlıyoruz.",
+    ],
+  },
+  "drone-cekimi/golcuk": {
+    heading: "Gölcük'te drone çekimi",
+    paragraphs: [
+      "Gölcük'ün körfez kıyısı, sanayi tesisleri ve konut projeleri havadan çekildiğinde konumun değeri tek planda anlaşılıyor. Drone görüntülerini tanıtım filmi, gayrimenkul videosu ve sosyal medya içeriği olarak teslim ediyoruz.",
+      "Kıyı ve sanayi alanlarında uçuş kısıtlarını çekim öncesinde kontrol ediyoruz.",
+    ],
+  },
+  "drone-cekimi/izmit": {
+    heading: "İzmit'te drone çekimi",
+    paragraphs: [
+      "İzmit'te drone çekimi; sanayi tesisleri, liman ve lojistik alanları, konut projeleri ve şehir tanıtımları için kullanılıyor. Körfez manzarası havadan planlarda güçlü bir arka plan oluşturuyor.",
+      "Uçuş kurallarını ve izin gerekliliklerini önceden kontrol edip çekimi bu çerçevede planlıyoruz.",
+    ],
+  },
+  "drone-cekimi/akyazi": {
+    heading: "Akyazı'da drone çekimi",
+    paragraphs: [
+      "Akyazı'da drone çekimi termal tesisler, doğa alanları, tarım arazileri ve üretim tesisleri için tercih ediliyor. Geniş alanların büyüklüğü ve çevresiyle ilişkisi en iyi havadan anlaşılıyor.",
+      "Havadan çekimi yer çekimleriyle birleştirerek tanıtım ve sosyal medya içeriği olarak teslim ediyoruz.",
+    ],
+  },
+  "drone-cekimi/duzce": {
+    heading: "Düzce'de drone çekimi",
+    paragraphs: [
+      "Düzce'de drone çekimlerini üretim tesisleri, Akçakoca sahil hattındaki turizm işletmeleri, konut projeleri ve doğa alanları için yapıyoruz. Sakarya'dan aynı gün ulaşıp çekimi tamamlayabiliyoruz.",
+      "Hava durumu ve ışığa göre çekim saatini planlıyor, gerektiğinde yedek gün belirliyoruz.",
+    ],
+  },
 };
 
 export const getLocationContent = (service: string, location: string) =>
