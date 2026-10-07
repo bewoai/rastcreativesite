@@ -66,6 +66,7 @@ export const localBusiness = {
   telephone: CONTACT.phoneIntl,
   email: CONTACT.email,
   priceRange: "₺₺₺",
+  foundingDate: SITE.foundingDate,
   inLanguage: "tr",
   address: {
     "@type": "PostalAddress",
@@ -128,6 +129,7 @@ export const organization = {
     addressCountry: CONTACT.addressCountry,
   },
   sameAs: [...SOCIAL.map((s) => s.href), CONTACT.googleProfile],
+  foundingDate: SITE.foundingDate,
   founder: TEAM.map((m) => ({
     "@type": "Person",
     name: m.name,

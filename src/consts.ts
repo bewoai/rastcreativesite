@@ -4,6 +4,8 @@
  * (roadmap §5) — do not invent them.
  */
 export const SITE = {
+  /** Company founded 1 May 2026 (client, 2026-10-07). */
+  foundingDate: "2026-05-01",
   name: "Rast Creative Studio",
   shortName: "Rast Creative",
   /** Home-page <title>. Inner pages pass their own `title` to BaseLayout. */
