@@ -1,0 +1,389 @@
+---
+/**
+ * "Bir çekim günü" planner: the visitor picks sector, channels and what is on
+ * set; the page lists which pieces one shoot day can produce, which job each
+ * does, and what to prepare. No counts or prices — same promise as the blog
+ * post "Tek çekim gününden kaç içerik çıkar?". The result can be sent to us on
+ * WhatsApp (lead) — all client-side, nothing stored.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/Section.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import Button from "../components/Button.astro";
+import { CONTACT, PRIMARY_CTA, SITE } from "../consts";
+import { breadcrumb } from "../lib/schema";
+
+const title = "Çekim Günü Planlayıcı: Tek Çekimden Hangi İçerikler Çıkar?";
+const description =
+  "Sektörünüzü ve videoları nerede kullanacağınızı seçin; tek bir çekim gününden çıkarılabilecek içerik planını ve çekim öncesi hazırlık listesini görün.";
+
+const sectors = [
+  { v: "saglik", l: "Sağlık / klinik", href: "/sektorler/doktor-klinik-video-cekimi/" },
+  { v: "sanayi", l: "Sanayi / fabrika", href: "/sektorler/fabrika-tanitim-filmi/" },
+  { v: "perakende", l: "Mağaza / perakende", href: "/sektorler/magaza-sosyal-medya-icerigi/" },
+  { v: "mekan", l: "Kafe, restoran, otel, etkinlik", href: "/sektorler/davet-salonu-etkinlik-videosu/" },
+  { v: "egitim", l: "Eğitim / uzman içeriği", href: "/sektorler/youtube-egitim-icerigi/" },
+  { v: "diger", l: "Diğer", href: "/hizmetler/" },
+];
+const channels = [
+  { v: "sosyal", l: "Instagram / TikTok" },
+  { v: "youtube", l: "YouTube" },
+  { v: "web", l: "Web sitesi" },
+  { v: "reklam", l: "Reklam (Meta / Google)" },
+  { v: "fuar", l: "Fuar / satış sunumu" },
+  { v: "isealim", l: "LinkedIn / işe alım" },
+];
+const onSet = [
+  { v: "urun", l: "Ürünler" },
+  { v: "mekan", l: "Mekan" },
+  { v: "ekip", l: "Ekip / çalışanlar" },
+  { v: "konusan", l: "Kameraya konuşan biri" },
+  { v: "surec", l: "Üretim / hizmet süreci" },
+  { v: "dis", l: "Geniş dış alan (drone)" },
+];
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Çekim günü planlayıcı", path: "/cekim-planlayici/" },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "Çekim Günü Planlayıcı",
+    url: new URL("/cekim-planlayici/", SITE.url).href,
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    offers: { "@type": "Offer", price: "0", priceCurrency: "TRY" },
+    description,
+    provider: { "@id": `${SITE.url}#business` },
+  },
+];
+---
+
+<BaseLayout title="Çekim Günü Planlayıcı" description={description} jsonLd={jsonLd}>
+  <Section width="narrow">
+    <SectionHeading as="h1" eyebrow="Araç · Ücretsiz">
+      Tek çekim gününden hangi içerikler çıkar?
+      <Fragment slot="intro">
+        <p>
+          Üç soruyu cevaplayın; bir çekim gününden çıkarılabilecek içerikleri, her birinin hangi işi
+          göreceğini ve çekimden önce neleri hazırlamanız gerektiğini listeleyelim.
+        </p>
+      </Fragment>
+    </SectionHeading>
+
+    <form class="planner" data-planner data-wa={CONTACT.whatsapp}>
+      <fieldset>
+        <legend><span>1</span> Sektörünüz</legend>
+        <div class="chips">
+          {
+            sectors.map((s, i) => (
+              <label class="chip">
+                <input type="radio" name="sektor" value={s.v} data-href={s.href} data-label={s.l} checked={i === 0} />
+                <span>{s.l}</span>
+              </label>
+            ))
+          }
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><span>2</span> Videoları nerede kullanacaksınız?</legend>
+        <div class="chips">
+          {
+            channels.map((c) => (
+              <label class="chip">
+                <input type="checkbox" name="kanal" value={c.v} data-label={c.l} checked={c.v === "sosyal" || c.v === "web"} />
+                <span>{c.l}</span>
+              </label>
+            ))
+          }
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><span>3</span> Çekimde neler olacak?</legend>
+        <div class="chips">
+          {
+            onSet.map((o) => (
+              <label class="chip">
+                <input type="checkbox" name="set" value={o.v} data-label={o.l} checked={o.v === "urun" || o.v === "ekip"} />
+                <span>{o.l}</span>
+              </label>
+            ))
+          }
+        </div>
+      </fieldset>
+    </form>
+
+    <section class="result" aria-live="polite" data-result>
+      <noscript>
+        <p>Planı görmek için JavaScript gerekli. Dilerseniz doğrudan <a href="/iletisim/">bize yazın</a>; planı birlikte çıkaralım.</p>
+      </noscript>
+      <div class="result__inner" hidden data-result-inner>
+        <h2 class="result__title">Bir çekim gününden çıkabilecekler</h2>
+        <ul class="plan" data-plan></ul>
+        <h2 class="result__title">Çekimden önce hazırlayın</h2>
+        <ul class="prep" data-prep></ul>
+        <p class="result__note">
+          Bu liste bir çerçeve; hangi içeriğin gerçekten gerektiğini ve kaç tane üretileceğini ön
+          görüşmede birlikte netleştiriyoruz. <a data-sector-link href="/hizmetler/">Sektörünüzde nasıl çalıştığımızı görün →</a>
+        </p>
+        <div class="result__cta">
+          <a class="ev-btn ev-btn--sun" data-wa-send href="#" target="_blank" rel="noopener">Planı WhatsApp'tan gönder</a>
+          <Button href={PRIMARY_CTA.href} variant="secondary">Görüşelim</Button>
+        </div>
+      </div>
+    </section>
+  </Section>
+</BaseLayout>
+
+<script>
+  type Item = { t: string; d: string; f: string };
+  const form = document.querySelector<HTMLFormElement>("[data-planner]");
+  const inner = document.querySelector<HTMLElement>("[data-result-inner]");
+  const planEl = document.querySelector<HTMLUListElement>("[data-plan]");
+  const prepEl = document.querySelector<HTMLUListElement>("[data-prep]");
+  const sectorLink = document.querySelector<HTMLAnchorElement>("[data-sector-link]");
+  const waBtn = document.querySelector<HTMLAnchorElement>("[data-wa-send]");
+
+  const SECTOR_ITEMS: Record<string, Item[]> = {
+    saglik: [{ t: "Hasta soruları serisi", d: "Hastaların en sık sorduğu sorulara hekimin kısa cevapları; güven inşa eden en güçlü format.", f: "16:9 + 9:16" }],
+    sanayi: [{ t: "Kalite ve iş güvenliği planları", d: "Kalite kontrol, iş güvenliği ve standartları gösteren planlar; tedarikçi güveni için.", f: "16:9" }],
+    perakende: [{ t: "Kampanya duyuru videoları", d: "Ayın kampanyalarını ve öne çıkan ürünleri net bir mesajla anlatan kısa videolar.", f: "9:16" }],
+    mekan: [{ t: "Atmosfer ve deneyim planları", d: "Misafirin yaşayacağı deneyimi hissettiren, en iyi ışık saatinde çekilen planlar.", f: "9:16 + 16:9" }],
+    egitim: [{ t: "Bölümlü eğitim serisi", d: "Konu planına göre art arda çekilen bölümler; düzenli yayın için hazır arşiv.", f: "16:9 + Shorts" }],
+    diger: [],
+  };
+  const SECTOR_PREP: Record<string, string> = {
+    saglik: "Hastaların en çok sorduğu 8–10 soruyu listeleyin; her biri bir video olabilir.",
+    sanayi: "Çekilebilecek alanları ve iş güvenliği kurallarını netleştirin; vardiya düzenini paylaşın.",
+    perakende: "Ayın kampanyalarını ve öne çıkacak ürünleri seçin; mağazanın sakin saatini belirleyin.",
+    mekan: "Dekorun hazır olacağı ve ışığın en güzel olduğu saati belirleyin.",
+    egitim: "Konu listesini ve yayın sırasını çıkarın; her bölümün ana mesajını bir cümleyle yazın.",
+    diger: "Videoyla çözmek istediğiniz tek bir ana problemi yazın.",
+  };
+
+  const values = (name: string) =>
+    [...form!.querySelectorAll<HTMLInputElement>(`input[name="${name}"]:checked`)].map((i) => i.value);
+  const labels = (name: string) =>
+    [...form!.querySelectorAll<HTMLInputElement>(`input[name="${name}"]:checked`)].map((i) => i.dataset.label ?? i.value);
+
+  function build() {
+    const sector = form!.querySelector<HTMLInputElement>('input[name="sektor"]:checked');
+    const s = sector?.value ?? "diger";
+    const ch = new Set(values("kanal"));
+    const set = new Set(values("set"));
+    const items: Item[] = [];
+
+    if (ch.has("web") || ch.has("youtube") || ch.has("fuar"))
+      items.push({ t: "Ana tanıtım filmi", d: "Markanızı baştan sona anlatan ana video; web sitesi, YouTube ve sunumlarda kullanılır.", f: "16:9" });
+    if (ch.has("sosyal"))
+      items.push({ t: "Dikey kısa videolar", d: "Reels, TikTok ve Shorts için kancayla açılan, haftalara yayılacak kısa kesitler.", f: "9:16" });
+    if (ch.has("reklam"))
+      items.push({ t: "Reklam versiyonları", d: "Farklı açılışlarla 6, 15 ve 30 saniyelik versiyonlar; yayında hangisinin çalıştığını test etmek için.", f: "9:16 + 1:1" });
+    if (ch.has("youtube") && set.has("konusan"))
+      items.push({ t: "Bilgilendirici YouTube bölümleri", d: "Uzmanın kendi sesinden anlattığı bölümler ve bunlardan kesilen Shorts.", f: "16:9 + 9:16" });
+    if (ch.has("fuar"))
+      items.push({ t: "Fuar ekranı döngüsü", d: "Sessiz izlenecek, yazılarla desteklenen kısa döngü video.", f: "16:9" });
+    if (ch.has("isealim") || set.has("ekip"))
+      items.push({ t: "Ekip ve işveren markası", d: "Ekibin çalışma anları ve kısa röportajlar; LinkedIn ve işe alım ilanları için.", f: "16:9 + 1:1" });
+    if (set.has("urun"))
+      items.push({ t: "Ürün detayları ve fotoğraflar", d: "Web sitesi, katalog ve e-ticaret için ürün planları ve fotoğraf seti.", f: "Fotoğraf + video" });
+    if (set.has("mekan"))
+      items.push({ t: "Mekan planları", d: "Mekanı tanıtan geniş planlar ve atmosfer görüntüleri; Google İşletme profili için de uygun.", f: "16:9 + fotoğraf" });
+    if (set.has("konusan") && !(ch.has("youtube")))
+      items.push({ t: "Röportaj / soru-cevap kesitleri", d: "Yönetici ya da uzmanın kısa cevapları; güven veren ve tek başına paylaşılabilen kesitler.", f: "9:16 + 16:9" });
+    if (set.has("surec"))
+      items.push({ t: "Süreç anlatımı", d: "Üretim ya da hizmetin nasıl yapıldığını gösteren planlar; gerekirse timelapse.", f: "16:9 + 9:16" });
+    if (set.has("dis"))
+      items.push({ t: "Drone planları", d: "Tesisin ya da mekanın ölçeğini ve konumunu gösteren havadan görüntüler.", f: "16:9" });
+    items.push(...(SECTOR_ITEMS[s] ?? []));
+    items.push({ t: "Kapak ve küçük resimler", d: "Videoların kapakları, YouTube küçük resimleri ve duyuru görselleri için kareler.", f: "Fotoğraf" });
+
+    const prep = [
+      SECTOR_PREP[s],
+      "Karar verecek kişiyi ve onay sürecini belirleyin.",
+      ...(set.has("urun") ? ["Ürünleri temiz ve hazır tutun; öncelik sırasını belirleyin."] : []),
+      ...(set.has("konusan") ? ["Kameraya konuşacak kişi ezber değil, anlatacağı ana fikirleri bilsin."] : []),
+      ...(set.has("dis") ? ["Drone uçuşu için konumu paylaşın; izin gerekip gerekmediğini birlikte kontrol edelim."] : []),
+      "Logo, marka renkleri ve varsa kullanılacak müzik tercihlerini hazırlayın.",
+    ];
+
+    planEl!.replaceChildren(
+      ...items.map((it) => {
+        const li = document.createElement("li");
+        const head = document.createElement("strong");
+        head.textContent = it.t;
+        const fmt = document.createElement("span");
+        fmt.className = "plan__fmt";
+        fmt.textContent = it.f;
+        const p = document.createElement("p");
+        p.textContent = it.d;
+        li.append(head, fmt, p);
+        return li;
+      }),
+    );
+    prepEl!.replaceChildren(
+      ...prep.map((t) => {
+        const li = document.createElement("li");
+        li.textContent = t;
+        return li;
+      }),
+    );
+    if (sector?.dataset.href) sectorLink!.href = sector.dataset.href;
+
+    const msg = [
+      "Merhaba, çekim günü planlayıcıdan geliyorum.",
+      `Sektör: ${sector?.dataset.label ?? "-"}`,
+      `Kullanım: ${labels("kanal").join(", ") || "-"}`,
+      `Çekimde: ${labels("set").join(", ") || "-"}`,
+      "",
+      "Çıkan plan:",
+      ...items.map((it) => `• ${it.t} (${it.f})`),
+      "",
+      "Bunu birlikte planlamak istiyorum.",
+    ].join("\n");
+    const wa = form!.dataset.wa;
+    if (wa) waBtn!.href = `https://wa.me/${wa}?text=${encodeURIComponent(msg)}`;
+    inner!.hidden = false;
+  }
+
+  if (form) {
+    form.addEventListener("change", build);
+    build();
+  }
+</script>
+
+<style>
+  .planner {
+    display: grid;
+    gap: 1.6rem;
+    margin-top: 2rem;
+  }
+  fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+  legend {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.8rem;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--ink);
+  }
+  legend span {
+    display: inline-grid;
+    place-items: center;
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 999px;
+    background: var(--amber);
+    color: #fff;
+    font-family: var(--font-utility);
+    font-size: 0.85rem;
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .chip {
+    position: relative;
+    cursor: pointer;
+  }
+  .chip input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+  .chip span {
+    display: inline-block;
+    padding: 0.55rem 0.95rem;
+    border: 1px solid var(--line-strong, var(--line));
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--paper) 70%, transparent);
+    font-size: 0.95rem;
+    color: var(--ink);
+    transition:
+      background var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+  .chip input:checked + span {
+    border-color: var(--amber);
+    background: color-mix(in srgb, var(--amber) 16%, var(--paper));
+  }
+  .chip input:focus-visible + span {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+  }
+  .result {
+    margin-top: 2.6rem;
+  }
+  .result__inner {
+    padding: 1.6rem;
+    border: 1px solid var(--line);
+    border-radius: 1.2rem;
+    background: color-mix(in srgb, var(--paper) 80%, transparent);
+  }
+  .result__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.6rem);
+    color: var(--ink);
+  }
+  .result__title + ul {
+    margin: 1rem 0 1.8rem;
+  }
+  .plan {
+    display: grid;
+    gap: 0.9rem;
+  }
+  .plan :global(li) {
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .plan :global(strong) {
+    color: var(--ink);
+  }
+  .plan :global(.plan__fmt) {
+    margin-left: 0.5rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--amber) 12%, var(--paper));
+    font-family: var(--font-utility);
+    font-size: 0.75rem;
+    color: var(--amber-text);
+  }
+  .plan :global(p) {
+    margin-top: 0.3rem;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .prep {
+    display: grid;
+    gap: 0.5rem;
+    padding-left: 1.2rem;
+    list-style: disc;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .result__note {
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .result__note a {
+    color: var(--amber-text);
+  }
+  .result__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 1.4rem;
+  }
+</style>

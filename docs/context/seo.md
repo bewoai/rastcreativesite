@@ -132,3 +132,9 @@ Astro’nun `trailingSlash: "always"` ayarı üretim rotalarını tanımlar. Hos
 - Ekip verisi `src/data/team.ts` dosyasında tek kaynak; `/hakkimizda/`, `/ekip/<slug>/` ve blog yazar şeması buradan besleniyor.
 - `/ekip/berat-degirmenci/` ve `/ekip/muhammed-ekrem-adnan/` sayfaları ProfilePage + Person şeması taşıyor (sameAs: LinkedIn, Instagram, portfolyo).
 - Blog yazılarında yazar adı profil sayfasına `rel="author"` ile bağlanıyor; BlogPosting.author artık profil URL'si, unvan ve sameAs bilgisini içeriyor.
+
+## Çekim günü planlayıcı (2026-10-07)
+
+- `/cekim-planlayici/`: sektör, kullanım yeri ve set içeriği seçimine göre içerik planı ve hazırlık listesi üreten istemci tarafı araç.
+- Rakam ve fiyat vermiyor. Sonuç WhatsApp mesajı olarak gönderilebiliyor ve bir müşteri adayı (lead) getiriyor; hiçbir veri saklanmıyor.
+- Schema: WebApplication. Linkler: footer, sektör sayfaları ve "tek çekim günü" blog yazısı.

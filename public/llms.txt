@@ -48,4 +48,5 @@ Odak noktamız tek çekim gününden çok sayıda kullanılabilir içerik çıka
 - [Blog](https://rastcreative.com/blog/): Video prodüksiyon ve içerik pazarlaması üzerine tüm yazılar
 - [Video prodüksiyon sözlüğü](https://rastcreative.com/sozluk/): 40 temel terimin kısa tanımları
 - [Sektörler](https://rastcreative.com/sektorler/): Sağlık, sanayi, perakende, mekan/etkinlik ve eğitim için çalışma şekli
+- [Çekim günü planlayıcı](https://rastcreative.com/cekim-planlayici/): Tek çekim gününden çıkarılabilecek içerikleri ve hazırlık listesini gösteren ücretsiz araç
 - [Ayrıntılı rehber (llms-full.txt)](https://rastcreative.com/llms-full.txt): Hizmetler, süreç ve SSS'nin uzun metni
