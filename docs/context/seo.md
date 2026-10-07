@@ -92,3 +92,10 @@ Astro’nun `trailingSlash: "always"` ayarı üretim rotalarını tanımlar. Hos
   | sakarya tanıtım filmi | 7,9 | |
   | sakarya sosyal medya | 48 | |
   | sakarya reklam çekimi | 14 | |
+- **2. tur (2026-10-07):** Gösterim sırasına göre 17 sayfa daha eklendi:
+  - **Sosyal medya:** Gebze, Darıca, İzmit, Düzce.
+  - **Tanıtım filmi:** Hendek, Karasu, Gebze, Sapanca.
+  - **Reklam filmi:** Hendek.
+  - **Video çekimi:** Serdivan, Darıca, İzmit, Düzce.
+  - **Drone çekimi:** Sapanca, Kocaeli, Gebze, Sakarya.
+  - Toplamda 24 sayfa özel içeriğe sahip.
