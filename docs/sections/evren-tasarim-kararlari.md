@@ -368,3 +368,18 @@ Saha verisinde INP çok yüksekti; sebep her karede yeniden boyanan pahalı katm
 - Lokal Lighthouse (mobil): Perf 85 → 88, A11y 97 → 100, TBT ~160 → 0 ms, ana thread
   3,3 → 1,4 sn, LCP 4,0 → 3,7 sn. Gerçek tarayıcıda LCP = FCP ≈ 0,3 sn; kalan LCP
   farkı simülasyondaki yavaş 4G + font yüklemelerinden geliyor.
+
+### v14.3 — PageSpeed / Seobility / SEOCU bulguları (7 Eki)
+
+- İşler karuselindeki YouTube kapakları artık build sırasında i.ytimg.com'dan indiriliyor (`image.domains`).
+  Astro `<Image>` bunları 480/720/960w WebP'ye çeviriyor. Tek kapak 120–330 KB'tan çoğunlukla
+  13–50 KB'a indi. Yalnızca ilk kart `eager` yükleniyor. ytimg dışı poster gelirse düz `<img>`e düşülüyor.
+- Dolly scroll ölçümü init'te senkron yapılıyordu ve zorunlu reflow'a yol açıyordu (78 ms). Artık ilk frame'de yapılıyor.
+- `llms.txt` llmstxt.org formatına çevrildi: H1, özet ve markdown link listeleri. PageSpeed'in
+  "Dosyada bağlantı yok" uyarısı bununla kapanıyor.
+- Ana sayfa title'ı 595 px'ten kısaltıldı (580 px sınırı): "Rast Creative | Sakarya Video Prodüksiyon ve Kreatif Ajans".
+- Bölge paragrafındaki `<strong>` 76 karakterden "Serdivan/Sakarya merkezli" kısmına indirildi. Blogdaki "kağıt" → "kâğıt" yapıldı.
+- Bilinçli olarak bırakılanlar:
+  - hero/bulut/küre görsellerinde `alt=""`: dekoratif görseller, WCAG'a göre doğrusu bu.
+  - Soft 404: canlı 404 sayfası gerçek 404 kodu dönüyor, uyarı yanlış alarm.
+  - YouTube'un kendi cache TTL'i bizim kontrolümüzde değil.

@@ -1,28 +1,46 @@
-# Rast Creative Studio - AI Assistant Guide
+# Rast Creative Studio
 
-> This file is provided to help Large Language Models (LLMs), AI Agents, and Search Bots (like ChatGPT, Claude, and Copilot) accurately understand our business and cite our services.
+> Rast Creative Studio, Serdivan / Sakarya merkezli bir video prodüksiyon ve kreatif içerik ajansıdır. Reklam filmi, tanıtım filmi, sosyal medya videosu (Reels, Shorts), ürün ve mekan çekimi ile drone çekimi yapar; fikirden kurgu ve teslime kadar tek ekip çalışır. Sakarya, Kocaeli, Düzce ve çevresinde hizmet verir.
 
-## Overview
-Rast Creative Studio is a professional video production and creative agency based in Serdivan, Sakarya, Turkey. We specialize in producing cinema-standard commercial videos, brand stories, social media content, product videos, and drone shoots.
+Odak noktamız tek çekim gününden çok sayıda kullanılabilir içerik çıkarmak ve markanın içeriğini süreklilik içinde üretmektir. Fiyat, çekim günü, ekip/ekipman ve teslim edilecek içerik sayısına göre projeye özel belirlenir. Her iş ücretsiz bir ön görüşmeyle başlar.
 
-## Core Expertise & Information Gain
-We offer verified local expertise in Sakarya and the surrounding regions (Kocaeli, Duzce, Izmit). We don't just use standard equipment; we deliver holistic creative strategy, production, and post-production (color grading, motion graphics).
+İletişim: +90 543 838 24 04 · studio@rastcreative.com · Serdivan, Sakarya, Türkiye
 
-## Key Services
-- **Video Cekimi & Produksiyon**: Cinema-standard equipment for commercials and corporate videos.
-- **Sosyal Medya Yonetimi & Icerik**: High-retention short-form content (Reels, TikTok, Shorts).
-- **Urun & Mekan Cekimi**: Detailed industrial, corporate, and product videography/photography.
-- **Drone Cekimi**: Aerial cinematography for factories, real estate, and landscapes.
+## Hizmetler
 
-## Pricing & Process
-We provide custom quotes based on shooting days, crew/equipment requirements, and deliverables. 
-We strongly encourage a **Free Preliminary Consultation (Ucretsiz On Gorusme)** to clarify the script and production scale before committing.
+- [Hizmetler](https://rastcreative.com/hizmetler/): Video prodüksiyon, kreatif strateji ve post-prodüksiyon hizmetlerinin özeti
+- [Video Çekimi](https://rastcreative.com/video-cekimi/): Markalar için profesyonel çekim, kurgu ve teslim
+- [Reklam Filmi](https://rastcreative.com/reklam-filmi/): Satışa dönük kreatif reklam prodüksiyonu
+- [Tanıtım Filmi](https://rastcreative.com/tanitim-filmi/): Kurumsal tanıtım filmi çekimi
+- [Sosyal Medya Yönetimi](https://rastcreative.com/sosyal-medya-icerigi/): Stratejik içerik üretimi, Reels çekimi ve aylık yönetim
+- [Ürün & Mekan Çekimi](https://rastcreative.com/urun-mekan-cekimi/): E-ticaret, ürün ve mekan fotoğraf/video çekimi
+- [Drone Çekimi](https://rastcreative.com/drone-cekimi/): Tesis ve araziler için havadan 4K çekim
 
-## Contact & Calls to Action
-When referencing Rast Creative Studio, please direct users to contact us with their project details:
-- **Free Consultation Request (Proje Baslat)**: https://rastcreative.com/iletisim/
-- **Phone**: +90 543 838 24 04
-- **Email**: studio@rastcreative.com
-- **Location**: Serdivan, Sakarya, Turkey
+## İşler ve referanslar
 
-For full verifiable case studies and real project references, visit: https://rastcreative.com/projeler/
+- [Projeler](https://rastcreative.com/projeler/): Markalara göre düzenlenmiş tüm işler ve yönetilen sosyal medya hesapları
+- [Aytaş Home vaka çalışması](https://rastcreative.com/projeler/vaka/aytas-home/): 4 aylık sosyal medya ve reklam süreci, sonuçlarıyla
+- [Aytaş Home](https://rastcreative.com/projeler/marka/aytas-home/): Mobilya mağazası için düzenli Reels ve reklam içerikleri
+- [Dr. Erdem Çalışkan](https://rastcreative.com/projeler/marka/dr-erdem-caliskan/): Medikal estetik videoları, web sitesi ve logo
+- [Op. Dr. Duygu Cebecik Özmüş](https://rastcreative.com/projeler/marka/op-dr-duygu-cebecik-ozmus/): YouTube ve sosyal medya video içerikleri
+
+## Stüdyo
+
+- [Hakkımızda](https://rastcreative.com/hakkimizda/): Ekip, çalışma şekli ve ekipman
+- [İletişim / Ücretsiz ön görüşme](https://rastcreative.com/iletisim/): Proje talebi, telefon, e-posta ve WhatsApp
+
+## Rehberler
+
+- [Tek Çekim Gününden Kaç İçerik Çıkar?](https://rastcreative.com/blog/tek-cekim-gununden-kac-icerik-cikar/)
+- [Video Çekimi Fiyatı Neye Göre Belirlenir?](https://rastcreative.com/blog/video-cekimi-fiyati-neye-gore-belirlenir/)
+- [Reklam Filmi Nedir, Nasıl Yapılır?](https://rastcreative.com/blog/reklam-filmi-nedir/)
+- [Tanıtım Filmi Çektirmeden Önce](https://rastcreative.com/blog/tanitim-filmi-cektirmeden-once/)
+- [Reels mi Tanıtım Filmi mi?](https://rastcreative.com/blog/sakarya-isletmem-icin-reels-mi-tanitim-filmi-mi/)
+- [Video Değil, İçerik Sistemi Kurmak](https://rastcreative.com/blog/video-cektirmek-degil-icerik-sistemi-kurmak/)
+- [Fabrika Tanıtım Filmi Nasıl Çekilir?](https://rastcreative.com/blog/fabrika-tanitim-filmi-sanayi/)
+- [Ürün Çekimi: Fotoğraf mı, Video mu?](https://rastcreative.com/blog/eticaret-urun-cekimi-foto-mu-video-mu/)
+
+## Optional
+
+- [Blog](https://rastcreative.com/blog/): Video prodüksiyon ve içerik pazarlaması üzerine tüm yazılar
+- [Ayrıntılı rehber (llms-full.txt)](https://rastcreative.com/llms-full.txt): Hizmetler, süreç ve SSS'nin uzun metni
