@@ -9,8 +9,9 @@
  *
  * Regulatory rule (binding, from the owner): for physicians in Turkey paid
  * advertising is NOT a continuous service. It is only possible as an opening
- * announcement in the first 30 days after the practice licence (ruhsat), or
- * where specific permission exists. So NO monthly tier may list Meta/Google
+ * announcement in the first month after the opening date (Art. 5/1-k of the
+ * 2025 Regulation on Promotion and Information in Health Services, RG 12.11.2025),
+ * or where specific permission exists. So NO monthly tier may list Meta/Google
  * ad management. Promotion lives only in HEKIM_ADDONS (one-off, labelled).
  */
 
@@ -83,7 +84,7 @@ export const HEKIM_ADDONS: readonly HekimAddon[] = [
   {
     id: "acilis",
     name: "Açılış dönemi tanıtımı",
-    when: "Ruhsat sonrası ilk 30 gün",
+    when: "Açılış tarihini izleyen ilk bir ay",
     text: "Muayenehane ya da kliniğin açılışını duyuran, yalnızca bu döneme ait tek seferlik tanıtım çalışması.",
   },
   {

@@ -35,9 +35,11 @@ const SECTOR_HREF = "/sektorler/doktor-klinik-video-cekimi/";
 
 const principles = [
   "İçerik bilgilendirme odaklıdır: hastanın sorusunu yanıtlar, hekimi öne çıkarır.",
-  "Sonuç vaadi ya da garanti içeren ifade kullanmayız.",
+  "\"En iyi\", \"garantili\" gibi sonuç vaadi ya da üstünlük iddiası içeren ifade kullanmayız.",
   "Fiyat, indirim ya da kampanya duyurusu yapmayız.",
-  "Hasta mahremiyetine saygılıyız; hasta görüntüsü ve kişisel bilgi kullanmayız.",
+  "Hasta teşekkürü ya da yorumu paylaşmayız.",
+  "Sponsorlu ya da öne çıkarılmış paylaşım yapmayız (açılış ayı hariç).",
+  "Öncesi/sonrası görselini yalnızca yönetmelik koşullarıyla (açık rıza, tarih, filtre yok) ve hekim onayıyla kullanırız; aksi halde hasta görüntüsü ve kişisel bilgi kullanmayız.",
   "Her senaryo çekimden, her video yayından önce hekimin onayından geçer.",
 ];
 
@@ -86,7 +88,7 @@ const faqs = [
   {
     question: "Hekimler sosyal medyada reklam verebilir mi?",
     answer:
-      "Türkiye'de hekimlerin ücretli reklamı genel olarak kısıtlıdır. Tanıtım; ruhsat sonrası kısa bir açılış dönemi ve izin alınabilen özel durumlarla sınırlıdır. Bu yüzden paketlerimizde sürekli reklam yönetimi yoktur. Mevzuatın güncel yorumu için meslek odanızın ve hukuk danışmanınızın görüşü esastır.",
+      "Türkiye'de sağlık hizmetlerinde reklam yasaktır; yalnızca bilgilendirme yapılabilir. Ücretli tanıtım, sağlık tesisinin açılış tarihini izleyen ilk bir ayla ve Bakanlığın izin verdiği yeni tıbbi yöntemlerle sınırlıdır (Sağlık Hizmetlerinde Tanıtım ve Bilgilendirme Faaliyetleri Hakkında Yönetmelik, RG 12.11.2025). Bu yüzden paketlerimizde sürekli reklam yönetimi yoktur.",
   },
   {
     question: "Konu-anlatım videosu reklam sayılır mı?",
@@ -111,7 +113,7 @@ const faqs = [
   {
     question: "Açılış dönemi tanıtımı nedir?",
     answer:
-      "Ruhsat sonrası ilk 30 günde muayenehane ya da kliniğin açılışını duyurmaya yönelik tek seferlik bir çalışmadır. Aylık paketlerin parçası değildir; kapsamı ve fiyatı görüşmede belirlenir.",
+      "Muayenehane ya da kliniğinizin açılış tarihini izleyen ilk bir ay içinde, yönetmeliğe uygun sponsorlu açılış duyurusudur. Fiyat, kampanya ve hasta görseli içermez; aylık paketlerin parçası değildir; kapsamı ve fiyatı görüşmede belirlenir.",
   },
   {
     question: "Fiyatlara neler dahil?",
@@ -170,9 +172,11 @@ const jsonLd = [
         <p class="ev-label"><span class="ev-label__n">{roman(1)}</span>Neden reklam değil</p>
         <h2 id="hk-why" class="ev-h2 hk__h2">Reklam değil, <em>güven.</em></h2>
         <p class="hk__p">
-          Türkiye'de hekimlerin ücretli reklamı genel olarak kısıtlıdır. Tanıtım, ruhsat
-          sonrası kısa bir açılış dönemiyle ve izin alınabilen özel durumlarla sınırlıdır.
-          Yani hasta adayına her ay reklamla ulaşmak çoğu hekim için bir seçenek değil.
+          Türkiye'de sağlık hizmetlerinde reklam yasaktır; yalnızca bilgilendirme yapılabilir.
+          Ücretli tanıtım, sağlık tesisinin açılış tarihini izleyen ilk bir ayla ve Bakanlığın
+          izin verdiği yeni tıbbi yöntemlerle sınırlıdır (Sağlık Hizmetlerinde Tanıtım ve
+          Bilgilendirme Faaliyetleri Hakkında Yönetmelik, RG 12.11.2025). Bu yüzden
+          paketlerimizde sürekli reklam yönetimi yoktur.
         </p>
         <p class="hk__p">
           Geriye kalan yol aslında daha güçlü: hastanın aradığı soruya hekimin kendi sesiyle
@@ -186,8 +190,9 @@ const jsonLd = [
           {principles.map((r) => <li>{r}</li>)}
         </ul>
         <p class="hk__small">
-          Bu sayfa hukuki görüş değildir. Mevzuatın güncel yorumu için meslek odası ve
-          hukuk danışmanı görüşü esastır; içeriği bu çerçevede üretiriz.
+          Her içerik yayından önce hekimin yazılı onayına sunulur; tereddüt edilen içerikte
+          tabip odası görüşü beklenir. Bu sayfa hukuki görüş değildir; son söz tabip odası ve
+          hukuk danışmanınındır.
         </p>
       </div>
     </section>

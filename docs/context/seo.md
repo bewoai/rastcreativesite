@@ -151,5 +151,5 @@ Astro’nun `trailingSlash: "always"` ayarı üretim rotalarını tanımlar. Hos
 
 - `/hekim-icerik-sistemi/` (veri: `src/data/hekim-paketleri.ts`, fiyatlar geçici) ve iki nitel vaka sayfası: `/projeler/vaka/duygu-hoca/`, `/projeler/vaka/dr-erdem-caliskan/`.
 - Üçü de `noindex, follow` ve sitemap dışı. Yayına almak için: sayfadaki `ROBOTS` sabiti `undefined` yapılır **ve** yol `astro.config.mjs` içindeki `NOINDEX_PATHS` listesinden silinir.
-- Mevzuat kuralı: hekimler için ücretli reklam sürekli hizmet değildir (yalnızca ruhsat sonrası ilk 30 gün açılış tanıtımı ve izinli durumlar). Aylık paketlerde reklam yönetimi yok; tanıtım yalnızca tek seferlik ek hizmet.
+- Mevzuat kuralı: hekimler için ücretli reklam sürekli hizmet değildir (yalnızca açılış tarihini izleyen ilk bir ay açılış tanıtımı ve Bakanlıkça izin verilen yeni tıbbi yöntemler; Sağlık Hizmetlerinde Tanıtım ve Bilgilendirme Faaliyetleri Hakkında Yönetmelik, RG 12.11.2025, md. 5/1-k). Aylık paketlerde reklam yönetimi yok; tanıtım yalnızca tek seferlik ek hizmet.
 - Linkler: footer ("Hekimler için"), `/hizmetler/` sektör listesi, sağlık sektörü sayfasının "İlgili hizmetler" listesi; hekim sayfası da sektör sayfasına link veriyor.
