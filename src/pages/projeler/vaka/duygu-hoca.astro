@@ -1,0 +1,160 @@
+---
+/**
+ * Case study: Op. Dr. Duygu Cebecik Özmüş ("Duygu Hoca") — YouTube content
+ * system. Same structure as aytas-home.astro, but qualitative only: no
+ * metrics until the client approves publishing numbers.
+ *
+ * INDEXING: "noindex, follow" until the owner/client approves the case study.
+ * To publish: set ROBOTS to undefined below AND remove
+ * "/projeler/vaka/duygu-hoca/" from NOINDEX_PATHS in astro.config.mjs.
+ */
+import "../../../styles/vaka.css";
+import { getCollection } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import InstagramCard from "../../../components/evren/InstagramCard.astro";
+import { MANAGED_ACCOUNTS } from "../../../data/managed-accounts";
+import { breadcrumb } from "../../../lib/schema";
+import { EV_CTA, roman } from "../../../lib/evren";
+
+const ROBOTS: string | undefined = "noindex, follow"; // → undefined when approved
+
+const CLIENT = "Op. Dr. Duygu Cebecik Özmüş";
+const account = MANAGED_ACCOUNTS.find((a) => a.client === CLIENT)!;
+const videos = (await getCollection("projects"))
+  .filter((p) => p.data.client === CLIENT && !p.data.draft && !p.data.hidden)
+  .sort((a, b) => b.data.order - a.data.order);
+
+const facts = [
+  { k: "Hekim", v: "Op. Dr. Duygu Cebecik Özmüş, kadın hastalıkları ve doğum uzmanı" },
+  { k: "Kanal", v: "YouTube, Instagram metinleriyle" },
+  { k: "Format", v: "Tek kişi, kameraya konuşarak anlatım" },
+  { k: "Ritim", v: "2 aylık takvim · haftada 2 video" },
+  { k: "Video", v: "4–5 dakika · 550–630 kelime" },
+];
+
+const series = ["Fetal gelişim", "Ev ve yaşam düzeni", "“İlk 7 Gün”", "Bilgilendirme ve mit çürütme"];
+
+const did = [
+  { t: "Kanal denetimi", d: "Mevcut kanal ve yayınlanmış videolar incelendi; içerik planı bunun üzerine kuruldu." },
+  { t: "Transkript ve üslup analizi", d: "Önceki videoların metinlerinden hekimin anlatım üslubu çıkarıldı; senaryolar bu sese göre yazıldı." },
+  { t: "Serilere bölünmüş takvim", d: "Konular dört seri altında, iki aylık ve haftada iki videoluk bir takvime yerleşti." },
+  { t: "Prompter'a hazır senaryo", d: "Her video 4–5 dakikalık, 550–630 kelimelik bir metin. Ton sakin; kendi kendine ilaç kullanımı konusunda net." },
+];
+
+const deliverables = [
+  "2 aylık içerik takvimi, haftada 2 video",
+  "16 senaryo, her biri prompter'a hazır doküman",
+  "SRT altyazı dosyaları",
+  "YouTube açıklamaları",
+  "Instagram caption'ları",
+];
+
+const crumbs = breadcrumb([
+  { name: "Ana Sayfa", path: "/" },
+  { name: "Projeler", path: "/projeler/" },
+  { name: CLIENT, path: "/projeler/marka/op-dr-duygu-cebecik-ozmus/" },
+  { name: "YouTube vaka çalışması", path: "/projeler/vaka/duygu-hoca/" },
+]);
+---
+
+<BaseLayout
+  title="Duygu Hoca YouTube Vaka Çalışması"
+  description="Kadın doğum uzmanı Op. Dr. Duygu Cebecik Özmüş'ün YouTube kanalı için kanal denetimi, 16 senaryo, haftada 2 video ve iki aylık içerik takvimi."
+  ogType="article"
+  robots={ROBOTS}
+  jsonLd={crumbs}
+>
+  <div class="vk">
+    <a href="/projeler/marka/op-dr-duygu-cebecik-ozmus/" class="vk__back">← Duygu Hoca videoları</a>
+
+    <header class="vk__head">
+      <p class="ev-label"><span class="ev-label__sun"></span>Vaka çalışması · YouTube</p>
+      <h1 class="vk__title">Duygu Hoca: haftada iki video, <em>tek sakin ses.</em></h1>
+      <p class="vk__lede">
+        Kadın doğum uzmanı Op. Dr. Duygu Cebecik Özmüş'ün YouTube kanalı için konu planından
+        prompter'a hazır metne, altyazıdan yayın açıklamasına kadar düzenli bir içerik
+        sistemi kurduk. Hekim yalnızca anlatıyor.
+      </p>
+    </header>
+
+    <section class="vk__sec" aria-labelledby="v-facts">
+      <h2 id="v-facts" class="ev-h2 vk__h2">Bir bakışta <em>künye.</em></h2>
+      <dl class="vk__facts">
+        {facts.map((f) => (
+          <div class="ev-glass">
+            <dt>{f.k}</dt>
+            <dd>{f.v}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section class="vk__sec vk__split" aria-labelledby="v-need">
+      <div>
+        <h2 id="v-need" class="ev-h2 vk__h2">Muayene temposunda <em>düzenli kanal.</em></h2>
+        <p class="vk__p">
+          Bir YouTube kanalını düzenli beslemek, muayene temposunun yanında yürütülmesi zor
+          bir iş: her hafta konu seçmek, metni yazmak, çekime hazırlanmak ve yayını hazırlamak
+          ayrı zaman ister.
+        </p>
+        <p class="vk__p">
+          Amaç, hekimin <b>yalnızca anlatmaya odaklandığı</b>, haftada iki videoluk
+          sürdürülebilir bir akıştı. Format bilinçli olarak sade bırakıldı: tek kişi,
+          kameraya konuşur.
+        </p>
+      </div>
+      <div class="vk__card ev-glass">
+        <p class="ev-label">Dört seri</p>
+        <ul class="vk__list">
+          {series.map((s) => <li>{s}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <section class="vk__sec" aria-labelledby="v-did">
+      <h2 id="v-did" class="ev-h2 vk__h2">Ne <em>yaptık?</em></h2>
+      <ul class="vk__did">
+        {did.map((d, i) => (
+          <li class="ev-glass">
+            <span class="vk__n">{roman(i + 1)}</span>
+            <b>{d.t}</b>
+            <span>{d.d}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="vk__sec" aria-labelledby="v-del">
+      <h2 id="v-del" class="ev-h2 vk__h2">Teslim <em>edilenler.</em></h2>
+      <div class="vk__deliv vk__card ev-glass">
+        <ul class="vk__list">
+          {deliverables.map((d) => <li>{d}</li>)}
+        </ul>
+      </div>
+      <div class="vk__ig">
+        <InstagramCard account={account} projects={videos} showCase={false} />
+      </div>
+    </section>
+
+    <section class="vk__sec" aria-labelledby="v-res">
+      <h2 id="v-res" class="ev-h2 vk__h2">Ne <em>değişti?</em></h2>
+      <!-- TODO: müşteri onayıyla rakam ekle -->
+      <p class="vk__p vk__res">
+        Kanal artık iki ay önceden belli olan bir takvimle çalışıyor. Hekim her çekime hazır
+        metinle giriyor; altyazı, YouTube açıklaması ve Instagram metni videoyla birlikte
+        hazır geliyor.
+      </p>
+    </section>
+
+    <section class="vk__cta ev-glass">
+      <div>
+        <h2 class="vk__ctat">Kanalınız da böyle <em>çalışsın.</em></h2>
+        <p class="vk__p">Hekimler için aylık içerik sistemimizi ve paketleri inceleyin.</p>
+      </div>
+      <div class="vk__ctaact">
+        <a class="ev-btn ev-btn--sun" href="/iletisim/" data-cta-location="case_duygu">{EV_CTA} <span aria-hidden="true">→</span></a>
+        <a class="ev-link" href="/hekim-icerik-sistemi/">Hekim içerik sistemi</a>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
