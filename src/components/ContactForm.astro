@@ -8,6 +8,9 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
   <input type="hidden" name="subject" value="Yeni ön görüşme talebi — rastcreative.com" />
   <input type="hidden" name="from_name" value={SITE.name} />
   {/* honeypot — bots fill this; humans never see it */}
+  {/* lead attribution — filled client-side from ?kaynak=…&paket=… (see script) */}
+  <input type="hidden" name="kaynak" value="" data-cf-kaynak />
+  <input type="hidden" name="paket" value="" data-cf-paket />
   <input type="checkbox" name="botcheck" class="cform__hp" tabindex="-1" autocomplete="off" />
 
   <div class="cform__row">
@@ -61,6 +64,7 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
       <option value="Ürün & Mekan Çekimi">Ürün & Mekan Çekimi</option>
       <option value="Marka Hikayesi">Marka Hikayesi</option>
       <option value="Medikal">Medikal</option>
+      <option value="Hekim İçerik Sistemi">Hekim İçerik Sistemi</option>
       <option value="Düğün & Organizasyon">Düğün & Organizasyon</option>
       <option value="Diğer">Diğer</option>
     </select>
@@ -227,6 +231,32 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
   const form = document.querySelector<HTMLFormElement>("[data-cform]");
   if (form) {
     const status = form.querySelector<HTMLElement>("[data-status]");
+
+    /*
+     * Lead attribution. Links such as /iletisim/?kaynak=hekim&paket=standart
+     * fill two hidden fields so Web3Forms emails say where the lead came
+     * from. Values are allow-listed (never echo arbitrary query text into
+     * the email) and the Hekim funnel also pre-selects its project type.
+     */
+    const KAYNAK_ALLOWED = ["hekim"];
+    const PAKET_ALLOWED = ["baslangic", "standart", "klinik", "genel"];
+    const urlParams = new URLSearchParams(window.location.search);
+    const kaynakParam = (urlParams.get("kaynak") ?? "").toLowerCase();
+    const paketParam = (urlParams.get("paket") ?? "").toLowerCase();
+    const kaynak = KAYNAK_ALLOWED.includes(kaynakParam) ? kaynakParam : "";
+    const paket = kaynak && PAKET_ALLOWED.includes(paketParam) ? paketParam : "";
+    const kaynakField = form.querySelector<HTMLInputElement>("[data-cf-kaynak]");
+    const paketField = form.querySelector<HTMLInputElement>("[data-cf-paket]");
+    if (kaynakField) kaynakField.value = kaynak;
+    if (paketField) paketField.value = paket;
+    if (kaynak === "hekim") {
+      const projectSelect = form.querySelector<HTMLSelectElement>("#cf-project");
+      if (projectSelect) projectSelect.value = "Hekim İçerik Sistemi";
+      const subjectField = form.querySelector<HTMLInputElement>('input[name="subject"]');
+      if (subjectField) {
+        subjectField.value = `Yeni hekim içerik sistemi talebi${paket ? ` (${paket})` : ""} — rastcreative.com`;
+      }
+    }
     const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
     const setStatus = (text: string, state: "pending" | "ok" | "err") => {
       if (status) {
@@ -289,6 +319,8 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
               event_category: "lead",
               event_label: "contact_form",
               form_id: "contact_form",
+              // Set only when the visitor arrived via a tracked link (e.g. Hekim funnel).
+              ...(kaynak ? { kaynak, paket: paket || "genel" } : {}),
             },
             () => {
               window.location.href = "/tesekkurler/";

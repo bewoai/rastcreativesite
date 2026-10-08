@@ -294,6 +294,16 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
           });
         }
 
+        // Hekim İçerik Sistemi funnel: CTA clicks carry package + position.
+        if (link.dataset.hekimKonum) {
+          window.rcTrack("hekim_cta_click", {
+            event_category: "hekim",
+            paket: link.dataset.hekimPaket || "genel",
+            konum: link.dataset.hekimKonum,
+            link_url: href,
+          });
+        }
+
         if (href.startsWith("/projeler/")) {
           window.rcTrack("project_view", {
             event_category: "portfolio",
@@ -315,6 +325,14 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
             link_url: href,
           });
         } else if (href.includes("wa.me/") || href.includes("api.whatsapp.com/")) {
+          // On Hekim pages (page + case studies) also tag the click as a Hekim lead signal.
+          if (document.querySelector("[data-hekim-page]")) {
+            window.rcTrack("hekim_whatsapp_click", {
+              event_category: "hekim",
+              event_label: "whatsapp_link",
+              link_url: href,
+            });
+          }
           window.rcTrack("contact_whatsapp_click", {
             event_category: "contact",
             event_label: "whatsapp_link",

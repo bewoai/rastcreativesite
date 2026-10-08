@@ -17,7 +17,7 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 import InstagramCard from "../../../components/evren/InstagramCard.astro";
 import { MANAGED_ACCOUNTS } from "../../../data/managed-accounts";
 import { breadcrumb } from "../../../lib/schema";
-import { EV_CTA, roman } from "../../../lib/evren";
+import { EV_CTA, roman, hekimContactHref } from "../../../lib/evren";
 
 const ROBOTS: string | undefined = "noindex, follow"; // → undefined when approved
 
@@ -72,7 +72,7 @@ const crumbs = breadcrumb([
   robots={ROBOTS}
   jsonLd={crumbs}
 >
-  <div class="vk">
+  <div class="vk" data-hekim-page>
     <a href="/projeler/marka/dr-erdem-caliskan/" class="vk__back">← Dr. Erdem Çalışkan işleri</a>
 
     <header class="vk__head">
@@ -159,7 +159,7 @@ const crumbs = breadcrumb([
         <p class="vk__p">Hekimler için aylık içerik sistemimizi ve paketleri inceleyin.</p>
       </div>
       <div class="vk__ctaact">
-        <a class="ev-btn ev-btn--sun" href="/iletisim/" data-cta-location="case_erdem">{EV_CTA} <span aria-hidden="true">→</span></a>
+        <a class="ev-btn ev-btn--sun" href={hekimContactHref("genel")} data-cta-location="case_erdem" data-hekim-konum="vaka_erdem" data-hekim-paket="genel">{EV_CTA} <span aria-hidden="true">→</span></a>
         <a class="ev-link" href="/hekim-icerik-sistemi/">Hekim içerik sistemi</a>
       </div>
     </section>
