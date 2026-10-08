@@ -1,0 +1,713 @@
+---
+/**
+ * /hekim-icerik-sistemi/ — monthly content system for physicians and clinics.
+ * Positioning: paid advertising is not a continuous option for physicians in
+ * Turkey, so patient trust is earned with informative content instead.
+ *
+ * INDEXING: ships as "noindex, follow" until the owner confirms the prices
+ * (provisional, see src/data/hekim-paketleri.ts) and the case pages. To
+ * publish: set ROBOTS to undefined below AND remove "/hekim-icerik-sistemi/"
+ * from NOINDEX_PATHS in astro.config.mjs (that list keeps it out of the
+ * sitemap).
+ *
+ * Copy rules: no Meta/Google ad management as a monthly item; promotion only
+ * as the one-off, labelled add-ons. No article numbers; cautious wording.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { CONTACT, SITE } from "../consts";
+import { EV_CTA, roman } from "../lib/evren";
+import { breadcrumb, faqPage, BUSINESS_ID } from "../lib/schema";
+import {
+  HEKIM_PACKAGES,
+  HEKIM_ADDONS,
+  PRICE_NOTE,
+  ADDON_PRICE_NOTE,
+  formatTl,
+} from "../data/hekim-paketleri";
+
+const ROBOTS: string | undefined = "noindex, follow"; // → undefined when the owner approves
+
+const PATH = "/hekim-icerik-sistemi/";
+const TITLE = "Hekimler için İçerik Sistemi"; // + " — Rast Creative Studio" = 52 chars
+const DESCRIPTION =
+  "Reklamın sınırlı olduğu sağlıkta güven içerikle kazanılır: hekimlere konu-anlatım videosu, sosyal medya ve Google İşletme Profili yönetimi.";
+const SECTOR_HREF = "/sektorler/doktor-klinik-video-cekimi/";
+
+const principles = [
+  "İçerik bilgilendirme odaklıdır: hastanın sorusunu yanıtlar, hekimi öne çıkarır.",
+  "\"En iyi\", \"garantili\" gibi sonuç vaadi ya da üstünlük iddiası içeren ifade kullanmayız.",
+  "Fiyat, indirim ya da kampanya duyurusu yapmayız.",
+  "Hasta teşekkürü ya da yorumu paylaşmayız.",
+  "Sponsorlu ya da öne çıkarılmış paylaşım yapmayız (açılış ayı hariç).",
+  "Öncesi/sonrası görselini yalnızca yönetmelik koşullarıyla (açık rıza, tarih, filtre yok) ve hekim onayıyla kullanırız; aksi halde hasta görüntüsü ve kişisel bilgi kullanmayız.",
+  "Her senaryo çekimden, her video yayından önce hekimin onayından geçer.",
+];
+
+const steps = [
+  {
+    t: "Kanal denetimi",
+    d: "Mevcut hesaplarınızı, videolarınızı ve hastalarınızın en çok sorduğu konuları inceler, neyin işe yaradığını yazılı olarak paylaşırız.",
+  },
+  {
+    t: "Konu ve senaryo planı",
+    d: "Aylık konu takvimini çıkarır, senaryoları sizin anlatım üslubunuzla yazarız. Her metin çekimden önce onayınıza gelir.",
+  },
+  {
+    t: "Çekim günü",
+    d: "Çoğunlukla muayenehanenizde ya da kliniğinizde, muayene düzenini bozmadan. Metinler prompter'a hazır gelir; siz yalnızca anlatırsınız.",
+  },
+  {
+    t: "Kurgu, altyazı, kapak",
+    d: "Videoları kurgular, ses ve altyazıyı düzenler, kapaklarını tasarlarız. Instagram, YouTube ve web sitesi için ayrı formatlar çıkar.",
+  },
+  {
+    t: "Yayın ve aylık değerlendirme",
+    d: "Paylaşımları takvime göre yayınlar, açıklamaları ve arama ayarlarını yaparız. Ay sonunda neyin işe yaradığına birlikte bakarız.",
+  },
+];
+
+const cases = [
+  {
+    href: "/projeler/vaka/duygu-hoca/",
+    client: "Op. Dr. Duygu Cebecik Özmüş",
+    field: "Kadın hastalıkları ve doğum · YouTube",
+    summary:
+      "Kanal denetiminden iki aylık içerik takvimine: haftada 2 video, 16 senaryo, prompter'a hazır metinler, altyazı ve yayın açıklamaları.",
+  },
+  {
+    href: "/projeler/vaka/dr-erdem-caliskan/",
+    client: "Dr. Erdem Çalışkan · Serdivan Estetik",
+    field: "Medikal estetik · Sosyal medya",
+    summary:
+      "Sosyal medya yönetimi ve ayda 5–8 bilgilendirme odaklı konu-anlatım videosu; kapak tasarımı aynı akışta.",
+  },
+];
+
+// Plain-text answers: rendered below AND emitted as FAQPage JSON-LD.
+const faqs = [
+  {
+    question: "Hekimler sosyal medyada reklam verebilir mi?",
+    answer:
+      "Türkiye'de sağlık hizmetlerinde reklam yasaktır; yalnızca bilgilendirme yapılabilir. Ücretli tanıtım, sağlık tesisinin açılış tarihini izleyen ilk bir ayla ve Bakanlığın izin verdiği yeni tıbbi yöntemlerle sınırlıdır (Sağlık Hizmetlerinde Tanıtım ve Bilgilendirme Faaliyetleri Hakkında Yönetmelik, RG 12.11.2025). Bu yüzden paketlerimizde sürekli reklam yönetimi yoktur.",
+  },
+  {
+    question: "Konu-anlatım videosu reklam sayılır mı?",
+    answer:
+      "Amacımız bilgilendirmedir: hastanın sorusunu hekimin kendi sesiyle, vaat, fiyat ve yönlendirme olmadan yanıtlamak. Sınır her içerikte ayrıca değerlendirilir; tereddüt edilen konuda içeriği yayınlamadan önce meslek odası ya da hukuk danışmanı görüşü alınmasını öneririz.",
+  },
+  {
+    question: "Çekimler nerede yapılıyor?",
+    answer:
+      "Çoğunlukla kendi muayenehanenizde ya da kliniğinizde. Serdivan merkezli ekibimizle Sakarya ve çevre illerde yerinde çekim yapıyoruz.",
+  },
+  {
+    question: "Hekim olarak ne kadar vakit ayırmam gerekiyor?",
+    answer:
+      "Çekim günü ve senaryoların onayı için kısa bir okuma. Konu seçimi, metin yazımı, kurgu ve yayını biz yürütüyoruz; metinler prompter'a hazır geldiği için çekim hızlı ilerler.",
+  },
+  {
+    question: "İçerik onayı nasıl işliyor?",
+    answer:
+      "Her senaryo çekimden önce, her video yayından önce onayınıza gelir. Onaylamadığınız hiçbir içerik yayınlanmaz.",
+  },
+  {
+    question: "Açılış dönemi tanıtımı nedir?",
+    answer:
+      "Muayenehane ya da kliniğinizin açılış tarihini izleyen ilk bir ay içinde, yönetmeliğe uygun sponsorlu açılış duyurusudur. Fiyat, kampanya ve hasta görseli içermez; aylık paketlerin parçası değildir; kapsamı ve fiyatı görüşmede belirlenir.",
+  },
+  {
+    question: "Fiyatlara neler dahil?",
+    answer:
+      "Paket fiyatları KDV hariç, aylık başlangıç fiyatlarıdır ve paket kartında yazan kapsamı içerir. Çekim yeri, video uzunluğu ve kanal sayısı fiyatı etkileyebilir; net teklifi ön görüşmeden sonra sunuyoruz.",
+  },
+  {
+    question: "Sözleşme süresi ne kadar?",
+    answer:
+      "Düzenli içeriğin etkisi birkaç ay içinde görünür hale gelir; bu yüzden çalışmayı aylık bir sistem olarak planlıyoruz. Süre ve fesih koşulları teklifte açıkça yazılır.",
+  },
+];
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Hizmetler", path: "/hizmetler/" },
+    { name: "Hekim içerik sistemi", path: PATH },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Hekim İçerik Sistemi",
+    serviceType: "Hekimler için bilgilendirme odaklı video içerik ve sosyal medya yönetimi",
+    description: DESCRIPTION,
+    audience: { "@type": "Audience", audienceType: "Hekimler ve klinikler" },
+    areaServed: ["Sakarya", "Kocaeli", "Düzce"],
+    provider: { "@id": BUSINESS_ID },
+    url: new URL(PATH, SITE.url).href,
+  },
+  faqPage(faqs),
+];
+---
+
+<BaseLayout title={TITLE} description={DESCRIPTION} robots={ROBOTS} jsonLd={jsonLd}>
+  <div class="hk">
+    {/* ── Hero ── */}
+    <header class="hk__head">
+      <p class="ev-label"><span class="ev-label__sun"></span>Hekimler ve klinikler için</p>
+      <h1 class="hk__title">Reklam yasağı varken hasta güveni nasıl kazanılır? <em>Anlatarak.</em></h1>
+      <p class="hk__lede">
+        Hekimler için reklam sürekli bir seçenek değil. Hastalarınız sizi seçmeden önce sizi
+        dinlemek ister. Sorularını sizin sesinizle yanıtlayan, bilgilendirme odaklı videoları
+        her ay planlıyor, çekiyor ve yayınlıyoruz.
+      </p>
+      <div class="hk__cta">
+        <a class="ev-btn ev-btn--sun" href="/iletisim/" data-cta-location="hekim_hero">{EV_CTA} <span aria-hidden="true">→</span></a>
+        <a class="ev-link" href="#paketler">Paketleri gör</a>
+      </div>
+      <p class="ev-whisper">İlk görüşme ücretsiz.</p>
+    </header>
+
+    {/* ── Why content, not ads ── */}
+    <section class="hk__sec hk__split" aria-labelledby="hk-why">
+      <div>
+        <p class="ev-label"><span class="ev-label__n">{roman(1)}</span>Neden reklam değil</p>
+        <h2 id="hk-why" class="ev-h2 hk__h2">Reklam değil, <em>güven.</em></h2>
+        <p class="hk__p">
+          Türkiye'de sağlık hizmetlerinde reklam yasaktır; yalnızca bilgilendirme yapılabilir.
+          Ücretli tanıtım, sağlık tesisinin açılış tarihini izleyen ilk bir ayla ve Bakanlığın
+          izin verdiği yeni tıbbi yöntemlerle sınırlıdır (Sağlık Hizmetlerinde Tanıtım ve
+          Bilgilendirme Faaliyetleri Hakkında Yönetmelik, RG 12.11.2025). Bu yüzden
+          paketlerimizde sürekli reklam yönetimi yoktur.
+        </p>
+        <p class="hk__p">
+          Geriye kalan yol aslında daha güçlü: hastanın aradığı soruya hekimin kendi sesiyle
+          verdiği sakin ve net cevap. Bu cevaplar sosyal medyada, YouTube'da, Google
+          aramasında ve İşletme Profilinizde birikir; hasta sizi muayeneden önce tanır.
+        </p>
+      </div>
+      <div class="hk__rules ev-glass">
+        <p class="ev-label">Yazarken uyduğumuz ilkeler</p>
+        <ul>
+          {principles.map((r) => <li>{r}</li>)}
+        </ul>
+        <p class="hk__small">
+          Her içerik yayından önce hekimin yazılı onayına sunulur; tereddüt edilen içerikte
+          tabip odası görüşü beklenir. Bu sayfa hukuki görüş değildir; son söz tabip odası ve
+          hukuk danışmanınındır.
+        </p>
+      </div>
+    </section>
+
+    {/* ── The system ── */}
+    <section class="hk__sec" aria-labelledby="hk-steps">
+      <p class="ev-label"><span class="ev-label__n">{roman(2)}</span>Sistem</p>
+      <h2 id="hk-steps" class="ev-h2 hk__h2">Beş adım, her ay <em>aynı ritim.</em></h2>
+      <ol class="hk__steps">
+        {steps.map((s, i) => (
+          <li class="ev-glass">
+            <span class="hk__n">{roman(i + 1)}</span>
+            <b>{s.t}</b>
+            <span>{s.d}</span>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    {/* ── Packages ── */}
+    <section class="hk__sec" id="paketler" aria-labelledby="hk-pk">
+      <p class="ev-label"><span class="ev-label__n">{roman(3)}</span>Paketler</p>
+      <h2 id="hk-pk" class="ev-h2 hk__h2">Üç paket, <em>aynı sistem.</em></h2>
+      <p class="hk__p hk__narrow">
+        Fark video sayısında ve kapsanan kanallarda. Hangisinin size uyduğunu ön görüşmede
+        birlikte netleştiririz.
+      </p>
+      <ul class="hk__tiers" aria-label="Hekim içerik paketleri">
+        {HEKIM_PACKAGES.map((p) => (
+          <li id={`paket-${p.id}`} class:list={["hk__tier ev-glass", { "is-rec": p.recommended }]}>
+            <div class="hk__tierhead">
+              <h3 class="hk__tiername">{p.name}</h3>
+              {p.recommended && <span class="hk__badge">Önerilen</span>}
+            </div>
+            <p class="hk__fit">{p.fit}</p>
+            <p class="hk__price">
+              <span class="hk__amount">{formatTl(p.priceTl)}</span>
+              <span class="hk__per">/ ay</span>
+            </p>
+            <p class="hk__note">{PRICE_NOTE}</p>
+            {p.includesPrevious && <p class="hk__prev">{p.includesPrevious}</p>}
+            <ul class="hk__feat">
+              {p.features.map((f) => <li>{f}</li>)}
+            </ul>
+            <a class="ev-link hk__tiercta" href="/iletisim/" data-cta-location={`hekim_paket_${p.id}`}>
+              Bu paketi konuşalım <span aria-hidden="true">→</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <div class="hk__addons ev-glass" aria-labelledby="hk-addon">
+        <div class="hk__addonhead">
+          <p class="ev-label">Ek hizmet · aylık pakete dahil değil</p>
+          <h3 id="hk-addon" class="hk__addontitle">Yalnızca izin verilen dönemde <em>tanıtım.</em></h3>
+          <p class="hk__note">{ADDON_PRICE_NOTE}</p>
+        </div>
+        <ul>
+          {HEKIM_ADDONS.map((a) => (
+            <li>
+              <span class="hk__when">{a.when}</span>
+              <b>{a.name}</b>
+              <span>{a.text}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    {/* ── Cases ── */}
+    <section class="hk__sec" aria-labelledby="hk-cases">
+      <p class="ev-label"><span class="ev-label__n">{roman(4)}</span>Vaka çalışmaları</p>
+      <h2 id="hk-cases" class="ev-h2 hk__h2">Hekimlerle <em>yaptığımız işler.</em></h2>
+      <ul class="hk__cases">
+        {cases.map((c) => (
+          <li>
+            <a class="hk__case ev-glass" href={c.href}>
+              <span class="hk__field">{c.field}</span>
+              <b class="hk__client">{c.client}</b>
+              <span class="hk__sum">{c.summary}</span>
+              <span class="hk__more">Vakayı oku <span aria-hidden="true">→</span></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p class="hk__p">
+        <a class="ev-link" href={SECTOR_HREF}>Sağlık alanında ürettiğimiz tüm işler <span aria-hidden="true">→</span></a>
+      </p>
+    </section>
+
+    {/* ── FAQ ── */}
+    <section class="hk__sec" aria-labelledby="hk-faq">
+      <p class="ev-label"><span class="ev-label__n">{roman(5)}</span>Sık sorulanlar</p>
+      <h2 id="hk-faq" class="ev-h2 hk__h2">Hekimlerin <em>sorduğu sorular.</em></h2>
+      <div class="hk__faq">
+        {faqs.map((f, i) => (
+          <details class="ev-qa ev-glass" open={i === 0}>
+            <summary>
+              <span>{f.question}</span>
+              <span class="ev-qa__ic" aria-hidden="true"></span>
+            </summary>
+            <div class="ev-qa__a"><p>{f.answer}</p></div>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    {/* ── Final CTA ── */}
+    <section class="hk__final ev-glass">
+      <div>
+        <h2 class="hk__finalt">Kanalınıza birlikte <em>bakalım.</em></h2>
+        <p class="hk__p">Mevcut hesaplarınızı inceleyip hangi paketin size uyduğunu ilk görüşmede söyleriz.</p>
+      </div>
+      <div class="hk__finalact">
+        <a class="ev-btn ev-btn--sun" href="/iletisim/" data-cta-location="hekim_final">{EV_CTA} <span aria-hidden="true">→</span></a>
+        <a class="ev-link" href={`tel:${CONTACT.phoneIntl}`}>{CONTACT.phone}</a>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .hk {
+    width: min(100%, 76rem);
+    margin: 0 auto;
+    padding: clamp(6.5rem, 10vw, 8rem) var(--pad) clamp(3rem, 6vw, 5rem);
+  }
+  .hk__head {
+    max-width: 52rem;
+  }
+  .hk__title {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(2.3rem, 4.4vw + 0.6rem, 4.2rem);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .hk__title em,
+  .hk__addontitle em,
+  .hk__finalt em {
+    font-weight: 460;
+    color: var(--sun-text);
+  }
+  .hk__lede {
+    max-width: 40rem;
+    margin: 1.3rem 0 0;
+    font-size: 1.12rem;
+    color: var(--ink-2);
+  }
+  .hk__cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 1.4rem;
+    margin-top: 1.8rem;
+  }
+  .hk__sec {
+    margin-top: clamp(3.5rem, 7vw, 6rem);
+    scroll-margin-top: 5rem;
+  }
+  .hk__h2 {
+    font-size: clamp(2rem, 3vw + 0.6rem, 3.2rem);
+  }
+  .hk__p {
+    margin: 1rem 0 0;
+    color: var(--ink-2);
+  }
+  .hk__narrow {
+    max-width: 40rem;
+  }
+  .hk__split {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: start;
+  }
+  .hk__rules,
+  .hk__addons {
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+  }
+  .hk__rules::before,
+  .hk__steps li::before,
+  .hk__tier::before,
+  .hk__addons::before,
+  .hk__case::before,
+  .hk__final::before {
+    display: none;
+  }
+  .hk__rules ul,
+  .hk__feat {
+    display: grid;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .hk__rules li,
+  .hk__feat li {
+    position: relative;
+    padding-left: 1.3rem;
+  }
+  .hk__rules li::before,
+  .hk__feat li::before {
+    content: "✦";
+    position: absolute;
+    left: 0;
+    top: 0.05em;
+    font-size: 0.8em;
+    color: var(--sun);
+  }
+  .hk__small {
+    margin: 1.1rem 0 0;
+    padding-top: 0.9rem;
+    border-top: 1px solid rgba(114, 103, 92, 0.22);
+    font-size: 0.86rem;
+    color: var(--mute);
+  }
+  .hk__steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+    gap: 0.8rem;
+    margin: 1.6rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .hk__steps li {
+    display: grid;
+    gap: 0.3rem;
+    align-content: start;
+    padding: 1.2rem;
+  }
+  .hk__steps b {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  .hk__steps li > span:last-child {
+    font-size: 0.94rem;
+    color: var(--ink-2);
+  }
+  .hk__n {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 600;
+    color: var(--sun-text);
+  }
+  .hk__tiers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: 0.9rem;
+    margin: 1.6rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .hk__tier {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.2rem, 3vw, 1.6rem);
+    scroll-margin-top: 6rem;
+  }
+  .hk__tier.is-rec {
+    border-color: rgba(224, 122, 46, 0.55);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.75),
+      0 0 0 1px rgba(224, 122, 46, 0.25),
+      0 24px 50px -30px rgba(179, 80, 26, 0.55);
+  }
+  .hk__tierhead {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  .hk__tiername {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.6rem;
+  }
+  .hk__badge {
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    background: #b3501a;
+    color: #fff;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .hk__fit {
+    margin: 0.5rem 0 0;
+    font-size: 0.95rem;
+    color: var(--ink-2);
+  }
+  .hk__price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.4rem;
+    margin: 1.1rem 0 0;
+  }
+  .hk__amount {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(2rem, 2vw + 1.2rem, 2.6rem);
+    line-height: 1;
+    color: var(--sun-text);
+  }
+  .hk__per {
+    color: var(--ink-2);
+    font-weight: 600;
+  }
+  .hk__note {
+    margin: 0.35rem 0 0;
+    font-size: 0.82rem;
+    color: var(--mute);
+  }
+  .hk__prev {
+    margin: 1rem 0 0;
+    font-weight: 600;
+  }
+  .hk__feat {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(114, 103, 92, 0.22);
+  }
+  .hk__tiercta {
+    margin-top: auto;
+    padding-top: 1rem;
+  }
+  .hk__addons {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 1rem clamp(1.5rem, 4vw, 3rem);
+    margin-top: 1.2rem;
+  }
+  .hk__addonhead .ev-label {
+    margin-bottom: 0.6rem;
+  }
+  .hk__addontitle {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(1.4rem, 1.4vw + 0.9rem, 1.9rem);
+    line-height: 1.1;
+  }
+  .hk__addons ul {
+    display: grid;
+    gap: 0.9rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .hk__addons li {
+    display: grid;
+    gap: 0.2rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid rgba(114, 103, 92, 0.22);
+  }
+  .hk__addons li:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+  .hk__addons li > span:last-child {
+    font-size: 0.94rem;
+    color: var(--ink-2);
+  }
+  .hk__when {
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sun-text);
+  }
+  .hk__cases {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    gap: 0.9rem;
+    margin: 1.6rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .hk__case {
+    display: grid;
+    gap: 0.4rem;
+    height: 100%;
+    padding: clamp(1.2rem, 3vw, 1.6rem);
+    color: var(--ink);
+    text-decoration: none;
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .hk__case:hover {
+    transform: translateY(-2px);
+  }
+  .hk__field {
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mute);
+  }
+  .hk__client {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.45rem;
+    line-height: 1.15;
+  }
+  .hk__sum {
+    color: var(--ink-2);
+  }
+  .hk__more {
+    margin-top: 0.4rem;
+    font-weight: 620;
+    color: var(--sun-text);
+  }
+  .hk__faq {
+    display: grid;
+    gap: 0.6rem;
+    max-width: 52rem;
+    margin-top: 1.6rem;
+  }
+  .ev-qa {
+    border-radius: 1.1rem;
+  }
+  .ev-qa summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 3.6rem;
+    padding: 0.8rem 1.2rem;
+    font-weight: 560;
+    cursor: pointer;
+    list-style: none;
+  }
+  .ev-qa summary::-webkit-details-marker {
+    display: none;
+  }
+  .ev-qa__ic {
+    position: relative;
+    flex: none;
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 50%;
+    background: var(--glass-strong);
+    box-shadow: inset 0 0 0 1px var(--edge);
+  }
+  .ev-qa__ic::before,
+  .ev-qa__ic::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.65rem;
+    height: 1.5px;
+    background: var(--ink);
+    translate: -50% -50%;
+    transition: transform var(--dur) var(--ease-out);
+  }
+  .ev-qa__ic::after {
+    transform: rotate(90deg);
+  }
+  .ev-qa[open] .ev-qa__ic::after {
+    transform: rotate(0deg);
+  }
+  .ev-qa[open] .ev-qa__ic {
+    background: var(--sun);
+    box-shadow: 0 0 14px rgba(224, 122, 46, 0.6);
+  }
+  .ev-qa[open] .ev-qa__ic::before,
+  .ev-qa[open] .ev-qa__ic::after {
+    background: #fff;
+  }
+  .ev-qa__a {
+    padding: 0 1.2rem 1.1rem;
+    color: var(--ink-2);
+  }
+  .ev-qa__a p {
+    margin: 0;
+  }
+  .hk__final {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2rem;
+    margin-top: clamp(3.5rem, 7vw, 6rem);
+    padding: clamp(1.4rem, 3vw, 2.2rem);
+  }
+  .hk__finalt {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(1.7rem, 2vw + 0.8rem, 2.4rem);
+  }
+  .hk__finalact {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 1.2rem;
+  }
+  @media (max-width: 860px) {
+    .hk__split,
+    .hk__addons {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hk__case,
+    .hk__case:hover {
+      transition: none;
+      transform: none;
+    }
+  }
+</style>

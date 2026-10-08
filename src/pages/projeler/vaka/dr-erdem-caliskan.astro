@@ -1,0 +1,167 @@
+---
+/**
+ * Case study: Dr. Erdem Çalışkan (Serdivan Estetik) — social media and
+ * informative topic videos. Same structure as aytas-home.astro, but
+ * qualitative only: no metrics until the client approves publishing numbers.
+ *
+ * Regulatory rule: promotion support is ONLY offered in permitted periods
+ * (one-off). Never describe Meta/Google ads as an ongoing service here.
+ *
+ * INDEXING: "noindex, follow" until the owner/client approves the case study.
+ * To publish: set ROBOTS to undefined below AND remove
+ * "/projeler/vaka/dr-erdem-caliskan/" from NOINDEX_PATHS in astro.config.mjs.
+ */
+import "../../../styles/vaka.css";
+import { getCollection } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import InstagramCard from "../../../components/evren/InstagramCard.astro";
+import { MANAGED_ACCOUNTS } from "../../../data/managed-accounts";
+import { breadcrumb } from "../../../lib/schema";
+import { EV_CTA, roman } from "../../../lib/evren";
+
+const ROBOTS: string | undefined = "noindex, follow"; // → undefined when approved
+
+const CLIENT = "Dr. Erdem Çalışkan";
+const account = MANAGED_ACCOUNTS.find((a) => a.client === CLIENT)!;
+const reels = (await getCollection("projects"))
+  .filter((p) => p.data.client === CLIENT && !p.data.draft && !p.data.hidden)
+  .sort((a, b) => b.data.order - a.data.order);
+
+const facts = [
+  { k: "Hekim", v: "Dr. Erdem Çalışkan, medikal estetik" },
+  { k: "Klinik", v: "Serdivan Estetik" },
+  { k: "Kapsam", v: "Sosyal medya yönetimi · video kapak tasarımı" },
+  { k: "Ritim", v: "Ayda 5–8 konu-anlatım videosu" },
+  { k: "Tanıtım", v: "Yalnızca izinli dönemde, tek seferlik" },
+];
+
+const principles = [
+  "Bilgilendirme odaklı: hastanın sorusunu yanıtlar, hekimi öne çıkarır.",
+  "Sonuç vaadi ya da garanti içeren ifade yok.",
+  "Fiyat, indirim ya da kampanya duyurusu yok.",
+  "Her video yayından önce hekimin onayından geçer.",
+];
+
+const did = [
+  { t: "Aylık konu planı", d: "Hastaların en çok sorduğu uygulama ve süreçlerden her ay yeni bir konu listesi." },
+  { t: "Konu-anlatım videosu merkezde", d: "Hekim bir konuyu kameraya kendi sesiyle anlatıyor; ayda 5 ile 8 video." },
+  { t: "Kurallara göre yazım", d: "Metinler sağlık tanıtım kurallarına uygun, bilgilendirme odaklı; vaat ve fiyat içermiyor." },
+  { t: "Kapak ve yayın", d: "Her video için kapak tasarımı; paylaşım takvimi ve hesap yönetimi aynı akışta." },
+];
+
+const deliverables = [
+  "Sosyal medya yönetimi",
+  "Ayda 5–8 konu-anlatım videosu",
+  "Video kapak tasarımı",
+  "Tanıtım desteği yalnızca izin verilen dönemde, tek seferlik",
+];
+
+const crumbs = breadcrumb([
+  { name: "Ana Sayfa", path: "/" },
+  { name: "Projeler", path: "/projeler/" },
+  { name: CLIENT, path: "/projeler/marka/dr-erdem-caliskan/" },
+  { name: "Sosyal medya vaka çalışması", path: "/projeler/vaka/dr-erdem-caliskan/" },
+]);
+---
+
+<BaseLayout
+  title="Dr. Erdem Çalışkan Vaka Çalışması"
+  description="Medikal estetik hekimi Dr. Erdem Çalışkan (Serdivan Estetik) için sosyal medya yönetimi, ayda 5–8 bilgilendirme odaklı video ve kapak tasarımı."
+  image="/covers/dr-erdem-caliskan-kimdir.webp"
+  ogType="article"
+  robots={ROBOTS}
+  jsonLd={crumbs}
+>
+  <div class="vk">
+    <a href="/projeler/marka/dr-erdem-caliskan/" class="vk__back">← Dr. Erdem Çalışkan işleri</a>
+
+    <header class="vk__head">
+      <p class="ev-label"><span class="ev-label__sun"></span>Vaka çalışması · Sosyal medya</p>
+      <h1 class="vk__title">Dr. Erdem Çalışkan: vaat değil, <em>bilgi.</em></h1>
+      <p class="vk__lede">
+        Serdivan Estetik'te medikal estetik hekimi Dr. Erdem Çalışkan'ın sosyal medyasını,
+        sağlık tanıtım kurallarına uygun konu-anlatım videolarıyla yönetiyoruz. Hekim
+        anlatıyor; plan, kurgu, kapak ve yayın bizden.
+      </p>
+    </header>
+
+    <section class="vk__sec" aria-labelledby="e-facts">
+      <h2 id="e-facts" class="ev-h2 vk__h2">Bir bakışta <em>künye.</em></h2>
+      <dl class="vk__facts">
+        {facts.map((f) => (
+          <div class="ev-glass">
+            <dt>{f.k}</dt>
+            <dd>{f.v}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section class="vk__sec vk__split" aria-labelledby="e-need">
+      <div>
+        <h2 id="e-need" class="ev-h2 vk__h2">Dar sınırlar içinde <em>düzenli görünürlük.</em></h2>
+        <p class="vk__p">
+          Medikal estetikte tanıtımın sınırları dardır: sonuç vaadi ve fiyat duyurusu
+          kullanılamaz, ücretli tanıtım yalnızca izin verilen dönemlerle sınırlıdır. Buna
+          rağmen hasta adayları hekimi seçmeden önce onu tanımak ister.
+        </p>
+        <p class="vk__p">
+          Çözüm, <b>hekimin kendi anlatımıyla düzenli bilgilendirme</b>: hastaların sorduğu
+          konuları sakin ve net anlatan kısa videolar, her ay bir plan dahilinde.
+        </p>
+      </div>
+      <div class="vk__card ev-glass">
+        <p class="ev-label">İçerik ilkeleri</p>
+        <ul class="vk__list">
+          {principles.map((p) => <li>{p}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <section class="vk__sec" aria-labelledby="e-did">
+      <h2 id="e-did" class="ev-h2 vk__h2">Ne <em>yapıyoruz?</em></h2>
+      <ul class="vk__did">
+        {did.map((d, i) => (
+          <li class="ev-glass">
+            <span class="vk__n">{roman(i + 1)}</span>
+            <b>{d.t}</b>
+            <span>{d.d}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="vk__sec" aria-labelledby="e-del">
+      <h2 id="e-del" class="ev-h2 vk__h2">Teslim <em>edilenler.</em></h2>
+      <div class="vk__deliv vk__card ev-glass">
+        <ul class="vk__list">
+          {deliverables.map((d) => <li>{d}</li>)}
+        </ul>
+      </div>
+      <div class="vk__ig">
+        <InstagramCard account={account} projects={reels} showCase={false} />
+      </div>
+    </section>
+
+    <section class="vk__sec" aria-labelledby="e-res">
+      <h2 id="e-res" class="ev-h2 vk__h2">Ne <em>değişti?</em></h2>
+      {/* TODO: müşteri onayıyla rakam ekle */}
+      <p class="vk__p vk__res">
+        Hesap artık her ay belli bir konu planıyla ve hekimin kendi anlatımıyla besleniyor.
+        Video, kapak ve paylaşım aynı akıştan çıkıyor; her içerik yayından önce hekimin
+        onayından geçiyor.
+      </p>
+    </section>
+
+    <section class="vk__cta ev-glass">
+      <div>
+        <h2 class="vk__ctat">Hesabınız da böyle <em>çalışsın.</em></h2>
+        <p class="vk__p">Hekimler için aylık içerik sistemimizi ve paketleri inceleyin.</p>
+      </div>
+      <div class="vk__ctaact">
+        <a class="ev-btn ev-btn--sun" href="/iletisim/" data-cta-location="case_erdem">{EV_CTA} <span aria-hidden="true">→</span></a>
+        <a class="ev-link" href="/hekim-icerik-sistemi/">Hekim içerik sistemi</a>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

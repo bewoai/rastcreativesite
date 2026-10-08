@@ -1,0 +1,187 @@
+/*
+  Qualitative case studies (/projeler/vaka/duygu-hoca/, /dr-erdem-caliskan/).
+  Same structure and type as the Aytaş Home case (aytas-home.astro keeps its
+  own scoped copy); these pages carry no metrics, so facts replace KPIs.
+  Prefix .vk keeps it from touching any other page.
+*/
+.vk {
+  width: min(100%, 76rem);
+  margin: 0 auto;
+  padding: clamp(6.5rem, 10vw, 8rem) var(--pad) clamp(3rem, 6vw, 5rem);
+}
+.vk__back {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  font-size: 0.92rem;
+  color: var(--ink-2);
+  text-decoration: none;
+}
+.vk__back:hover {
+  color: var(--sun-text);
+}
+.vk__head {
+  max-width: 52rem;
+  margin-top: 1rem;
+}
+.vk__title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(2.3rem, 4.6vw + 0.6rem, 4.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.vk__title em,
+.vk__h2 em,
+.vk__ctat em {
+  font-weight: 460;
+  color: var(--sun-text);
+}
+.vk__lede {
+  max-width: 40rem;
+  margin: 1.3rem 0 0;
+  font-size: 1.12rem;
+  color: var(--ink-2);
+}
+.vk__sec {
+  margin-top: clamp(3rem, 6vw, 5rem);
+}
+.vk__h2 {
+  font-size: clamp(2rem, 3vw + 0.6rem, 3.2rem);
+}
+.vk__p {
+  margin: 1rem 0 0;
+  color: var(--ink-2);
+}
+.vk__p b {
+  color: var(--ink);
+}
+/* Facts: the case's "künye" in place of the KPI tiles. */
+.vk__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: 0.8rem;
+  margin: 1.6rem 0 0;
+}
+.vk__facts > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1.1rem 1.2rem;
+}
+.vk__facts dt {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+.vk__facts dd {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 560;
+  font-size: 1.15rem;
+  line-height: 1.25;
+}
+.vk__facts > div::before,
+.vk__card::before,
+.vk__did li::before,
+.vk__cta::before {
+  display: none;
+}
+.vk__split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+}
+.vk__card {
+  padding: 1.4rem;
+}
+.vk__list {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.vk__list li {
+  position: relative;
+  padding-left: 1.3rem;
+}
+.vk__list li::before {
+  content: "✦";
+  position: absolute;
+  left: 0;
+  top: 0.05em;
+  font-size: 0.8em;
+  color: var(--sun);
+}
+.vk__did {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 0.8rem;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.vk__did li {
+  display: grid;
+  gap: 0.3rem;
+  align-content: start;
+  padding: 1.2rem;
+}
+.vk__did b {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.vk__did li > span:last-child {
+  font-size: 0.94rem;
+  color: var(--ink-2);
+}
+.vk__n {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 600;
+  color: var(--sun-text);
+}
+.vk__res {
+  max-width: 44rem;
+}
+.vk__deliv {
+  max-width: 44rem;
+  margin-top: 1.4rem;
+}
+.vk__ig {
+  max-width: 44rem;
+  margin-top: 1.6rem;
+}
+.vk__cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  margin-top: clamp(3rem, 6vw, 5rem);
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+}
+.vk__ctat {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(1.7rem, 2vw + 0.8rem, 2.4rem);
+}
+.vk__ctaact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 1.2rem;
+}
+@media (max-width: 860px) {
+  .vk__split {
+    grid-template-columns: 1fr;
+  }
+}

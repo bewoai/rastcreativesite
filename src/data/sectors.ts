@@ -71,6 +71,7 @@ export const SECTORS: readonly Sector[] = [
     ],
     clients: ["Op. Dr. Duygu Cebecik Özmüş", "Dr. Erdem Çalışkan", "PARHAD — Paramedik ve Hastane Öncesi Acil Tıp Derneği"],
     services: [
+      { label: "Hekimler için içerik sistemi ve paketler", href: "/hekim-icerik-sistemi/" },
       { label: "Sosyal medya yönetimi", href: "/sosyal-medya-icerigi/sakarya/" },
       { label: "Tanıtım filmi", href: "/tanitim-filmi/sakarya/" },
       { label: "Video çekimi", href: "/video-cekimi/sakarya/" },
