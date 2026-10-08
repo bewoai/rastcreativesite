@@ -11,6 +11,16 @@ import sitemap from '@astrojs/sitemap';
 const isHiddenProjectPage = (page) =>
   new URL(page).pathname.startsWith('/projeler/adatip-');
 
+// Single pages that ship with a `noindex` robots meta while they wait for an
+// owner decision. Keep this list in sync with each page's ROBOTS constant:
+// when a page is approved, set its ROBOTS to undefined AND remove it here.
+const NOINDEX_PATHS = new Set([
+  '/hekim-icerik-sistemi/', // prices provisional
+  '/projeler/vaka/duygu-hoca/', // client approval for the case study
+  '/projeler/vaka/dr-erdem-caliskan/', // client approval for the case study
+]);
+const isNoindexPage = (page) => NOINDEX_PATHS.has(new URL(page).pathname);
+
 // https://astro.build/config
 export default defineConfig({
   // Canonical origin — used for canonical URLs, OG tags and (Faz 5) sitemap.
@@ -40,7 +50,7 @@ export default defineConfig({
       customSitemaps: ['https://rastcreative.com/video-sitemap.xml'],
       // Keep the temporary component gallery and hidden/noindex projects out.
       // All service × location pages are indexable after the content-quality pass.
-      filter: (page) => !page.includes('/dev') && !page.includes('/taslak') && !page.includes('/tesekkurler') && !isHiddenProjectPage(page),
+      filter: (page) => !page.includes('/dev') && !page.includes('/taslak') && !page.includes('/tesekkurler') && !isHiddenProjectPage(page) && !isNoindexPage(page),
     }),
   ]
 });
