@@ -1,0 +1,53 @@
+# Rast Creative Studio
+
+> Rast Creative Studio, Serdivan / Sakarya merkezli bir video prodüksiyon ve kreatif içerik ajansıdır. Reklam filmi, tanıtım filmi, sosyal medya videosu (Reels, Shorts), ürün ve mekan çekimi ile drone çekimi yapar; fikirden kurgu ve teslime kadar tek ekip çalışır. Sakarya, Kocaeli, Düzce ve çevresinde hizmet verir.
+
+Odak noktamız tek çekim gününden çok sayıda kullanılabilir içerik çıkarmak ve markanın içeriğini süreklilik içinde üretmektir. Fiyat, çekim günü, ekip/ekipman ve teslim edilecek içerik sayısına göre projeye özel belirlenir. Her iş ücretsiz bir ön görüşmeyle başlar.
+
+İletişim: +90 543 838 24 04 · studio@rastcreative.com · Serdivan, Sakarya, Türkiye
+
+## Hizmetler
+
+- [Hizmetler](https://rastcreative.com/hizmetler/): Video prodüksiyon, kreatif strateji ve post-prodüksiyon hizmetlerinin özeti
+- [Video Çekimi](https://rastcreative.com/video-cekimi/): Markalar için profesyonel çekim, kurgu ve teslim
+- [Reklam Filmi](https://rastcreative.com/reklam-filmi/): Satışa dönük kreatif reklam prodüksiyonu
+- [Tanıtım Filmi](https://rastcreative.com/tanitim-filmi/): Kurumsal tanıtım filmi çekimi
+- [Sosyal Medya Yönetimi](https://rastcreative.com/sosyal-medya-icerigi/): Stratejik içerik üretimi, Reels çekimi ve aylık yönetim
+- [Ürün & Mekan Çekimi](https://rastcreative.com/urun-mekan-cekimi/): E-ticaret, ürün ve mekan fotoğraf/video çekimi
+- [Drone Çekimi](https://rastcreative.com/drone-cekimi/): Tesis ve araziler için havadan 4K çekim
+
+## İşler ve referanslar
+
+- [Projeler](https://rastcreative.com/projeler/): Markalara göre düzenlenmiş tüm işler ve yönetilen sosyal medya hesapları
+- [Aytaş Home vaka çalışması](https://rastcreative.com/projeler/vaka/aytas-home/): 4 aylık sosyal medya ve reklam süreci, sonuçlarıyla
+- [Aytaş Home](https://rastcreative.com/projeler/marka/aytas-home/): Mobilya mağazası için düzenli Reels ve reklam içerikleri
+- [Dr. Erdem Çalışkan](https://rastcreative.com/projeler/marka/dr-erdem-caliskan/): Medikal estetik videoları, web sitesi ve logo
+- [Op. Dr. Duygu Cebecik Özmüş](https://rastcreative.com/projeler/marka/op-dr-duygu-cebecik-ozmus/): YouTube ve sosyal medya video içerikleri
+
+## Stüdyo
+
+- [Hakkımızda](https://rastcreative.com/hakkimizda/): Ekip, çalışma şekli ve ekipman
+- [İletişim / Ücretsiz ön görüşme](https://rastcreative.com/iletisim/): Proje talebi, telefon, e-posta ve WhatsApp
+
+## Rehberler
+
+- [Tek Çekim Gününden Kaç İçerik Çıkar?](https://rastcreative.com/blog/tek-cekim-gununden-kac-icerik-cikar/)
+- [Video Çekimi Fiyatı Neye Göre Belirlenir?](https://rastcreative.com/blog/video-cekimi-fiyati-neye-gore-belirlenir/)
+- [Reklam Filmi Nedir, Nasıl Yapılır?](https://rastcreative.com/blog/reklam-filmi-nedir/)
+- [Tanıtım Filmi Çektirmeden Önce](https://rastcreative.com/blog/tanitim-filmi-cektirmeden-once/)
+- [Reels mi Tanıtım Filmi mi?](https://rastcreative.com/blog/sakarya-isletmem-icin-reels-mi-tanitim-filmi-mi/)
+- [Video Değil, İçerik Sistemi Kurmak](https://rastcreative.com/blog/video-cektirmek-degil-icerik-sistemi-kurmak/)
+- [Fabrika Tanıtım Filmi Nasıl Çekilir?](https://rastcreative.com/blog/fabrika-tanitim-filmi-sanayi/)
+- [Ürün Çekimi: Fotoğraf mı, Video mu?](https://rastcreative.com/blog/eticaret-urun-cekimi-foto-mu-video-mu/)
+- [Reklam Senaryosu Nedir, Nasıl Yazılır?](https://rastcreative.com/blog/reklam-senaryosu-nasil-yazilir/)
+- [Drone Çekimi Fiyatı Neye Göre Belirlenir?](https://rastcreative.com/blog/drone-cekimi-fiyati-neye-gore-belirlenir/)
+- [Sosyal Medya Yönetimi Fiyatı Neye Göre Belirlenir?](https://rastcreative.com/blog/sosyal-medya-yonetimi-fiyati-neye-gore-belirlenir/)
+
+## Optional
+
+- [Blog](https://rastcreative.com/blog/): Video prodüksiyon ve içerik pazarlaması üzerine tüm yazılar
+- [Sık sorulan sorular](https://rastcreative.com/sss/): Fiyat, teslim, revizyon, formatlar, sosyal medya yönetimi ve bölgeler
+- [Video prodüksiyon sözlüğü](https://rastcreative.com/sozluk/): 40 temel terimin kısa tanımları
+- [Sektörler](https://rastcreative.com/sektorler/): Sağlık, sanayi, perakende, mekan/etkinlik ve eğitim için çalışma şekli
+- [Çekim günü planlayıcı](https://rastcreative.com/cekim-planlayici/): Tek çekim gününden çıkarılabilecek içerikleri ve hazırlık listesini gösteren ücretsiz araç
+- [Ayrıntılı rehber (llms-full.txt)](https://rastcreative.com/llms-full.txt): Hizmetler, süreç ve SSS'nin uzun metni
