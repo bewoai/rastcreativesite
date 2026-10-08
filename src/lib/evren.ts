@@ -25,3 +25,12 @@ export const EV_NAV = [
 
 /** The one lead CTA: short, confident, the same wording everywhere. */
 export const EV_CTA = "Görüşelim";
+
+/**
+ * Contact-form link for the Hekim İçerik Sistemi funnel. `kaynak` and `paket`
+ * are read by ContactForm.astro into hidden fields so the Web3Forms email and
+ * the GA4 lead event carry the source. `paket` is baslangic | standart |
+ * klinik | genel (genel = no specific package chosen).
+ */
+export const hekimContactHref = (paket: "baslangic" | "standart" | "klinik" | "genel" = "genel") =>
+  `/iletisim/?kaynak=hekim&paket=${paket}#teklif-formu`;
