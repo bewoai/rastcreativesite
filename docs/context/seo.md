@@ -146,3 +146,10 @@ Astro’nun `trailingSlash: "always"` ayarı üretim rotalarını tanımlar. Hos
 - **`/video-sitemap.xml`:** Videolu projeleri listeliyor; kural VideoObject ile aynı (provider + publishDate). `customSitemaps` ile sitemap-index'e ve robots.txt'ye eklendi.
 - **Organization şeması:** `founder` alanında iki kurucu ortak var. Kuruluş yılı (`foundingDate`) müşteriden bekleniyor.
 - **Windsor.ai:** Şu an sadece Google Ads bağlı. Aylık otomatik Search Console raporu için Windsor'da `searchconsole` bağlanmalı.
+
+## Hekim içerik sistemi (2026-10-08, noindex)
+
+- `/hekim-icerik-sistemi/` (veri: `src/data/hekim-paketleri.ts`, fiyatlar geçici) ve iki nitel vaka sayfası: `/projeler/vaka/duygu-hoca/`, `/projeler/vaka/dr-erdem-caliskan/`.
+- Üçü de `noindex, follow` ve sitemap dışı. Yayına almak için: sayfadaki `ROBOTS` sabiti `undefined` yapılır **ve** yol `astro.config.mjs` içindeki `NOINDEX_PATHS` listesinden silinir.
+- Mevzuat kuralı: hekimler için ücretli reklam sürekli hizmet değildir (yalnızca ruhsat sonrası ilk 30 gün açılış tanıtımı ve izinli durumlar). Aylık paketlerde reklam yönetimi yok; tanıtım yalnızca tek seferlik ek hizmet.
+- Linkler: footer ("Hekimler için"), `/hizmetler/` sektör listesi, sağlık sektörü sayfasının "İlgili hizmetler" listesi; hekim sayfası da sektör sayfasına link veriyor.
