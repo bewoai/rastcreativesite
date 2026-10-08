@@ -319,6 +319,8 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
               event_category: "lead",
               event_label: "contact_form",
               form_id: "contact_form",
+              // Set only when the visitor arrived via a tracked link (e.g. Hekim funnel).
+              ...(kaynak ? { kaynak, paket: paket || "genel" } : {}),
             },
             () => {
               window.location.href = "/tesekkurler/";

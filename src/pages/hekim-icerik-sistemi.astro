@@ -149,7 +149,7 @@ const jsonLd = [
 ---
 
 <BaseLayout title={TITLE} description={DESCRIPTION} robots={ROBOTS} jsonLd={jsonLd}>
-  <div class="hk">
+  <div class="hk" data-hekim-page>
     {/* ── Hero ── */}
     <header class="hk__head">
       <p class="ev-label"><span class="ev-label__sun"></span>Hekimler ve klinikler için</p>
@@ -160,7 +160,7 @@ const jsonLd = [
         her ay planlıyor, çekiyor ve yayınlıyoruz.
       </p>
       <div class="hk__cta">
-        <a class="ev-btn ev-btn--sun" href={hekimContactHref("genel")} data-cta-location="hekim_hero">{EV_CTA} <span aria-hidden="true">→</span></a>
+        <a class="ev-btn ev-btn--sun" href={hekimContactHref("genel")} data-cta-location="hekim_hero" data-hekim-konum="hero" data-hekim-paket="genel">{EV_CTA} <span aria-hidden="true">→</span></a>
         <a class="ev-link" href="#paketler">Paketleri gör</a>
       </div>
       <p class="ev-whisper">İlk görüşme ücretsiz.</p>
@@ -237,7 +237,7 @@ const jsonLd = [
             <ul class="hk__feat">
               {p.features.map((f) => <li>{f}</li>)}
             </ul>
-            <a class="ev-link hk__tiercta" href={hekimContactHref(p.id as "baslangic" | "standart" | "klinik")} data-cta-location={`hekim_paket_${p.id}`}>
+            <a class="ev-link hk__tiercta" href={hekimContactHref(p.id as "baslangic" | "standart" | "klinik")} data-cta-location={`hekim_paket_${p.id}`} data-hekim-konum="paketler" data-hekim-paket={p.id}>
               Bu paketi konuşalım <span aria-hidden="true">→</span>
             </a>
           </li>
@@ -307,7 +307,7 @@ const jsonLd = [
         <p class="hk__p">Mevcut hesaplarınızı inceleyip hangi paketin size uyduğunu ilk görüşmede söyleriz.</p>
       </div>
       <div class="hk__finalact">
-        <a class="ev-btn ev-btn--sun" href={hekimContactHref("genel")} data-cta-location="hekim_final">{EV_CTA} <span aria-hidden="true">→</span></a>
+        <a class="ev-btn ev-btn--sun" href={hekimContactHref("genel")} data-cta-location="hekim_final" data-hekim-konum="final" data-hekim-paket="genel">{EV_CTA} <span aria-hidden="true">→</span></a>
         <a class="ev-link" href={`tel:${CONTACT.phoneIntl}`}>{CONTACT.phone}</a>
       </div>
     </section>
