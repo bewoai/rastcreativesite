@@ -27,7 +27,7 @@ export const FAQ_GROUPS: readonly FaqGroup[] = [
     id: "fiyat",
     title: "Fiyat ve teklif",
     items: [
-      { q: "Video çekimi ne kadar?", a: "Sabit bir fiyat listemiz yok; her proje kapsamına göre fiyatlanır. Çekim günü sayısı, lokasyon, ekip ve ekipman, drone, kurgu kapsamı ve teslim edilecek içerik sayısı fiyatı belirler. Ön görüşmeden sonra net bir teklif sunuyoruz.", link: { label: "Fiyatı neler belirler?", href: "/blog/video-cekimi-fiyati-neye-gore-belirlenir/" } },
+      { q: "Video çekimi ne kadar?", a: "Her proje kapsamına göre fiyatlanır. Çekim günü sayısı, lokasyon, ekip ve ekipman, drone, kurgu kapsamı ve teslim edilecek içerik sayısı fiyatı belirler. Ön görüşmeden sonra net bir teklif sunuyoruz.", link: { label: "Fiyatı neler belirler?", href: "/blog/video-cekimi-fiyati-neye-gore-belirlenir/" } },
       { q: "Sosyal medya yönetimi fiyatı neye göre belirlenir?", a: "Ayda üretilecek video ve gönderi sayısı, çekim günü sayısı, yönetilecek platformlar, reklam yönetimi ve raporlama kapsamına göre.", link: { label: "Sosyal medya yönetimi fiyatı", href: "/blog/sosyal-medya-yonetimi-fiyati-neye-gore-belirlenir/" } },
       { q: "Drone çekimi ayrıca mı ücretlendirilir?", a: "Drone, projeye değer katıyorsa kapsama eklenir ve teklifte ayrı bir kalem olarak görünür. Her projede gerekli değildir.", link: { label: "Drone çekim ücreti", href: "/blog/drone-cekimi-fiyati-neye-gore-belirlenir/" } },
       { q: "Teklifleri nasıl karşılaştırmalıyım?", a: "Toplam rakam yerine kapsamı karşılaştırın: kaç gün çekim, hangi ekip, hangi ekipman, kaç teslim dosyası, kaç revizyon turu ve hangi formatlar dahil." },
