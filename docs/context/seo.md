@@ -142,7 +142,7 @@ Astro’nun `trailingSlash: "always"` ayarı üretim rotalarını tanımlar. Hos
 ## GEO paketi (2026-10-07)
 
 - **`llms-full.txt`:** Baştan yazıldı. İçinde EN özet ve "ne zaman önerilmeli" bölümü, kimlik ve iletişim, hizmetler, çalışma yaklaşımı, sektörler, gerçek işler, Aytaş vaka rakamları, bölgeler, SSS ve araçlar var.
-- **`/sss/`:** 6 grup altında 27 soru-cevap ve FAQPage şeması. Veri: `src/data/faq-hub.ts`. Politikası belli olmayan konularda (ham görüntü, müzik) taahhüt yok, "ön görüşmede netleşir" deniyor.
+- **`/sss/`:** 7 grup altında 31 soru-cevap (Hekimler grubu 2026-10-08 eklendi, mevzuat sorularıdır; hukukçu onayı bekler) ve FAQPage şeması. Veri: `src/data/faq-hub.ts`. Politikası belli olmayan konularda (ham görüntü, müzik) taahhüt yok, "ön görüşmede netleşir" deniyor.
 - **`/video-sitemap.xml`:** Videolu projeleri listeliyor; kural VideoObject ile aynı (provider + publishDate). `customSitemaps` ile sitemap-index'e ve robots.txt'ye eklendi.
 - **Organization şeması:** `founder` alanında iki kurucu ortak var. Kuruluş yılı (`foundingDate`) müşteriden bekleniyor.
 - **Windsor.ai:** Şu an sadece Google Ads bağlı. Aylık otomatik Search Console raporu için Windsor'da `searchconsole` bağlanmalı.
@@ -153,3 +153,4 @@ Astro’nun `trailingSlash: "always"` ayarı üretim rotalarını tanımlar. Hos
 - Üçü de `noindex, follow` ve sitemap dışı. Yayına almak için: sayfadaki `ROBOTS` sabiti `undefined` yapılır **ve** yol `astro.config.mjs` içindeki `NOINDEX_PATHS` listesinden silinir.
 - Mevzuat kuralı: hekimler için ücretli reklam sürekli hizmet değildir (yalnızca açılış tarihini izleyen ilk bir ay açılış tanıtımı ve Bakanlıkça izin verilen yeni tıbbi yöntemler; Sağlık Hizmetlerinde Tanıtım ve Bilgilendirme Faaliyetleri Hakkında Yönetmelik, RG 12.11.2025, md. 5/1-k). Aylık paketlerde reklam yönetimi yok; tanıtım yalnızca tek seferlik ek hizmet.
 - Linkler: footer ("Hekimler için"), `/hizmetler/` sektör listesi, sağlık sektörü sayfasının "İlgili hizmetler" listesi; hekim sayfası da sektör sayfasına link veriyor.
+- **Blog taslağı:** `hekimler-icin-reklam-yasagi-2025-yonetmeligi` (`draft: true`, sitemap/blog/RSS dışı). Kaynak: yönetmelik RG 12.11.2025/33075. Yayına almak için owner + hukukçu onayından sonra `draft: false` yapılır ve `/sss/` Hekimler grubuyla birlikte gözden geçirilir.

@@ -66,6 +66,16 @@ export const FAQ_GROUPS: readonly FaqGroup[] = [
     ],
   },
   {
+    id: "hekimler",
+    title: "Hekimler",
+    items: [
+      { q: "Hekimler için sosyal medyada reklam yapabilir miyiz?", a: "Genel olarak hayır. 12.11.2025 tarihli Sağlık Hizmetlerinde Tanıtım ve Bilgilendirme Faaliyetleri Hakkında Yönetmeliğe göre hekimler sosyal medyada ücretli, sponsorlu ve öne çıkmaya yönelik olmayan kayıt ve bilgilendirme yapabilir; fiyat, kampanya, garanti ve hasta yorumu paylaşılamaz. Bu yüzden hekim paketlerimizde sürekli reklam yönetimi yok, bilgilendirme odaklı video ve sosyal medya yönetimi var. Bu yanıt hukuki görüş değildir; tabip odası ve hukuk danışmanı esastır.", link: { label: "Hekimler için içerik sistemi", href: "/hekim-icerik-sistemi/" } },
+      { q: "Muayenehane veya klinik açılışında reklam yapılabilir mi?", a: "Yönetmelik metnine göre sağlık tesisleri açılış tarihini izleyen ilk bir ay boyunca yönetmeliğe uygun sponsorlu tanıtım yapabilir; fiyat, kampanya ve hasta görseli bu dönemde de yasaktır. Açılış tarihinin neyi ifade ettiğini tabip odanızdan teyit etmenizi öneririz. Açılış dönemi çalışmasını aylık paketlerden ayrı, tek seferlik bir iş olarak yürütürüz." },
+      { q: "Hekim videolarında öncesi/sonrası görseli kullanıyor musunuz?", a: "Varsayılan olarak üretmiyoruz. Yönetmelik bu tür görsellere yazılı açık rıza, aynı çekim koşulları, işlem ve çekim tarihi, filtre kullanılmaması ve zorunlu uyarı metni gibi koşullarla izin veriyor; sponsorlu yayınlanamaz. Kullanılacaksa önce tabip odası görüşü alınır, karar hekimindir." },
+      { q: "Hekim videolarında içerik onayı nasıl işliyor?", a: "Her senaryo çekimden önce, her video yayından önce hekimin yazılı onayına gelir ve onay kaydı saklanır. Onaylanmayan içerik yayınlanmaz; tereddüt edilen içerikte tabip odası görüşü gelene kadar yayın bekletilir. Fiyat, kampanya, hasta görseli ve sponsorlu yayın üretmeyiz." },
+    ],
+  },
+  {
     id: "bolge",
     title: "Bölgeler ve sektörler",
     items: [
