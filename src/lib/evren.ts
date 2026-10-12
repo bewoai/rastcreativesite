@@ -34,3 +34,10 @@ export const EV_CTA = "Görüşelim";
  */
 export const hekimContactHref = (paket: "baslangic" | "standart" | "klinik" | "genel" = "genel") =>
   `/iletisim/?kaynak=hekim&paket=${paket}#teklif-formu`;
+
+/**
+ * Contact-form link for the /nasil-calisiyoruz/ page. ContactForm.astro
+ * allow-lists `kaynak=surec` into its hidden field, so the Web3Forms email
+ * and the GA4 lead event say the lead came from the process page.
+ */
+export const SUREC_CONTACT_HREF = "/iletisim/?kaynak=surec#teklif-formu";

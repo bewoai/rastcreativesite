@@ -234,11 +234,12 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
 
     /*
      * Lead attribution. Links such as /iletisim/?kaynak=hekim&paket=standart
+     * (or ?kaynak=surec from /nasil-calisiyoruz/)
      * fill two hidden fields so Web3Forms emails say where the lead came
      * from. Values are allow-listed (never echo arbitrary query text into
      * the email) and the Hekim funnel also pre-selects its project type.
      */
-    const KAYNAK_ALLOWED = ["hekim"];
+    const KAYNAK_ALLOWED = ["hekim", "surec"];
     const PAKET_ALLOWED = ["baslangic", "standart", "klinik", "genel"];
     const urlParams = new URLSearchParams(window.location.search);
     const kaynakParam = (urlParams.get("kaynak") ?? "").toLowerCase();
@@ -256,6 +257,10 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
       if (subjectField) {
         subjectField.value = `Yeni hekim içerik sistemi talebi${paket ? ` (${paket})` : ""} — rastcreative.com`;
       }
+    }
+    if (kaynak === "surec") {
+      const subjectField = form.querySelector<HTMLInputElement>('input[name="subject"]');
+      if (subjectField) subjectField.value = "Yeni ön görüşme talebi (Nasıl çalışıyoruz sayfası) — rastcreative.com";
     }
     const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
     const setStatus = (text: string, state: "pending" | "ok" | "err") => {

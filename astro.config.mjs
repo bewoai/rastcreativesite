@@ -18,6 +18,7 @@ const NOINDEX_PATHS = new Set([
   '/hekim-icerik-sistemi/', // prices provisional
   '/projeler/vaka/duygu-hoca/', // client approval for the case study
   '/projeler/vaka/dr-erdem-caliskan/', // client approval for the case study
+  '/nasil-calisiyoruz/', // draft, waiting for owner approval + real screenshots
 ]);
 const isNoindexPage = (page) => NOINDEX_PATHS.has(new URL(page).pathname);
 
