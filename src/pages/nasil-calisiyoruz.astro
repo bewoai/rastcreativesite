@@ -9,8 +9,9 @@
  *
  * DRAFT: ships as "noindex, follow" and is NOT in the site nav. To publish:
  * set ROBOTS to undefined below AND remove "/nasil-calisiyoruz/" from
- * NOINDEX_PATHS in astro.config.mjs. Before that, replace every
- * `data-placeholder` figure with a real screenshot (alt + width/height).
+ * NOINDEX_PATHS in astro.config.mjs. Figures use Kurgu Masası screenshots and
+ * frames of a synthetic test project (no client data); step I is a typographic
+ * card until a real set photo is available.
  *
  * Copy rules: no unmeasured speed claims ("ertesi gün" is banned; "genellikle
  * aynı hafta" is the ceiling), no "hayallerinizdeki / eşsiz / yaratıcı
@@ -46,8 +47,9 @@ const desk = [
 ];
 
 /**
- * The four steps. `fig` = placeholder until Bewo drops in the real
- * screenshot: `ph` says what the image should show, `cap` is the caption.
+ * The four steps. `fig`: `src` (+ w/h/alt) = real image from public/evren,
+ * `card` = plain typographic card (no image), `cap` = caption.
+ * Images are Kurgu Masası screenshots / frames of a synthetic test project.
  */
 const steps = [
   {
@@ -61,7 +63,7 @@ const steps = [
       "Hekim içeriklerinde senaryo çekimden önce onayınıza gelir.",
     ],
     fig: {
-      ph: "Çekim günü planı ya da setten bir kare",
+      card: "Çekim günü planı",
       cap: "Çekim günü planı: sahne listesi ve gün akışı çekimden önce elinizde.",
     },
   },
@@ -71,7 +73,10 @@ const steps = [
     lede: "Ham çekim Kurgu Masası'na girer. Bu bizim kurgu hattımız: Claude destekli bir yazılım konuşmayı yazıya döker, kesim önerir, altyazıyı ve sesi ölçer. Her aşamada durur. Kararı editör verir.",
     points: [],
     fig: {
-      ph: "Kurgu Masası ekranı: transkript üstünde önerilen kesimler",
+      src: "/evren/surec-kurgu-masasi.webp",
+      w: 1440,
+      h: 900,
+      alt: "Kurgu Masası ekranı: Akış sekmesinde Claude'un yaptığı iş, bakmanız istenen yerler ve editörün seçenekleri; solda transkript, altta zaman çizelgesi. Sentetik test projesi.",
       cap: "Kurgu Masası: önerilen kesimler transkriptin üstünde görünür, hangisinin kalacağına editör karar verir.",
     },
   },
@@ -86,7 +91,11 @@ const steps = [
       "Onaylamadığınız hiçbir video yayına çıkmaz.",
     ],
     fig: {
-      ph: "Telefonda inceleme ekranı: saniyeye bırakılmış not",
+      src: "/evren/surec-inceleme-telefon.webp",
+      w: 390,
+      h: 844,
+      phone: true,
+      alt: "Telefonda inceleme ekranı: video sürümleri, karşılaştırma düğmesi ve oynatıcı. Sentetik test projesi.",
       cap: "İnceleme ekranı telefonda: saniyesine not, ardından Onayla ya da Revize iste.",
     },
   },
@@ -101,8 +110,11 @@ const steps = [
       "Bir sonraki çekim bu verilerle planlanır.",
     ],
     fig: {
-      ph: "Aynı videonun dikey, kare ve yatay sürümleri yan yana",
-      cap: "Teslim: aynı kurgudan dikey, kare ve yatay sürümler.",
+      src: "/evren/surec-surumler.webp",
+      w: 1288,
+      h: 540,
+      alt: "Aynı test videosunun yatay (16:9) ve dikey (9:16) sürümü yan yana.",
+      cap: "Örnek: aynı kurgudan yatay ve dikey sürüm (sentetik test görüntüsü).",
     },
   },
 ];
@@ -230,14 +242,23 @@ const jsonLd = [
                 </p>
               )}
             </div>
-            {/* GÖRSEL: replace the placeholder div with the real screenshot,
-                e.g. <img src=… alt=… width=… height=… loading="lazy" decoding="async" />,
-                keep the figcaption. */}
-            <figure class="nc__fig">
-              <div class="nc__ph" data-placeholder aria-hidden="true">
-                <span class="nc__phk">Görsel yeri</span>
-                <span>{s.fig.ph}</span>
-              </div>
+            <figure class:list={["nc__fig", s.fig.phone && "nc__fig--phone"]}>
+              {s.fig.src ? (
+                <img
+                  class="nc__img"
+                  src={s.fig.src}
+                  alt={s.fig.alt}
+                  width={s.fig.w}
+                  height={s.fig.h}
+                  loading="lazy"
+                  decoding="async"
+                />
+              ) : (
+                <div class="nc__card">
+                  <span class="nc__phk">Plan</span>
+                  <span class="nc__cardt">{s.fig.card}</span>
+                </div>
+              )}
               <figcaption>{s.fig.cap}</figcaption>
             </figure>
           </li>
@@ -537,24 +558,47 @@ const jsonLd = [
     margin-top: 0.3rem;
   }
 
-  /* Placeholder figure — swapped for a real screenshot before publishing. */
+  /* Step figure: real screenshot, or a plain typographic card when no image fits. */
   .nc__fig {
     margin: 0;
   }
-  .nc__ph {
+  .nc__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: calc(var(--r) * 0.6);
+    border: 1px solid rgba(114, 103, 92, 0.25);
+  }
+  .nc__fig--phone {
+    max-width: 420px;
+    margin-inline: auto;
+  }
+  .nc__fig--phone .nc__img {
+    max-width: 280px;
+    margin-inline: auto;
+  }
+  .nc__fig--phone figcaption {
+    text-align: center;
+  }
+  .nc__card {
     display: grid;
     place-content: center;
-    gap: 0.35rem;
+    gap: 0.5rem;
     aspect-ratio: 16 / 10;
     padding: 1.2rem;
-    border: 1.5px dashed rgba(114, 103, 92, 0.45);
+    border: 1px solid rgba(114, 103, 92, 0.25);
     border-radius: calc(var(--r) * 0.6);
     background:
       radial-gradient(70% 60% at 70% 20%, rgba(255, 214, 176, 0.45), transparent 70%),
       rgba(250, 246, 240, 0.5);
     text-align: center;
-    color: var(--mute);
-    font-size: 0.95rem;
+  }
+  .nc__cardt {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(1.5rem, 1.4vw + 1rem, 2rem);
+    line-height: 1.12;
+    color: var(--ink);
   }
   .nc__phk {
     font-size: 0.74rem;
