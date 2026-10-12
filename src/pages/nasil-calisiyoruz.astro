@@ -1,0 +1,819 @@
+---
+/**
+ * /nasil-calisiyoruz/ — how a video job runs, told plainly to the client
+ * (physician, shop owner, brand): brief and shoot day → first cut on the
+ * Kurgu Masası (Claude-assisted, every critical call made by the editor) →
+ * client approval on the phone (timestamped notes, nothing goes out
+ * unapproved) → delivery and measurement.
+ * Positioning line: "Kurguyu makine hızlandırır, kararı biz veririz."
+ *
+ * DRAFT: ships as "noindex, follow" and is NOT in the site nav. To publish:
+ * set ROBOTS to undefined below AND remove "/nasil-calisiyoruz/" from
+ * NOINDEX_PATHS in astro.config.mjs. Before that, replace every
+ * `data-placeholder` figure with a real screenshot (alt + width/height).
+ *
+ * Copy rules: no unmeasured speed claims ("ertesi gün" is banned; "genellikle
+ * aynı hafta" is the ceiling), no "hayallerinizdeki / eşsiz / yaratıcı
+ * çözümler", short sentences. AI is described as help with the cut, never as
+ * the editor; no AI copies of real people or products.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { CONTACT } from "../consts";
+import { EV_CTA, roman, SUREC_CONTACT_HREF } from "../lib/evren";
+import { breadcrumb, faqPage } from "../lib/schema";
+
+const ROBOTS: string | undefined = "noindex, follow"; // → undefined when the owner approves
+
+const PATH = "/nasil-calisiyoruz/";
+const TITLE = "Nasıl Çalışıyoruz: Çekimden Onaya"; // + " — Rast Creative Studio" = 57 chars
+const DESCRIPTION =
+  "Brief ve çekim gününden ilk kurguya, telefondan onaya ve teslime: video sürecimizi ve yapay zekâyı nerede kullandığımızı açıkça anlatıyoruz.";
+const HEKIM_HREF = "/hekim-icerik-sistemi/";
+
+const thesis = [
+  { k: "Hız", t: "Yazıya dökme, kesim önerisi, altyazı ve ölçüm makineden gelir." },
+  { k: "Karar", t: "Hangi cümlenin kalacağını, videonun nasıl açılacağını editör seçer." },
+  { k: "Onay", t: "Siz onaylamadan hiçbir video yayına çıkmaz." },
+];
+
+/** Kurgu Masası checkpoints: the line stops at each one until the editor decides. */
+const desk = [
+  { t: "İçerik seçimi", d: "Hangi cümle kalır, video nasıl açılır? Öneri gelir, editör seçer." },
+  { t: "Kaba kesim", d: "Kesimler sessiz anlara önerilir. Editör dinler, gerekirse kırpar." },
+  { t: "Grafik ve altyazı", d: "Yazılar yerine oturur. Editör metni ve yerini düzeltir." },
+  { t: "Renk ve ses", d: "Renk ve ses seviyesi ölçülür. Editör dinler, müziği seçer." },
+  { t: "Son onay", d: "Kalite listesi işletilir. Editör onaylamadan size gitmez." },
+];
+
+/**
+ * The four steps. `fig` = placeholder until Bewo drops in the real
+ * screenshot: `ph` says what the image should show, `cap` is the caption.
+ */
+const steps = [
+  {
+    id: "brief",
+    t: "Brief ve çekim günü",
+    lede: "Önce dinleriz. Ne anlatmak istiyorsunuz, kime, hangi kanalda? Bunu bir sayfalık brief'e yazar, onayınıza sunarız.",
+    points: [
+      "Brief: amaç, izleyici, kanal ve video sayısı tek sayfada.",
+      "Çekim günü işinizin akışına göre planlanır; çoğunlukla kendi mekânınızda.",
+      "Tek çekim gününde birden çok video için malzeme toplarız.",
+      "Hekim içeriklerinde senaryo çekimden önce onayınıza gelir.",
+    ],
+    fig: {
+      ph: "Çekim günü planı ya da setten bir kare",
+      cap: "Çekim günü planı: sahne listesi ve gün akışı çekimden önce elinizde.",
+    },
+  },
+  {
+    id: "kurgu",
+    t: "Kurgu Masası'nda ilk kurgu",
+    lede: "Ham çekim Kurgu Masası'na girer. Bu bizim kurgu hattımız: Claude destekli bir yazılım konuşmayı yazıya döker, kesim önerir, altyazıyı ve sesi ölçer. Her aşamada durur. Kararı editör verir.",
+    points: [],
+    fig: {
+      ph: "Kurgu Masası ekranı: transkript üstünde önerilen kesimler",
+      cap: "Kurgu Masası: önerilen kesimler transkriptin üstünde görünür, hangisinin kalacağına editör karar verir.",
+    },
+  },
+  {
+    id: "onay",
+    t: "Sizin onayınız",
+    lede: "İlk kurgu hazır olunca inceleme ekranını size iletiriz. Videoyu telefonunuzdan izlersiniz. Değişmesini istediğiniz yerde durur, o saniyeye not bırakırsınız.",
+    points: [
+      "Not saniyeye bağlıdır: \"0:14'teki cümle çıksın\" gibi. Ne istendiği netleşir.",
+      "İki seçenek var: Onayla ya da Revize iste.",
+      "Düzeltilmiş sürümü öncekinin yanında görürsünüz.",
+      "Onaylamadığınız hiçbir video yayına çıkmaz.",
+    ],
+    fig: {
+      ph: "Telefonda inceleme ekranı: saniyeye bırakılmış not",
+      cap: "İnceleme ekranı telefonda: saniyesine not, ardından Onayla ya da Revize iste.",
+    },
+  },
+  {
+    id: "teslim",
+    t: "Teslim ve ölçüm",
+    lede: "Onaylanan video ihtiyacınız olan formatlarda teslim edilir. Yayını biz yapıyorsak takvime göre paylaşır, açıklamasını yazarız.",
+    points: [
+      "Aynı kurgudan dikey, kare ve yatay sürümler.",
+      "Yayından sonra izlenme, izlenme süresi, kaydetme ve gelen sorulara bakarız.",
+      "Düzenli çalıştığımız işlerde ay sonunda neyin işe yaradığını birlikte konuşuruz.",
+      "Bir sonraki çekim bu verilerle planlanır.",
+    ],
+    fig: {
+      ph: "Aynı videonun dikey, kare ve yatay sürümleri yan yana",
+      cap: "Teslim: aynı kurgudan dikey, kare ve yatay sürümler.",
+    },
+  },
+];
+
+/** Honest table: where the machine helps, and who makes the call. */
+const aiUse = [
+  { w: "Transkript", m: "Konuşmayı yazıya döker.", d: "Editör okur, yanlış duyulan kelimeyi düzeltir." },
+  { w: "Kesim önerisi", m: "Tekrar eden ve yarım kalan cümleleri işaretler, kesim noktası önerir.", d: "Hangi cümlenin kalacağına editör karar verir." },
+  { w: "Altyazı", m: "Altyazıyı zamanlar, satırlara böler.", d: "Editör yazımı, terimleri ve vurguyu düzeltir." },
+  { w: "Ses seviyesi", m: "Konuşma, müzik ve efekt seviyesini ölçer.", d: "Editör kulakla dinler, müziği seçer." },
+  { w: "Renk ölçümü", m: "Çekimler arasındaki renk farkını ölçer.", d: "Renk kararını editör verir." },
+  { w: "Taslak hızı", m: "İlk kurgu taslağını hızlı çıkarır.", d: "Size giden her sürümü editör baştan sona izler." },
+];
+
+const aiNot = [
+  { t: "Gerçek kişilerin ve ürünlerin yapay zekâ kopyası", d: "Yüz, ses ya da ürün görüntüsü üretmeyiz. Videoda gördüğünüz kişi ve ürün çekimde gerçekten vardır." },
+  { t: "Onaysız yayın", d: "Hiçbir video kendiliğinden yayına çıkmaz. Yayın, sizin onayınızdan sonradır." },
+  { t: "Hekim tanıtım kurallarını aşan içerik", d: "Üstünlük iddiası, sonuç vaadi, fiyat ve kampanya içeren içerik üretmeyiz." },
+];
+
+/** Timing: cautious on purpose. Nothing here we have not seen on real jobs. */
+const timing = [
+  { t: "Brief ve çekim tarihi", d: "Takviminize ve mekâna göre birlikte belirlenir." },
+  { t: "İlk kurgu", d: "Kısa videolarda genellikle çekimle aynı hafta." },
+  { t: "Revize", d: "Düzeltilmiş sürüm aynı inceleme ekranına gelir. Süresini notun kapsamı belirler." },
+  { t: "Teslim ve yayın", d: "Onayınızdan sonra. Yayın tarihi takvimdeki gündür." },
+];
+
+// Plain-text answers: rendered below AND emitted as FAQPage JSON-LD.
+const faqs = [
+  {
+    question: "Videolarımı yapay zekâ mı kurguluyor?",
+    answer:
+      "Hayır. Yapay zekâ kurguyu hızlandırır: konuşmayı yazıya döker, kesim önerir, altyazıyı zamanlar, ses ve rengi ölçer. Hangi cümlenin kalacağına, videonun nasıl açılacağına ve size hangi sürümün gideceğine editörümüz karar verir.",
+  },
+  {
+    question: "Yüzümün, sesimin ya da ürünümün yapay zekâ kopyası yapılır mı?",
+    answer:
+      "Hayır. Gerçek kişilerin ve ürünlerin yapay zekâ kopyasını üretmiyoruz. Videoda gördüğünüz kişi ve ürün çekimde gerçekten vardır. Atmosfer için yapay zekâyla üretilmiş bir sahne kullanırsak bunu videoda belirtiriz.",
+  },
+  {
+    question: "Onayı nasıl veriyorum?",
+    answer:
+      "İlk kurguyu telefonunuzdan izlersiniz. Değişmesini istediğiniz yerde durup o saniyeye not bırakırsınız, sonra Onayla ya da Revize iste dersiniz. Onaylamadığınız hiçbir video yayına çıkmaz.",
+  },
+  {
+    question: "İlk kurguyu ne zaman görürüm?",
+    answer:
+      "Kısa videolarda genellikle çekimle aynı hafta. Kesin tarihi işin kapsamına göre teklifte yazarız; ölçmediğimiz bir süreyi vaat etmeyiz.",
+  },
+  {
+    question: "Hekim içeriklerinde süreç farklı mı?",
+    answer:
+      "Adımlar aynı, kontrol daha sıkı. Tanıtım yönetmeliğine uyum editörün kontrolündedir: üstünlük iddiası, sonuç vaadi, fiyat ve kampanya kullanmayız. Her senaryo çekimden, her video yayından önce hekimin onayından geçer. Tereddüt edilen içerikte yayından önce meslek odası ya da hukuk danışmanı görüşü almanızı öneririz.",
+  },
+];
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Nasıl çalışıyoruz", path: PATH },
+  ]),
+  faqPage(faqs),
+];
+---
+
+<BaseLayout title={TITLE} description={DESCRIPTION} robots={ROBOTS} jsonLd={jsonLd}>
+  <div class="nc">
+    {/* ── Giriş + tez ── */}
+    <header class="nc__head">
+      <p class="ev-label"><span class="ev-label__sun"></span>Nasıl çalışıyoruz</p>
+      <h1 class="nc__title">Kurguyu makine hızlandırır, <em>kararı biz veririz.</em></h1>
+      <p class="nc__lede">
+        Bir videonun çekimden yayına nasıl geldiğini saklamıyoruz. Kurgu hattımızda yapay zekâ
+        var. Hızı o getiriyor. Ama hangi sahnenin kalacağına editörümüz, yayına neyin çıkacağına
+        siz karar veriyorsunuz.
+      </p>
+      <div class="nc__cta">
+        <a class="ev-btn ev-btn--sun" href={SUREC_CONTACT_HREF} data-cta-location="surec_hero">{EV_CTA} <span aria-hidden="true">→</span></a>
+        <a class="ev-link" href="#surec">Süreci gör</a>
+      </div>
+      <p class="ev-whisper">İlk görüşme ücretsiz.</p>
+    </header>
+
+    <ul class="nc__thesis" aria-label="Kısaca">
+      {thesis.map((x) => (
+        <li class="ev-glass">
+          <b>{x.k}</b>
+          <span>{x.t}</span>
+        </li>
+      ))}
+    </ul>
+
+    {/* ── Süreç ── */}
+    <section class="nc__sec" id="surec" aria-labelledby="nc-steps">
+      <p class="ev-label"><span class="ev-label__n">{roman(1)}</span>Süreç</p>
+      <h2 id="nc-steps" class="ev-h2 nc__h2">Dört adım, <em>her işte aynı.</em></h2>
+      <ol class="nc__steps">
+        {steps.map((s, i) => (
+          <li class="nc__step ev-glass" id={s.id}>
+            <div class="nc__stepbody">
+              <span class="nc__stepn" aria-hidden="true">{roman(i + 1)}</span>
+              <h3 class="nc__stept">{s.t}</h3>
+              <p class="nc__p">{s.lede}</p>
+              {s.points.length > 0 && (
+                <ul class="nc__list">
+                  {s.points.map((p) => <li>{p}</li>)}
+                </ul>
+              )}
+              {s.id === "kurgu" && (
+                <ol class="nc__desk" aria-label="Kurgu Masası'nda beş karar noktası">
+                  {desk.map((d) => (
+                    <li>
+                      <b>{d.t}</b>
+                      <span>{d.d}</span>
+                    </li>
+                  ))}
+                </ol>
+              )}
+              {s.id === "onay" && (
+                <p class="nc__note">
+                  <b>Hekimler için:</b> Hekim içeriklerinde tanıtım yönetmeliğine uyum editörün
+                  kontrolündedir. Son onay her zaman hekimindir.
+                  <a class="ev-link" href={HEKIM_HREF}>Hekim içerik sistemi <span aria-hidden="true">→</span></a>
+                </p>
+              )}
+            </div>
+            {/* GÖRSEL: replace the placeholder div with the real screenshot,
+                e.g. <img src=… alt=… width=… height=… loading="lazy" decoding="async" />,
+                keep the figcaption. */}
+            <figure class="nc__fig">
+              <div class="nc__ph" data-placeholder aria-hidden="true">
+                <span class="nc__phk">Görsel yeri</span>
+                <span>{s.fig.ph}</span>
+              </div>
+              <figcaption>{s.fig.cap}</figcaption>
+            </figure>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    {/* ── Yapay zekâ: nerede evet, nerede hayır ── */}
+    <section class="nc__sec" id="yapay-zeka" aria-labelledby="nc-ai">
+      <p class="ev-label"><span class="ev-label__n">{roman(2)}</span>Yapay zekâ</p>
+      <h2 id="nc-ai" class="ev-h2 nc__h2">Yapay zekâyı nerede kullanıyoruz, <em>nerede kullanmıyoruz.</em></h2>
+      <p class="nc__p nc__narrow">
+        Kısa cevap: zaman alan, ölçülebilen işlerde kullanıyoruz. Karar gerektiren işlerde
+        kullanmıyoruz.
+      </p>
+
+      <div class="nc__ai">
+        <div class="nc__tablewrap ev-glass">
+          {/* Explicit roles: on phones the cells become blocks, which drops native
+              table semantics in some browsers. */}
+          <table class="nc__table" role="table">
+            <caption>Kullanıyoruz</caption>
+            <thead role="rowgroup">
+              <tr role="row">
+                <th scope="col" role="columnheader">İş</th>
+                <th scope="col" role="columnheader">Makine ne yapar</th>
+                <th scope="col" role="columnheader">Kararı kim verir</th>
+              </tr>
+            </thead>
+            <tbody role="rowgroup">
+              {aiUse.map((r) => (
+                <tr role="row">
+                  <th scope="row" role="rowheader">{r.w}</th>
+                  <td role="cell" data-label="Makine ne yapar">{r.m}</td>
+                  <td role="cell" data-label="Kararı kim verir">{r.d}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="nc__not ev-glass">
+          <h3 class="nc__nott">Kullanmıyoruz</h3>
+          <ul>
+            {aiNot.map((x) => (
+              <li>
+                <b>{x.t}</b>
+                <span>{x.d}</span>
+              </li>
+            ))}
+          </ul>
+          <p class="nc__label">
+            <b>Etiket kuralı:</b> Atmosfer için yapay zekâyla üretilmiş bir sahne kullanırsak
+            videoda bunu belirtiriz.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {/* ── Süreler ── */}
+    <section class="nc__sec" id="sureler" aria-labelledby="nc-time">
+      <p class="ev-label"><span class="ev-label__n">{roman(3)}</span>Süreler</p>
+      <h2 id="nc-time" class="ev-h2 nc__h2">Ne kadar sürer? <em>Temkinli cevap.</em></h2>
+      <dl class="nc__time">
+        {timing.map((x) => (
+          <div class="ev-glass">
+            <dt>{x.t}</dt>
+            <dd>{x.d}</dd>
+          </div>
+        ))}
+      </dl>
+      <p class="nc__p nc__narrow">
+        Kesin tarihleri teklifte yazarız. Uzun tanıtım filmleri ayrı planlanır. Ölçmediğimiz bir
+        süreyi vaat etmeyiz.
+      </p>
+    </section>
+
+    {/* ── SSS ── */}
+    <section class="nc__sec" id="sss" aria-labelledby="nc-faq">
+      <p class="ev-label"><span class="ev-label__n">{roman(4)}</span>Sık sorulanlar</p>
+      <h2 id="nc-faq" class="ev-h2 nc__h2">Süreç hakkında <em>sorulanlar.</em></h2>
+      <div class="nc__faq">
+        {faqs.map((f, i) => (
+          <details class="ev-qa ev-glass" open={i === 0}>
+            <summary>
+              <span>{f.question}</span>
+              <span class="ev-qa__ic" aria-hidden="true"></span>
+            </summary>
+            <div class="ev-qa__a"><p>{f.answer}</p></div>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    {/* ── Son CTA ── */}
+    <section class="nc__final ev-glass" aria-labelledby="nc-final">
+      <div>
+        <h2 id="nc-final" class="nc__finalt">İlk çekiminizi <em>birlikte planlayalım.</em></h2>
+        <p class="nc__p">İlk görüşmede işinizi dinler, size uygun çekim ve onay akışını anlatırız. İlk görüşme ücretsiz.</p>
+      </div>
+      <div class="nc__finalact">
+        <a class="ev-btn ev-btn--sun" href={SUREC_CONTACT_HREF} data-cta-location="surec_final">{EV_CTA} <span aria-hidden="true">→</span></a>
+        <a class="ev-link" href={`tel:${CONTACT.phoneIntl}`}>{CONTACT.phone}</a>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .nc {
+    width: min(100%, 76rem);
+    margin: 0 auto;
+    padding: clamp(6.5rem, 10vw, 8rem) var(--pad) clamp(3rem, 6vw, 5rem);
+  }
+  .nc__head {
+    max-width: 52rem;
+  }
+  .nc__title {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(2.3rem, 4.4vw + 0.6rem, 4.2rem);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .nc__title em,
+  .nc__finalt em {
+    font-weight: 460;
+    color: var(--sun-text);
+  }
+  .nc__lede {
+    max-width: 40rem;
+    margin: 1.3rem 0 0;
+    font-size: 1.12rem;
+    color: var(--ink-2);
+  }
+  .nc__cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 1.4rem;
+    margin-top: 1.8rem;
+  }
+
+  /* Thesis strip: three short claims under the hero. */
+  .nc__thesis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    gap: 0.8rem;
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .nc__thesis li {
+    display: grid;
+    gap: 0.25rem;
+    padding: 1.1rem 1.2rem;
+  }
+  .nc__thesis b {
+    font-family: var(--serif);
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--sun-text);
+  }
+  .nc__thesis span {
+    color: var(--ink-2);
+  }
+
+  .nc__sec {
+    margin-top: clamp(3.5rem, 7vw, 6rem);
+    scroll-margin-top: 5rem;
+  }
+  .nc__h2 {
+    font-size: clamp(2rem, 3vw + 0.6rem, 3.2rem);
+  }
+  .nc__p {
+    margin: 1rem 0 0;
+    color: var(--ink-2);
+  }
+  .nc__narrow {
+    max-width: 40rem;
+  }
+
+  /* Hairline glass edges from .ev-glass::before are not wanted on flat panels. */
+  .nc__thesis li::before,
+  .nc__step::before,
+  .nc__tablewrap::before,
+  .nc__not::before,
+  .nc__time > div::before,
+  .nc__final::before {
+    display: none;
+  }
+
+  /* ── Steps ── */
+  .nc__steps {
+    display: grid;
+    gap: 1rem;
+    margin: 1.6rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .nc__step {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: clamp(1.2rem, 3vw, 2.6rem);
+    align-items: start;
+    padding: clamp(1.2rem, 3vw, 2rem);
+    scroll-margin-top: 6rem;
+  }
+  .nc__stepn {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 600;
+    font-size: 1.3rem;
+    line-height: 1;
+    color: var(--sun-text);
+  }
+  .nc__stept {
+    margin: 0.3rem 0 0;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(1.5rem, 1.4vw + 1rem, 2rem);
+    line-height: 1.12;
+  }
+  .nc__list {
+    display: grid;
+    gap: 0.5rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .nc__list li,
+  .nc__not li {
+    position: relative;
+    padding-left: 1.3rem;
+  }
+  .nc__list li::before {
+    content: "✦";
+    position: absolute;
+    left: 0;
+    top: 0.05em;
+    font-size: 0.8em;
+    color: var(--sun);
+  }
+
+  /* Kurgu Masası: five checkpoints, numbered. */
+  .nc__desk {
+    display: grid;
+    gap: 0;
+    margin: 1.1rem 0 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: desk;
+    border-top: 1px solid rgba(114, 103, 92, 0.22);
+  }
+  .nc__desk li {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    column-gap: 0.4rem;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid rgba(114, 103, 92, 0.22);
+    counter-increment: desk;
+  }
+  .nc__desk li::before {
+    content: counter(desk);
+    grid-row: span 2;
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 600;
+    font-size: 1.15rem;
+    line-height: 1.3;
+    color: var(--sun-text);
+  }
+  .nc__desk b {
+    font-weight: 650;
+  }
+  .nc__desk span {
+    font-size: 0.94rem;
+    color: var(--ink-2);
+  }
+
+  .nc__note {
+    margin: 1.1rem 0 0;
+    padding: 0.9rem 1rem;
+    border-left: 2px solid var(--sun);
+    border-radius: 0 0.6rem 0.6rem 0;
+    background: rgba(250, 246, 240, 0.55);
+    font-size: 0.95rem;
+    color: var(--ink-2);
+  }
+  .nc__note b {
+    color: var(--ink);
+  }
+  .nc__note .ev-link {
+    display: inline-flex;
+    margin-top: 0.3rem;
+  }
+
+  /* Placeholder figure — swapped for a real screenshot before publishing. */
+  .nc__fig {
+    margin: 0;
+  }
+  .nc__ph {
+    display: grid;
+    place-content: center;
+    gap: 0.35rem;
+    aspect-ratio: 16 / 10;
+    padding: 1.2rem;
+    border: 1.5px dashed rgba(114, 103, 92, 0.45);
+    border-radius: calc(var(--r) * 0.6);
+    background:
+      radial-gradient(70% 60% at 70% 20%, rgba(255, 214, 176, 0.45), transparent 70%),
+      rgba(250, 246, 240, 0.5);
+    text-align: center;
+    color: var(--mute);
+    font-size: 0.95rem;
+  }
+  .nc__phk {
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sun-text);
+  }
+  .nc__fig figcaption {
+    margin-top: 0.6rem;
+    font-size: 0.9rem;
+    color: var(--mute);
+  }
+
+  /* ── AI table ── */
+  .nc__ai {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+    margin-top: 1.6rem;
+  }
+  .nc__tablewrap,
+  .nc__not {
+    padding: clamp(1.1rem, 2.6vw, 1.6rem);
+  }
+  .nc__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.96rem;
+  }
+  .nc__table caption,
+  .nc__nott {
+    margin: 0 0 0.6rem;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.45rem;
+    text-align: left;
+  }
+  .nc__table thead th {
+    padding: 0 0.8rem 0.55rem 0;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-align: left;
+    color: var(--mute);
+  }
+  .nc__table tbody th,
+  .nc__table td {
+    padding: 0.75rem 0.8rem 0.75rem 0;
+    border-top: 1px solid rgba(114, 103, 92, 0.22);
+    vertical-align: top;
+    text-align: left;
+  }
+  .nc__table tbody th {
+    font-weight: 650;
+    white-space: nowrap;
+  }
+  .nc__table td {
+    color: var(--ink-2);
+  }
+  .nc__not ul {
+    display: grid;
+    gap: 0.9rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .nc__not li {
+    display: grid;
+    gap: 0.15rem;
+  }
+  .nc__not li::before {
+    content: "";
+    position: absolute;
+    left: 0.1rem;
+    top: 0.62em;
+    width: 0.7rem;
+    height: 1.5px;
+    background: var(--sun-text);
+  }
+  .nc__not li span {
+    font-size: 0.94rem;
+    color: var(--ink-2);
+  }
+  .nc__label {
+    margin: 1.1rem 0 0;
+    padding-top: 0.9rem;
+    border-top: 1px solid rgba(114, 103, 92, 0.22);
+    font-size: 0.92rem;
+    color: var(--ink-2);
+  }
+  .nc__label b {
+    color: var(--ink);
+  }
+
+  /* ── Timing ── */
+  .nc__time {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    gap: 0.8rem;
+    margin: 1.6rem 0 0;
+  }
+  .nc__time > div {
+    padding: 1.1rem 1.2rem;
+  }
+  .nc__time dt {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.2rem;
+  }
+  .nc__time dd {
+    margin: 0.3rem 0 0;
+    color: var(--ink-2);
+  }
+
+  /* ── FAQ (same pattern as /hekim-icerik-sistemi/) ── */
+  .nc__faq {
+    display: grid;
+    gap: 0.6rem;
+    max-width: 52rem;
+    margin-top: 1.6rem;
+  }
+  .ev-qa {
+    border-radius: 1.1rem;
+  }
+  .ev-qa summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 3.6rem;
+    padding: 0.8rem 1.2rem;
+    font-weight: 560;
+    cursor: pointer;
+    list-style: none;
+  }
+  .ev-qa summary::-webkit-details-marker {
+    display: none;
+  }
+  .ev-qa__ic {
+    position: relative;
+    flex: none;
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 50%;
+    background: var(--glass-strong);
+    box-shadow: inset 0 0 0 1px var(--edge);
+  }
+  .ev-qa__ic::before,
+  .ev-qa__ic::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.65rem;
+    height: 1.5px;
+    background: var(--ink);
+    translate: -50% -50%;
+    transition: transform var(--dur) var(--ease-out);
+  }
+  .ev-qa__ic::after {
+    transform: rotate(90deg);
+  }
+  .ev-qa[open] .ev-qa__ic::after {
+    transform: rotate(0deg);
+  }
+  .ev-qa[open] .ev-qa__ic {
+    background: var(--sun);
+    box-shadow: 0 0 14px rgba(224, 122, 46, 0.6);
+  }
+  .ev-qa[open] .ev-qa__ic::before,
+  .ev-qa[open] .ev-qa__ic::after {
+    background: #fff;
+  }
+  .ev-qa__a {
+    padding: 0 1.2rem 1.1rem;
+    color: var(--ink-2);
+  }
+  .ev-qa__a p {
+    margin: 0;
+  }
+
+  /* ── Final CTA ── */
+  .nc__final {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2rem;
+    margin-top: clamp(3.5rem, 7vw, 6rem);
+    padding: clamp(1.4rem, 3vw, 2.2rem);
+  }
+  .nc__finalt {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(1.7rem, 2vw + 0.8rem, 2.4rem);
+  }
+  .nc__finalact {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 1.2rem;
+  }
+
+  @media (max-width: 860px) {
+    .nc__step,
+    .nc__ai {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Phones: the table reads as stacked rows, each cell labelled. */
+  @media (max-width: 600px) {
+    .nc__table thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+    .nc__table,
+    .nc__table tbody,
+    .nc__table tr,
+    .nc__table tbody th,
+    .nc__table td {
+      display: block;
+    }
+    .nc__table tr {
+      padding: 0.8rem 0;
+      border-top: 1px solid rgba(114, 103, 92, 0.22);
+    }
+    .nc__table tbody th,
+    .nc__table td {
+      padding: 0;
+      border-top: 0;
+      white-space: normal;
+    }
+    .nc__table td {
+      margin-top: 0.45rem;
+    }
+    .nc__table td::before {
+      content: attr(data-label);
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--mute);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ev-qa__ic::before,
+    .ev-qa__ic::after {
+      transition: none;
+    }
+  }
+</style>

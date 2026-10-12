@@ -114,3 +114,25 @@ beklenen durumdur; trafik dogrudan, sosyal veya reklam disi baglantilardan
 gelir. `noindex` kaldirildiktan sonra URL Inspection ile indexleme
 istenmelidir. Canonical query icermedigi icin `?kaynak=hekim` linkleri
 iletisim sayfasinin canonical'ini bozmaz.
+
+## Surec sayfasi (taslak)
+
+`/nasil-calisiyoruz/` sayfasindaki iki CTA (hero ve final) iletisim formuna su
+adresle gider:
+
+```text
+/iletisim/?kaynak=surec#teklif-formu
+```
+
+Form `kaynak=surec` degerini gizli alana yazar (izin listesi: `hekim`, `surec`)
+ve e-posta konusunu "Yeni on gorusme talebi (Nasil calisiyoruz sayfasi)"
+yapar. Ek event yoktur:
+
+```text
+cta_click                 location = surec_hero | surec_final (mevcut genel event)
+lead_form_submit_success  kaynak=surec, paket=genel
+```
+
+GA4'te gormek icin Hekim bolumundeki `kaynak` custom dimension'i yeterlidir:
+filtre `Event name` = `lead_form_submit_success` ve `kaynak` = `surec`.
+Sayfa onaylanana kadar `noindex, follow` ve sitemap disidir.
