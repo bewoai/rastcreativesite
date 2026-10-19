@@ -79,7 +79,7 @@ export const SOCIAL: readonly NavItem[] = [
 ];
 
 /**
- * Contact details (provided by the client, 2026-06-13).
+ * Contact details (provided by the client, 2026-06-13; company phone changed 2026-10-19).
  * `whatsapp` is digits only, international format (TR +90, no leading 0).
  */
 export const CONTACT = {
@@ -92,10 +92,10 @@ export const CONTACT = {
   addressLocality: "Serdivan",
   addressRegion: "Sakarya",
   addressCountry: "TR",
-  phone: "0543 838 2404",
-  phoneIntl: "+905438382404", // for tel: links
+  phone: "0533 128 1080",
+  phoneIntl: "+905331281080", // for tel: links
   email: "studio@rastcreative.com",
-  whatsapp: "905438382404", // for wa.me links
+  whatsapp: "905331281080", // for wa.me links
 } as const;
 
 /** Build a wa.me link only from a validated, non-empty message. */

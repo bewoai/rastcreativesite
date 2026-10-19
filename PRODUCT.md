@@ -74,7 +74,7 @@ Açıkça karara bağlanmamış / iddia edilmemesi gerekenler:
   Birinci çoğul "biz" (kurumsal değil, samimi ekip sesi), ikinci çoğul "siz".
 - Dil: içerik Türkçe, kod ve değişken adları İngilizce.
 - Blog yazarı: Berat Değirmenci.
-- İletişim: Serdivan/Sakarya · 0543 838 2404 · studio@rastcreative.com
+- İletişim: Serdivan/Sakarya · 0533 128 1080 · studio@rastcreative.com
 - Doğrulanmış sosyal: Instagram (@rastcreative), YouTube (@RastCreativeStudio).
 
 ## Evidence on Hand
