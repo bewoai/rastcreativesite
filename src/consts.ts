@@ -85,10 +85,10 @@ export const CONTACT = {
   addressLocality: "Serdivan",
   addressRegion: "Sakarya",
   addressCountry: "TR",
-  phone: "0543 838 2404",
-  phoneIntl: "+905438382404", // for tel: links
+  phone: "0533 128 1080",
+  phoneIntl: "+905331281080", // for tel: links
   email: "studio@rastcreative.com",
-  whatsapp: "905438382404", // for wa.me links
+  whatsapp: "905331281080", // for wa.me links
 } as const;
 
 /** Build a wa.me link only from a validated, non-empty message. */
