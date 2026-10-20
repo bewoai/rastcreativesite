@@ -413,3 +413,63 @@ Saha verisinde INP çok yüksekti; sebep her karede yeniden boyanan pahalı katm
 - Hakkımızda ve ekip sayfalarında İngilizce unvan `lang="en"` ile basılıyor;
   büyük harf "VİDEO DİRECTOR" yerine "VIDEO DIRECTOR" oluyor (Eyebrow/SectionHeading
   `lang` prop'u).
+
+### v15 — VI · Google yorumları
+
+Kullanıcı: siteye Google yorumları, "müşteri memnuniyeti" gibi bir bölüm. Bağlam ve
+sahibin adımları: `docs/sections/google-yorumlari.md`.
+- **Yer:** #ekip (V) ile #surec arasında yeni **VI · Google yorumları**, H2 "Sözü
+  *müşterilere* bırakalım." Ekip vaadi verir ("telefonu çekimi yönetenler açar"),
+  müşteri kendi cümlesiyle doğrular, ardından Süreç ("İlk durak: ücretsiz ön görüşme").
+  IV'ün ardına konmadı (iki yoğun ızgara üst üste), formun önüne de konmadı
+  (~%85 derinlik, ziyaretçilerin çoğu inmiyor).
+- **Numaralar hesaplanıyor:** etiket numaraları artık elle yazılmıyor; `sceneNo(id)`
+  ekranda çıkan sahnelerden üretiyor (I = hero). Sıra, yorum varken:
+  I hero · II işler · III çekim · IV markalar · V ekip · VI yorumlar · VII süreç ·
+  VIII hizmetler · IX SSS · X bölge · XI günlük · XII ön görüşme. Yorum yokken bugünkü
+  sıra birebir (II…XI). Eski hata da düzeldi: blog boşken ön görüşme "XI" kalıyor,
+  X atlanıyordu. Bilinmeyen id build'i durdurur.
+- **Veri:** `src/data/google-reviews.ts`, Google'dan elle ve kelimesi kelimesine
+  kopyalanır. Liste boşken bölüm, önündeki bulut ve numarası hiç basılmaz; dosya veri
+  gelmeden yayına çıkabilir. Build hatalı kaydı (puan, tarih, boş alan, örnek metin)
+  Türkçe mesajla durdurur.
+- **Puan kuralı:** "4,9 · Google'da N yorum" plakası yalnız `GOOGLE_RATING`'den gelir
+  (Google'da görünen puan, toplam ve kopyalama günü). Google yalnız yıldızlı oyları da
+  saydığı için ortalama/sayı listeden asla hesaplanmaz; `null` plakayı gizler.
+- **Görünüm:** cam kartlar (ev-post / ev-person dili); ≥1100 px üç sütun, altında
+  ortalanmış tek okuma sütunu (en çok 38rem). İlk 3 açık, kalanı "Diğer N yorumu
+  okuyun" `<details>`'ında (≤4 yorumda hepsi açık, ana sayfada en çok 12). Yorum metni
+  Fraunces 18 px (PRODUCT.md gövde minimumu); ≤50 karakter serif italik alıntı (üç
+  sütunda kartın ortasında); >450 karakter her genişlikte, 261–450 yalnız üç sütunda 6
+  satırda kırpılır, "Devamını okuyun" ile açılır (satır en uzun kart kadar uzadığı için;
+  eşikler ölçüyle, kontrol her zaman gerçekten metin açsın diye). Kontrol `.ev-link`
+  kalıbında, mürekkep: `--sun-text` kart camında ~4,1:1 ölçüldü. Avatar yerine baş harf
+  monogramı. Yıldızlar #b3501a, yalnız cam üzerinde (çıplak gökyüzünde 3:1'i
+  tutmuyor). CTA "Görüşelim" + "Tüm yorumları Google'da okuyun ↗".
+- **Performans:** yeni JS dosyası yok (açma kapama `<details>`, kırpma `:has()`), dış
+  istek / görsel / font yok, yıldızlar tek data-URI maskesi. Mevcut script'e birkaç satır:
+  uzun yorum kapatılınca kontrol header'ın altında kaldıysa kart geri getiriliyor
+  (320×568'de odaktaki kontrol header'ın altına kaçıyordu, WCAG 2.4.11). Mobil camda
+  `backdrop-filter` yok (v14.2); kalan yorumlar düğmesi bu yüzden `ev-btn--glass` değil,
+  SSS'teki gibi düz summary + `ev-qa__ic`. `data-rise` yalnız opacity/transform.
+- **JSON-LD yok:** işletmenin kendi sitesindeki kendi yorumları Google için
+  "self-serving"; Review / AggregateRating rich result'a uygun değil. Bölüm düz HTML;
+  `pageJsonLd` değişmedi.
+- **Örnek veri:** `google-reviews.fixture.ts` (7 yorum, hepsi "[Örnek]" ile başlar)
+  yalnız gerçek liste boşken `npm run dev`'de ve yerel `REVIEWS_FIXTURE=1` build'de
+  çıkar, "Örnek veri · yayında görünmez" damgasıyla. CI'da bu bayrak build'i durdurur.
+- **Reddedilenler:** carousel / otomatik kaydırma, Google widget'ı veya API'si, Google
+  avatarları, "G" logosu ve Google renkleri, epigraflı tek levha (IV'teki markalar
+  levhasının hemen ardından ikinci levha gelir; en uzun yorum ilk sıraya düşerse
+  epigraf bozulur), fısıltı satırı
+  (`--sun-text` çıplak gökyüzünde 3,54:1, 1,2 rem italik için 4,5:1'in altında).
+- **Bulut aynalaması elle:** `:nth-of-type(even)` yerine `ev-cloud--flip` sınıfı (bugünkü
+  yönler korunarak). Sayarak yapılınca araya giren yorum bulutu sonrakilerin hepsini
+  çeviriyordu; formun üstündeki bulut aynalanınca soğuk `/#on-gorusme` inişinde CLS
+  0,30'dan 0,48'e çıkıyordu (1440, 4× CPU). Yorum bulutu aynalanmaz.
+- **761–1099 px tek sütun:** bilerek (yalnız kalan kart yok); iPad yatayda seyrek
+  görünüyor. Üç sütunu ~1000 px'te başlatmak sahibin kararı.
+- **Kapsam dışı bırakılanlar:** `#on-gorusme`'ye puan satırı (ayrı iş, puan sabit
+  kalırsa); `--sun-text`'in çıplak gökyüzündeki 3,54:1'i (etiket numaraları ve
+  fısıltılar, ortak stil; #7a350b önerisi görsel onay ister); #gunluk'un bulutu blog
+  boşken de basılıyor; kullanılmayan `TestimonialCard.astro`.

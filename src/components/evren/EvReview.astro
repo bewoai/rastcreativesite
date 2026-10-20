@@ -1,0 +1,56 @@
+---
+/**
+ * One Google review (#yorumlar): its stars (as text for screen readers), the
+ * words exactly as they stand on Google, and who wrote it. An initials
+ * monogram instead of the Google avatar: no hotlinking, no requests. Long
+ * texts rest at six lines behind "Devamını okuyun" (mid-length ones only three
+ * across): an empty <details> beside the quote acts as the switch; the clamp is
+ * CSS behind :has(), so browsers without it show the whole text. The clamp is
+ * visual only, so screen readers already have every word: the control says it
+ * only changes what is on screen.
+ * Styles: src/pages/index.astro ("Reviews").
+ */
+import type { GoogleReview } from "../../data/google-reviews";
+import { fmtMonth, initials, isLong, isMid, isShort, starFill } from "../../lib/reviews";
+
+interface Props {
+  review: GoogleReview;
+  /** Reveal stagger slot; left out behind a toggle (those cards appear at once). */
+  rise?: number;
+}
+const { review: r, rise } = Astro.props;
+// Outer whitespace only (a template literal's edges); the words are never touched.
+const text = r.text.trim();
+const long = isLong(text);
+const mid = isMid(text);
+---
+<li
+  class:list={["ev-review ev-glass", { "is-long": long, "is-mid": mid, "is-short": isShort(text) }]}
+  data-rise={rise === undefined ? undefined : ""}
+  style={rise === undefined ? undefined : `--d:${rise}`}
+>
+  <figure class="ev-review__fig">
+    <p class="ev-review__stars">
+      <span class="ev-stars" style={`--fill:${starFill(r.rating)}%`} aria-hidden="true"></span>
+      <span class="ev-sr">5 üzerinden {r.rating} yıldız</span>
+    </p>
+    {/* set:text: the string is the whole content, so no template whitespace
+        reaches white-space:pre-line, and it stays escaped. */}
+    <blockquote class="ev-review__quote" lang={r.lang}><p class="ev-review__text" set:text={text}></p></blockquote>
+    {(long || mid) && (
+      <details class="ev-review__more">
+        <summary class="ev-link">
+          <span class="ev-toggle__closed">Devamını okuyun<span class="ev-sr">: {r.author} (tam metin ekranda açılır)</span></span>
+          <span class="ev-toggle__open">Daha az gösterin<span class="ev-sr">: {r.author} (metin ekranda kısalır)</span></span>
+        </summary>
+      </details>
+    )}
+    <figcaption class="ev-review__by">
+      <span class="ev-review__mono" aria-hidden="true">{initials(r.author)}</span>
+      <span class="ev-review__who">
+        <span class="ev-review__name">{r.author}</span>
+        <span class="ev-review__meta">{r.service && <>{r.service} · </>}<time datetime={r.date}>{fmtMonth(r.date)}</time></span>
+      </span>
+    </figcaption>
+  </figure>
+</li>

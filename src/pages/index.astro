@@ -62,9 +62,11 @@ import {
   waCtaHref,
 } from "../consts";
 import { ytThumbToWebp } from "../lib/ytimg";
-import { roman, WA_PATH } from "../lib/evren";
+import { roman, WA_PATH, EV_CTA } from "../lib/evren";
 import EvHeader from "../components/evren/EvHeader.astro";
 import EvFooter from "../components/evren/EvFooter.astro";
+import EvReview from "../components/evren/EvReview.astro";
+import { reviewsAreFixture, reviewRating, openReviews, moreReviews, fmtMonth, fmtScore, starFill } from "../lib/reviews";
 import { localBusiness, organization, webSite, faqPage, toPlainText } from "../lib/schema";
 import { SEO_SERVICES } from "../data/seo-services";
 import { AREA_INDEX_LOCATION_SLUGS, SEO_LOCATIONS } from "../data/locations";
@@ -161,7 +163,28 @@ const blogPosts = (await getCollection("blog"))
   .slice(0, 3);
 const fmtDate = (d: Date) => d.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" });
 
+/* ---- Scene numbers -------------------------------------------------- */
+// Each label's numeral comes from the scenes that actually render (I = hero),
+// so an optional scene (reviews before there is data, the journal without
+// posts) never leaves a gap. The section condition below uses hasReviews too.
+const hasReviews = openReviews.length > 0;
+const scenes = [
+  "isler", "cekim", "markalar", "ekip",
+  ...(hasReviews ? ["yorumlar"] : []),
+  "surec", "hizmetler", "sss", "bolge",
+  ...(blogPosts.length > 0 ? ["gunluk"] : []),
+  "on-gorusme",
+];
+const sceneNo = (id: string) => {
+  const i = scenes.indexOf(id);
+  if (i < 0) throw new Error(`[evren] sceneNo: "${id}" is not in the scene list`); // a typo fails the build
+  return roman(i + 2);
+};
+
 // Structured data: Organization + WebSite + LocalBusiness + FAQPage.
+// No Review / AggregateRating on purpose: reviews a business shows about
+// itself are self-serving for Google and ineligible for review rich results
+// (src/data/google-reviews.ts). The #yorumlar section stays plain HTML.
 const pageJsonLd = [
   organization,
   webSite,
@@ -404,7 +427,7 @@ const year = new Date().getFullYear();
     {/* ───────── 02 · Works ───────── */}
     <section id="isler" class="ev-sec ev-works" aria-labelledby="ev-works-title">
       <header class="ev-head2 ev-head2--center" data-rise>
-        <p class="ev-label"><span class="ev-label__n">II</span>Seçili işler</p>
+        <p class="ev-label"><span class="ev-label__n">{sceneNo("isler")}</span>Seçili işler</p>
         <h2 id="ev-works-title" class="ev-h2">Kameranın önünden <em>geçenler</em></h2>
         <p class="ev-whisper ev-whisper--center" aria-hidden="true">hepsi gerçek müşteri işi</p>
       </header>
@@ -522,7 +545,7 @@ const year = new Date().getFullYear();
         running vertical series, playable in-site. */}
     <section id="cekim" class="ev-sec ev-shoot" aria-labelledby="ev-shoot-title">
       <div class="ev-shoot__intro" data-rise>
-        <p class="ev-label"><span class="ev-label__n">III</span>Tek çekim günü</p>
+        <p class="ev-label"><span class="ev-label__n">{sceneNo("cekim")}</span>Tek çekim günü</p>
         <h2 id="ev-shoot-title" class="ev-h2">Bir çekim günü, <br /><em>haftalarca içerik.</em></h2>
         <p class="ev-shoot__lede">
           Çekim gününü tek bir video için değil, markanızı haftalarca yayında tutacak bir
@@ -557,7 +580,7 @@ const year = new Date().getFullYear();
     </section>
 
 
-    <div class:list={["ev-cloud", { "has-video": cloudVideo }]} aria-hidden="true">
+    <div class:list={["ev-cloud ev-cloud--flip", { "has-video": cloudVideo }]} aria-hidden="true">
       {cloudVideo && (
         <video data-ambient muted loop playsinline preload="none" poster={A.cloudPoster ?? undefined}>
           {A.cloudWebm && <source src={A.cloudWebm} type="video/webm" />}
@@ -568,7 +591,7 @@ const year = new Date().getFullYear();
     {/* ───────── 04 · Brands: trust right after the work ───────── */}
     <section id="markalar" class="ev-sec ev-brands" aria-labelledby="ev-brands-title">
       <header class="ev-head2 ev-head2--center" data-rise>
-        <p class="ev-label"><span class="ev-label__n">IV</span>Markalar</p>
+        <p class="ev-label"><span class="ev-label__n">{sceneNo("markalar")}</span>Markalar</p>
         <h2 id="ev-brands-title" class="ev-h2">Kadrajımıza giren <em>markalar.</em></h2>
         <p class="ev-whisper ev-whisper--center" aria-hidden="true">fabrikadan kliniğe, mağazadan sahneye</p>
       </header>
@@ -610,7 +633,7 @@ const year = new Date().getFullYear();
     {/* ───────── 05 · The people you talk to ───────── */}
     <section id="ekip" class="ev-sec ev-team" aria-labelledby="ev-team-title">
       <div class="ev-team__say" data-rise>
-        <p class="ev-label"><span class="ev-label__n">V</span>Muhatabınız</p>
+        <p class="ev-label"><span class="ev-label__n">{sceneNo("ekip")}</span>Muhatabınız</p>
         <h2 id="ev-team-title" class="ev-h2">Telefonu <em>çekimi yönetenler</em> açar.</h2>
         <p class="ev-team__lede">
           Projenizi bir satış ekibiyle değil, doğrudan şirketin kurucu ortaklarıyla
@@ -644,8 +667,77 @@ const year = new Date().getFullYear();
       </ul>
     </section>
 
+    {/* ───────── 06 · Reviews: what clients wrote, word for word ─────────
+        Right after "Muhatabınız": the founders make the promise, clients
+        confirm it in their own words, then the process (first stop: the free
+        meeting). Copied by hand from our Google Business Profile
+        (src/data/google-reviews.ts); no widget, avatars or requests to Google,
+        no review JSON-LD (self-serving). Until there is a review nothing
+        renders: not the section, not its cloud, not its numeral. The cloud
+        has no ev-cloud--flip, so the ones after it keep their side. */}
+    {
+      hasReviews && (
+        <>
+          <div class:list={["ev-cloud", { "has-video": cloudVideo }]} aria-hidden="true">
+            {cloudVideo && (
+              <video data-ambient muted loop playsinline preload="none" poster={A.cloudPoster ?? undefined}>
+                {A.cloudWebm && <source src={A.cloudWebm} type="video/webm" />}
+                {A.cloudMp4 && <source src={A.cloudMp4} type="video/mp4" />}
+              </video>
+            )}
+          </div>
+          <section id="yorumlar" class="ev-sec ev-reviews" aria-labelledby="ev-reviews-title" data-fixture={reviewsAreFixture ? "" : undefined}>
+            <header class="ev-head2 ev-head2--center" data-rise>
+              <p class="ev-label"><span class="ev-label__n">{sceneNo("yorumlar")}</span>Google yorumları</p>
+              <h2 id="ev-reviews-title" class="ev-h2">Sözü <em>müşterilere</em> bırakalım.</h2>
+              {reviewRating && (
+                <p class="ev-reviews__score ev-glass">
+                  <span class="ev-reviews__num" aria-hidden="true">{fmtScore(reviewRating.rating)}</span>
+                  <span class="ev-reviews__sum">
+                    <span class="ev-stars" style={`--fill:${starFill(reviewRating.rating)}%`} aria-hidden="true"></span>
+                    <span class="ev-sr">Google puanımız 5 üzerinden {fmtScore(reviewRating.rating)}.</span>
+                    <span class="ev-reviews__count">Google'da {reviewRating.count} yorum</span>
+                    <span class="ev-reviews__asof"><time datetime={reviewRating.asOf}>{fmtMonth(reviewRating.asOf.slice(0, 7))}</time> itibarıyla</span>
+                  </span>
+                </p>
+              )}
+              {reviewsAreFixture && <p class="ev-reviews__stamp">Örnek veri · yayında görünmez</p>}
+            </header>
 
-    <div class:list={["ev-cloud", { "has-video": cloudVideo }]} aria-hidden="true">
+            {/* role="list": Safari/VoiceOver drop list semantics under list-style:none. */}
+            <ul class="ev-reviews__list" role="list">
+              {openReviews.map((r, i) => <EvReview review={r} rise={i + 1} />)}
+            </ul>
+            {moreReviews.length > 0 && (
+              <details class="ev-reviews__rest">
+                <summary>
+                  <span class="ev-toggle__closed">Diğer {moreReviews.length} yorumu okuyun</span>
+                  <span class="ev-toggle__open">Daha az gösterin</span>
+                  <span class="ev-qa__ic" aria-hidden="true"></span>
+                </summary>
+                {/* No data-rise in here: what the visitor asked for appears at once. */}
+                <ul class="ev-reviews__list" role="list">
+                  {moreReviews.map((r) => <EvReview review={r} />)}
+                </ul>
+              </details>
+            )}
+
+            <div class="ev-reviews__foot" data-rise style="--d:4">
+              <p class="ev-reviews__cta">
+                <a class="ev-btn ev-btn--sun" href="#on-gorusme" data-cta-location="evren_reviews">{EV_CTA} <span aria-hidden="true">→</span></a>
+                <a class="ev-link" href={CONTACT.googleShare} target="_blank" rel="noopener" data-cta-location="evren_reviews_google">
+                  Tüm yorumları Google'da okuyun <span aria-hidden="true">↗</span><span class="ev-sr"> (yeni sekmede açılır)</span>
+                </a>
+              </p>
+              <p class="ev-reviews__note">Yorumlar Google İşletme Profilimizden, değiştirilmeden alındı.</p>
+            </div>
+          </section>
+        </>
+      )
+    }
+
+
+    <div class:list={["ev-cloud ev-cloud--flip", { "has-video": cloudVideo }]} aria-hidden="true">
       {cloudVideo && (
         <video data-ambient muted loop playsinline preload="none" poster={A.cloudPoster ?? undefined}>
           {A.cloudWebm && <source src={A.cloudWebm} type="video/webm" />}
@@ -653,10 +745,10 @@ const year = new Date().getFullYear();
         </video>
       )}
     </div>
-    {/* ───────── 06 · Process: four stops around the sun ───────── */}
+    {/* ───────── 07 · Process: four stops around the sun ───────── */}
     <section id="surec" class="ev-sec ev-path" aria-labelledby="ev-path-title">
       <header class="ev-head2" data-rise>
-        <p class="ev-label"><span class="ev-label__n">VI</span>Süreç</p>
+        <p class="ev-label"><span class="ev-label__n">{sceneNo("surec")}</span>Süreç</p>
         <h2 id="ev-path-title" class="ev-h2">Fikirden teslime <em>dört durak.</em></h2>
       </header>
 
@@ -703,10 +795,10 @@ const year = new Date().getFullYear();
         </video>
       )}
     </div>
-    {/* ───────── 07 · Services ───────── */}
+    {/* ───────── 08 · Services ───────── */}
     <section id="hizmetler" class="ev-sec ev-svc" aria-labelledby="ev-svc-title">
       <header class="ev-head2" data-rise>
-        <p class="ev-label"><span class="ev-label__n">VII</span>Hizmetler</p>
+        <p class="ev-label"><span class="ev-label__n">{sceneNo("hizmetler")}</span>Hizmetler</p>
         <h2 id="ev-svc-title" class="ev-h2">Çekim, kurgu, strateji: <em>tek ekip.</em></h2>
       </header>
       <ul class="ev-svc__list">
@@ -734,7 +826,7 @@ const year = new Date().getFullYear();
     </section>
 
 
-    <div class:list={["ev-cloud", { "has-video": cloudVideo }]} aria-hidden="true">
+    <div class:list={["ev-cloud ev-cloud--flip", { "has-video": cloudVideo }]} aria-hidden="true">
       {cloudVideo && (
         <video data-ambient muted loop playsinline preload="none" poster={A.cloudPoster ?? undefined}>
           {A.cloudWebm && <source src={A.cloudWebm} type="video/webm" />}
@@ -742,10 +834,10 @@ const year = new Date().getFullYear();
         </video>
       )}
     </div>
-    {/* ───────── 08 · FAQ: the questions clients actually ask ───────── */}
+    {/* ───────── 09 · FAQ: the questions clients actually ask ───────── */}
     <section id="sss" class="ev-sec ev-faq" aria-labelledby="ev-faq-title">
       <header class="ev-head2" data-rise>
-        <p class="ev-label"><span class="ev-label__n">VIII</span>Sık sorulanlar</p>
+        <p class="ev-label"><span class="ev-label__n">{sceneNo("sss")}</span>Sık sorulanlar</p>
         <h2 id="ev-faq-title" class="ev-h2">Video çekimi hakkında <em>sorular.</em></h2>
         <p class="ev-whisper" aria-hidden="true">fiyat da burada</p>
       </header>
@@ -781,12 +873,12 @@ const year = new Date().getFullYear();
         </video>
       )}
     </div>
-    {/* ───────── 09 · Studio & region: what we are, where we shoot ─────────
+    {/* ───────── 10 · Studio & region: what we are, where we shoot ─────────
         Answer-first copy for new visitors and search/AI engines, plus the
         regional hub linking every priority service to its location pages. */}
     <section id="bolge" class="ev-sec ev-area" aria-labelledby="ev-area-title">
       <div class="ev-area__intro" data-rise>
-        <p class="ev-label"><span class="ev-label__n">IX</span>Stüdyo ve bölge</p>
+        <p class="ev-label"><span class="ev-label__n">{sceneNo("bolge")}</span>Stüdyo ve bölge</p>
         <h2 id="ev-area-title" class="ev-h2">Sakarya'da <em>sahadayız.</em></h2>
         <p class="ev-area__lead">
           Rast Creative Studio, <strong>Serdivan/Sakarya merkezli</strong> bir video prodüksiyon ve
@@ -857,7 +949,7 @@ const year = new Date().getFullYear();
     </section>
 
 
-    <div class:list={["ev-cloud", { "has-video": cloudVideo }]} aria-hidden="true">
+    <div class:list={["ev-cloud ev-cloud--flip", { "has-video": cloudVideo }]} aria-hidden="true">
       {cloudVideo && (
         <video data-ambient muted loop playsinline preload="none" poster={A.cloudPoster ?? undefined}>
           {A.cloudWebm && <source src={A.cloudWebm} type="video/webm" />}
@@ -865,13 +957,13 @@ const year = new Date().getFullYear();
         </video>
       )}
     </div>
-    {/* ───────── 10 · Journal: latest posts ───────── */}
+    {/* ───────── 11 · Journal: latest posts ───────── */}
     {
       blogPosts.length > 0 && (
         <section id="gunluk" class="ev-sec ev-blog" aria-labelledby="ev-blog-title">
           <header class="ev-head2 ev-blog__head" data-rise>
             <div>
-              <p class="ev-label"><span class="ev-label__n">X</span>Günlük</p>
+              <p class="ev-label"><span class="ev-label__n">{sceneNo("gunluk")}</span>Günlük</p>
               <h2 id="ev-blog-title" class="ev-h2">Setten <em>notlar.</em></h2>
             </div>
             <a class="ev-link" href="/blog/">Tüm yazılar <span aria-hidden="true">→</span></a>
@@ -910,7 +1002,7 @@ const year = new Date().getFullYear();
         </video>
       )}
     </div>
-    {/* ───────── 11 · Call sheet: the sun rises behind the form ─────────
+    {/* ───────── 12 · Call sheet: the sun rises behind the form ─────────
         A full-bleed dawn stage (like the hero), not a box in a box: the
         promise and the ways to reach us on the left, the one-sentence form on
         the right, and the sun on the horizon below. Sending lifts the sun. */}
@@ -930,7 +1022,7 @@ const year = new Date().getFullYear();
 
       <div class="ev-call__grid">
         <div class="ev-call__intro" data-rise>
-          <p class="ev-label"><span class="ev-label__n">XI</span>Ücretsiz ön görüşme</p>
+          <p class="ev-label"><span class="ev-label__n">{sceneNo("on-gorusme")}</span>Ücretsiz ön görüşme</p>
           <h2 id="ev-call-title" class="ev-h2">Bize bir cümle <em>yazın.</em></h2>
           <p class="ev-call__lede">
             Gerisini telefonda konuşuruz. Fiyat ve kapsam için ilk görüşme ücretsiz.
@@ -1716,6 +1808,302 @@ const year = new Date().getFullYear();
     }
     .ev-person:nth-child(2) {
       translate: 0 1.2rem;
+    }
+  }
+
+  /* ───── Reviews: the clients' own words, as Google shows them ───── */
+  /* A closer stand-in than the shared 900px (head + three cards + foot).
+     Same specificity as .ev-sec:not(.ev-works); wins by order. Content-box
+     heights (rendered minus padding), three cards open, on the sample (stamp
+     left out) and a 426/12/600-char set: ≥1100px 828–852; 561–1099px
+     1223–1395; ≤560px 1249–1719, 1427–1651 on 360–430px phones. */
+  .ev-sec.ev-reviews {
+    contain-intrinsic-size: auto 840px;
+  }
+
+  /* Google's own figure, copied by hand (GOOGLE_RATING), on a small glass
+     plate: the stars need glass under them for 3:1. */
+  .ev-reviews__score {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    width: fit-content;
+    margin: 1.5rem auto 0;
+    padding: 0.8rem 1.4rem 0.8rem 1.2rem;
+    text-align: start;
+  }
+  .ev-reviews__score.ev-glass::before {
+    display: none;
+  }
+  .ev-reviews__num {
+    font-family: var(--serif);
+    font-weight: 580;
+    font-size: 2.6rem;
+    line-height: 1;
+  }
+  .ev-reviews__sum {
+    display: grid;
+    justify-items: start;
+    gap: 0.25rem;
+    font-size: 0.95rem;
+  }
+  .ev-reviews__count {
+    font-weight: 620;
+  }
+  .ev-reviews__asof {
+    font-size: 0.82rem;
+    color: var(--mute);
+  }
+  .ev-reviews__stamp {
+    width: fit-content;
+    margin: 1rem auto 0;
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    background: var(--ink);
+    color: #f6f1ea;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* Five stars from one element: a star mask repeated over a fill that stops
+     at the rating (4,9 → 98%). Decorative; the rating is always also text.
+     #b3501a is the CTA's flat sun: 3.6–4.3:1 on glass (non-text ≥ 3:1) but
+     2.6:1 on the bare sky, so stars only ever sit on glass. */
+  .ev-stars {
+    --star: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z'/></svg>");
+    --s: 1rem;
+    display: inline-block;
+    flex: none;
+    width: calc(var(--s) * 5);
+    height: var(--s);
+    background: linear-gradient(90deg, #b3501a var(--fill, 100%), rgba(81, 73, 63, 0.3) 0);
+    -webkit-mask: var(--star) 0 50% / var(--s) var(--s) repeat-x;
+    mask: var(--star) 0 50% / var(--s) var(--s) repeat-x;
+  }
+  .ev-reviews__score .ev-stars {
+    --s: 1.15rem;
+  }
+  @media (forced-colors: active) {
+    .ev-stars {
+      forced-color-adjust: none;
+      background: linear-gradient(90deg, CanvasText var(--fill, 100%), GrayText 0);
+    }
+  }
+
+  /* Cards: a centred single reading column, three across from 1100px (flex,
+     so a short last row centres instead of leaving an orphan hanging left). */
+  .ev-reviews__list {
+    --gap: clamp(0.9rem, 1.6vw, 1.25rem);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  /* Opening one long review must not stretch its row-mates into empty cards. */
+  .ev-reviews__list:has(.ev-review__more[open]) {
+    align-items: flex-start;
+  }
+  .ev-review {
+    display: flex;
+    flex: 1 1 100%;
+    max-width: 38rem;
+    scroll-margin-top: 5.5rem;
+  }
+  .ev-review__fig {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    width: 100%;
+    margin: 0;
+    padding: clamp(1.15rem, 2.2vw, 1.6rem);
+  }
+  .ev-review__stars {
+    margin: 0;
+    line-height: 0;
+  }
+  .ev-review__quote {
+    margin: 0;
+  }
+  /* 18px body minimum (PRODUCT.md). This 33rem measure and the three-across
+     card (≤ ~317px of text) pair with LONG_AT / MID_AT in src/lib/reviews.ts. */
+  .ev-review__text {
+    margin: 0;
+    max-width: 33rem;
+    font-family: var(--serif);
+    font-weight: 420;
+    font-size: 1.125rem;
+    line-height: 1.55;
+    color: var(--ink);
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+  }
+  /* A review of a line or two reads as a pull quote, not a lonely line in a
+     big card. */
+  .ev-review.is-short .ev-review__text {
+    font-style: italic;
+    font-weight: 460;
+    font-size: clamp(1.3rem, 1.1rem + 0.6vw, 1.55rem);
+    line-height: 1.3;
+  }
+  /* Long texts rest at six lines; mid-length ones too, but only three across
+     (below). The full text is always in the DOM. Thresholds: LONG_AT / MID_AT
+     in src/lib/reviews.ts. */
+  .ev-review__more {
+    display: none;
+    margin-top: -0.5rem;
+  }
+  @supports selector(:has(*)) {
+    .ev-review.is-long .ev-review__more {
+      display: block;
+    }
+    .ev-review.is-long:not(:has(.ev-review__more[open])) .ev-review__text {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 6;
+      line-clamp: 6;
+      overflow: hidden;
+    }
+  }
+  /* .ev-link: ink, sun only on hover. --sun-text measured ~4.1:1 on the real
+     card glass, under 4.5 for text this size. */
+  .ev-review__more > summary {
+    list-style: none;
+  }
+  .ev-review__more > summary::-webkit-details-marker,
+  .ev-reviews__rest > summary::-webkit-details-marker {
+    display: none;
+  }
+  .ev-reviews details[open] > summary .ev-toggle__closed,
+  .ev-reviews details:not([open]) > summary .ev-toggle__open {
+    display: none;
+  }
+  .ev-review__by {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: auto 0 0;
+    padding-top: 0.9rem;
+    border-top: 1px solid rgba(114, 103, 92, 0.18);
+  }
+  .ev-review__mono {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background: var(--fog-hi);
+    box-shadow: inset 0 0 0 1px var(--edge), 0 0 0 1px rgba(224, 122, 46, 0.3);
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 600;
+    font-size: 1.05rem;
+    line-height: 1;
+    color: var(--sun-text);
+  }
+  .ev-review__who {
+    display: grid;
+    min-width: 0;
+  }
+  .ev-review__name {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.1rem;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+  .ev-review__meta {
+    font-size: 0.88rem;
+    color: var(--ink-2);
+  }
+
+  /* The rest, behind one plain control (no glass button: .ev-btn--glass keeps
+     its backdrop-filter on phones, v14.2). Same +/− as the FAQ. */
+  .ev-reviews__rest {
+    margin-top: 1.1rem;
+  }
+  .ev-reviews__rest > summary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    width: fit-content;
+    min-height: var(--tap-min);
+    margin: 0 auto;
+    font-weight: 620;
+    cursor: pointer;
+    list-style: none;
+  }
+  .ev-reviews__rest[open] > summary .ev-qa__ic::after {
+    transform: rotate(0deg);
+  }
+  .ev-reviews__rest > .ev-reviews__list {
+    margin-top: 1.1rem;
+  }
+
+  .ev-reviews__cta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.8rem 1.3rem;
+    margin: clamp(1.8rem, 3.5vw, 2.6rem) 0 0;
+  }
+  .ev-reviews__note {
+    max-width: 36rem;
+    margin: 0.6rem auto 0;
+    text-align: center;
+    font-size: 0.86rem;
+    color: var(--mute);
+  }
+
+  @media (min-width: 1100px) {
+    .ev-review {
+      flex: 0 1 calc((100% - 2 * var(--gap)) / 3);
+      max-width: none;
+    }
+    /* A row is as tall as its tallest card: the pull quote sits in the middle
+       of the room that leaves, not on top of an empty band. */
+    .ev-review.is-short .ev-review__quote {
+      margin-block: auto;
+    }
+    .ev-review.is-short .ev-review__by {
+      margin-top: 0;
+    }
+    @supports selector(:has(*)) {
+      .ev-review.is-mid .ev-review__more {
+        display: block;
+      }
+      .ev-review.is-mid:not(:has(.ev-review__more[open])) .ev-review__text {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 6;
+        line-clamp: 6;
+        overflow: hidden;
+      }
+    }
+  }
+  @media (max-width: 1099px) {
+    .ev-sec.ev-reviews {
+      contain-intrinsic-size: auto 1300px;
+    }
+  }
+  @media (max-width: 560px) {
+    .ev-sec.ev-reviews {
+      contain-intrinsic-size: auto 1550px;
+    }
+    .ev-reviews__num {
+      font-size: 2.2rem;
+    }
+    .ev-review__mono {
+      width: 2.4rem;
+      height: 2.4rem;
+      font-size: 0.95rem;
     }
   }
 
@@ -2627,7 +3015,11 @@ const year = new Date().getFullYear();
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
     mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
   }
-  .ev-cloud.has-video:nth-of-type(even) video {
+  /* Every other passage is mirrored so neighbours don't repeat. Set by hand
+     (ev-cloud--flip), not by :nth-of-type: the optional reviews cloud would
+     flip every one after it, and a mirrored cloud right above the form made
+     the cold /#on-gorusme landing shift more (CLS 0.30 → 0.48 at 1440px). */
+  .ev-cloud--flip video {
     transform: scaleX(-1);
   }
   .ev-cloud:not(.has-video)::before,
@@ -3205,6 +3597,20 @@ const year = new Date().getFullYear();
       jumpTo(landing);
       addEventListener("load", () => !moved && jumpTo(landing), { once: true });
     }
+
+    /* ── Reviews: "Daha az gösterin" keeps the reader on the card ──
+       The control sits under the text it shortens. On a small phone, after
+       reading to the end, closing pulled the still-focused control up under
+       the header and the review's start off screen (320×568: control at
+       y=4–52, header to 73). Only then, bring the card back under the header. */
+    const head = root.querySelector<HTMLElement>(".ev-head");
+    root.querySelectorAll<HTMLDetailsElement>(".ev-review__more").forEach((more) =>
+      more.addEventListener("toggle", () => {
+        const card = more.closest<HTMLElement>(".ev-review");
+        const top = more.getBoundingClientRect().top;
+        if (!more.open && card && top < (head?.getBoundingClientRect().bottom ?? 0)) jumpTo(card);
+      }),
+    );
 
     /* ── Hero: on-air monitor cycles only while the hero is visible ── */
     const hero = root.querySelector<HTMLElement>(".ev-hero");
