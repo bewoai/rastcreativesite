@@ -46,40 +46,95 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
 
   "sosyal-medya-icerigi/sakarya": {
     description:
-      "Sakarya sosyal medya yönetimi: içerik planı, Reels çekimi, paylaşım ve aylık rapor tek ekipte. Yönettiğimiz hesapları inceleyin, ücretsiz görüşelim.",
-    heading: "Sakarya'da sosyal medya yönetimi: tek çekim, bir aylık içerik",
+      "Sakarya sosyal medya yönetimi: video sayısı ve çekim günü teklifte yazılı. Plan, çekim, kurgu, paylaşım, rapor. Aytaş Home'da 4 ayda etkileşim +%311.",
+    heading: "Sakarya'da sosyal medya ajansı seçerken: ayda kaç video, çekim dahil mi?",
     paragraphs: [
-      "Sakarya'da yönettiğimiz hesaplarda aynı modeli kullanıyoruz: önce markanın ne anlatacağını ve kime anlatacağını netleştiriyoruz, sonra ayın içeriklerini bir ya da iki çekim gününe topluyoruz. Böylece Instagram ve YouTube'da süreklilik bozulmuyor, her video aynı görsel dili taşıyor.",
-      "Mobilya mağazası, medikal estetik kliniği ve uzman hekim kanalı gibi farklı sektörlerde hesap yönetiyoruz; nasıl çalıştığımızı Projeler sayfasındaki yönetilen hesaplarda ve Aytaş Home vaka çalışmasında görebilirsiniz. Serdivan'daki stüdyomuzdan Adapazarı, Erenler, Arifiye, Hendek, Sapanca ve diğer ilçelere aynı gün ulaşıyoruz.",
+      "Sakarya'da sosyal medya yönetimi için teklif topladığınızda birçok paketin gönderi ve hikâye sayısıyla satıldığını görürsünüz. Bu paketlerin bir kısmında ayda kaç video çekileceği yazmaz. Bizim paketlerimiz video üzerine kurulu: ayda kaç video çıkacağı ve kaç çekim günü yapılacağı teklifte yazılı olur. Böylece neye para verdiğinizi baştan bilir, ay sonunda yayına çıkanla karşılaştırabilirsiniz.",
+      "Bir ay bizde şöyle geçiyor. Ay başında kampanyalarınızı ve öne çıkarmak istediğiniz ürün ya da hizmetleri konuşup videoların konu listesini çıkarıyoruz. Ayda 4 video için yarım gün, 8 video için bir tam gün ya da iki yarım gün çekim yapıyoruz ve çekimi işletmenizin sakin saatlerine koyuyoruz. Çekimde ve kurguda kurucu ortaklarımız bizzat yer alıyor; çekimleri Sony FX30 sinema kamerasıyla yapıyoruz. Ay sonunda erişim, etkileşim, profil ziyareti ve gelen mesajları özetleyen kısa bir rapor gönderiyor, sonraki ayın planını bu verilere göre düzenliyoruz.",
+      "Bu düzenle yönettiğimiz hesaplardan biri, mobilya perakendecisi Aytaş Home Outlet'in Instagram hesabı. Hesabı Mayıs 2026'da devraldık. Mağazada düzenli çekim günleriyle ürün, kampanya ve festival videoları ürettik, Meta reklamlarını da biz yönettik. Meta Business Suite verisine göre önceki dört ay (Ocak–Nisan) ile ilk dört ayımız (Mayıs–Ağustos 2026) karşılaştırıldığında içerik etkileşimi 18,6 binden 76,5 bine çıktı (+%311). Yeni mesajlaşan kişi sayısı 257'den 730'a yükseldi. Karşılaştırmanın tamamı Aytaş Home vaka çalışmasında.",
+      "Yönettiğimiz hesaplardan ikisi hekimlere ait: Serdivan'da medikal estetik hizmeti veren Dr. Erdem Çalışkan'ın Instagram hesabı ve Op. Dr. Duygu Cebecik Özmüş'ün gebelik bilgilendirme serisini yayınladığı YouTube kanalı. Sağlıkta reklam yönetmelikle sınırlı olduğu için bu hesaplarda kampanya, fiyat ya da sonuç vaadi kullanmıyoruz. Hastaların sık sorduğu konuları hekim kendi ağzından, sade bir dille anlatıyor. “Fraksiyonel Lazer Nedir?” ve “Gebelik: İlk 7 Gün” bu düzenle çıkan videolardan.",
     ],
     faqs: [
       {
-        question: "Sakarya'da sosyal medya yönetimine nasıl başlıyoruz?",
+        question: "Sakarya'da sosyal medya ajansı tekliflerini nasıl karşılaştırmalıyım?",
         answer:
-          "Ücretsiz ön görüşmede hesabınızı, hedef kitlenizi ve ayda ne kadar içerik gerektiğini konuşuyoruz. Ardından ilk ayın içerik planını ve çekim gününü belirleyip üretime geçiyoruz.",
+          "Toplam tutardan önce kapsamı yan yana koyun: ayda kaç video var, çekim dahil mi, kaç çekim günü yapılıyor, kurguyu ve paylaşımı kim yapıyor, her ay rapor geliyor mu. Reklam bütçesinin fiyata dahil olup olmadığını da sorun. Bizde reklam bütçesi hizmet bedeline dahil değildir; Meta'ya doğrudan siz ödersiniz.",
       },
       {
-        question: "Sonuçları nasıl takip ediyoruz?",
+        question: "Sakarya'da sosyal medya danışmanlığı da veriyor musunuz?",
         answer:
-          "Her ay erişim, etkileşim, takipçi ve (reklam varsa) mesaj/dönüşüm verilerini özetleyen kısa bir rapor paylaşıyoruz; bir sonraki ayın planını bu verilere göre düzenliyoruz.",
+          "Evet. Hesabı kendi ekibinizle yönetmek istiyorsanız saatlik danışmanlık alabilirsiniz: mevcut hesabınıza birlikte bakıp neyin işlediğini, neyin eksik kaldığını konuşuruz. Yalnızca çekim ve kurguyu bize bırakmak da mümkün. Günlük paylaşımları kendiniz çekip vitrin ve reklam videolarını bizden aldığınız karma bir düzen de kurulabilir.",
       },
+      {
+        question: "Klinik ya da muayenehane hesabını da yönetiyor musunuz?",
+        answer:
+          "Evet. Ayın videolarını çoğunlukla muayenehanede ya da klinikte, muayene düzenini bozmadan, genellikle tek çekim gününde topluca çekiyoruz. Her senaryo çekimden önce, her video yayından önce hekimin onayına gidiyor. Hekim hesaplarında yönetmelik gereği sürekli reklam yönetimi yapmıyoruz; görünürlüğü bilgilendirme videoları, Google İşletme Profili ve YouTube üzerinden kuruyoruz.",
+      },
+      {
+        question: "Kameraya çıkmak zorunda mıyım?",
+        answer:
+          "Hayır. Ürün, mekan ve ekip videoları siz kameraya geçmeden de çekilip kurgulanabilir. Kameraya çıkacaksanız soru-cevap şeklinde ilerliyoruz: ne söyleyeceğinizi önceden birlikte hazırlıyor, beğenmediğiniz kısmı yeniden çekiyoruz.",
+      },
+      {
+        question: "En az kaç ay çalışmamız gerekiyor?",
+        answer:
+          "Aylık paketlerde en az üç ay çalışıyoruz, çünkü düzenli içeriğin etkisi birkaç ay içinde görünür hale geliyor. Takipçi ya da satış garantisi vermiyoruz. Söz verdiğimiz şey teklifte yazan video sayısı, çekim günleri ve her ay gelen rapor.",
+      },
+    ],
+    projects: [
+      "aytas-home-sosyal-medya",
+      "dr-erdem-caliskan-kimdir",
+      "aytas-home-sinematik-magaza",
+      "dr-erdem-caliskan-fraksiyonel-lazer",
+      "gebelik-ilk-7-gun",
+      "candles-and-echoes-golden-swan",
     ],
   },
 
   "video-cekimi/sakarya": {
     description:
-      "Sakarya video çekimi: bir çekim gününden ana film, Reels ve fotoğraf. Serdivan'daki ekibimizle her ilçeye aynı gün. Ücretsiz ön görüşme.",
-    heading: "Sakarya'da video çekimi: bir çekim gününden çok sayıda içerik",
+      "Sakarya video çekimi: tanıtım, Reels, etkinlik. Kurucu ortaklar çekip kurguluyor; her ilçeye aynı gün, teslim genelde 2–4 hafta. Ön görüşme ücretsiz.",
+    heading: "Sakarya'da video çekimi nasıl ilerler, fiyatı ne belirler?",
     paragraphs: [
-      "Sakarya'da video çektiren işletmelerin çoğu tek bir film değil, aylarca kullanabileceği içerik istiyor. Bu yüzden çekim gününü baştan çok çıktılı planlıyoruz: aynı setten yatay ana film, dikey Reels/Shorts kesitleri, kısa reklam versiyonları ve fotoğraflar birlikte çıkıyor.",
-      "Stüdyomuz Serdivan'da; Adapazarı, Erenler, Arifiye, Hendek, Akyazı, Sapanca ve Karasu'daki fabrika, mağaza, klinik ve otel çekimlerine aynı gün ulaşıyoruz. Senaryo, ışık, ses, kurgu ve renk düzenlemeyi aynı ekip yürüttüğü için iş tek elden ve tutarlı çıkıyor.",
+      "Hangi videoya ihtiyacınız olduğu, onu nerede kullanacağınıza bağlı. Tanıtım filmi web sitesinde, YouTube'da ve firmayı iş ortaklarına anlatırken kullanılır; tekstil üreticisi Altoteks'in 4K tanıtım filmi fabrikayı havadan, dokuma makinelerini ve laboratuvar testlerini gösteriyor. Mağaza videosu Instagram'da ve Google İşletme profilinde yeri tanıtır; Duru Optik için çektiğimiz dikey videoda mağazanın konumu havadan, gözlük koleksiyonu ve göz ölçümü yakından görünüyor. Serdivan'da medikal estetik hizmeti veren Dr. Erdem Çalışkan'ın Instagram hesabı için tanıtım ve bilgilendirme videoları hazırlıyoruz. Candles and Echoes'un Sapanca Kırkpınar Amfi Tiyatro'daki mum ışığında bale gösterimini de dikey formatta çektik.",
+      "Bir çekim gününden ne çıkacağı, çekim listesiyle baştan belli olur. Yarım günlük bir mağaza ya da kafe çekimini genellikle bir yatay tanıtım videosu ve üç Reels olarak planlıyoruz; kurumsal tanıtım filminde tam gün çekimden 2–3 dakikalık film, dikey kesitler ve drone planları çıkar. Düzenli içerikte ayın videolarını bir ya da iki çekim gününe topluyoruz. Mobilya perakendecisi Aytaş Home'un Instagram hesabını Mayıs 2026'dan beri yönetiyoruz: Meta Business Suite verisine göre içerik etkileşimi Ocak–Nisan 2026'daki 18,6 binden Mayıs–Ağustos'ta 76,5 bine çıktı (+%311), yeni mesajlaşan kişi 257'den 730'a yükseldi.",
+      "Süreç ücretsiz ön görüşmeyle başlar: videonun amacını, kime gösterileceğini ve nerede yayınlanacağını konuşuruz. Ardından konu ve çekim listesini çıkarıp çekim gününü belirleriz. Projeyi kurucu ortaklar Berat Değirmenci ve Muhammed Ekrem Adnan ile konuşursunuz; sette ve kurguda da onlar bizzat çalışır, muhatabınız proje boyunca değişmez. Sony FX30 kamera, Sigma 18-50 lens ve DJI RS4 gimbal ile çekiyor, gerektiğinde 4K drone ekliyoruz. Revizyonlarla birlikte teslim, kapsama göre genellikle 2–4 hafta sürer.",
+      "Fiyatı belirleyen başlıca kalemler şunlar: yarım ya da tam gün çekim, çıkacak video sayısı, drone, senaryo ve kurgu kapsamı (grafik, altyazı), ham görüntü isteği ve acil teslim. Net rakamı ön görüşmeden sonra yazılı teklifle veriyoruz. Başka tekliflerle karşılaştırırken toplam tutardan önce kapsama bakın: çekim kaç saat sürüyor, kaç video teslim ediliyor, çekimi kim yapıyor, kaç revizyon turu var ve hangi formatlar dahil.",
     ],
     faqs: [
       {
-        question: "Sakarya'da bir çekim gününden kaç video çıkar?",
+        question: "Sakarya'da çekim günü işletmemi kapatmam gerekir mi?",
         answer:
-          "Projeye göre değişir; iyi planlanmış bir günden genellikle bir ana film, birkaç dikey sosyal medya videosu ve fotoğraf seti birlikte çıkar. Hangi çıktıların gerektiğini ön görüşmede birlikte listeliyoruz.",
+          "Genellikle hayır. Mağaza, klinik ya da fabrikadaki çekimi sakin saatlere veya vardiya düzenine göre planlıyoruz, işletme kendi akışında devam eder. Yalnızca bazı planlar için kısa bir düzenleme gerekebilir.",
       },
+      {
+        question: "Çekimden önce ne hazırlamam gerekiyor?",
+        answer:
+          "Ana mesajı, öne çıkmasını istediğiniz ürün ya da hizmetleri, çekilecek alanları ve videoları onaylayacak kişiyi netleştirmeniz yeterli. Çekim günü ürünlerin ve mekânın hazır olması işi hızlandırır. Konu ve çekim listesini ön görüşmeden sonra birlikte çıkarıyoruz.",
+      },
+      {
+        question: "Kameraya çıkmak istemiyorum, yine de video çekilebilir mi?",
+        answer:
+          "Evet. Video ürün, mekân ve ekip görüntüleriyle, ekran yazılarıyla kurgulanabilir. Çekindiğiniz için uzak duruyorsanız da soru-cevap şeklinde ilerliyor, ne söyleyeceğinizi önceden birlikte hazırlıyor, beğenmediğiniz kısmı yeniden çekiyoruz.",
+      },
+      {
+        question: "İlk kurguyu beğenmezsem ne olur?",
+        answer:
+          "İlk kurguyu teslimden önce size gönderiyor, geri bildiriminize göre düzeltiyoruz. Revizyon turlarının sayısı ve kapsamı ön görüşmede netleşir.",
+      },
+      {
+        question: "Sosyal medya yönetimi almadan sadece video çektirebilir miyim?",
+        answer:
+          "Evet. Tek seferlik çekim ve kurgu için aylık anlaşma gerekmez; elinizde görüntü varsa yalnızca kurgu da yapıyoruz. Ham görüntü isterseniz kapsama eklenir. Her ay video gerekiyorsa aylık planla çalışmak genellikle daha uygun olur.",
+      },
+    ],
+    projects: [
+      "aytas-home-sosyal-medya",
+      "altoteks-tanitim-filmi",
+      "dr-erdem-caliskan-kimdir",
+      "duru-optik-tanitim",
+      "candles-and-echoes-golden-swan",
+      "hornhauss-tanitim",
     ],
   },
 
@@ -115,10 +170,44 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
   },
 
   "video-cekimi/kocaeli": {
-    heading: "Kocaeli'nde video çekimi: İzmit'ten Gebze'ye",
+    description:
+      "Kocaeli video çekimi: fabrika ve liman filmleri, mağaza ve kafe için Reels. İzmit, Gebze, Gölcük, Darıca, Kartepe'ye aynı gün. Ücretsiz ön görüşme.",
+    heading: "Kocaeli'nde fabrika, liman ve mağaza için video çekimi",
     paragraphs: [
-      "Kocaeli, İzmit, Gebze, Gölcük, Kartepe ve Darıca hattında sanayi, lojistik, denizcilik ve turizm işletmeleriyle çok farklı çekim ihtiyaçları barındırıyor. Sakarya'ya komşu olduğumuz için Kocaeli'deki projelere aynı gün içinde gidip dönebiliyoruz.",
-      "Kurumsal tanıtım filmi, ürün videosu, sosyal medya içeriği ve drone çekimini tek prodüksiyonda birleştirerek bir çekim gününden olabildiğince çok içerik çıkarıyoruz.",
+      "Serdivan'daki stüdyomuzdan İzmit, Gebze, Gölcük, Darıca, Kartepe ve Başiskele'ye aynı gün gidip dönüyoruz. Kocaeli'ndeki çekimler konaklama ya da ek yol günü gerektirmediği için saati tesisin düzenine göre seçebiliyoruz: üretim hattını vardiyanın yoğun saatinde, röportajları makine sesinden uzak bir odada, dış cepheyi ve havadan planları ışığın uygun olduğu saatte çekiyoruz. Hat sabah yoğun, dış cephe için uygun ışık akşamüstüyse işi iki ayrı yarım güne bölebiliyoruz. Çekimde ve kurguda kurucu ortaklarımız bizzat yer alıyor.",
+      "İzmit Körfezi çevresindeki liman ve lojistik firmalarında çekimin zor tarafı, işin kamera için tekrarlanmaması. Bir gemi manevrası ya da ağır yük transferi bir kez yapılır; bu yüzden çekim planını firmanın operasyon saatine göre kuruyor, gerekirse geceye uzatıyoruz. Portföyde bu tür işlerin iki örneği var: Mavi Vatan Gemi İnşa filmi blok ve modül transferini gece ve gündüz takip ediyor, Meteors Shipping filmi ise limandaki kargo gemilerini, römorkör manevralarını ve güverte detaylarını drone ve yer çekimleriyle birleştiriyor.",
+      "İzmit ve Gebze hattındaki bir fabrikanın filmini çoğu zaman tedarikçi arayan bir satın alma ekibi ya da yurt dışındaki bir alıcı izliyor. Bu izleyici makine listesinden çok üretimin kontrol altında olduğunu görmek istiyor, bu yüzden filmi üretimin akışı üzerine kuruyoruz. Canex filminde hammadde rulolarını, pres, kesim ve büküm makinelerini, kalite kontrolü ve sevkiyatı; Altoteks filminde dokuma, laboratuvar testi, dikim ve paketleme aşamalarını görebilirsiniz. Bu dört film 2024 tarihli; kurucu ortaklarımızın stüdyoyu kurmadan önce yaptığı işler.",
+      "Kocaeli'nde video ihtiyacı olan her işletme fabrika değil. İzmit, Darıca ve Başiskele'deki mağaza, kafe, klinik ve davet salonları için çoğu zaman yarım günlük bir çekim yetiyor; Portföydeki Hörnhauss, Duru Optik ve Newlife Davet Salonu videoları bu türden işlere örnek. Düzenli içerik isteyen mağazalar Aytaş Home'un vaka çalışmasına bakabilir: Mayıs 2026'da devraldığımız Instagram hesabında dört ayda, önceki dört aya göre içerik etkileşimi 18,6 binden 76,5 bine, yeni mesajlaşan kişi sayısı 257'den 730'a çıktı (Meta Business Suite verisi).",
+    ],
+    faqs: [
+      {
+        question: "Kocaeli'ndeki çekim için yol ya da konaklama ücreti ekleniyor mu?",
+        answer:
+          "Hayır. İzmit, Gebze, Gölcük, Darıca, Kartepe ve Başiskele aynı gün gidip döndüğümüz bölgede; bu ilçelerdeki çekimlerin teklifine ayrı yol ya da konaklama kalemi eklemiyoruz. Bu kalem yalnızca Bolu ve Bilecik gibi proje bazlı gittiğimiz yerlerde var.",
+      },
+      {
+        question: "Fabrika, liman ya da tersanede çekim için bizden neler gerekiyor?",
+        answer:
+          "Çekim günü bizimle olacak bir yetkili, çekilebilecek ve çekilmemesi gereken alanların listesi ve varsa operasyonun saat planı. Baret, yelek, refakat ve giriş kaydı gibi saha kurallarını çekimden önce iş güvenliği biriminizle konuşuyoruz. Üretimi durdurmanız genellikle gerekmiyor; hat çalışırken çekiyoruz, yalnızca belirli bir makine ya da alan için kısa bir düzenleme isteyebiliriz.",
+      },
+      {
+        question: "Kocaeli'ndeki çekime havadan planlar eklenebilir mi?",
+        answer:
+          "Konuma bağlı. Gebze'nin Sabiha Gökçen Havalimanı'na yakınlığı, Kartepe'deki Cengiz Topel Havalimanı, Gölcük'teki askeri alanlar ve bazı liman ve enerji tesisleri uçuşu kısıtlayabiliyor. Konumu çekimden önce kontrol ediyoruz; uçuş mümkün değilse bunu teklif aşamasında söylüyor, planı yer çekimleriyle kuruyoruz.",
+      },
+      {
+        question: "Yurt dışındaki alıcılar için İngilizce versiyon hazırlıyor musunuz?",
+        answer:
+          "Evet, ihracat ve fuar sunumları için filmin İngilizce altyazılı versiyonunu hazırlıyoruz. Fuar standında sesi kapalı dönecek bir ekran versiyonu gerekiyorsa onu da aynı kurgudan çıkarıyoruz.",
+      },
+    ],
+    projects: [
+      "mavi-vatan-gemi-insa",
+      "meteors-shipping-tanitim-filmi",
+      "canex-tanitim-filmi",
+      "altoteks-tanitim-filmi",
+      "aytas-home-sosyal-medya",
+      "duru-optik-tanitim",
     ],
   },
   // ── Round 2 (Search Console impressions, Oct 2026) ──
@@ -284,10 +373,43 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
   },
 
   "drone-cekimi/sakarya": {
-    heading: "Sakarya'da drone çekimi",
+    description:
+      "Sakarya drone çekimi: fabrika, tesis ve mağazalar için 4K havadan görüntü, uçuş öncesi izin kontrolü, yerden çekimle aynı gün. Örnek işleri görün.",
+    heading: "Sakarya'da drone çekimi: ne zaman gerekir, nasıl planlanır?",
     paragraphs: [
-      "Sakarya'da drone çekimlerini fabrika ve tesis tanıtımları, Sapanca ve Karasu çevresindeki turizm işletmeleri, gayrimenkul projeleri ve etkinlikler için yapıyoruz. Serdivan'daki stüdyomuzdan ilin her noktasına aynı gün ulaşabiliyoruz.",
-      "Drone planları tek başına değil, yerden yapılan çekimlerle birlikte bir hikâyenin parçası olarak kurgulandığında en güçlü sonucu veriyor; bu yüzden havadan ve yerden çekimi aynı günde planlamayı öneriyoruz.",
+      "Drone en çok iki şeyi anlatırken işe yarıyor: büyüklük ve konum. Örneğin Hendek'te bir üretim tesisinin araziye nasıl yayıldığı ya da Sapanca Gölü kıyısındaki bir otelin suya ne kadar yakın olduğu, yerden çekilen planlarla tam anlaşılmıyor; yukarıdan tek karede görülüyor. Küçük bir iç mekânda, ürün çekiminde ya da röportajda ise drone filme bir şey katmıyor. Böyle işlerde bütçeyi yerden çekime ve kurguya ayırmanızı öneriyoruz.",
+      "Aşağıdaki projelerde bunun örnekleri var. Altoteks ve Canex tanıtım filmlerinde fabrikanın dışı havadan, üretim hattı içeriden çekildi. Mavi Vatan'ın modül transferini belgeleyen filmde gece ve gündüz yapılan saha çekimleri, Meteors Shipping filminde de tersane ve liman çekimleri drone görüntüleriyle birlikte kurgulandı. Bu filmler 2024 tarihli, kurucu ortaklarımızın stüdyoyu kurmadan önce yaptığı işler. Çekimde ve kurguda bugün de onlar bizzat yer alıyor.",
+      "Müşterinin gelip bulması gereken mağazalarda da birkaç saniyelik bir havadan plan işe yarıyor. Mağazalara mesajla gelen en sık sorulardan biri “Yeriniz nerede?” oluyor. Binayı ve çevresindeki tanıdık bir caddeyi ya da meydanı gösteren kısa bir plan, bu soruyu videonun içinde cevaplıyor. Duru Optik için çektiğimiz dikey videoda da mağazanın konumu havadan, gözlük koleksiyonu ve göz ölçümü yakından gösteriliyor.",
+      "Teklif için uzun bir dosya hazırlamanız gerekmiyor. Çekim yerinin konum linkini, görüntülerin nerede kullanılacağını (web sitesi, sosyal medya, fuar ya da reklam), yalnız havadan mı yoksa yerden çekimle birlikte mi istediğinizi ve tarih aralığınızı yazmanız yeterli. Kapsamı ücretsiz ön görüşmede birlikte netleştiriyoruz. Ücreti hangi kalemlerin belirlediğini de blogdaki “Drone çekimi fiyatı neye göre belirlenir?” yazısında anlattık.",
+    ],
+    faqs: [
+      {
+        question: "Sakarya'da her yerde drone uçurulabilir mi?",
+        answer:
+          "Hayır. Havalimanı ve askeri alan çevresi, bazı kamu tesisleri ve kalabalıkların üzeri SHGM kurallarına göre kısıtlıdır ya da ayrı izin ister. Fabrika veya şantiye üzerinde uçmak için tesis yönetiminin onayı da gerekir. Konum linkini gönderdiğinizde uçuşa uygunluğu kontrol ediyoruz; uygun değilse bunu çekim gününden önce söylüyoruz.",
+      },
+      {
+        question: "Hava kötü olursa drone çekimi ne olur?",
+        answer:
+          "Rüzgâr ve yağmur uçuşu doğrudan etkiler. Havadan planları hava tahminine ve ışığa göre günün uygun saatine koyuyor, uçuş mümkün olmazsa yedek gün belirliyoruz. Yerden çekim de aynı gündeyse iç mekân planları çoğu zaman programdaki gibi çekilebiliyor; o durumda yalnız havadan planlar yedek güne kalıyor.",
+      },
+      {
+        question: "Sadece drone çekimi yaptırabilir miyim?",
+        answer:
+          "Evet. Tesis, arazi ya da proje alanı için yalnız havadan çekim de yapıyoruz. Tesisin içi, ekip ya da ürün de anlatılacaksa yerden çekimi aynı güne eklemek çoğu zaman daha verimli oluyor; hangisinin gerektiğine ön görüşmede birlikte karar veriyoruz.",
+      },
+      {
+        question: "Drone görüntülerinin ham dosyalarını da alabilir miyim?",
+        answer:
+          "Evet. Kurgulu videonun yanında ham görüntü teslimi de kapsama eklenebilir; bunu ön görüşmede konuşup teklife ayrı kalem olarak yazıyoruz.",
+      },
+    ],
+    projects: [
+      "altoteks-tanitim-filmi",
+      "canex-tanitim-filmi",
+      "mavi-vatan-gemi-insa",
+      "meteors-shipping-tanitim-filmi",
+      "duru-optik-tanitim",
     ],
   },
   // ── Round 3 (next tier, 6–13 impressions) ──

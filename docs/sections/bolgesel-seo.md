@@ -35,6 +35,27 @@ Yerel arama niyetini hizmet × konum sayfalarıyla karşılamak; ziyaretçiyi il
 - Portföy seçkisi gerçek işlere dayanır; konuma özel proje verisi yoksa o bölgede çekim yapıldığı iddia edilmez.
 - Gizli proje sayfaları bu politikadan ayrıdır; `noindex` kalır ve sitemap’e girmez.
 
+## Para sayfaları (güncelleme 20 Ekim 2026)
+
+GSC'de en çok gösterim alan dört sayfa elle yazılmış uzun bloklarla güçlendirildi
+(`src/data/location-content.ts`): `/video-cekimi/sakarya/`, `/video-cekimi/kocaeli/`,
+`/sosyal-medya-icerigi/sakarya/`, `/drone-cekimi/sakarya/`.
+
+- Her blok: ≤155 karakter description, soru biçiminde H2, 4 paragraf, 4–5 ek SSS
+  (şablon SSS'leriyle çakışmaz, FAQPage şemasına girer) ve `projects` listesi.
+- `projects`: metinde anılan gerçek işler ızgaranın başına sabitlenir; boş kalan
+  yer eskisi gibi hizmet kategorilerinden dolar.
+- Kurallar: rakam yalnızca Aytaş Home vaka sayfasındakiler (18,6 bin → 76,5 bin,
+  +%311; 257 → 730). 2024 tarihli işler "kurucu ortakların stüdyo öncesi işleri"
+  diye anılır, Rast adına "çektik" denmez. Aytaş'a şehir yazılmaz (birden fazla
+  mağaza). Projelere kayıtta olmayan şehir eklenmez.
+- Kocaeli SSS'si "yol/konaklama ücreti yok" diyor: dayanak fiyat politikası (yol
+  farkı yalnızca Bolu/Bilecik). Politika değişirse bu SSS de değişmeli.
+- Izgara başlığı "Tamamladığımız son … projeleri" → "Portföyden … örnekleri";
+  alt metin 2024–2025 işlerinin stüdyo öncesi olduğunu söylüyor.
+- Eşlik eden rehber: `/blog/sakarya-video-produksiyon-firmasi-nasil-secilir/`
+  (dört sayfaya ve fiyat yazılarına iç link verir).
+
 ## Tasarım ve motion
 
 Kâğıt zemin ve bölgesel keşif akışı korunur. Bu URL standardizasyonu görsel, layout veya motion davranışını değiştirmemelidir.
