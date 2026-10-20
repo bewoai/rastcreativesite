@@ -119,6 +119,19 @@ export const WHATSAPP_CTA_MESSAGE =
 /** Ready-to-use WhatsApp href for the global shortcuts; null if unconfigured. */
 export const WHATSAPP_CTA_HREF = waLink(WHATSAPP_CTA_MESSAGE);
 
+/** Opener for the Hekim İçerik Sistemi page: a physician isn't asking for a shoot quote. */
+const HEKIM_WHATSAPP_MESSAGE = "Merhaba, Hekim İçerik Sistemi hakkında bilgi almak istiyorum.";
+
+/**
+ * The same opener, tagged with the page it was sent from. GA4 sees the click
+ * but not the chat; the tag lets a WhatsApp conversation be traced back to
+ * its page (e.g. an organic visit to /video-cekimi/sakarya/).
+ */
+export const waCtaHref = (path = "/") =>
+  waLink(
+    `${path.startsWith("/hekim") ? HEKIM_WHATSAPP_MESSAGE : WHATSAPP_CTA_MESSAGE}\n\n(Sayfa: rastcreative.com${path})`,
+  );
+
 /**
  * Migrated marketing copy (roadmap §2 + old site rastcreative.com).
  * `heroTitle` is the slogan the roadmap says to keep; `heroSubtitle`/`aboutIntro`

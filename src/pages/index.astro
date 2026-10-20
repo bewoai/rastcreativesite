@@ -59,7 +59,7 @@ import {
   SOCIAL,
   SITE,
   WEB3FORMS_ACCESS_KEY,
-  WHATSAPP_CTA_HREF,
+  waCtaHref,
 } from "../consts";
 import { ytThumbToWebp } from "../lib/ytimg";
 import { roman, WA_PATH } from "../lib/evren";
@@ -280,7 +280,7 @@ const projectTypes = [
 ];
 
 
-const whatsappHref = WHATSAPP_CTA_HREF ?? "/iletisim/";
+const whatsappHref = waCtaHref("/") ?? "/iletisim/";
 const year = new Date().getFullYear();
 ---
 

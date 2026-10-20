@@ -5,7 +5,7 @@
  * tabs fold into a phone menu. Styles: src/styles/evren.css (.ev-head, .ev-menu).
  */
 import Logo from "../Logo.astro";
-import { CONTACT, WHATSAPP_CTA_HREF } from "../../consts";
+import { CONTACT, waCtaHref } from "../../consts";
 import { EV_CTA, EV_NAV, WA_PATH, roman } from "../../lib/evren";
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
   ctaHref?: string;
 }
 const { ctaHref = "/iletisim/" } = Astro.props;
-const whatsappHref = WHATSAPP_CTA_HREF ?? "/iletisim/";
+const whatsappHref = waCtaHref(Astro.url.pathname) ?? "/iletisim/";
 const path = Astro.url.pathname;
 // "/" matches only the homepage, never every page.
 const isCurrent = (href: string) =>
