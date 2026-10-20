@@ -60,6 +60,9 @@ GSC'de en çok gösterim alan dört sayfa elle yazılmış uzun bloklarla güçl
 - Tüm bölge sayfalarında telefonun yanında "Google'daki yorumlarımız ↗"
   (`CONTACT.googleShare`). SERP karşılaştırması (20 Eki): "sakarya sosyal medya"
   ilk sayfasındaki ajansların 2'si sayfada 45 ve 85 Google yorumu gösteriyor.
+- **Adres kararı (sahip, 20 Eki):** İşletme Profili hizmet bölgesi olarak kalır;
+  sitede açık adres ve harita gösterilmez. Şema ve metinlerde yalnızca
+  "Serdivan, Sakarya" geçer.
 - WhatsApp hazır mesajı hizmete göre değişiyor (`WHATSAPP_OPENERS`, `src/consts.ts`):
   sosyal medya sayfasından yazan "video çekimi teklifi" değil "sosyal medya
   yönetimi" diye açılır.
