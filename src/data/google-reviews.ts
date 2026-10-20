@@ -42,8 +42,43 @@ export interface GoogleRating {
   asOf: string;
 }
 
+// Copied 2026-10-20 from the owner's screenshots. People appear by initials
+// only (owner's call); Aytaş Home is a business, so its name stays. Not listed:
+// two star-only ratings, and one review held until the owner confirms the
+// writer is a client (shares a surname with a founder).
 export const GOOGLE_REVIEWS: readonly GoogleReview[] = [
-  // { author: "Ayşe K.", rating: 5, date: "2026-09", service: "Tanıtım filmi", text: `…` },
+  {
+    author: "Aytaş Home",
+    rating: 5,
+    date: "2026-10",
+    service: "Sosyal medya yönetimi",
+    text: `Arkadaşlarla uzun zamandır beraber çalışıyoruz. Özellikle kampanya zamanlarında bizim kadar onlar da koşturuyor sağ olsunlar. Çekimlerimiz de güzel geçiyor, yaptıkları işlerden memnunuz. Ellerine sağlık.`,
+  },
+  {
+    author: "E. Ç.",
+    rating: 5,
+    date: "2026-10",
+    service: "Sosyal medya içeriği",
+    text: `İki dostumla bir süredir birlikte çalışıyoruz. Çekimlerimiz hem keyifli geçiyor hem de ortaya güzel işler çıkıyor. İşlerini severek yapmaları ve her zaman yeni fikirlerle gelmeleri de çok güzel. İkisinin de eline emeğine sağlık, iyi ki tanışmışız.`,
+  },
+  {
+    author: "M.",
+    rating: 5,
+    date: "2026-10",
+    text: `İşini severek yapan, güler yüzlü ve yaratıcı bir ekip. Beklentilerimi anlayıp ortaya güzel bir iş çıkardılar. Süreç boyunca iletişim kurmak da çok rahattı. Rast Creative Studio ekibine emekleri için teşekkür ederim, kesinlikle tavsiye ederim!`,
+  },
+  {
+    author: "M. S.",
+    rating: 5,
+    date: "2026-10",
+    text: `Rast Creative Studio’ya özenli çalışmaları ve ilgili yaklaşımları için teşekkür ederim. İletişimleri ve işlerine gösterdikleri titizlikten çok memnun kaldım. Video prodüksiyon hizmeti arayanlara gönül rahatlığıyla tavsiye ederim.`,
+  },
+  {
+    author: "A. A.",
+    rating: 5,
+    date: "2026-10",
+    text: `Rast creative studio ekip arkadaşların emeğine sağlık ilgi ve alakalarından kaynakli ne kadar tecrübeli ekip olduklarını belli etmektedir`,
+  },
 ];
 
 /** null hides the "5,0 · Google'da N yorum" plate. */

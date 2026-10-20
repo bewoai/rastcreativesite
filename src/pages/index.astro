@@ -2021,6 +2021,24 @@ const year = new Date().getFullYear();
     font-size: 0.88rem;
     color: var(--ink-2);
   }
+  .ev-review__meta time {
+    white-space: nowrap;
+  }
+  /* "Hizmet · Ekim 2026" fits one line only in a card of ~22rem; narrower
+     (320–360px phones, three across at 1100px) it would break mid-date or
+     leave the dot hanging, so service and date stack instead. The card's
+     width comes from the layout, never its content, so containment is safe. */
+  .ev-review {
+    container-type: inline-size;
+  }
+  @container (max-width: 22rem) {
+    .ev-review__sep {
+      display: none;
+    }
+    .ev-review__svc {
+      display: block;
+    }
+  }
 
   /* The rest, behind one plain control (no glass button: .ev-btn--glass keeps
      its backdrop-filter on phones, v14.2). Same +/− as the FAQ. */
