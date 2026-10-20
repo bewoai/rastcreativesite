@@ -11,7 +11,7 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
   {/* lead attribution — filled client-side from ?kaynak=…&paket=… (see script) */}
   <input type="hidden" name="kaynak" value="" data-cf-kaynak />
   <input type="hidden" name="paket" value="" data-cf-paket />
-  <input type="checkbox" name="botcheck" class="cform__hp" tabindex="-1" autocomplete="off" />
+  <input type="checkbox" name="botcheck" class="cform__hp" tabindex="-1" autocomplete="off" aria-hidden="true" aria-label="Bu alanı boş bırakın" />
 
   <div class="cform__row">
     <div class="field">
@@ -88,12 +88,14 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
   <div class="cform__status" data-status role="status" aria-live="polite"></div>
 
   <div class="cform__actions">
-    <Button type="submit" size="lg" class="cform__submit">Gönder</Button>
+    <Button type="submit" size="lg" class="cform__submit">Gönder, sizi arayalım</Button>
   </div>
 </form>
 
 <style>
   .cform {
+    /* In-page target (#teklif-formu): clear the sticky header. */
+    scroll-margin-top: 6rem;
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
