@@ -49,7 +49,7 @@ const mid = isMid(text);
       <span class="ev-review__mono" aria-hidden="true">{initials(r.author)}</span>
       <span class="ev-review__who">
         <span class="ev-review__name">{r.author}</span>
-        <span class="ev-review__meta">{r.service && <>{r.service} · </>}<time datetime={r.date}>{fmtMonth(r.date)}</time></span>
+        <span class="ev-review__meta">{r.service && <><span class="ev-review__svc">{r.service}</span><span class="ev-review__sep" aria-hidden="true"> · </span></>}<time datetime={r.date}>{fmtMonth(r.date)}</time></span>
       </span>
     </figcaption>
   </figure>

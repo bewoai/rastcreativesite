@@ -165,3 +165,17 @@ boş `service`, listedeki yorum sayısından küçük `GOOGLE_RATING.count`, ge�
 - Puan birkaç ay sabit kalırsa ayrı iş: `#on-gorusme` lede'sinin altına düz metin
   "5,0 · Google'da N yorum"; hero kanıt satırına "Google 5,0" (v11 CLS kilidi nedeniyle
   ölçüm gerekir).
+
+## Güncelleme 20 Ekim 2026: ilk gerçek veri
+
+- 5 yorum girildi (sahibin ekran görüntülerinden, metinler aynen). Sıra: Aytaş Home,
+  E. Ç., M., M. S., A. A.; ilk üçü açık, iki yorum "Diğer 2 yorumu okuyun" altında.
+- İsimler yalnız baş harf (sahibin kararı). Aytaş Home bir işletme, adı kaldı.
+  `service` yalnız işini bildiğimiz iki müşteride var.
+- Listede yok: yalnız yıldız veren 2 değerlendirme; yazanın müşteri olduğu sahipten
+  teyit edilene kadar bekleyen 1 yorum (soyadı bir kurucuyla aynı; akraba yorumu hem
+  Google kurallarına aykırı hem sitede yanıltıcı olur).
+- `GOOGLE_RATING` henüz null: ekran görüntülerinde Google'ın üstteki puan/sayı satırı
+  yoktu. Sahip o satırı gönderince plaka açılır.
+- Hizmet + tarih satırı kart ~22rem'den darsa (320–360px telefon, 1100px'te üçlü)
+  alt alta iner (container query); "Ekim / 2026" bölünmesi ve asılı "·" kalmadı.
