@@ -15,6 +15,10 @@ export interface LocationContent {
   paragraphs: string[];
   /** Appended to the page FAQ (and its FAQPage schema). */
   faqs?: { question: string; answer: string }[];
+  /** Project ids shown first in the page's proof grid: the real work that
+   *  backs this page's copy. The rest of the grid fills from the service's
+   *  categories as before. */
+  projects?: string[];
 }
 
 export const LOCATION_CONTENT: Record<string, LocationContent> = {

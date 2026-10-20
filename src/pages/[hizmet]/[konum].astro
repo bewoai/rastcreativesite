@@ -111,17 +111,24 @@ const allProjects = (await getCollection("projects"))
   .filter((p) => !p.data.draft && !p.data.hidden)
   .sort((a, b) => a.data.order - b.data.order);
 const relatedCategories = serviceProjectCategories[service.slug] ?? [];
-// Up to 6 projects, one per client/brand so the proof reel stays varied.
-const seenClients = new Set<string>();
-const relatedProjects = allProjects
-  .filter((p) => relatedCategories.includes(p.data.category))
-  .filter((p) => {
-    const key = p.data.client ?? p.id;
-    if (seenClients.has(key)) return false;
-    seenClients.add(key);
-    return true;
-  })
-  .slice(0, 6);
+// Up to 6 projects: the page's hand-picked proof first (location-content
+// `projects`), then one per client/brand from the service's categories so
+// the reel stays varied.
+const featured = (extra?.projects ?? [])
+  .map((id) => allProjects.find((p) => p.id === id))
+  .filter((p): p is (typeof allProjects)[number] => Boolean(p));
+const seenClients = new Set<string>(featured.map((p) => p.data.client ?? p.id));
+const relatedProjects = [
+  ...featured,
+  ...allProjects
+    .filter((p) => relatedCategories.includes(p.data.category) && !featured.includes(p))
+    .filter((p) => {
+      const key = p.data.client ?? p.id;
+      if (seenClients.has(key)) return false;
+      seenClients.add(key);
+      return true;
+    }),
+].slice(0, 6);
 
 // ItemList of the referenced works — a structured "real projects" signal.
 const projectsItemList =
