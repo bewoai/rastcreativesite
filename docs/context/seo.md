@@ -62,6 +62,7 @@ Astro’nun `trailingSlash: "always"` ayarı üretim rotalarını tanımlar. Hos
   - Bilgi Grafiği kimliği `/g/11zxk4gs4x`.
   - `CONTACT.googleProfile` LocalBusiness `hasMap` ve LocalBusiness/Organization `sameAs` alanlarında kullanılıyor.
   - İletişim sayfasındaki "Google'da aç" kartı `CONTACT.googleShare` kısa linkine gidiyor; harita, yorumlar ve yol tarifi orada.
+  - Ana sayfa #yorumlar elle kopyalanır (`src/data/google-reviews.ts`); Review/AggregateRating JSON-LD bilerek yok (self-serving).
 - **Backlinkler:**
   - serdivanestetik.com (Dr. Erdem Çalışkan) footer'ında "Created by Rast Creative" var. Link dofollow ve `https://rastcreative.com` adresine gidiyor (2026-10-07'de doğrulandı).
 

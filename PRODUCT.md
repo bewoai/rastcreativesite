@@ -63,7 +63,9 @@ Teknik kısıtlar:
 
 Açıkça karara bağlanmamış / iddia edilmemesi gerekenler:
 - İstanbul veya "worldwide" hizmet iddiası **doğrulanmadı** — kullanılmayacak.
-- Fiyat, ödül, müşteri yorumu, sertifika: sitede yok, uydurulmayacak.
+- Fiyat, ödül, sertifika: sitede yok, uydurulmayacak. Müşteri yorumu: yalnızca Google
+  İşletme Profili'ndeki gerçek yorumlar, kelimesi kelimesine (`src/data/google-reviews.ts`);
+  metin düzenlenmez, yıldıza göre ayıklanmaz, yorum uydurulmaz; örnek veri yayına çıkmaz.
 - TikTok / X profilleri: doğru URL'ler yok.
 
 ## Brand Commitments
