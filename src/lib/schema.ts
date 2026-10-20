@@ -67,7 +67,8 @@ export const localBusiness = {
   email: CONTACT.email,
   priceRange: "₺₺₺",
   foundingDate: SITE.foundingDate,
-  inLanguage: "tr",
+  // No inLanguage here: not a LocalBusiness property (validator error); the
+  // WebSite node carries the language.
   address: {
     "@type": "PostalAddress",
     addressLocality: CONTACT.addressLocality,

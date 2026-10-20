@@ -20,6 +20,9 @@ export interface SeoLocation {
   province: string;
   /** Whether this is part of the Sakarya core area. */
   core: boolean;
+  /** Outside the same-day service area (Bolu, Bilecik): visits are planned
+   *  per project, travel and stay are quoted. */
+  projectBased?: boolean;
   /** City-specific paragraph (2 sentences) — keeps pages from being duplicates. */
   blurb: string;
   /** Nearby location slugs for internal linking. */
@@ -74,7 +77,7 @@ export const SEO_LOCATIONS: readonly SeoLocation[] = [
     province: "Sakarya",
     core: true,
     blurb:
-      "Erenler'in organize sanayi ve üretim tesisleri, kurumsal içerik üretimi için ideal. Bölgedeki imalatçı markalarla çalışma tecrübemiz var.",
+      "Erenler'in organize sanayi ve üretim tesisleri, kurumsal içerik üretimi için ideal. Serdivan'a komşu olduğu için tesis çekimlerine kısa bir kurulumla aynı gün başlayabiliyoruz.",
     nearby: ["adapazari", "serdivan", "hendek", "sakarya"],
   },
   {
@@ -84,7 +87,7 @@ export const SEO_LOCATIONS: readonly SeoLocation[] = [
     province: "Sakarya",
     core: true,
     blurb:
-      "Hendek'in sanayi bölgesi ve geniş üretim alanları, güçlü kurumsal içerikler için etkileyici bir zemin oluşturur. Tesis tanıtımları için sık çalıştığımız bir ilçe.",
+      "Hendek'in sanayi bölgesi ve geniş üretim alanları, güçlü kurumsal içerikler için etkileyici bir zemin oluşturur. Serdivan'dan aynı gün ulaşıp tesis tanıtımlarını tek çekim gününde planlayabiliyoruz.",
     nearby: ["akyazi", "adapazari", "sapanca", "duzce"],
   },
   {
@@ -94,7 +97,7 @@ export const SEO_LOCATIONS: readonly SeoLocation[] = [
     province: "Sakarya",
     core: true,
     blurb:
-      "Akyazı'nın termal tesisleri, doğası ve tarımsal işletmeleri görsel açıdan zengin bir çekim ortamı sunar. Turizm ve üretim odaklı tanıtımlarda deneyimliyiz.",
+      "Akyazı'nın termal tesisleri, doğası ve tarımsal işletmeleri görsel açıdan zengin bir çekim ortamı sunar. Termal tesis ve üretim tanıtımlarını gün ışığına göre planlıyoruz.",
     nearby: ["hendek", "adapazari", "sapanca", "sakarya"],
   },
   {
@@ -104,7 +107,7 @@ export const SEO_LOCATIONS: readonly SeoLocation[] = [
     province: "Sakarya",
     core: true,
     blurb:
-      "Sapanca Gölü ve çevresindeki butik oteller, bungalovlar ve etkinlik mekanları için sinematik tanıtım üretiyoruz. Doğal ışığın en güzel olduğu saatleri bölgede iyi biliyoruz.",
+      "Sapanca Gölü ve çevresindeki butik oteller, bungalovlar ve etkinlik mekanları için sinematik tanıtım üretiyoruz. Göl çevresindeki çekimleri doğal ışığın en iyi olduğu saatlere göre kuruyoruz.",
     nearby: ["serdivan", "sakarya", "adapazari", "kocaeli"],
   },
   {
@@ -114,7 +117,7 @@ export const SEO_LOCATIONS: readonly SeoLocation[] = [
     province: "Sakarya",
     core: true,
     blurb:
-      "Karasu sahil hattı, liman çevresi ve turizm işletmeleriyle çekim projelerinde görsel zenginliği yüksek planlar verir. Yaz sezonu, etkinlik ve tesis tanıtımlarında bölgeyi aktif kullanıyoruz.",
+      "Karasu sahil hattı, liman çevresi ve turizm işletmeleriyle çekim projelerinde görsel zenginliği yüksek planlar verir. Sezon içi çekimleri sahil trafiğine ve ışık saatlerine göre önceden planlıyoruz.",
     nearby: ["ferizli", "hendek", "adapazari", "duzce"],
   },
   {
@@ -164,7 +167,7 @@ export const SEO_LOCATIONS: readonly SeoLocation[] = [
     province: "Kocaeli",
     core: false,
     blurb:
-      "Kocaeli'nin merkezi İzmit, körfez manzarası ve sanayi tesisleriyle tanıtım çekimleri için güçlü bir zemin. Kurumsal ve endüstriyel projelerde aktif çalışıyoruz.",
+      "Kocaeli'nin merkezi İzmit, körfez manzarası ve sanayi tesisleriyle tanıtım çekimleri için güçlü bir zemin. Sakarya'dan aynı gün ulaşabildiğimiz için kurumsal ve endüstriyel çekimler ek yol günü gerektirmez.",
     nearby: ["kocaeli", "gebze", "sakarya", "serdivan"],
   },
   {
@@ -204,7 +207,7 @@ export const SEO_LOCATIONS: readonly SeoLocation[] = [
     province: "Kocaeli",
     core: false,
     blurb:
-      "Gebze'nin organize sanayi bölgeleri Türkiye'nin en yoğun üretim merkezlerinden. Sanayi odaklı prodüksiyon ve tesis projelerinde bölgeye düzenli gidiyoruz.",
+      "Gebze'nin organize sanayi bölgeleri Türkiye'nin en yoğun üretim merkezlerinden. Sanayi odaklı prodüksiyon ve tesis projelerinde Sakarya'dan aynı gün ulaşıp çekim günü planlıyoruz.",
     nearby: ["izmit", "kocaeli", "sakarya", "serdivan"],
   },
   {
@@ -233,8 +236,9 @@ export const SEO_LOCATIONS: readonly SeoLocation[] = [
     loc: "Bolu'da",
     province: "Bolu",
     core: false,
+    projectBased: true,
     blurb:
-      "Bolu'nun otelleri, yaylaları ve doğa turizmi görsel projeler için zengin bir sahne sunar. Turizm işletmeleri için sinematik içerik üretiyoruz.",
+      "Bolu'nun otelleri, yaylaları ve doğa turizmi görsel projeler için zengin bir sahne sunar. Bolu'daki çekimleri proje bazlı planlıyoruz; yol ve konaklama kapsamı teklifte netleşir.",
     nearby: ["duzce", "akyazi", "sakarya", "bilecik"],
   },
   {
@@ -243,6 +247,7 @@ export const SEO_LOCATIONS: readonly SeoLocation[] = [
     loc: "Bilecik'te",
     province: "Bilecik",
     core: false,
+    projectBased: true,
     blurb:
       "Bilecik'in tarihi dokusu ve sanayi yatırımları, marka hikâyesi ve tanıtım için ilgi çekici bir kontrast yaratır. Bölgedeki işletmelere proje bazlı destek veriyoruz.",
     nearby: ["bolu", "sakarya", "adapazari", "duzce"],

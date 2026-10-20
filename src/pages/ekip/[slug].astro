@@ -60,7 +60,9 @@ const jsonLd = [
         loading="eager"
       />
       <div>
-        <SectionHeading as="h1" eyebrow={member.role}>
+        {/* The title is English ("Video Director"); uppercase under lang="tr"
+            would print VİDEO DİRECTOR. "Kurucu Ortak" reads the same either way. */}
+        <SectionHeading as="h1" eyebrow={member.role} eyebrowLang="en">
           {member.name}
           <Fragment slot="intro">
             <p>{member.focus}</p>

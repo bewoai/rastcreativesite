@@ -13,7 +13,7 @@ export const SERVICE_AUDIENCES: Record<string, string[]> = {
   "drone-cekimi": [
     "Tesisini, sahasını veya lokasyonunu havadan göstermek isteyen markalar",
     "Tanıtım filmine ölçek ve hareket katmak isteyen kurumlar",
-    "FPV ya da klasik drone görüntüsünü güvenli şekilde kullanmak isteyen ekipler",
+    "Havadan görüntüyü izinli ve güvenli şekilde kullanmak isteyen ekipler",
   ],
   "tanitim-filmi": [
     "Kurumunu, üretim sürecini veya hizmet yapısını tek videoda anlatmak isteyen markalar",

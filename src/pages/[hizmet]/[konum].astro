@@ -56,7 +56,10 @@ const faqs = [
   },
   {
     question: `${location.name} dışındaki çevre ilçelere de geliyor musunuz?`,
-    answer: `Evet. Serdivan'daki stüdyomuzdan ${location.name} merkez ve çevre ilçelerin tamamına ekip yönlendiriyoruz; bölgeyi yakından tanıdığımız için ulaşım ve organizasyonu hızlı planlarız.`,
+    // No "we know the area well" claim: only what holds for every location.
+    answer: location.projectBased
+      ? `Evet, proje bazlı geliyoruz. ${location.name} ve çevresindeki çekimlerde yol ve konaklama kapsamı teklifte netleşir.`
+      : `Evet. Serdivan'daki stüdyomuzdan ${location.name} merkez ve çevre ilçelerine ekip yönlendiriyoruz; ulaşımı ve organizasyonu çekim planıyla birlikte kuruyoruz.`,
   },
   {
     question: `${service.name} için ne kadar önceden planlama yapmak gerekir?`,
@@ -209,7 +212,7 @@ if (projectsItemList) jsonLd.push(projectsItemList);
         <div class="projects-grid">
           {relatedProjects.map((p) => (
             <ProjectCard
-              href={p.data.externalUrl ?? `/projeler/${p.id}`}
+              href={p.data.externalUrl ?? `/projeler/${p.id}/`}
               title={p.data.title}
               category={p.data.category}
               poster={p.data.poster}

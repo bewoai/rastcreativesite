@@ -76,7 +76,12 @@ body:has(.ev) {
   --fog-hi: #f4efe8;
   --ink: #1d1915;
   --ink-2: #51493f; /* body copy on fog / glass  (≈ 7.5:1) */
-  --mute: #72675c; /* labels, ≥ 4.5:1 on fog */
+  /* Labels. Measured on the rendered sky (fog photo under a 30–70% veil,
+     ≈ #c3b8ad–#c5bdb5) rather than flat fog: the old #72675c gave 2.6–3.0:1
+     there. This is the lightest value that still reaches ≥ 4.5:1 there
+     (≈ 6.7:1 on flat fog); it matches --ink-2, so labels lean on size,
+     weight and caps for hierarchy. */
+  --mute: #51493f;
   --sun: #e07a2e; /* light itself — glows, never small text */
   --sun-text: #94420f; /* the sun as text: whispers, links  (≈ 5.5:1) */
   --glass: rgba(250, 246, 240, 0.5);

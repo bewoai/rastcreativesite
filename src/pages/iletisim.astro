@@ -5,7 +5,7 @@ import SectionHeading from "../components/SectionHeading.astro";
 import Eyebrow from "../components/Eyebrow.astro";
 import Icon from "../components/Icon.astro";
 import ContactForm from "../components/ContactForm.astro";
-import { CONTACT } from "../consts";
+import { CONTACT, WHATSAPP_CTA_HREF } from "../consts";
 import { localBusiness, organization, webSite, breadcrumb } from "../lib/schema";
 
 // Opens the Google Business Profile: map, route and reviews in one place.
@@ -27,6 +27,7 @@ const pageJsonLd = [
   title="İletişim"
   description="Sakarya'da video prodüksiyon için projenizi anlatın; telefon ve e-posta üzerinden birlikte planlayalım. Serdivan, Sakarya."
   jsonLd={pageJsonLd}
+  headerCta="#teklif-formu"
 >
   <Section>
     <SectionHeading eyebrow="Sahne 01 · İletişim" as="h1">
@@ -34,7 +35,8 @@ const pageJsonLd = [
       <Fragment slot="intro">
         <p>
           Projenizi anlatın; size uygun formatı, kapsamı ve takvimi birlikte
-          belirleyelim. Telefonla hızlı dönüş yaparız.
+          belirleyelim. Telefonla hızlı dönüş yaparız. İlk görüşme ücretsiz
+          ve&nbsp;bağlayıcı&nbsp;değil.
         </p>
       </Fragment>
     </SectionHeading>
@@ -60,6 +62,16 @@ const pageJsonLd = [
               }
             </dd>
           </div>
+          {
+            WHATSAPP_CTA_HREF && (
+              <div class="channels__row">
+                <dt>WhatsApp</dt>
+                <dd>
+                  <a href={WHATSAPP_CTA_HREF} target="_blank" rel="noopener" data-cta-location="iletisim_wa">WhatsApp'tan yazın</a>
+                </dd>
+              </div>
+            )
+          }
           <div class="channels__row">
             <dt>E-posta</dt>
             <dd>
@@ -96,6 +108,9 @@ const pageJsonLd = [
     display: grid;
     grid-template-columns: 1fr;
     gap: 3rem;
+    /* The heading block has no bottom margin; without this the first field
+       sat flush under the intro. */
+    margin-top: clamp(1.5rem, 3vw, 2rem);
   }
   .contact__aside {
     display: flex;

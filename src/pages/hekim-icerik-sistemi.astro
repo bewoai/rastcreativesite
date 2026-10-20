@@ -118,12 +118,12 @@ const faqs = [
   {
     question: "Fiyatlara neler dahil?",
     answer:
-      "Paket fiyatları KDV hariç, aylık başlangıç fiyatlarıdır ve paket kartında yazan kapsamı içerir. Çekim yeri, video uzunluğu ve kanal sayısı fiyatı etkileyebilir; net teklifi ön görüşmeden sonra sunuyoruz.",
+      "Paket fiyatları aylıktır, KDV hariçtir ve paket kartında yazan kapsamı içerir. Kesin teklifi ön görüşmeden sonra yazılı olarak sunuyoruz.",
   },
   {
     question: "Sözleşme süresi ne kadar?",
     answer:
-      "Düzenli içeriğin etkisi birkaç ay içinde görünür hale gelir; bu yüzden çalışmayı aylık bir sistem olarak planlıyoruz. Süre ve fesih koşulları teklifte açıkça yazılır.",
+      "Düzenli içeriğin etkisi birkaç ay içinde görünür hale gelir; bu yüzden aylık paketlerde en az 3 ay çalışıyoruz ve ücret her ay peşin ödenir. Diğer koşullar teklifte açıkça yazılır.",
   },
 ];
 
@@ -237,7 +237,7 @@ const jsonLd = [
             <ul class="hk__feat">
               {p.features.map((f) => <li>{f}</li>)}
             </ul>
-            <a class="ev-link hk__tiercta" href={hekimContactHref(p.id as "baslangic" | "standart" | "klinik")} data-cta-location={`hekim_paket_${p.id}`} data-hekim-konum="paketler" data-hekim-paket={p.id}>
+            <a class="ev-link hk__tiercta" href={hekimContactHref(p.id as "duzenli" | "guclu" | "klinik")} data-cta-location={`hekim_paket_${p.id}`} data-hekim-konum="paketler" data-hekim-paket={p.id}>
               Bu paketi konuşalım <span aria-hidden="true">→</span>
             </a>
           </li>
