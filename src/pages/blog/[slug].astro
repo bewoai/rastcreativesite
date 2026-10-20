@@ -183,6 +183,25 @@ const pageJsonLd = [
     text-decoration: underline;
     text-underline-offset: 2px;
   }
+  /* Tailwind's preflight strips list markers; posts lean on lists (steps,
+     checklists), so give them back. */
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin: 0 0 1.1rem;
+    padding-left: 1.4rem;
+  }
+  .prose :global(ul) {
+    list-style: disc;
+  }
+  .prose :global(ol) {
+    list-style: decimal;
+  }
+  .prose :global(li) {
+    margin: 0 0 0.45rem;
+  }
+  .prose :global(li::marker) {
+    color: var(--amber-text);
+  }
   .article-cta {
     display: flex;
     flex-wrap: wrap;

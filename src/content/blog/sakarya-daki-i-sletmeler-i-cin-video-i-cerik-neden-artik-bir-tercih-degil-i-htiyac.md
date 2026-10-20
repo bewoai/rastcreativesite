@@ -5,7 +5,7 @@ seoTitle: "Sakarya İşletmeleri İçin Video İçerik"
 description: Sakarya’daki işletmeler için video içerik neden önemli? Sosyal
   medya, reklam ve marka güveni açısından profesyonel video üretiminin etkisini
   keşfedin.
-author: Berat Degirmenci
+author: Berat Değirmenci
 pubDate: 2026-06-24
 updatedDate: 2026-06-24
 cover: ../../assets/uploads/blog/chatgpt-image-jun-24-2026-01_21_15-pm.webp

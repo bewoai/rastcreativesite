@@ -6,13 +6,16 @@ interface Props {
   tone?: "amber" | "soft" | "paper";
   as?: "p" | "span" | "div";
   class?: string;
+  /** For a label in another language: uppercase follows lang, and under "tr"
+   *  an English "i" turns into "İ" (VİDEO DİRECTOR). */
+  lang?: string;
 }
 
-const { tone = "amber", as: Tag = "p", class: className } = Astro.props;
+const { tone = "amber", as: Tag = "p", class: className, lang } = Astro.props;
 const html = (await Astro.slots.render("default")).replace(/^\s*Sahne\s+\d+\s*·\s*/i, "");
 ---
 
-<Tag class:list={["eyebrow", `eyebrow--${tone}`, className]}>
+<Tag class:list={["eyebrow", `eyebrow--${tone}`, className]} lang={lang}>
   <span class="eyebrow__mark" aria-hidden="true">✦</span><span set:html={html} />
 </Tag>
 
@@ -28,7 +31,7 @@ const html = (await Astro.slots.render("default")).replace(/^\s*Sahne\s+\d+\s*·
     line-height: 1.2;
     text-transform: uppercase;
     letter-spacing: 0.18em;
-    color: var(--mute, #72675c);
+    color: var(--mute, #51493f);
   }
   .eyebrow::after {
     content: "";
