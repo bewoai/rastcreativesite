@@ -1,11 +1,15 @@
 /**
  * Hekim İçerik Sistemi — monthly package tiers for /hekim-icerik-sistemi/.
  *
- * !! PRICES ARE PROVISIONAL — owner decision pending. Do not lift the page's
- * `noindex` until the owner confirms the numbers and the tier contents. !!
+ * Prices and tiers follow the October 2026 price policy (RAST-OS
+ * 04-Knowledge/Fiyat/fiyat-politikasi.md, decision 2026-10-19): Düzenli
+ * 20.000 / Güçlü 30.000 / Klinik 45.000 + KDV, minimum 3 months, paid monthly
+ * in advance. The same name means the same video count as the business
+ * packages (Düzenli = 4, Güçlü = 8). Lifting the page's `noindex` is a
+ * separate owner decision.
  *
  * Edit prices and scope here; the page renders straight from this file.
- * All prices: monthly, VAT excluded, "starting from" (PRICE_NOTE).
+ * All prices: monthly, VAT excluded (PRICE_NOTE).
  *
  * Regulatory rule (binding, from the owner): for physicians in Turkey paid
  * advertising is NOT a continuous service. It is only possible as an opening
@@ -21,9 +25,9 @@ export interface HekimPackage {
   name: string;
   /** One line: who this tier is for. */
   fit: string;
-  /** Monthly price in TL (VAT excluded, starting from). */
+  /** Monthly price in TL (VAT excluded). */
   priceTl: number;
-  /** Shown above the feature list, e.g. "Standart paketteki her şey, artı:". */
+  /** Shown above the feature list, e.g. "Güçlü paketteki her şey, artı:". */
   includesPrevious?: string;
   features: string[];
   /** Visually emphasised tier. */
@@ -38,21 +42,21 @@ export interface HekimAddon {
   text: string;
 }
 
-export const PRICE_NOTE = "KDV hariç, aylık başlangıç fiyatı";
+export const PRICE_NOTE = "+ KDV, aylık · en az 3 ay";
 
 export const HEKIM_PACKAGES: readonly HekimPackage[] = [
   {
-    id: "baslangic",
-    name: "Başlangıç",
+    id: "duzenli",
+    name: "Düzenli",
     fit: "Sosyal medyada düzenli ve güvenilir bir görünürlüğe başlamak isteyen hekimler için.",
-    priceTl: 15000,
+    priceTl: 20000,
     features: ["Ayda 4 konu-anlatım videosu", "Sosyal medya yönetimi"],
   },
   {
-    id: "standart",
-    name: "Standart",
+    id: "guclu",
+    name: "Güçlü",
     fit: "Hastaların sizi hem sosyal medyada hem aramada bulmasını isteyen hekimler için.",
-    priceTl: 25000,
+    priceTl: 30000,
     recommended: true,
     features: [
       "Ayda 8 konu-anlatım videosu",
@@ -66,8 +70,8 @@ export const HEKIM_PACKAGES: readonly HekimPackage[] = [
     id: "klinik",
     name: "Klinik",
     fit: "Birden fazla kanalda tam kapsamlı, sürekli içerik isteyen klinikler için.",
-    priceTl: 40000,
-    includesPrevious: "Standart paketteki her şey, artı:",
+    priceTl: 45000,
+    includesPrevious: "Güçlü paketteki her şey, artı:",
     features: [
       "Ayda 12 konu-anlatım videosu",
       "Story yönetimi",

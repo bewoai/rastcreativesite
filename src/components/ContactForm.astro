@@ -235,13 +235,15 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
     const status = form.querySelector<HTMLElement>("[data-status]");
 
     /*
-     * Lead attribution. Links such as /iletisim/?kaynak=hekim&paket=standart
+     * Lead attribution. Links such as /iletisim/?kaynak=hekim&paket=guclu
      * fill two hidden fields so Web3Forms emails say where the lead came
      * from. Values are allow-listed (never echo arbitrary query text into
      * the email) and the Hekim funnel also pre-selects its project type.
      */
     const KAYNAK_ALLOWED = ["hekim"];
-    const PAKET_ALLOWED = ["baslangic", "standart", "klinik", "genel"];
+    // baslangic/standart: package ids before the October 2026 prices, kept so
+    // links already shared or used in ads still carry their attribution.
+    const PAKET_ALLOWED = ["duzenli", "guclu", "klinik", "genel", "baslangic", "standart"];
     const urlParams = new URLSearchParams(window.location.search);
     const kaynakParam = (urlParams.get("kaynak") ?? "").toLowerCase();
     const paketParam = (urlParams.get("paket") ?? "").toLowerCase();
