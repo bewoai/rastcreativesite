@@ -24,8 +24,10 @@ export async function getStaticPaths() {
     params: { slug: p.id },
     props: {
       entry: p,
+      // Hidden (unlisted) projects keep their own page but never show up
+      // under "Benzer işler" on public ones.
       related: all
-        .filter((r) => r.data.category === p.data.category && r.id !== p.id)
+        .filter((r) => r.data.category === p.data.category && r.id !== p.id && !r.data.hidden)
         .sort(byOrder)
         .slice(0, 3),
     },
@@ -247,7 +249,8 @@ const pageJsonLd = [
   .back:hover {
     color: var(--amber-text);
   }
-  .back__ic {
+  /* :global — the class lands on Icon's own svg, outside this scope. */
+  .back :global(.back__ic) {
     transform: rotate(180deg);
   }
   .ph {

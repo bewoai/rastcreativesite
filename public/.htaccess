@@ -43,6 +43,16 @@ RewriteRule ^yorum/?$ https://g.page/r/Cb4qjKXCuFnWEBM/review [R=302,L]
 RewriteRule ^projeler/aytas-home-sosyal-medya/?$ https://rastcreative.com/projeler/ [R=301,L]
 RewriteRule ^projeler/isitan-edit-1/?$ https://rastcreative.com/projeler/ [R=301,L]
 
+# Directory URLs with no page of their own answered with the host's bare 403;
+# send them to the page that lists their children. Empty category pages are
+# no longer built (see projeler/kategori/[category].astro).
+RewriteRule ^ekip/?$ https://rastcreative.com/hakkimizda/ [R=301,L]
+RewriteRule ^projeler/(vaka|marka|kategori)/?$ https://rastcreative.com/projeler/ [R=301,L]
+# Only while the category has no page: once it holds work its page is built
+# again and this stops matching.
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^projeler/kategori/(web|reklam|marka-hikayesi)/?$ https://rastcreative.com/projeler/ [R=301,L]
+
 # Astro emits HTML pages as physical directories. Canonicalize a slashless
 # page in one hop while also upgrading HTTPS and removing www. Real files,
 # including API/feed/discovery endpoints and assets, never match -d.
@@ -66,6 +76,7 @@ RewriteRule (^|/)\.(git|github|vscode|gitignore|gitattributes) - [F,L]
 
 # ── Custom 404 ────────────────────────────────────────────────────────────
 ErrorDocument 404 /404.html
+ErrorDocument 403 /404.html
 
 # ── Cache control for static assets ──────────────────────────────────────
 <IfModule mod_expires.c>

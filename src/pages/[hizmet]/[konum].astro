@@ -209,7 +209,7 @@ if (projectsItemList) jsonLd.push(projectsItemList);
         <div class="projects-grid">
           {relatedProjects.map((p) => (
             <ProjectCard
-              href={p.data.externalUrl ?? `/projeler/${p.id}`}
+              href={p.data.externalUrl ?? `/projeler/${p.id}/`}
               title={p.data.title}
               category={p.data.category}
               poster={p.data.poster}

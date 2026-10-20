@@ -13,13 +13,16 @@ export async function getStaticPaths() {
     (p) => !p.data.draft && !p.data.hidden,
   );
   const brands = groupByBrand(all);
+  // Only categories that hold work get a page: empty ones ("Bu kategoride
+  // henüz içerik eklenmedi") were thin, unlinked pages sitting in the
+  // sitemap. Their old URLs 301 to /projeler/ (public/.htaccess).
   return PROJECT_CATEGORIES.map((c) => ({
     params: { category: c.slug },
     props: {
       label: c.label,
       brands: brands.filter((b) => b.category === c.label),
     },
-  }));
+  })).filter((p) => p.props.brands.length > 0);
 }
 
 const { label, brands } = Astro.props;
