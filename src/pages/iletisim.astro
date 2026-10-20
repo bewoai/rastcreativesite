@@ -5,8 +5,10 @@ import SectionHeading from "../components/SectionHeading.astro";
 import Eyebrow from "../components/Eyebrow.astro";
 import Icon from "../components/Icon.astro";
 import ContactForm from "../components/ContactForm.astro";
-import { CONTACT, WHATSAPP_CTA_HREF } from "../consts";
+import { CONTACT, waCtaHref } from "../consts";
 import { localBusiness, organization, webSite, breadcrumb } from "../lib/schema";
+
+const whatsappHref = waCtaHref("/iletisim/");
 
 // Opens the Google Business Profile: map, route and reviews in one place.
 const mapsUrl = CONTACT.googleShare;
@@ -63,11 +65,11 @@ const pageJsonLd = [
             </dd>
           </div>
           {
-            WHATSAPP_CTA_HREF && (
+            whatsappHref && (
               <div class="channels__row">
                 <dt>WhatsApp</dt>
                 <dd>
-                  <a href={WHATSAPP_CTA_HREF} target="_blank" rel="noopener" data-cta-location="iletisim_wa">WhatsApp'tan yazın</a>
+                  <a href={whatsappHref} target="_blank" rel="noopener" data-cta-location="iletisim_wa">WhatsApp'tan yazın</a>
                 </dd>
               </div>
             )
