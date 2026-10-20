@@ -287,6 +287,7 @@ const year = new Date().getFullYear();
 <BaseLayout
   bare
   leanFonts
+  skipTo="#icerik"
   jsonLd={pageJsonLd}
   preloadFonts={[
     "/fonts/fraunces-latin-wght-normal.woff2",
@@ -314,7 +315,7 @@ const year = new Date().getFullYear();
         fastest over the seam, so we approach, descend and arrive at the next
         section in a single shot. Native scroll drives it. */}
     <div class="ev-dolly" data-dolly>
-    <section class="ev-hero" aria-labelledby="ev-hero-title">
+    <section id="icerik" class="ev-hero" aria-labelledby="ev-hero-title" tabindex="-1">
       <div class="ev-hero__media" aria-hidden="true">
         {/* The still is a responsive <picture> (a video poster can't switch
             per screen, so phones were downloading the wide frame); it is the
@@ -765,7 +766,7 @@ const year = new Date().getFullYear();
       </div>
       <div class="ev-faq__ask">
         <p>Sorunuz burada yok mu? Bir mesajla sorun, aynı ekip yanıtlar.</p>
-        <a class="ev-btn ev-btn--glass ev-btn--sm" href={whatsappHref} data-cta-location="evren_faq_wa">
+        <a class="ev-btn ev-btn--glass ev-btn--sm" href={whatsappHref} target="_blank" rel="noopener" data-cta-location="evren_faq_wa">
           <svg class="ev-wa__mark" viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path fill="currentColor" d={WA_PATH} /></svg> WhatsApp'tan sorun
         </a>
       </div>
@@ -942,7 +943,7 @@ const year = new Date().getFullYear();
           </ol>
 
           <div class="ev-call__direct">
-            <a class="ev-btn ev-btn--glass" href={whatsappHref} data-cta-location="evren_form_wa">
+            <a class="ev-btn ev-btn--glass" href={whatsappHref} target="_blank" rel="noopener" data-cta-location="evren_form_wa">
               <svg class="ev-wa__mark" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d={WA_PATH} /></svg> WhatsApp'tan yazın
             </a>
             <a class="ev-link" href={`tel:${CONTACT.phoneIntl}`} data-cta-location="evren_form_tel">{CONTACT.phone}</a>
@@ -963,11 +964,13 @@ const year = new Date().getFullYear();
                 <span class="ev-sr">Adınız soyadınız (zorunlu)</span>
                 <input id="ev-name" name="name" type="text" autocomplete="name" minlength="2" required placeholder="adınız" />
               </label>,</span>
-              <span class="ev-nw"><label class="ev-fill">
+              {/* Not held together with "için bir" (.ev-nw): a long company
+                  name pushed the words past the card on 360px phones. */}
+              <label class="ev-fill">
                 <span class="ev-sr">Firma (isteğe bağlı)</span>
                 <input id="ev-company" name="company" type="text" autocomplete="organization" placeholder="firmanız" />
               </label>
-              için bir</span>
+              için bir
               <label class="ev-fill ev-fill--select">
                 <span class="ev-sr">Proje türü</span>
                 <select id="ev-type" name="project_type">
@@ -1026,6 +1029,7 @@ const year = new Date().getFullYear();
     min-height: min(100svh, 58rem);
     margin-top: -4.4rem;
     padding: 8rem var(--pad) 6rem;
+
     isolation: isolate;
   }
   .ev-hero__media {
@@ -1375,6 +1379,14 @@ const year = new Date().getFullYear();
     .ev-dolly__cloud--near {
       display: none;
     }
+  }
+
+  /* Focus targets, not controls: the skip-link lands on the hero and in-page
+     links move focus to their scene (tabindex -1) so Tab continues from
+     there. No ring around a whole scene. */
+  .ev .ev-hero:focus-visible,
+  .ev .ev-sec[tabindex="-1"]:focus-visible {
+    outline: none;
   }
 
   /* Scenes below the first screen skip rendering work until they approach
@@ -2784,6 +2796,9 @@ const year = new Date().getFullYear();
   }
   .ev-fill {
     display: inline-block;
+    /* Caps a growing field (field-sizing) at the line, so a long name or
+       company wraps inside the card instead of running off it. */
+    max-width: 100%;
   }
   .ev-fill input,
   .ev-fill select {
@@ -3112,6 +3127,85 @@ const year = new Date().getFullYear();
   };
 
   if (root) {
+    /* ── In-page links (#on-gorusme, …) ──
+       Scenes below the hero use content-visibility:auto (v14.2, mobile INP)
+       and stand in at 900px until rendered. A smooth scroll renders them on
+       the way, the page shrinks under it and the target drifts: "Görüşelim"
+       landed ~2,800px above the form on phones and in the footer on desktop,
+       the /#on-gorusme deep link too. An instant jump skips them (they stay
+       placeholders, so the target holds still). The landing scenes render
+       right after and, where the browser doesn't anchor the scroll (Safari,
+       keyboard activation), push the target away — so the position is
+       re-checked every frame until it holds for a few frames. The visitor's
+       own wheel/touch/key/pointer input ends that watch. */
+    let watch = 0;
+    const jumpTo = (target: HTMLElement, focus = false) => {
+      const align = () => {
+        try {
+          target.scrollIntoView({ behavior: "instant", block: "start" });
+        } catch {
+          // No "instant" in this engine: turn smooth scrolling off for one call.
+          const html = document.documentElement.style;
+          const prev = html.scrollBehavior;
+          html.scrollBehavior = "auto";
+          target.scrollIntoView(true);
+          html.scrollBehavior = prev;
+        }
+      };
+      cancelAnimationFrame(watch);
+      align();
+      if (focus) {
+        // A native anchor jump moves the focus start point to the target;
+        // preventDefault took that away, and Tab went back to the header.
+        if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+        target.focus({ preventScroll: true });
+      }
+      const margin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+      let still = 0;
+      let frames = 0;
+      const check = () => {
+        if (Math.abs(target.getBoundingClientRect().top - margin) > 4) {
+          align();
+          still = 0;
+        } else still++;
+        if (still < 3 && ++frames < 90) watch = requestAnimationFrame(check);
+      };
+      watch = requestAnimationFrame(check);
+    };
+    const userMoves = ["wheel", "touchstart", "keydown", "pointerdown"];
+    userMoves.forEach((t) => addEventListener(t, () => cancelAnimationFrame(watch), { passive: true }));
+    const hashTarget = (hash: string) => {
+      let id = hash.slice(1);
+      try {
+        id = decodeURIComponent(id);
+      } catch {
+        // A malformed "#%…" must not take the rest of this script down.
+      }
+      const el = id ? document.getElementById(id) : null;
+      return el && root.contains(el) ? el : null;
+    };
+    root.addEventListener("click", (e) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const link = (e.target as Element).closest<HTMLAnchorElement>('a[href^="#"]');
+      const target = link ? hashTarget(link.getAttribute("href") ?? "") : null;
+      if (!link || !target) return;
+      e.preventDefault();
+      if (location.hash !== link.hash) history.pushState(null, "", link.hash);
+      // The jump forces a full layout; run it after the next paint so the
+      // tap itself answers fast (INP).
+      requestAnimationFrame(() => setTimeout(() => jumpTo(target, true)));
+    });
+    // Arriving on /#on-gorusme (ads, shared links): the browser's own jump
+    // runs before the scenes settle, so align again now and after load —
+    // unless the visitor has started moving around by then.
+    const landing = hashTarget(location.hash);
+    if (landing) {
+      let moved = false;
+      [...userMoves, "mousedown"].forEach((t) => addEventListener(t, () => (moved = true), { once: true, passive: true }));
+      jumpTo(landing);
+      addEventListener("load", () => !moved && jumpTo(landing), { once: true });
+    }
+
     /* ── Hero: on-air monitor cycles only while the hero is visible ── */
     const hero = root.querySelector<HTMLElement>(".ev-hero");
     const frames = [...root.querySelectorAll<HTMLImageElement>("[data-onair-frame]")];
