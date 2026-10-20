@@ -119,17 +119,28 @@ export const WHATSAPP_CTA_MESSAGE =
 /** Ready-to-use WhatsApp href for the global shortcuts; null if unconfigured. */
 export const WHATSAPP_CTA_HREF = waLink(WHATSAPP_CTA_MESSAGE);
 
-/** Opener for the Hekim İçerik Sistemi page: a physician isn't asking for a shoot quote. */
-const HEKIM_WHATSAPP_MESSAGE = "Merhaba, Hekim İçerik Sistemi hakkında bilgi almak istiyorum.";
+/**
+ * Openers for pages where "video çekimi için teklif" is the wrong first line
+ * (a physician or a social-media client isn't asking for a shoot quote).
+ * Key = first path segment.
+ */
+const WHATSAPP_OPENERS: Record<string, string> = {
+  "hekim-icerik-sistemi": "Merhaba, Hekim İçerik Sistemi hakkında bilgi almak istiyorum.",
+  "sosyal-medya-icerigi": "Merhaba, sosyal medya yönetimi için bilgi almak istiyorum.",
+  "drone-cekimi": "Merhaba, drone çekimi için teklif almak istiyorum.",
+  "tanitim-filmi": "Merhaba, tanıtım filmi için teklif almak istiyorum.",
+  "reklam-filmi": "Merhaba, reklam filmi için teklif almak istiyorum.",
+  "urun-mekan-cekimi": "Merhaba, ürün ve mekan çekimi için teklif almak istiyorum.",
+};
 
 /**
- * The same opener, tagged with the page it was sent from. GA4 sees the click
+ * The page's opener, tagged with the page it was sent from. GA4 sees the click
  * but not the chat; the tag lets a WhatsApp conversation be traced back to
  * its page (e.g. an organic visit to /video-cekimi/sakarya/).
  */
 export const waCtaHref = (path = "/") =>
   waLink(
-    `${path.startsWith("/hekim") ? HEKIM_WHATSAPP_MESSAGE : WHATSAPP_CTA_MESSAGE}\n\n(Sayfa: rastcreative.com${path})`,
+    `${WHATSAPP_OPENERS[path.split("/")[1]] ?? WHATSAPP_CTA_MESSAGE}\n\n(Sayfa: rastcreative.com${path})`,
   );
 
 /**
