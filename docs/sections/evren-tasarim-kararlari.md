@@ -383,3 +383,33 @@ Saha verisinde INP çok yüksekti; sebep her karede yeniden boyanan pahalı katm
   - hero/bulut/küre görsellerinde `alt=""`: dekoratif görseller, WCAG'a göre doğrusu bu.
   - Soft 404: canlı 404 sayfası gerçek 404 kodu dönüyor, uyarı yanlış alarm.
   - YouTube'un kendi cache TTL'i bizim kontrolümüzde değil.
+
+### v14.4 — Site denetimi düzeltmeleri (20 Eki)
+
+- **Ana sayfa çapaları:** "Görüşelim" (header, hero, çekim ve süreç bölümleri, menü) ve
+  `/#on-gorusme` derin linki formu ıskalıyordu: telefonda formun ~2.800 px üstüne,
+  masaüstünde footer'a iniyordu. Sebep v14.2'deki `content-visibility: auto` (900 px yer
+  tutucu) ile `scroll-behavior: smooth` birleşimi; yumuşak kaydırma yol üstündeki
+  bölümleri çizdiriyor, sayfa altında kısalıyor, hedef kayıyordu. `content-visibility`
+  korundu. Ana sayfa scripti `a[href^="#"]` tıklamalarında ve açılıştaki hash'te
+  `scrollIntoView({behavior: "instant"})` ile anında atlıyor, iki karede bir konumu
+  yeniden kontrol ediyor. Atlanan bölümler yer tutucu kaldığı için hedef sabit kalıyor.
+- **Skip-link:** Ana sayfada header `<main>` içinde olduğu için "İçeriğe geç" yine
+  header'a dönüyordu. BaseLayout'a `skipTo` prop'u eklendi; ana sayfa hero'ya
+  (`#icerik`) atlıyor.
+- **`--mute` #72675c → #51493f:** Etiketler gerçek zeminde (sis fotoğrafı + %30–70 örtü,
+  ≈ #c3b8ad–#c5bdb5) 2,6–3,0:1'de kalıyordu. Yeni değer orada ≥ 4,5:1, düz sisin
+  üstünde ≈ 6,7:1.
+- **Cümle-form:** Firma alanını "için bir" ile aynı satıra kilitleyen `.ev-nw`
+  kaldırıldı, `.ev-fill` satır genişliğiyle sınırlandı. Uzun unvan 360 px'te kartın
+  dışına taşmıyor.
+- WhatsApp linkleri (header, menü, SSS, form) yeni sekmede açılıyor; ziyaretçi siteden
+  düşmüyor, tıklama olayı da kaybolmuyor.
+- **İletişim sayfası:** lede'ye "İlk görüşme ücretsiz ve bağlayıcı değil" eklendi.
+  Kanallar listesine WhatsApp satırı geldi. Form ile başlık arasına boşluk girdi.
+  Header CTA'sı bu sayfada `#teklif-formu`'na iniyor (BaseLayout `headerCta`).
+  ContactForm honeypot'u ekran okuyuculardan gizlendi. Buton metni "Gönder, sizi
+  arayalım" oldu.
+- Hakkımızda ve ekip sayfalarında İngilizce unvan `lang="en"` ile basılıyor;
+  büyük harf "VİDEO DİRECTOR" yerine "VIDEO DIRECTOR" oluyor (Eyebrow/SectionHeading
+  `lang` prop'u).

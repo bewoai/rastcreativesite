@@ -50,6 +50,7 @@ Astro’nun `trailingSlash: "always"` ayarı üretim rotalarını tanımlar. Hos
 - [ ] LCP görselinde uygun preload/eager önceliği
 - [x] Canonical = `og:url`; HTML sayfa URL’leri slash’lı — 2026-09-10
 - [x] İç linklerde gereksiz canonical redirect yok — 2026-09-10
+- [x] Hizmet × konum sayfalarındaki proje kartı linkleri yeniden slash'lı (748 iç link 301'e gidiyordu; `[konum].astro`) — 2026-10-20
 - [x] Sitemap tüm indexlenebilir canonical URL’leri, hizmet × konum sayfaları dahil içeriyor — 2026-09-10
 - [x] API/RSS/discovery çıktılarında page ve endpoint ayrımı korunuyor — 2026-09-10
 - [ ] Mobil ve `prefers-reduced-motion` smoke testi
