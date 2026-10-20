@@ -64,22 +64,22 @@ export const SEO_SERVICES: readonly SeoService[] = [
     seoTitleSuffix: "ve Havadan Görselleştirme",
     tagline: "Tesis ve arazileriniz için havadan sinematik 4K drone çekimi",
     intro:
-      "Tesisinizi, sahanızı ya da etkinliğinizi havadan gösteren görüntüler, markanıza ölçek ve prestij katar. Lisanslı pilotlarımız ve sinema kararındaki drone'larımızla 4K ve RAW formatında, stabilize ve renk düzenlenmiş kareler üretiyoruz.",
+      "Tesisinizi, sahanızı ya da etkinliğinizi havadan gösteren görüntüler, markanıza ölçek ve prestij katar. 4K drone ile stabilize ve renk düzenlenmiş havadan kareler üretiyoruz; uçuştan önce alanı ve izin durumunu kontrol ediyoruz.",
     benefits: [
       {
-        title: "FPV ve klasik drone bir arada",
-        text: "Geniş, sakin yörünge çekimlerinden nefes kesen FPV dalışlarına kadar her ihtiyaca uygun hava planı.",
+        title: "Yer çekimiyle aynı planda",
+        text: "Havadan görüntüler tanıtım ya da sosyal medya çekiminize eklenir; havadan ve yerden kareler tek kurguda buluşur.",
       },
       {
-        title: "Mevzuata uygun, sigortalı uçuş",
-        text: "SHGM kurallarına uygun, izinli alanlarda güvenli operasyon — kayıt ve pilot belgeleriyle.",
+        title: "Uçuş öncesi izin kontrolü",
+        text: "Uçuş yapılabilecek alanlar ve gereken izinler SHGM kurallarına göre çekimden önce kontrol edilir.",
       },
       {
         title: "Teslime hazır renk",
         text: "Çekim sonrası color grading ile görüntüler doğrudan reklam veya tanıtımda kullanılabilir gelir.",
       },
     ],
-    keywords: ["drone çekimi", "havadan çekim", "fpv drone", "hava fotoğrafçılığı"],
+    keywords: ["drone çekimi", "havadan çekim", "4k drone çekimi", "hava fotoğrafçılığı"],
   },
   {
     slug: "tanitim-filmi",
@@ -91,7 +91,7 @@ export const SEO_SERVICES: readonly SeoService[] = [
     benefits: [
       {
         title: "Senaryo + kurgu tek elden",
-        text: "Mesajınızı netleştiren senaryo, profesyonel seslendirme ve ritmi yüksek kurgu birlikte planlanır.",
+        text: "Mesajınızı netleştiren senaryo ve ritmi yüksek kurgu birlikte planlanır; dış ses gerekiyorsa ayrıca planlanır.",
       },
       {
         title: "Her platform için doğru süre",
@@ -99,7 +99,7 @@ export const SEO_SERVICES: readonly SeoService[] = [
       },
       {
         title: "Çok dilli seçenek",
-        text: "İhracat ve yurt dışı sunumlar için altyazı ve seslendirme ile çok dilli versiyonlar.",
+        text: "İhracat ve yurt dışı sunumlar için altyazılı çok dilli versiyonlar; yabancı dilde dış ses ayrıca planlanır.",
       },
     ],
     keywords: ["tanıtım filmi", "kurumsal film", "fabrika tanıtım", "şirket tanıtım videosu"],
@@ -110,7 +110,7 @@ export const SEO_SERVICES: readonly SeoService[] = [
     seoTitleSuffix: "Çekimi ve Prodüksiyon",
     tagline: "Satışa dönüşen kreatif reklam prodüksiyonu",
     intro:
-      "Reklam filmi, bir ürünü değil bir hissi satar. Kreatif fikir, oyuncu yönetimi ve sinema standardında görüntüyle, dijital ve TV mecralarında dikkat çeken reklamlar üretiyoruz.",
+      "Reklam filmi, bir ürünü değil bir hissi satar. Kreatif fikir, oyuncu yönetimi ve sinema standardında görüntüyle, dijital mecralarda ve sosyal medyada dikkat çeken reklamlar üretiyoruz.",
     benefits: [
       {
         title: "Kreatif konsept geliştirme",
@@ -122,10 +122,10 @@ export const SEO_SERVICES: readonly SeoService[] = [
       },
       {
         title: "Mecraya özel kurgular",
-        text: "Aynı çekimden Instagram Reels, YouTube ön-reklam ve TV spotu çıkacak şekilde planlama.",
+        text: "Aynı çekimden Instagram Reels, YouTube ön-reklam ve dikey/yatay reklam versiyonları çıkacak şekilde planlama.",
       },
     ],
-    keywords: ["reklam filmi", "reklam çekimi", "tv reklamı", "dijital reklam videosu"],
+    keywords: ["reklam filmi", "reklam çekimi", "sosyal medya reklamı", "dijital reklam videosu"],
   },
   {
     slug: "sosyal-medya-icerigi",
@@ -168,7 +168,7 @@ export const SEO_SERVICES: readonly SeoService[] = [
       },
       {
         title: "Video ile birlikte",
-        text: "Aynı sette ürün videosu ve 360° döndürme görüntüleri de alınabilir.",
+        text: "Aynı sette ürün videosu da alınabilir.",
       },
     ],
     keywords: ["ürün çekimi", "ürün fotoğrafçılığı", "mekan çekimi", "katalog çekimi"],
