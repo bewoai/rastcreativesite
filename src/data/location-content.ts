@@ -19,6 +19,8 @@ export interface LocationContent {
    *  backs this page's copy. The rest of the grid fills from the service's
    *  categories as before. */
   projects?: string[];
+  /** Internal links shown under the block (paragraphs are plain text). */
+  links?: { href: string; label: string }[];
 }
 
 export const LOCATION_CONTENT: Record<string, LocationContent> = {
@@ -89,6 +91,11 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
       "gebelik-ilk-7-gun",
       "candles-and-echoes-golden-swan",
     ],
+    links: [
+      { href: "/projeler/vaka/aytas-home/", label: "Aytaş Home vaka çalışması: 4 ayda etkileşim +%311" },
+      { href: "/blog/sosyal-medya-yonetimi-fiyati-neye-gore-belirlenir/", label: "Sosyal medya yönetimi fiyatı neye göre belirlenir?" },
+      { href: "/blog/sakarya-video-produksiyon-firmasi-nasil-secilir/", label: "Sakarya'da video prodüksiyon firması nasıl seçilir?" },
+    ],
   },
 
   "video-cekimi/sakarya": {
@@ -96,7 +103,7 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
       "Sakarya video çekimi: tanıtım, Reels, etkinlik. Kurucu ortaklar çekip kurguluyor; her ilçeye aynı gün, teslim genelde 2–4 hafta. Ön görüşme ücretsiz.",
     heading: "Sakarya'da video çekimi nasıl ilerler, fiyatı ne belirler?",
     paragraphs: [
-      "Hangi videoya ihtiyacınız olduğu, onu nerede kullanacağınıza bağlı. Tanıtım filmi web sitesinde, YouTube'da ve firmayı iş ortaklarına anlatırken kullanılır; tekstil üreticisi Altoteks'in 4K tanıtım filmi fabrikayı havadan, dokuma makinelerini ve laboratuvar testlerini gösteriyor. Mağaza videosu Instagram'da ve Google İşletme profilinde yeri tanıtır; Duru Optik için çektiğimiz dikey videoda mağazanın konumu havadan, gözlük koleksiyonu ve göz ölçümü yakından görünüyor. Serdivan'da medikal estetik hizmeti veren Dr. Erdem Çalışkan'ın Instagram hesabı için tanıtım ve bilgilendirme videoları hazırlıyoruz. Candles and Echoes'un Sapanca Kırkpınar Amfi Tiyatro'daki mum ışığında bale gösterimini de dikey formatta çektik.",
+      "Hangi videoya ihtiyacınız olduğu, onu nerede kullanacağınıza bağlı. Tanıtım filmi web sitesinde, YouTube'da ve firmayı iş ortaklarına anlatırken kullanılır; tekstil üreticisi Altoteks'in 4K tanıtım filmi fabrikayı havadan, dokuma makinelerini ve laboratuvar testlerini gösteriyor. Mağaza videosu Instagram'da ve Google İşletme profilinde yeri tanıtır; Duru Optik için çektiğimiz dikey videoda mağazanın konumu havadan, gözlük koleksiyonu ve göz ölçümü yakından görünüyor. Serdivan'da medikal estetik hizmeti veren Dr. Erdem Çalışkan'ın Instagram hesabı için tanıtım ve bilgilendirme videoları hazırlıyoruz. Candles and Echoes'un Sapanca Kırkpınar Amfi Tiyatro'daki mum ışığında bale gösterimini de dikey formatta çektik. Erenler, Akyazı ve Karasu'daki çekimlere de Serdivan'dan aynı gün gidiyoruz.",
       "Bir çekim gününden ne çıkacağı, çekim listesiyle baştan belli olur. Yarım günlük bir mağaza ya da kafe çekimini genellikle bir yatay tanıtım videosu ve üç Reels olarak planlıyoruz; kurumsal tanıtım filminde tam gün çekimden 2–3 dakikalık film, dikey kesitler ve drone planları çıkar. Düzenli içerikte ayın videolarını bir ya da iki çekim gününe topluyoruz. Mobilya perakendecisi Aytaş Home'un Instagram hesabını Mayıs 2026'dan beri yönetiyoruz: Meta Business Suite verisine göre içerik etkileşimi Ocak–Nisan 2026'daki 18,6 binden Mayıs–Ağustos'ta 76,5 bine çıktı (+%311), yeni mesajlaşan kişi 257'den 730'a yükseldi.",
       "Süreç ücretsiz ön görüşmeyle başlar: videonun amacını, kime gösterileceğini ve nerede yayınlanacağını konuşuruz. Ardından konu ve çekim listesini çıkarıp çekim gününü belirleriz. Projeyi kurucu ortaklar Berat Değirmenci ve Muhammed Ekrem Adnan ile konuşursunuz; sette ve kurguda da onlar bizzat çalışır, muhatabınız proje boyunca değişmez. Sony FX30 kamera, Sigma 18-50 lens ve DJI RS4 gimbal ile çekiyor, gerektiğinde 4K drone ekliyoruz. Revizyonlarla birlikte teslim, kapsama göre genellikle 2–4 hafta sürer.",
       "Fiyatı belirleyen başlıca kalemler şunlar: yarım ya da tam gün çekim, çıkacak video sayısı, drone, senaryo ve kurgu kapsamı (grafik, altyazı), ham görüntü isteği ve acil teslim. Net rakamı ön görüşmeden sonra yazılı teklifle veriyoruz. Başka tekliflerle karşılaştırırken toplam tutardan önce kapsama bakın: çekim kaç saat sürüyor, kaç video teslim ediliyor, çekimi kim yapıyor, kaç revizyon turu var ve hangi formatlar dahil.",
@@ -135,6 +142,12 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
       "duru-optik-tanitim",
       "candles-and-echoes-golden-swan",
       "hornhauss-tanitim",
+    ],
+    links: [
+      { href: "/blog/sakarya-video-produksiyon-firmasi-nasil-secilir/", label: "Sakarya'da video prodüksiyon firması nasıl seçilir?" },
+      { href: "/blog/video-cekimi-fiyati-neye-gore-belirlenir/", label: "Video çekimi fiyatı neye göre belirlenir?" },
+      { href: "/blog/tek-cekim-gununden-kac-icerik-cikar/", label: "Bir çekim gününden kaç farklı içerik çıkar?" },
+      { href: "/projeler/vaka/aytas-home/", label: "Aytaş Home vaka çalışması: 4 ayda etkileşim +%311" },
     ],
   },
 
@@ -208,6 +221,11 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
       "altoteks-tanitim-filmi",
       "aytas-home-sosyal-medya",
       "duru-optik-tanitim",
+    ],
+    links: [
+      { href: "/blog/fabrika-tanitim-filmi-sanayi/", label: "Fabrikanızı en iyi anlatan film nasıl çekilir?" },
+      { href: "/blog/video-cekimi-fiyati-neye-gore-belirlenir/", label: "Video çekimi fiyatı neye göre belirlenir?" },
+      { href: "/projeler/vaka/aytas-home/", label: "Aytaş Home vaka çalışması: 4 ayda etkileşim +%311" },
     ],
   },
   // ── Round 2 (Search Console impressions, Oct 2026) ──
@@ -410,6 +428,10 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
       "mavi-vatan-gemi-insa",
       "meteors-shipping-tanitim-filmi",
       "duru-optik-tanitim",
+    ],
+    links: [
+      { href: "/blog/drone-cekimi-gerekli-mi/", label: "Drone çekimi gerçekten gerekli mi?" },
+      { href: "/blog/drone-cekimi-fiyati-neye-gore-belirlenir/", label: "Drone çekimi fiyatı neye göre belirlenir?" },
     ],
   },
   // ── Round 3 (next tier, 6–13 impressions) ──

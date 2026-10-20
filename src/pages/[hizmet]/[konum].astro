@@ -169,6 +169,16 @@ if (projectsItemList) jsonLd.push(projectsItemList);
           <>
             <h2 class="extra__title">{extra.heading}</h2>
             {extra.paragraphs.map((t) => <p>{t}</p>)}
+            {extra.links && extra.links.length > 0 && (
+              <>
+                <h2 class="extra__title">İlgili yazılar</h2>
+                <ul class="extra__links">
+                  {extra.links.map((l) => (
+                    <li><a href={l.href}>{l.label}</a></li>
+                  ))}
+                </ul>
+              </>
+            )}
           </>
         )
       }
@@ -201,6 +211,9 @@ if (projectsItemList) jsonLd.push(projectsItemList);
       </Button>
       <a href={`tel:${CONTACT.phoneIntl}`} class="phone">
         <Icon name="contact" size={18} /> {CONTACT.phone}
+      </a>
+      <a href={CONTACT.googleShare} class="phone" target="_blank" rel="noopener">
+        Google'daki yorumlarımız <span aria-hidden="true">↗</span>
       </a>
     </div>
   </Section>
@@ -421,6 +434,22 @@ if (projectsItemList) jsonLd.push(projectsItemList);
   }
   .phone:hover {
     color: var(--amber-text);
+  }
+  .extra__links {
+    margin: 0 0 1.1rem;
+    padding-left: 1.2rem;
+    list-style: disc;
+  }
+  .extra__links li {
+    margin: 0 0 0.45rem;
+  }
+  .extra__links li::marker {
+    color: var(--amber-text);
+  }
+  .extra__links a {
+    color: var(--amber-text);
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
   .faq {
     margin: 2rem 0 0;

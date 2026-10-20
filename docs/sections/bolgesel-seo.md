@@ -55,6 +55,15 @@ GSC'de en çok gösterim alan dört sayfa elle yazılmış uzun bloklarla güçl
   alt metin 2024–2025 işlerinin stüdyo öncesi olduğunu söylüyor.
 - Eşlik eden rehber: `/blog/sakarya-video-produksiyon-firmasi-nasil-secilir/`
   (dört sayfaya ve fiyat yazılarına iç link verir).
+- `links`: paragraflar düz metin basıldığı için iç linkler bloğun altında
+  "İlgili yazılar" listesi olarak çıkar (blog yazıları, Aytaş vaka sayfası).
+- Tüm bölge sayfalarında telefonun yanında "Google'daki yorumlarımız ↗"
+  (`CONTACT.googleShare`). SERP karşılaştırması (20 Eki): "sakarya sosyal medya"
+  ilk sayfasındaki ajansların 2'si sayfada 45 ve 85 Google yorumu gösteriyor.
+- WhatsApp hazır mesajı hizmete göre değişiyor (`WHATSAPP_OPENERS`, `src/consts.ts`):
+  sosyal medya sayfasından yazan "video çekimi teklifi" değil "sosyal medya
+  yönetimi" diye açılır.
+
 
 ## Tasarım ve motion
 
