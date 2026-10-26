@@ -86,6 +86,12 @@ const blog = defineCollection({
       cover: image().optional(),
       coverAlt: z.string().optional(),
       tags: z.array(z.string()).default([]),
+      // Optional FAQ: rendered at the end of the post AND emitted as FAQPage
+      // JSON-LD, so the visible text and the schema never drift apart.
+      // Answers are plain text (no markdown) because they go into schema as-is.
+      faq: z
+        .array(z.object({ question: z.string(), answer: z.string() }))
+        .default([]),
       draft: z.boolean().default(false),
     }),
 });
