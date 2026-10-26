@@ -96,7 +96,7 @@ const faqs = [
   {
     question: "Hangi bölgelerde çekim yapıyorsunuz?",
     answer:
-      "Serdivan'daki stüdyomuzdan Sakarya, Adapazarı, Erenler, Arifiye ve çevre ilçelere; ayrıca Kocaeli, Gebze ve Düzce hattına yerinde çekime gidiyoruz.",
+      "Serdivan'daki stüdyomuzdan Sakarya, Adapazarı, Erenler, Arifiye ve çevre ilçelere; ayrıca Kocaeli, Gebze ve Düzce hattına yerinde çekime gidiyoruz. Daha uzaktaki işletmeler için fotoğraflarından yapay zekâ ile video üretiyor ya da ham videolarının kurgusunu yapıyoruz.",
   },
   {
     question: "Bir video projesi ne kadar sürede teslim edilir?",
@@ -195,6 +195,15 @@ const pageJsonLd = [
         ))
       }
     </ul>
+
+    <aside class="remote" data-reveal>
+      <Eyebrow>Sakarya dışında mısınız?</Eyebrow>
+      <p class="remote__text">
+        Yerinde çekimi Sakarya ve yakın illerde yapıyoruz. Daha uzaktaysanız
+        <a href="/fotograftan-yapay-zeka-reklam-videosu/">fotoğraflarınızdan yapay zekâ ile reklam videosu</a>
+        üretiyor ya da ham videolarınızın kurgusunu yapıyoruz.
+      </p>
+    </aside>
   </Section>
 
   <Section space="tight">
@@ -571,6 +580,24 @@ const pageJsonLd = [
     .use-cases {
       grid-column: 2;
     }
+  }
+  .remote {
+    margin-top: 2.5rem;
+    padding: 1.4rem clamp(1.15rem, 4vw, 1.8rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--amber) 4%, transparent);
+  }
+  .remote__text {
+    margin: 0.6rem 0 0;
+    max-width: 62ch;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .remote__text a {
+    color: var(--amber-text);
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
   .sector-links {
     display: grid;

@@ -1,0 +1,521 @@
+---
+/**
+ * /fotograftan-yapay-zeka-reklam-videosu/ — remote service: short ad videos
+ * made from the client's own product photos. For businesses outside Sakarya
+ * and nearby provinces (we only shoot on location there).
+ *
+ * Copy rules: no prices (pricing decision pending), no tool/model names or
+ * production methods, no promise of showing what the product doesn't have.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/Section.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import Button from "../components/Button.astro";
+import Icon from "../components/Icon.astro";
+import { PRIMARY_CTA, waCtaHref } from "../consts";
+import { breadcrumb, faqPage, BUSINESS_ID } from "../lib/schema";
+
+const PATH = "/fotograftan-yapay-zeka-reklam-videosu/";
+const NAME = "Fotoğraftan Yapay Zekâ ile Reklam Videosu";
+// + " — Rast Creative Studio" ≈ 64 chars; keyword is front-loaded.
+const TITLE = NAME;
+const DESCRIPTION =
+  "Ürün fotoğraflarınızdan yapay zekâ ile kısa reklam videosu: çekim ekibi yok, yol yok. Türkiye'nin her yerinden işletmeler için dikey, reklama hazır teslim.";
+
+const whatsappHref = waCtaHref(PATH);
+
+const benefits = [
+  {
+    title: "Çekim günü gerekmez",
+    text: "Ekip, ekipman ve yol masrafı yok. Elinizdeki ürün fotoğrafları videonun hammaddesi olur; nerede olduğunuz fark etmez.",
+  },
+  {
+    title: "Reklama hazır format",
+    text: "Instagram, TikTok ve Meta reklamları için dikey 9:16 ana format; ihtiyaca göre kare ve yatay kesit. Ürün ve mesaj ilk saniyelerde görünür.",
+  },
+  {
+    title: "Marka diliyle uyumlu",
+    text: "Logo, renk ve yazı dili sizin markanızdan gelir. Fikri ve senaryoyu birlikte netleştirir, metni ve kurguyu biz hazırlarız.",
+  },
+];
+
+const audience = [
+  "Sakarya ve yakın illerin dışındaki işletmeler",
+  "Elinde iyi ürün fotoğrafı olan e-ticaret markaları",
+  "Kampanya için hızlı reklam videosu gereken mağazalar",
+  "Her ay düzenli video isteyen ama her ay çekim yaptıramayan markalar",
+];
+
+const steps = [
+  {
+    t: "1 · Fotoğraf ve kısa not",
+    d: "Ürün fotoğraflarınızı ve markanızı anlatan kısa bir notu gönderirsiniz. Neyi, kime sattığınızı yazmanız yeterli.",
+  },
+  {
+    t: "2 · Fikir ve senaryo",
+    d: "Videonun ne anlatacağını, hangi mecrada yayınlanacağını ve ilk saniyedeki mesajı birlikte netleştiririz.",
+  },
+  {
+    t: "3 · Teslim ve revizyon",
+    d: "Videoyu reklama hazır formatta teslim ederiz. Revizyon hakkı ve video sayısı teklifte yazılıdır.",
+  },
+];
+
+const photoTips = [
+  "Net, iyi ışıklı ve ürünün tamamını gösteren kareler",
+  "Aynı ürünün farklı açılardan birkaç fotoğrafı",
+  "Logo ve marka renkleri",
+  "Varsa ürünün kullanımda olduğu bir kare",
+];
+
+const options = [
+  {
+    t: "Şablon video",
+    d: "Hazır bir kurgu kalıbı markanıza ve ürününüze uyarlanır. Kampanya ve hızlı ihtiyaçlar için.",
+  },
+  {
+    t: "Özel konsept",
+    d: "Fikir ve senaryo sıfırdan, ürününüz için yazılır. Lansman ve ana reklam videosu için.",
+  },
+  {
+    t: "Aylık paket",
+    d: "Her ay düzenli video, çekimsiz. Sosyal medya akışı ve reklam varyasyonları için.",
+  },
+];
+
+const limits = [
+  "Ürününüzde olmayan bir özelliği, rengi ya da detayı göstermez.",
+  "Mekânı, ekibi ve insanı anlatan işlerde gerçek çekimin yerini her zaman tutmaz.",
+  "Sakarya ve yakınındaysanız iki seçeneği birlikte değerlendiririz.",
+];
+
+const faqs = [
+  {
+    question: "Sakarya dışındayım, bu hizmetten yararlanabilir miyim?",
+    answer:
+      "Evet. Bu hizmet tamamen uzaktan yürür: fotoğrafları gönderirsiniz, videoyu teslim alırsınız. Yerinde çekimi ise Sakarya ve yakın illerde yapıyoruz.",
+  },
+  {
+    question: "Kaç fotoğraf göndermem gerekir?",
+    answer:
+      "Ürün başına farklı açılardan birkaç net fotoğraf çoğu zaman yeter. Ne kadar çok açı olursa video o kadar zengin olur; ön görüşmede elinizdekilere birlikte bakarız.",
+  },
+  {
+    question: "Telefonla çekilmiş fotoğraflar olur mu?",
+    answer:
+      "Net, iyi ışıklı ve ürünün tamamını gösteriyorsa olur. Bulanık ya da karanlık karelerden iyi sonuç çıkmaz; bunu işe başlamadan söyleriz.",
+  },
+  {
+    question: "Video ürünümü olduğundan farklı gösterir mi?",
+    answer:
+      "Göstermemeli ve göstermez. Ürününüzde olmayan bir özellik, renk ya da detay eklemeyiz; her videoyu teslimden önce sizin fotoğraflarınızla karşılaştırırız.",
+  },
+  {
+    question: "Elimde fotoğraf değil ham video var, ne yapabilirsiniz?",
+    answer:
+      "Telefonla ya da kamerayla çektiğiniz ham videoları gönderin; kurgusunu, altyazısını ve platforma göre formatını biz yaparız.",
+  },
+  {
+    question: "Fiyat neye göre belirlenir?",
+    answer:
+      "Video sayısı, şablon ya da özel konsept olması ve aylık düzen fiyatı belirler. Net teklifi ücretsiz ön görüşmeden sonra yazılı olarak veriyoruz.",
+  },
+];
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Hizmetler", path: "/hizmetler/" },
+    { name: NAME, path: PATH },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: NAME,
+    serviceType: "Yapay zekâ ile reklam videosu",
+    description: DESCRIPTION,
+    areaServed: { "@type": "Country", name: "Türkiye" },
+    provider: { "@id": BUSINESS_ID },
+  },
+  faqPage(faqs),
+];
+---
+
+<BaseLayout title={TITLE} description={DESCRIPTION} jsonLd={jsonLd}>
+  <Section width="narrow">
+    <SectionHeading as="h1" eyebrow="Uzaktan hizmet · Türkiye geneli">
+      Fotoğraflarınızdan yapay zekâ ile reklam videosu
+      <Fragment slot="intro">
+        <p>Çekim ekibi yok, yol yok. Ürün fotoğraflarınızı gönderin, reklam videonuzu teslim alın.</p>
+      </Fragment>
+    </SectionHeading>
+
+    <div class="prose">
+      <p>
+        Yerinde çekimi Sakarya ve yakın illerde yapıyoruz. Daha uzaktaki işletmeler için
+        elinizdeki ürün fotoğraflarından yapay zekâ ile kısa reklam videoları üretiyoruz.
+        Fikir, senaryo, metin ve kurgu bizden; ürün ve marka sizden. Sonuç, Instagram,
+        TikTok ve Meta reklamlarında doğrudan kullanabileceğiniz dikey videolar.
+      </p>
+    </div>
+
+    <ul class="benefits">
+      {
+        benefits.map((b) => (
+          <li class="benefit">
+            <Icon name="arrow-right" size={18} class="benefit__ic" />
+            <div>
+              <h2 class="benefit__title">{b.title}</h2>
+              <p class="benefit__text">{b.text}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="fit" data-reveal>
+      <h2 class="fit__title">Bu hizmet kimler için uygun?</h2>
+      <ul class="fit__list">
+        {audience.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+
+    <div class="deliverables" data-reveal>
+      <h2 class="deliverables__title">Nasıl ilerler?</h2>
+      <ul class="deliverables__list">
+        {
+          steps.map((item) => (
+            <li>
+              <span>{item.t}</span>
+              <p>{item.d}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="cta-inline">
+      <Button href={PRIMARY_CTA.href} size="lg" arrow>Fotoğraflarınızı konuşalım</Button>
+      {
+        whatsappHref && (
+          <a href={whatsappHref} class="wa" target="_blank" rel="noopener" data-cta-location="ai_video_hero_wa">
+            WhatsApp'tan yazın <span aria-hidden="true">↗</span>
+          </a>
+        )
+      }
+    </div>
+  </Section>
+
+  <Section width="narrow" space="tight">
+    <div class="split">
+      <div class="fit" data-reveal>
+        <h2 class="fit__title">Hangi fotoğraflar işe yarar?</h2>
+        <ul class="fit__list">
+          {photoTips.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+      <div class="fit fit--muted" data-reveal>
+        <h2 class="fit__title">Neyi yapmaz?</h2>
+        <ul class="fit__list">
+          {limits.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </div>
+  </Section>
+
+  <Section width="narrow" space="tight">
+    <SectionHeading eyebrow="Seçenekler">
+      Üç çalışma şekli
+      <Fragment slot="intro">
+        <p>Fiyatı video sayısı ve kapsam belirler. Net teklifi ön görüşmeden sonra yazılı veriyoruz.</p>
+      </Fragment>
+    </SectionHeading>
+    <ul class="options">
+      {
+        options.map((o) => (
+          <li data-reveal>
+            <h3>{o.t}</h3>
+            <p>{o.d}</p>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="prose">
+      <p>
+        Elinizde fotoğraf değil ham video mu var? Telefonla çektiğiniz görüntüleri gönderin;
+        <a href="/hizmetler/#post-produksiyon">kurgusunu, altyazısını ve formatını</a> biz yaparız.
+        Ürün videosu mu fotoğraf mı kararsızsanız
+        <a href="/blog/eticaret-urun-cekimi-foto-mu-video-mu/">e-ticarette foto mu video mu</a>
+        yazımız işinizi kolaylaştırır.
+      </p>
+    </div>
+  </Section>
+
+  <Section width="narrow" space="tight">
+    <SectionHeading eyebrow="Örnekler">
+      İşlerimizden örnekler
+      <Fragment slot="intro">
+        <p>
+          Yapay zekâ destekli kurgunun sosyal medyada nasıl durduğunu
+          <a class="inline-link" href="/projeler/aytas-home-yapay-zeka-kurgu/">Aytaş Home dikey videosunda</a>
+          görebilirsiniz. Tüm işlerimiz <a class="inline-link" href="/projeler/">projeler sayfasında</a>.
+        </p>
+      </Fragment>
+    </SectionHeading>
+  </Section>
+
+  <Section width="narrow" space="tight">
+    <SectionHeading eyebrow="Sık sorulanlar">Fotoğraftan video hakkında sık sorulanlar</SectionHeading>
+    <dl class="faq">
+      {
+        faqs.map((f) => (
+          <div class="faq__item" data-reveal>
+            <dt class="faq__q">{f.question}</dt>
+            <dd class="faq__a">{f.answer}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Section>
+
+  <Section tone="ink" space="tight">
+    <div class="cta">
+      <Eyebrow tone="paper">Fotoğraflarınız hazır mı?</Eyebrow>
+      <h2 class="cta__title">Fotoğraflarınızı gönderin, fikri birlikte çıkaralım.</h2>
+      <p class="cta__text">Ne sattığınızı ve ayda kaç video istediğinizi yazmanız yeterli. İlk görüşme ücretsiz.</p>
+      <div class="cta__actions">
+        <Button href={PRIMARY_CTA.href} size="lg" arrow>{PRIMARY_CTA.label}</Button>
+        {
+          whatsappHref && (
+            <a href={whatsappHref} class="wa wa--paper" target="_blank" rel="noopener" data-cta-location="ai_video_footer_wa">
+              WhatsApp'tan yazın <span aria-hidden="true">↗</span>
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .prose {
+    margin-top: 1.8rem;
+    font-size: 1.1rem;
+    line-height: var(--leading-body);
+    color: var(--ink-soft);
+    max-width: 62ch;
+  }
+  .prose a,
+  .inline-link {
+    color: var(--amber-text);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .benefits {
+    list-style: none;
+    margin: 2.5rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 1.2rem;
+  }
+  .benefit {
+    display: flex;
+    gap: 0.8rem;
+    padding: 1.2rem 1.3rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--amber) 3%, transparent);
+  }
+  .benefit__ic {
+    margin-top: 0.25rem;
+    flex: none;
+    color: var(--amber-text);
+  }
+  .benefit__title {
+    margin: 0 0 0.3rem;
+    font-size: 1.05rem;
+  }
+  .benefit__text {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+    line-height: var(--leading-body);
+  }
+  .cta-inline {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+  }
+  .wa {
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .wa:hover {
+    color: var(--amber-text);
+  }
+  .wa--paper {
+    color: var(--on-ink);
+  }
+  .fit {
+    margin-top: 2.5rem;
+    padding: 1.4rem clamp(1.15rem, 4vw, 1.8rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--amber) 4%, transparent);
+  }
+  .fit--muted {
+    background: color-mix(in srgb, var(--ink) 2%, transparent);
+  }
+  .split .fit {
+    margin-top: 0;
+  }
+  .split {
+    display: grid;
+    gap: 1.1rem;
+  }
+  .fit__title {
+    margin: 0 0 1rem;
+    font-family: var(--font-utility);
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+  }
+  .fit__list {
+    display: grid;
+    gap: 0.75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .fit__list li {
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .fit__list li::before {
+    content: "";
+    display: inline-block;
+    width: 0.48rem;
+    height: 0.48rem;
+    margin-right: 0.65rem;
+    border-radius: 999px;
+    background: var(--amber);
+    vertical-align: 0.08em;
+  }
+  .deliverables {
+    margin-top: 1.1rem;
+    padding: 1.4rem clamp(1.15rem, 4vw, 1.8rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--ink) 2%, transparent);
+  }
+  .deliverables__title {
+    margin: 0 0 1rem;
+    font-family: var(--font-utility);
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+  }
+  .deliverables__list {
+    display: grid;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .deliverables__list li {
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--line);
+  }
+  .deliverables__list span {
+    display: inline-flex;
+    margin-bottom: 0.4rem;
+    color: var(--amber-text);
+    font-family: var(--font-utility);
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .deliverables__list p {
+    margin: 0;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+  .options {
+    list-style: none;
+    margin: 2rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+  }
+  .options li {
+    padding: 1.2rem 1.3rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+  }
+  .options h3 {
+    margin: 0 0 0.35rem;
+    font-size: 1.05rem;
+  }
+  .options p {
+    margin: 0;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+  .faq {
+    margin: 2rem 0 0;
+    display: grid;
+    gap: 1.2rem;
+  }
+  .faq__item {
+    border-top: 1px solid var(--line);
+    padding-top: 1.2rem;
+  }
+  .faq__q {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  .faq__a {
+    margin: 0;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+  }
+  .cta__title {
+    margin: 0;
+    max-width: 24ch;
+    color: var(--on-ink);
+  }
+  .cta__text {
+    margin: 0;
+    color: color-mix(in srgb, var(--on-ink) 75%, transparent);
+  }
+  .cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem 1.5rem;
+  }
+  @media (min-width: 640px) {
+    .deliverables__list,
+    .options {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.2rem;
+    }
+    .split {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

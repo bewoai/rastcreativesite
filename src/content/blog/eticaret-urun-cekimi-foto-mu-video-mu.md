@@ -34,4 +34,4 @@ Bize sorarsanız ideal düzen şu: her ürün için birkaç temiz fotoğraf (zor
 
 ## Başlayalım mı?
 
-Sakarya ve çevresinde e-ticaret yapan markalarla bu işi sık yapıyoruz. Ürünleriniz hazırsa, bir [ön görüşmede](/iletisim/) kaç ürününüz olduğunu konuşup size en mantıklı çekim planını çıkaralım — gereksiz kareye bütçe harcatmadan.
+Sakarya ve çevresinde e-ticaret yapan markalarla bu işi sık yapıyoruz. Daha uzaktaysanız [ürün fotoğraflarınızdan yapay zekâ ile video](/fotograftan-yapay-zeka-reklam-videosu/) da üretiyoruz. Ürünleriniz hazırsa, bir [ön görüşmede](/iletisim/) kaç ürününüz olduğunu konuşup size en mantıklı çekim planını çıkaralım — gereksiz kareye bütçe harcatmadan.

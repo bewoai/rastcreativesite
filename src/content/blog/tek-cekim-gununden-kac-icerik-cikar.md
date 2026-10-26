@@ -13,7 +13,7 @@ draft: false
 
 ## Bir çekim gününü içerik sistemine dönüştürmek ne demek?
 
-Tek bir videoyu çekip teslim etmek yerine görüntüleri farklı kullanım amaçlarına göre tasarlamak demektir. Ana film markanın hikâyesini taşırken, kısa dikey kesitler sosyal medyada düzenli görünürlük sağlar. Ürün detayları web sitesi veya satış sunumunda, ekip ve mekân görüntüleri ise markanın güven iletişiminde kullanılabilir.
+Tek bir videoyu çekip teslim etmek yerine görüntüleri farklı kullanım amaçlarına göre tasarlamak demektir. Ana film markanın hikâyesini taşırken, kısa dikey kesitler [sosyal medyada düzenli görünürlük](/sosyal-medya-icerigi/sakarya/) sağlar. Ürün detayları web sitesi veya satış sunumunda, ekip ve mekân görüntüleri ise markanın güven iletişiminde kullanılabilir.
 
 Buradaki amaç aynı görüntüyü her yerde tekrar etmek değil; aynı prodüksiyonun farklı ihtiyaçlara cevap vermesidir.
 
@@ -29,13 +29,13 @@ Bu kararlar netleşmeden çekim listesi hazırlanırsa sonradan eksik kadraj, ye
 
 Projeye göre şu içerik grupları planlanabilir:
 
-- Web sitesi veya YouTube için ana tanıtım filmi
+- Web sitesi veya YouTube için ana [tanıtım filmi](/tanitim-filmi/sakarya/)
 - Reels ve Shorts için kısa dikey kesitler
 - Ürün, mekân, makine veya hizmet detayları
 - Ekibin çalışma biçimini gösteren kısa görüntüler
 - Soru-cevap veya açıklayıcı konuşma parçaları
 - Kapak, thumbnail ve sosyal medya duyurularında kullanılacak planlar
-- Reklam kampanyası için farklı giriş ve kapanış varyasyonları
+- [Reklam kampanyası](/reklam-filmi/sakarya/) için farklı giriş ve kapanış varyasyonları
 
 Bu liste bir garanti değil, çekim planının nasıl kurulabileceğine dair bir çerçevedir. Her projede bütün içerik türlerine ihtiyaç olmayabilir.
 

@@ -13,13 +13,13 @@ draft: false
 
 ## Reels ile tanıtım filmi arasındaki temel fark ne?
 
-Reels hızlı tüketilen, çoğunlukla dikey formatta hazırlanan kısa içeriklerdir. Bir ürünün detayını, mekânın atmosferini, ekipten bir anı veya hizmetin nasıl ilerlediğini birkaç saniyede gösterebilir. Tanıtım filmi ise markanın ne yaptığını, kime hizmet ettiğini ve neden tercih edilebileceğini daha sakin bir akışla anlatır.
+Reels hızlı tüketilen, çoğunlukla dikey formatta hazırlanan kısa içeriklerdir. Bir ürünün detayını, mekânın atmosferini, ekipten bir anı veya hizmetin nasıl ilerlediğini birkaç saniyede gösterebilir. [Tanıtım filmi](/tanitim-filmi/sakarya/) ise markanın ne yaptığını, kime hizmet ettiğini ve neden tercih edilebileceğini daha sakin bir akışla anlatır.
 
 Biri diğerinin kısa hâli değildir. Aynı çekim gününde ikisini birlikte planlamak mümkündür; ama iki formatın amacı baştan düşünülmelidir.
 
 ## İşletmem yeni müşteriye kendini anlatmak istiyorsa hangisini seçmeli?
 
-İlk temas noktanız Instagram veya TikTok ise Reels ile başlamak mantıklı olabilir. İnsanların sizi keşfetmesini, ekibinizi tanımasını ve hizmetinizin günlük hayattaki karşılığını görmesini sağlar.
+İlk temas noktanız Instagram veya TikTok ise [Reels ile başlamak](/sosyal-medya-icerigi/sakarya/) mantıklı olabilir. İnsanların sizi keşfetmesini, ekibinizi tanımasını ve hizmetinizin günlük hayattaki karşılığını görmesini sağlar.
 
 Bir müşteri sizinle çalışmayı düşündüğünde web sitenize, teklif dosyanıza veya YouTube kanalınıza yönlenecekse tanıtım filmi daha güçlü bir ana içerik olur. O film daha sonra Reels, reklam kesiti ve web sitesi videosu için kaynak hâline de gelebilir. [Sakarya'da video çekimi](/video-cekimi/sakarya/) planlarken bu kullanım alanlarını baştan konuşmamızın nedeni bu.
 
@@ -41,7 +41,7 @@ Karar veremiyorsanız şu sırayı kullanabilirsiniz:
 
 - Markanızı ilk kez duyuruyorsanız: kısa bir tanıtım filmi ve ondan türetilen Reels içerikleri.
 - Zaten biliniyor ama düzenli paylaşım yapamıyorsanız: içerik planına uygun Reels çekimi.
-- Yeni bir ürün veya kampanya çıkarıyorsanız: kampanya fikrini taşıyan ana film ve kısa reklam varyasyonları.
+- Yeni bir ürün veya kampanya çıkarıyorsanız: kampanya fikrini taşıyan ana film ve [kısa reklam varyasyonları](/reklam-filmi/sakarya/).
 - İnsanların size güvenmesi gerekiyorsa: ekip, süreç, mekân ve müşteri deneyimini gösteren içerikler.
 
 ## Sonuçta önemli olan ne?
