@@ -131,6 +131,7 @@ const WHATSAPP_OPENERS: Record<string, string> = {
   "tanitim-filmi": "Merhaba, tanıtım filmi için teklif almak istiyorum.",
   "reklam-filmi": "Merhaba, reklam filmi için teklif almak istiyorum.",
   "urun-mekan-cekimi": "Merhaba, ürün ve mekan çekimi için teklif almak istiyorum.",
+  "fotograftan-yapay-zeka-reklam-videosu": "Merhaba, ürün fotoğraflarımdan reklam videosu için bilgi almak istiyorum.",
 };
 
 /**
