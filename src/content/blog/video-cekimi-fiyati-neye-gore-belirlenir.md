@@ -9,13 +9,13 @@ tags: ["video çekimi fiyatı", "tanıtım filmi", "video prodüksiyon", "Sakary
 draft: false
 ---
 
-“Bir video çektirmek istiyoruz, fiyatı ne kadar?” Bu soruya tek bir rakam söyleyerek cevap vermek çoğu zaman yanıltıcı olur. Çünkü video çekiminin maliyetini yalnızca videonun kaç dakika olduğu belirlemez. Çekim günü sayısı, mekân sayısı, ekip, ekipman, drone, oyuncu, dış ses, kurgu, animasyon, kullanım alanı ve teslim formatları birlikte değerlendirilir.
+“Bir video çektirmek istiyoruz, fiyatı ne kadar?” Bu soruya tek bir rakam söyleyerek cevap vermek çoğu zaman yanıltıcı olur. Çünkü [video çekiminin](/video-cekimi/sakarya/) maliyetini yalnızca videonun kaç dakika olduğu belirlemez. Çekim günü sayısı, mekân sayısı, ekip, ekipman, drone, oyuncu, dış ses, kurgu, animasyon, kullanım alanı ve teslim formatları birlikte değerlendirilir.
 
 ## Video fiyatı neden dakika üzerinden hesaplanmıyor?
 
 Bir dakikalık film için iki saatlik bir çekim de gerekebilir, birkaç ayrı mekânda geçen iki günlük bir prodüksiyon da. Son videonun süresi aynı kalsa bile hazırlık, çekim ve kurgu yükü tamamen değişir.
 
-Bu yüzden “60 saniyelik film” tek başına yeterli bir kapsam değildir. [Tanıtım filmi](/tanitim-filmi/sakarya/) web sitesinde mi kullanılacak, fuar ekranında mı oynayacak, yoksa dikey reklam kesitleriyle birlikte mi teslim edilecek? Sağlıklı teklif bu soruların cevabından sonra çıkar.
+Bu yüzden “60 saniyelik film” tek başına yeterli bir kapsam değildir. [Tanıtım filmi](/tanitim-filmi/sakarya/) web sitesinde mi kullanılacak, fuar ekranında mı oynayacak, yoksa dikey [reklam kesitleriyle](/reklam-filmi/sakarya/) birlikte mi teslim edilecek? Sağlıklı teklif bu soruların cevabından sonra çıkar.
 
 ## Fiyatı en çok hangi kalemler değiştiriyor?
 
@@ -48,7 +48,7 @@ Bu sorular teklifin pahalı veya ucuz olduğunu değil, aynı kapsamın karşıl
 
 ## Sakarya’da keşif görüşmesi neden önemli?
 
-Bir ön görüşmede markanın hedefini, mekânı, çekim tarihini ve kullanılacak formatları konuşmak çoğu belirsizliği ortadan kaldırır. Bazen başlangıçta tanıtım filmi sanılan ihtiyaç, aslında birkaç günlük sosyal medya içerik planıdır. Bazen de yalnızca Reels istenirken web sitesi ve satış sunumu için kullanılacak bir ana filme ihtiyaç olduğu ortaya çıkar.
+Bir ön görüşmede markanın hedefini, mekânı, çekim tarihini ve kullanılacak formatları konuşmak çoğu belirsizliği ortadan kaldırır. Bazen başlangıçta tanıtım filmi sanılan ihtiyaç, aslında birkaç günlük [sosyal medya içerik planıdır](/sosyal-medya-icerigi/sakarya/). Bazen de yalnızca Reels istenirken web sitesi ve satış sunumu için kullanılacak bir ana filme ihtiyaç olduğu ortaya çıkar.
 
 Biz kapsamı netleştirmeden kesin rakam söylemeyi doğru bulmuyoruz. Önce neyin üretileceğini belirliyor, ardından çekim ve teslim planını anlaşılır bir teklife dönüştürüyoruz.
 

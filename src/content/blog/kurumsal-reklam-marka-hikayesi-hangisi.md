@@ -9,7 +9,7 @@ tags: ["kurumsal film", "reklam filmi", "marka hikayesi", "video prodüksiyon"]
 draft: false
 ---
 
-"Bize bir tanıtım filmi lazım" diyen iki markadan biri aslında reklam filmi, diğeri marka hikâyesi istiyor olabilir. Bu üç format sık karıştırılıyor; oysa amaçları, süreleri ve dilleri farklı. Hangisinin size uygun olduğunu bilmek, hem bütçeyi hem de sonucu doğrudan etkiler.
+"Bize bir tanıtım filmi lazım" diyen iki markadan biri aslında [reklam filmi](/reklam-filmi/sakarya/), diğeri marka hikâyesi istiyor olabilir. Bu üç format sık karıştırılıyor; oysa amaçları, süreleri ve dilleri farklı. Hangisinin size uygun olduğunu bilmek, hem bütçeyi hem de sonucu doğrudan etkiler.
 
 ## Kurumsal tanıtım filmi
 

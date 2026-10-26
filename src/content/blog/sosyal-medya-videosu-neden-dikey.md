@@ -25,7 +25,7 @@ Sosyal medyada kimse "bakalım bu ne olacak" diye beklemez. Başparmak hazır, k
 
 ## Ama her şey dikey olmak zorunda değil
 
-Açık olalım: web sitenizdeki tanıtım filmi, fuar ekranındaki gösterim ya da YouTube'daki uzun içerik pekâlâ yatay olabilir. Doğru format, mecraya göre değişir. Önemli olan "her yere aynı videoyu koymak" değil, her mecra için doğru çerçeveyi düşünmek. Hangi formatın işinize uygun olduğu başlı başına bir konu — ona [ayrı bir yazıda](/blog/kurumsal-reklam-marka-hikayesi-hangisi/) değindik.
+Açık olalım: web sitenizdeki [tanıtım filmi](/tanitim-filmi/sakarya/), fuar ekranındaki gösterim ya da YouTube'daki uzun içerik pekâlâ yatay olabilir. Doğru format, mecraya göre değişir. Önemli olan "her yere aynı videoyu koymak" değil, her mecra için doğru çerçeveyi düşünmek. Hangi formatın işinize uygun olduğu başlı başına bir konu — ona [ayrı bir yazıda](/blog/kurumsal-reklam-marka-hikayesi-hangisi/) değindik.
 
 ## Özet
 

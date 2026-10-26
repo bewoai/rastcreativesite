@@ -9,7 +9,7 @@ tags: ["sosyal medya yönetimi", "sosyal medya ajansı", "Reels", "Sakarya"]
 draft: false
 ---
 
-Sosyal medya yönetimi tekliflerini karşılaştırmak zordur, çünkü aynı isim altında çok farklı işler satılır. Bir ajans ayda birkaç tasarım gönderi paylaşmayı “yönetim” olarak sunarken, bir diğeri strateji, video çekimi, reklam ve raporlamayı birlikte yürütür. Fiyatı anlamanın yolu, pakette gerçekte neyin yapıldığına bakmaktır.
+Sosyal medya yönetimi tekliflerini karşılaştırmak zordur, çünkü aynı isim altında çok farklı işler satılır. Bir ajans ayda birkaç tasarım gönderi paylaşmayı “yönetim” olarak sunarken, bir diğeri strateji, [video çekimi](/video-cekimi/sakarya/), reklam ve raporlamayı birlikte yürütür. Fiyatı anlamanın yolu, pakette gerçekte neyin yapıldığına bakmaktır.
 
 ## 1. Ayda kaç içerik, hangi türde?
 

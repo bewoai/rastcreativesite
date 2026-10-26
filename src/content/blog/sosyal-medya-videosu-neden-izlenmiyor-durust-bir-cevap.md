@@ -56,7 +56,7 @@ Biz bu yüzden sosyal medya videosuna başlarken önce “ne çekelim?” diye d
 
 ## Güzel görüntü dikkat çeker, doğru kurgu izletir
 
-Çekim kalitesi sosyal medyada fark yaratır. Işık, açı, renk, kamera hareketi ve ses videonun profesyonel görünmesini sağlar.
+[Çekim kalitesi](/video-cekimi/sakarya/) sosyal medyada fark yaratır. Işık, açı, renk, kamera hareketi ve ses videonun profesyonel görünmesini sağlar.
 
 Ama videoyu izleten şey çoğu zaman kurgudur.
 

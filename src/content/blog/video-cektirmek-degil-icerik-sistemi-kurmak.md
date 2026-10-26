@@ -25,7 +25,7 @@ Bu yazıyı biraz da o yüzden yazmak istedim. Bir prodüksiyona başladığım�
 
 Eskiden bir tanıtım filmi çekilir, web sitesine konur, belki birkaç toplantıda izletilir ve iş bitmiş sayılırdı. Bugün işler öyle yürümüyor. İnsanlar markayla tek bir yerde karşılaşmıyor. Biri sizi Instagram’da görüyor, biri Google’da arıyor, biri YouTube’da denk geliyor, biri de satış temsilcinizin gönderdiği kısa bir videoyla karar veriyor.
 
-Bu yüzden “bir video” dediğimiz şey aslında çok daha büyük bir yapının parçası. Aynı çekimden ana tanıtım filmi çıkabilir, 15 saniyelik reklam versiyonu çıkabilir, dikey Reels içerikleri çıkabilir, web sitesi için sessiz loop görüntüler çıkabilir, ürün ya da hizmet anlatan kısa kesitler çıkabilir.
+Bu yüzden “bir video” dediğimiz şey aslında çok daha büyük bir yapının parçası. Aynı çekimden ana [tanıtım filmi](/tanitim-filmi/sakarya/) çıkabilir, [15 saniyelik reklam versiyonu](/reklam-filmi/sakarya/) çıkabilir, dikey Reels içerikleri çıkabilir, web sitesi için sessiz loop görüntüler çıkabilir, ürün ya da hizmet anlatan kısa kesitler çıkabilir.
 
 Eğer bu baştan planlanmazsa, çekim bittikten sonra “şunu da çıkarabilir miyiz?” sorusu genelde zorlaşır. Çünkü görüntü o amaçla çekilmemiştir. Kadraj uygun değildir, cümle eksiktir, dikey format düşünülmemiştir, geçiş planlanmamıştır.
 
@@ -41,7 +41,7 @@ Ben bu yüzden toplantılarda sadece sahne konuşmayı sevmiyorum. Müşterinin 
 
 ## Aynı çekimden daha fazla değer almak mümkün
 
-Doğru planlanan bir çekim gününün verimi çok yükselir. Bazen tek bir gün içinde ana film için görüntü alırken, aynı anda sosyal medya kesitlerini, ekip portrelerini, ürün detaylarını, dikey kadrajları ve web sitesi arka planlarını da planlayabiliyoruz.
+Doğru planlanan bir çekim gününün verimi çok yükselir. Bazen tek bir gün içinde ana film için görüntü alırken, aynı anda [sosyal medya kesitlerini](/sosyal-medya-icerigi/sakarya/), ekip portrelerini, ürün detaylarını, dikey kadrajları ve web sitesi arka planlarını da planlayabiliyoruz.
 
 Bu, “her şeyi aceleyle sıkıştıralım” demek değil. Tam tersi. Sete girmeden önce neye ihtiyacımız olduğunu bilirsek, günü daha temiz yönetiriz. Kamera neyi neden çektiğini bilir. Kurgu masasında da elimizde sadece güzel görüntüler değil, işe yarayan malzeme olur.
 
