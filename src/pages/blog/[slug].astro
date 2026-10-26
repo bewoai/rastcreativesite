@@ -7,7 +7,7 @@ import Section from "../../components/Section.astro";
 import Eyebrow from "../../components/Eyebrow.astro";
 import Button from "../../components/Button.astro";
 import { SITE, PRIMARY_CTA } from "../../consts";
-import { breadcrumb, person } from "../../lib/schema";
+import { breadcrumb, person, faqPage } from "../../lib/schema";
 
 export async function getStaticPaths() {
   const posts = (await getCollection("blog")).filter((p) => !p.data.draft);
@@ -52,6 +52,7 @@ const pageJsonLd = [
     { name: d.title, path: `/blog/${entry.id}/` },
   ]),
   blogPosting,
+  ...(d.faq.length ? [faqPage(d.faq)] : []),
 ];
 ---
 
@@ -101,6 +102,19 @@ const pageJsonLd = [
       <div class="prose">
         <Content />
       </div>
+      {
+        d.faq.length > 0 && (
+          <section class="faq" aria-labelledby="sss-baslik">
+            <h2 id="sss-baslik" class="faq__title">Sık sorulan sorular</h2>
+            {d.faq.map((f) => (
+              <details class="faq__item">
+                <summary>{f.question}</summary>
+                <p>{f.answer}</p>
+              </details>
+            ))}
+          </section>
+        )
+      }
     </article>
 
     <aside class="article-cta">
@@ -201,6 +215,35 @@ const pageJsonLd = [
   }
   .prose :global(li::marker) {
     color: var(--amber-text);
+  }
+  .faq {
+    max-width: 68ch;
+    margin-top: 2.2rem;
+  }
+  .faq__title {
+    margin: 0 0 0.9rem;
+    font-family: var(--font-body);
+    font-size: clamp(1.3rem, 3vw, 1.6rem);
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .faq__item {
+    border-top: 1px solid var(--line);
+    padding: 0.9rem 0;
+  }
+  .faq__item:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  .faq__item summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .faq__item p {
+    margin: 0.6rem 0 0;
+    font-size: 1.05rem;
+    line-height: var(--leading-body);
+    color: var(--ink-soft);
   }
   .article-cta {
     display: flex;
