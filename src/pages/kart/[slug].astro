@@ -1,0 +1,115 @@
+---
+/**
+ * /kart/<slug>/ — yaka kartı QR hedefi (link-in-bio).
+ * Bağlantılar src/data/kart.ts'ten gelir; kart yeniden basılmadan değiştirilebilir.
+ * Arama motorlarına kapalı (noindex).
+ */
+import { Picture } from "astro:assets";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { TEAM, type TeamMember } from "../../data/team";
+import { KART, type KartLink } from "../../data/kart";
+
+export function getStaticPaths() {
+  return TEAM.filter((m) => KART[m.slug]).map((member) => ({
+    params: { slug: member.slug },
+    props: { member, links: KART[member.slug] },
+  }));
+}
+
+const { member, links } = Astro.props as { member: TeamMember; links: KartLink[] };
+const isExternal = (href: string) => /^(https?:|mailto:|tel:)/.test(href);
+---
+
+<BaseLayout
+  title={`${member.name} · Rast Creative`}
+  description={`${member.name}, Rast Creative Studio — ${member.role}.`}
+  noindex
+>
+  <main class="kart">
+    <Picture
+      src={member.photo}
+      alt={member.name}
+      widths={[160, 320]}
+      sizes="8rem"
+      formats={["avif", "webp"]}
+      class="kart__photo"
+      loading="eager"
+    />
+    <h1 class="kart__name">{member.name}</h1>
+    <p class="kart__role">{member.role} · Rast Creative Studio</p>
+
+    <ul class="kart__links">
+      {
+        links.map((l, i) => (
+          <li>
+            <a
+              href={l.href}
+              class:list={["kart__btn", { "kart__btn--primary": i === 0 }]}
+              {...(isExternal(l.href) ? { target: "_blank", rel: "noopener" } : {})}
+            >
+              <span>{l.label}</span>
+              {l.note && <small>{l.note}</small>}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+</BaseLayout>
+
+<style>
+  .kart {
+    max-width: 26rem;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 4rem;
+    text-align: center;
+  }
+  .kart__photo {
+    width: 7rem;
+    height: 7rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 1rem;
+    display: block;
+  }
+  .kart__name {
+    font-size: 1.6rem;
+    line-height: 1.15;
+    margin: 0 0 0.35rem;
+  }
+  .kart__role {
+    margin: 0 0 2rem;
+    opacity: 0.7;
+    font-size: 0.95rem;
+  }
+  .kart__links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.7rem;
+  }
+  .kart__btn {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.95rem 1.1rem;
+    border: 1.5px solid var(--color-line, currentColor);
+    border-radius: 0.9rem;
+    text-decoration: none;
+    color: inherit;
+    font-weight: 600;
+  }
+  .kart__btn small {
+    font-weight: 400;
+    opacity: 0.65;
+  }
+  .kart__btn--primary {
+    background: var(--color-amber);
+    border-color: var(--color-amber);
+    color: #111;
+  }
+  .kart__btn:hover {
+    border-color: var(--color-amber);
+  }
+</style>
