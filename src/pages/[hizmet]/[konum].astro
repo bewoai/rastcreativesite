@@ -31,7 +31,9 @@ const { service, location } = Astro.props as Props;
 const audience = getServiceAudience(service.slug);
 const extra = getLocationContent(service.slug, location.slug);
 
-const title = `${location.name} ${service.name} ${service.seoTitleSuffix}`;
+// Keep "<title> — Rast Creative Studio" within ~70 chars (Bing "title too long").
+const fullTitle = `${location.name} ${service.name} ${service.seoTitleSuffix}`;
+const title = fullTitle.length <= 47 ? fullTitle : `${location.name} ${service.name}`;
 const pageHeading = `${location.name} ${service.name}`;
 const faqHeading = `${location.name} ${service.name} hakkında`;
 const path = `/${service.slug}/${location.slug}/`;

@@ -54,7 +54,7 @@ const cardPoster = ytThumbToWebp(poster, "card");
         <img
           class="card__backdrop"
           src={cardPoster}
-          alt=""
+          alt={posterAlt ?? `${title} — proje görseli`}
           loading="lazy"
           decoding="async"
           width="1600"

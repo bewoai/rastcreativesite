@@ -59,7 +59,7 @@ const cover = (p: CollectionEntry<"projects">) =>
         {reels.map((p) => (
           <li>
             <a href={`/projeler/${p.id}/`} class="ig__tile" aria-label={p.data.title}>
-              <img src={cover(p)} alt="" width={yt ? 320 : 240} height={yt ? 180 : 426} loading="lazy" decoding="async" />
+              <img src={cover(p)} alt={`${p.data.title} kapak görseli`} width={yt ? 320 : 240} height={yt ? 180 : 426} loading="lazy" decoding="async" />
               <span class="ig__play" aria-hidden="true">▶</span>
             </a>
           </li>

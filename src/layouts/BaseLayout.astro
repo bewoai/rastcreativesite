@@ -63,7 +63,14 @@ const {
 
 const jsonLdItems = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 
-const pageTitle = title ? SITE.titleTemplate.replace("%s", title) : SITE.defaultTitle;
+// Keep titles within ~70 chars (Bing/Google truncate; Bing flags "title too long"):
+// long page titles get the short brand suffix, very long ones none.
+const fullTitle = title ? SITE.titleTemplate.replace("%s", title) : SITE.defaultTitle;
+const pageTitle = !title || fullTitle.length <= 70
+  ? fullTitle
+  : `${title} | Rast Creative`.length <= 70
+    ? `${title} | Rast Creative`
+    : title;
 const pageDescription = description ?? SITE.description;
 const pagePath =
   Astro.url.pathname === "/"

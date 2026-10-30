@@ -14,6 +14,7 @@
  * poster carries the hero on its own.
  */
 interface Props {
+  posterAlt?: string;
   /** Built URL of the poster image (desktop / default). Omit for a bg-only hero. */
   poster?: string;
   /** Optional art-directed poster for narrow screens (portrait crop). */
@@ -50,8 +51,7 @@ const {
   scrim = defaultScrim,
   flush = false,
   fadeBottom = false,
-  class: className,
-} = Astro.props;
+  class: className, posterAlt } = Astro.props;
 
 const hasVideo = Boolean(webm || mp4);
 
@@ -72,7 +72,7 @@ const styleVars = `--vhero-h:${height}; --vhero-scrim:${scrim}%`;
       {posterMobile && <source media="(max-width: 767.98px)" srcset={posterMobile} />}
       <img
         src={poster}
-        alt=""
+        alt={posterAlt ?? "Rast Creative Studio video prodüksiyon çekiminden kare"}
         loading="eager"
         decoding="async"
         fetchpriority="high"

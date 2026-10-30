@@ -347,7 +347,7 @@ const year = new Date().getFullYear();
           A.heroPoster && (
             <picture>
               {A.heroMPoster && <source media="(max-width: 700px)" srcset={A.heroMPoster} width="900" height="1350" />}
-              <img class="ev-hero__video ev-hero__still" src={A.heroPoster} alt="" width="1672" height="941" fetchpriority="high" />
+              <img class="ev-hero__video ev-hero__still" src={A.heroPoster} alt="Sisli bir set atmosferinde Rast Creative Studio çekim sahnesi" width="1672" height="941" fetchpriority="high" />
             </picture>
           )
         }
@@ -415,9 +415,9 @@ const year = new Date().getFullYear();
       <div class="ev-dolly__clouds" aria-hidden="true">
         {A.cloudPoster && (
           <>
-            <img class="ev-dolly__cloud ev-dolly__cloud--far" src={A.cloudPoster} alt="" width="1600" height="502" decoding="async" />
-            <img class="ev-dolly__cloud ev-dolly__cloud--bank" src={A.cloudPoster} alt="" width="1600" height="502" decoding="async" />
-            <img class="ev-dolly__cloud ev-dolly__cloud--near" src={A.cloudPoster} alt="" width="1600" height="502" decoding="async" />
+            <img class="ev-dolly__cloud ev-dolly__cloud--far" src={A.cloudPoster} alt="Bulut dokusu" aria-hidden="true" width="1600" height="502" decoding="async" />
+            <img class="ev-dolly__cloud ev-dolly__cloud--bank" src={A.cloudPoster} alt="Bulut dokusu" aria-hidden="true" width="1600" height="502" decoding="async" />
+            <img class="ev-dolly__cloud ev-dolly__cloud--near" src={A.cloudPoster} alt="Bulut dokusu" aria-hidden="true" width="1600" height="502" decoding="async" />
           </>
         )}
       </div>
@@ -757,7 +757,7 @@ const year = new Date().getFullYear();
       <div class="ev-path__wrap" data-path style="--at:0">
         <div class="ev-path__line" aria-hidden="true">
           <span class="ev-path__sun">
-            {A.sun && <img src={A.sun} alt="" width="560" height="560" loading="lazy" decoding="async" />}
+            {A.sun && <img src={A.sun} alt="Rast Creative turuncu güneş küresi" aria-hidden="true" width="560" height="560" loading="lazy" decoding="async" />}
           </span>
         </div>
         <ol class="ev-path__list">
@@ -1015,7 +1015,7 @@ const year = new Date().getFullYear();
               {A.dawnMp4 && <source src={A.dawnMp4} type="video/mp4" />}
             </video>
           ) : (
-            A.dawnPoster && <img class="ev-call__video" src={A.dawnPoster} alt="" width="1600" height="900" loading="lazy" />
+            A.dawnPoster && <img class="ev-call__video" src={A.dawnPoster} alt="Şafak ışığında çekim seti" width="1600" height="900" loading="lazy" />
           )
         }
       </div>
