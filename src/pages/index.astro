@@ -3427,9 +3427,10 @@ const year = new Date().getFullYear();
       animation: ev-word 1.1s var(--ease-out) both;
       animation-delay: calc(150ms + var(--d, 0) * 120ms);
     }
+    /* Transform-only (no opacity fade): the hero headline is the LCP element,
+       and a fade from opacity 0 delays LCP on slow mobiles (CrUX 30.10: 3.6 s). */
     @keyframes ev-word {
       from {
-        opacity: 0;
         transform: translateY(0.35em);
       }
     }
@@ -3438,7 +3439,7 @@ const year = new Date().getFullYear();
     .ev-hero__proof,
     .ev-hero .ev-label {
       animation: ev-word 1s var(--ease-out) both;
-      animation-delay: 700ms;
+      animation-delay: 200ms;
     }
     /* Sections surface as they arrive. Content is only hidden once JS is
        known to run; without it everything is simply there. */
