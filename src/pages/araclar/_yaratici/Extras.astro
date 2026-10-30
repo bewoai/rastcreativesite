@@ -1,0 +1,108 @@
+---
+/**
+ * Shared lower half of the creator tool pages: FAQ (same text as the FAQPage
+ * JSON-LD), "Kaynak göster" copy box, sources (slot), related links, soft CTA.
+ */
+import Section from "../../../components/Section.astro";
+import SectionHeading from "../../../components/SectionHeading.astro";
+import Button from "../../../components/Button.astro";
+import { PRIMARY_CTA } from "../../../consts";
+
+interface Props {
+  faqs: { question: string; answer: string }[];
+  pageUrl: string;
+  linkText: string;
+  attribution: string;
+  current: string;
+  ctaTitle: string;
+  checked?: string;
+}
+const { faqs, pageUrl, linkText, attribution, current, ctaTitle, checked = "30 Ekim 2026" } = Astro.props;
+const citeHtml = `<a href="${pageUrl}">${linkText} — Rast Creative Studio</a>`;
+
+const related = [
+  { href: "/araclar/guvenli-alan/", name: "Güvenli alan kontrolü", text: "Reels, TikTok, Shorts arayüzü neyi kapatıyor?" },
+  { href: "/araclar/en-boy-orani/", name: "En-boy oranı ve kırpma", text: "16:9 kaydı 9:16, 4:5, 1:1, 3:4'e kırpın." },
+  { href: "/araclar/altyazi-kontrolu/", name: "Altyazı kontrolü", text: "SRT/VTT: satır uzunluğu, okuma hızı, çakışma." },
+  { href: "/araclar/instagram-grid-sablonu/", name: "Instagram grid şablonu", text: "Kapak profil ızgarasında nasıl kırpılıyor?" },
+  { href: "/araclar/kapak-sablonlari/", name: "Kapak şablonları", text: "Reels kapağı ve YouTube küçük resmi rehberleri." },
+  { href: "/araclar/bitrate-hesaplayici/", name: "Bitrate hesaplayıcı", text: "Süre ve bitrate'ten dosya boyutu." },
+  { href: "/rehber/video-export-ayarlari/", name: "Video export ayarları", text: "Platforma göre dışa aktarma rehberi." },
+  { href: "/araclar/storyboard-sablonu/", name: "Storyboard şablonu", text: "Çekimden önce kareleri planlayın." },
+  { href: "/araclar/cekim-kontrol-listesi/", name: "Çekim kontrol listesi", text: "Sete gitmeden önce son kontrol." },
+].filter((r) => r.href !== current);
+---
+
+<Section width="default" space="tight" id="sss">
+  <SectionHeading eyebrow="SSS">Sık sorulan sorular</SectionHeading>
+  <dl class="yt-faq">
+    {
+      faqs.map((f) => (
+        <div>
+          <dt>{f.question}</dt>
+          <dd>{f.answer}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</Section>
+
+<Section width="default" space="tight" id="kaynak-goster">
+  <div class="yt-box">
+    <h2>Bu aracı sitende kullan / kaynak göster</h2>
+    <p>
+      Bir yazıda, eğitimde ya da kaynak listesinde bu sayfaya yer vermek isterseniz aşağıdaki bağlantıyı kopyalayabilirsiniz.
+      İndirilen şablonları kullanırken atıf satırı: <em>“{attribution}”</em>.
+    </p>
+    <label for="yt-cite" class="yt-small">HTML bağlantısı</label>
+    <textarea id="yt-cite" readonly rows="2" data-cite>{citeHtml}</textarea>
+    <button type="button" class="ev-btn" data-copy-cite>Kopyala</button>
+    <span class="yt-small" data-copied aria-live="polite"></span>
+  </div>
+</Section>
+
+<Section width="default" space="tight" id="kaynaklar">
+  <SectionHeading eyebrow="Şeffaflık">Kaynaklar ve notlar</SectionHeading>
+  <div class="yt-prose"><slot name="sources" /></div>
+  <p class="yt-small">
+    Son kontrol: {checked}. Platform adları sahiplerinin ticari markalarıdır; bu araç hiçbir platformla bağlantılı değildir ve
+    logolarını kullanmaz. Arayüz çizimleri temsilidir, değerler cihaza ve uygulama sürümüne göre değişebilir.
+  </p>
+</Section>
+
+<Section width="default" space="tight" id="diger-araclar">
+  <SectionHeading eyebrow="Ücretsiz">Diğer araçlar ve rehberler</SectionHeading>
+  <ul class="yt-related">
+    {
+      related.map((r) => (
+        <li>
+          <a href={r.href}>{r.name}</a>
+          <small>{r.text}</small>
+        </li>
+      ))
+    }
+    <li><a href="/araclar/">Tüm araçlar</a><small>Kayıt yok, tarayıcıda çalışır.</small></li>
+  </ul>
+</Section>
+
+<Section width="default" space="tight">
+  <div class="yt-box">
+    <h2>{ctaTitle}</h2>
+    <p><slot name="cta" /></p>
+    <Button href={PRIMARY_CTA.href}>Görüşelim</Button>
+  </div>
+</Section>
+
+<script>
+  document.querySelector<HTMLButtonElement>("[data-copy-cite]")?.addEventListener("click", async () => {
+    const ta = document.querySelector<HTMLTextAreaElement>("[data-cite]")!;
+    const out = document.querySelector<HTMLElement>("[data-copied]")!;
+    try {
+      await navigator.clipboard.writeText(ta.value);
+    } catch {
+      ta.select();
+      document.execCommand("copy");
+    }
+    out.textContent = "Kopyalandı.";
+  });
+</script>

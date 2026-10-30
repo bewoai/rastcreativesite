@@ -1,0 +1,749 @@
+---
+/**
+ * /araclar/en-boy-orani/ — aspect ratio & crop previewer. 100% client-side.
+ * Shows how a 16:9 (or any) video/image looks cropped to 9:16, 4:5, 1:1, 3:4,
+ * draggable crop, FFmpeg crop line, PNG downloads (cropped still, crop frame).
+ * Static overlays: scripts/generate-creator-templates.py.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Section from "../../components/Section.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import Extras from "./_yaratici/Extras.astro";
+import { SITE } from "../../consts";
+import { breadcrumb, faqPage } from "../../lib/schema";
+import "./_yaratici/tool.css";
+
+const PATH = "/araclar/en-boy-orani/";
+const PAGE_URL = new URL(PATH, SITE.url).href;
+const title = "En-Boy Oranı ve Kırpma: 16:9 → 9:16, 4:5, 1:1";
+const description =
+  "Ücretsiz en-boy oranı aracı: yatay videonuzun 9:16, 4:5, 1:1 ve 3:4 kırpmada nasıl görüneceğini görün, kadrajı sürükleyin, kırpma çerçevesini PNG indirin.";
+
+const RATIOS = [
+  { id: "9x16", label: "9:16", w: 9, h: 16, use: "Reels, TikTok, Shorts, Story" },
+  { id: "4x5", label: "4:5", w: 4, h: 5, use: "Instagram/Facebook akış gönderisi" },
+  { id: "3x4", label: "3:4", w: 3, h: 4, use: "Instagram profil ızgarası, 3:4 gönderi" },
+  { id: "1x1", label: "1:1", w: 1, h: 1, use: "Kare gönderi, LinkedIn, reklam" },
+  { id: "16x9", label: "16:9", w: 16, h: 9, use: "YouTube, web, TV" },
+  { id: "4x3", label: "4:3", w: 4, h: 3, use: "Eski ekranlar, bazı sunumlar" },
+];
+
+// 1920x1080 source → centre crop sizes (exact arithmetic, shown in the table)
+const fit = (rw: number, rh: number, W = 1920, H = 1080) => {
+  const cw = Math.round((H * rw) / rh);
+  return cw <= W ? { w: cw, h: H } : { w: W, h: Math.round((W * rh) / rw) };
+};
+const TABLE = RATIOS.filter((r) => r.id !== "16x9").map((r) => {
+  const c = fit(r.w, r.h);
+  const c4k = fit(r.w, r.h, 3840, 2160);
+  const keep = Math.round(((c.w * c.h) / (1920 * 1080)) * 100);
+  return { ...r, c, c4k, keep };
+});
+
+const TPL = PATH;
+const templates = [
+  { file: "rast-kirpma-cerceveleri-16x9-1920x1080.png", label: "Tüm çerçeveler (16:9 üstünde)" },
+  { file: "rast-kirpma-16x9-to-9x16-1920x1080.png", label: "16:9 → 9:16 maske" },
+  { file: "rast-kirpma-16x9-to-4x5-1920x1080.png", label: "16:9 → 4:5 maske" },
+  { file: "rast-kirpma-16x9-to-3x4-1920x1080.png", label: "16:9 → 3:4 maske" },
+  { file: "rast-kirpma-16x9-to-1x1-1920x1080.png", label: "16:9 → 1:1 maske" },
+];
+
+const faqs = [
+  {
+    question: "16:9 bir videoyu 9:16'ya kırpınca ne kadarı kalır?",
+    answer:
+      "1920×1080 bir karede 9:16 kırpma 608×1080 piksellik dikey bir şerit bırakır; görüntünün yaklaşık üçte biri (%32) kalır, kalan kısım kenarlardan atılır. 4:5'te 864×1080 (%45), 1:1'de 1080×1080 (%56) kalır.",
+  },
+  {
+    question: "Full HD çekimden dikey video yaparsam kalite düşer mi?",
+    answer:
+      "Evet, belirgin biçimde. 1080p yatay kayıttan alınan 9:16 şerit 608×1080 pikseldir; 1080×1920'ye büyütülünce yaklaşık 1,8 kat ölçeklenir ve yumuşar. Aynı içerik hem yatay hem dikey yayınlanacaksa 4K (3840×2160) çekin: 9:16 şerit 1215×2160 olur ve 1080×1920'ye küçültülerek temiz kalır.",
+  },
+  {
+    question: "Videom bir sunucuya yükleniyor mu?",
+    answer:
+      "Hayır. Dosya yalnızca tarayıcınızda açılır, kırpma önizlemesi ve indirilen PNG'ler de tarayıcınızda oluşturulur. Hiçbir sunucuya gönderilmez, sayfada üçüncü taraf takip kodu yoktur.",
+  },
+  {
+    question: "Aracın verdiği FFmpeg satırını nasıl kullanırım?",
+    answer:
+      "Terminalde videonun bulunduğu klasöre geçip satırı çalıştırın; girdi.mp4 yerine kendi dosya adınızı yazın. crop filtresi seçtiğiniz kadrajı keser, scale filtresi hedef çözünürlüğe (ör. 1080×1920) getirir, ses olduğu gibi kopyalanır. Kurgu programında aynı sonucu sekans ayarını 1080×1920 yapıp klibi konumlandırarak da alabilirsiniz.",
+  },
+  {
+    question: "Kırpma çerçevesi PNG'sini nerede kullanırım?",
+    answer:
+      "Şeffaf PNG'yi Premiere Pro, DaVinci Resolve, Final Cut ya da CapCut'ta 16:9 zaman çizelgenizin en üst katmanına koyun. Koyu alan dikey kırpmada kaybolacak kısımdır; çekimde ya da kurguda önemli şeyleri parlak alanın içinde tutun. Dışa aktarmadan önce katmanı kapatın.",
+  },
+  {
+    question: "Hareketli konu varsa tek bir kırpma yeterli mi?",
+    answer:
+      "Çoğu zaman hayır. Konu kadrajda yürüyorsa kurgu programında kırpma konumunu anahtar karelerle (keyframe) taşıyın ya da Premiere Pro'daki Auto Reframe, DaVinci Resolve'daki Smart Reframe gibi otomatik takip özelliklerini kullanın. Bu araç tek kare ya da sabit kadraj için hızlı kontrol sağlar.",
+  },
+];
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Araçlar", path: "/araclar/" },
+    { name: "En-boy oranı ve kırpma", path: PATH },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "En-Boy Oranı ve Kırpma Önizleme",
+    alternateName: "Aspect ratio crop previewer (16:9 to 9:16, 4:5, 1:1, 3:4)",
+    url: PAGE_URL,
+    applicationCategory: "MultimediaApplication",
+    operatingSystem: "Web",
+    browserRequirements: "Modern bir web tarayıcısı; JavaScript gerekli",
+    isAccessibleForFree: true,
+    inLanguage: "tr",
+    offers: { "@type": "Offer", price: "0", priceCurrency: "TRY" },
+    description,
+    featureList: [
+      "Görsel ve video önizleme",
+      "9:16, 4:5, 3:4, 1:1, 16:9, 4:3 ve özel oran",
+      "Sürüklenebilir kırpma kadrajı ve yakınlaştırma",
+      "Kırpılmış kare ve şeffaf kırpma çerçevesi PNG indirme",
+      "FFmpeg crop komutu",
+      "CC BY 4.0 kırpma maskeleri",
+    ],
+    provider: { "@id": `${SITE.url}#business` },
+    creator: { "@id": `${SITE.url}#business` },
+    license: "https://creativecommons.org/licenses/by/4.0/deed.tr",
+  },
+  faqPage(faqs),
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <div class="yt-page">
+    <Section width="wide" space="tight">
+      <nav class="crumbs" aria-label="Sayfa yolu">
+        <a href="/">Ana sayfa</a> <span aria-hidden="true">/</span> <a href="/araclar/">Araçlar</a>
+        <span aria-hidden="true">/</span> <span aria-current="page">En-boy oranı ve kırpma</span>
+      </nav>
+      <SectionHeading as="h1" eyebrow="Araç · Ücretsiz · Kayıt yok">
+        En-boy oranı ve kırpma önizleme
+        <Fragment slot="intro">
+          <p>
+            Yatay çektiğiniz bir video Reels'te, akışta ya da kare gönderide nasıl görünecek? Görselinizi veya videonuzu açın,
+            9:16, 4:5, 3:4 ya da 1:1 kadrajı sürükleyerek yerleştirin, kırpılmış kareyi ve kırpma çerçevesini indirin.
+            <strong>Dosyanız hiçbir sunucuya yüklenmez.</strong>
+          </p>
+        </Fragment>
+      </SectionHeading>
+
+      <ol class="howto" aria-label="Nasıl kullanılır">
+        <li><strong>1. Dosyanızı açın.</strong> JPG, PNG, WebP görsel ya da MP4, MOV, WebM video. Dosya seçmezseniz örnek bir 16:9 kare gösterilir.</li>
+        <li><strong>2. Oranı seçin, kadrajı sürükleyin.</strong> Parlak alan kalan kısımdır. Yakınlaştırma ile daha sıkı kırpın; ok tuşları da çalışır.</li>
+        <li><strong>3. Kontrol edin, indirin.</strong> Çözünürlük uyarısına bakın; kırpılmış kareyi, kırpma çerçevesini ya da FFmpeg satırını alın.</li>
+      </ol>
+
+      <div class="yt-tool yt-tool--split" data-tool>
+        <div class="yt-stage">
+          <label class="yt-drop" data-drop>
+            <input type="file" class="yt-sr" data-file accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime,video/webm,.mov,.m4v" />
+            <span class="yt-drop__title">Dosya seçin ya da buraya sürükleyin</span>
+            <span class="yt-drop__hint">Görsel veya video · yalnızca tarayıcınızda açılır</span>
+          </label>
+          <div class="yt-canvaswrap">
+            <canvas width="1600" height="900" data-canvas tabindex="0" role="img" aria-label="Kaynak görüntü ve seçili kırpma kadrajı. Kadrajı sürükleyebilir ya da ok tuşlarıyla taşıyabilirsiniz."></canvas>
+          </div>
+          <div class="yt-player" data-player hidden>
+            <button type="button" class="yt-pbtn" data-play>Oynat</button>
+            <input type="range" min="0" max="1" step="0.01" value="0" data-seek aria-label="Videoda konum" />
+            <span class="yt-time" data-time>0:00</span>
+          </div>
+          <p class="yt-warn" data-warn aria-live="polite" hidden></p>
+          <p class="yt-small" data-info aria-live="polite"></p>
+          <noscript><p class="yt-warn">Önizleme için JavaScript gerekli. Aşağıdaki şeffaf kırpma maskelerini JavaScript olmadan da indirebilirsiniz.</p></noscript>
+        </div>
+
+        <div>
+          <fieldset>
+            <legend>Hedef oran</legend>
+            <div class="yt-chips">
+              {
+                RATIOS.map((r, i) => (
+                  <label class="yt-chip">
+                    <input type="radio" name="ratio" value={r.id} checked={i === 0} />
+                    <span>{r.label}</span>
+                  </label>
+                ))
+              }
+              <label class="yt-chip"><input type="radio" name="ratio" value="custom" /><span>Özel</span></label>
+            </div>
+            <div class="yt-fields" data-custom hidden style="margin-top:.8rem">
+              <label class="yt-field">Genişlik oranı <input type="number" min="1" max="100" step="0.01" value="2.39" data-cw /></label>
+              <label class="yt-field">Yükseklik oranı <input type="number" min="1" max="100" step="0.01" value="1" data-ch /></label>
+            </div>
+            <p class="yt-small" data-use></p>
+          </fieldset>
+          <fieldset>
+            <legend>Kadraj</legend>
+            <label class="yt-field">Yakınlaştırma <span data-zoomv>%100</span>
+              <input type="range" min="100" max="300" step="1" value="100" data-zoom />
+            </label>
+            <div class="yt-actions">
+              <button type="button" class="yt-btn" data-center>Ortala</button>
+              <label class="yt-checks"><span style="display:flex;gap:.5rem;align-items:center"><input type="checkbox" data-thirds checked /> Üçte bir çizgileri</span></label>
+            </div>
+          </fieldset>
+          <div class="yt-h3">Kırpılmış sonuç</div>
+          <div class="yt-canvaswrap" style="max-width:360px;margin-inline:auto">
+            <canvas width="540" height="960" data-out role="img" aria-label="Kırpılmış sonucun önizlemesi"></canvas>
+          </div>
+          <div class="yt-actions">
+            <button type="button" class="ev-btn ev-btn--sun" data-dl-crop>Kırpılmış kareyi indir (PNG)</button>
+            <button type="button" class="ev-btn" data-dl-frame>Kırpma çerçevesini indir</button>
+            <button type="button" class="yt-btn" data-clear hidden>Dosyayı kaldır</button>
+          </div>
+          <p class="yt-small">Kırpma çerçevesi, kaynak çözünürlüğünüzde şeffaf bir PNG'dir; kurgu programında videonun üstüne koyup aynı kadrajı korursunuz. Çerçevenin koyu alanında küçük bir Rast Creative imzası yer alır.</p>
+          <label class="yt-small" for="ff">FFmpeg ile aynı kırpma</label>
+          <output id="ff" class="yt-code" data-ffmpeg></output>
+          <button type="button" class="yt-btn" data-copy-ff style="margin-top:.5rem">Komutu kopyala</button>
+          <span class="yt-small" data-ff-copied aria-live="polite"></span>
+        </div>
+      </div>
+
+      <div style="margin-top:1.6rem">
+        <div class="yt-h3">Aynı kare, dört kırpma</div>
+        <div class="yt-tpls" data-minis style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr))"></div>
+        <p class="yt-small">Küçük önizlemeler seçtiğiniz kadrajın merkezini korur. Tıklayınca o orana geçersiniz.</p>
+      </div>
+    </Section>
+
+    <Section width="default" space="tight" id="olculer">
+      <SectionHeading eyebrow="Ölçüler">16:9 kayıttan hangi oran ne kadar kalır?</SectionHeading>
+      <div class="yt-tablewrap">
+        <table class="yt-table">
+          <caption>Ortadan kırpmada kalan alan (matematiksel, yuvarlama 1 px)</caption>
+          <thead>
+            <tr><th scope="col">Hedef</th><th scope="col">1920×1080'den</th><th scope="col">3840×2160'tan</th><th scope="col">Kalan alan</th><th scope="col">Nerede?</th></tr>
+          </thead>
+          <tbody>
+            {
+              TABLE.map((r) => (
+                <tr>
+                  <th scope="row">{r.label}</th>
+                  <td>{r.c.w}×{r.c.h}</td>
+                  <td>{r.c4k.w}×{r.c4k.h}</td>
+                  <td>%{r.keep}</td>
+                  <td>{r.use}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <ul class="yt-tips">
+        <li><strong>Çift yayın planlıyorsanız 4K çekin.</strong> 4K'dan alınan 9:16 şerit (1215×2160) 1080×1920 teslim için yeterli; 1080p'den alınan şerit büyütülmek zorunda.</li>
+        <li><strong>Konuyu merkeze yakın tutun.</strong> 9:16'da 16:9 karenin yalnızca orta üçte biri kalır; iki kişilik röportajda kişilerden biri dışarıda kalır.</li>
+        <li><strong>Yazıyı sonradan ekleyin.</strong> Yatay kurguya gömülü başlıklar kırpmada kesilir; dikey versiyonda metni ayrıca yerleştirin ve <a href="/araclar/guvenli-alan/">güvenli alan kontrolü</a> ile arayüz altında kalmadığını görün.</li>
+        <li><strong>Teslim ayarları:</strong> dikey video için 1080×1920, akış için 1080×1350. Codec ve bitrate için <a href="/rehber/video-export-ayarlari/">video export ayarları rehberine</a> bakın.</li>
+      </ul>
+    </Section>
+
+    <Section width="wide" space="tight" id="sablonlar">
+      <SectionHeading eyebrow="İndir · CC BY 4.0">
+        Şeffaf kırpma maskeleri (16:9, 1920×1080)
+        <Fragment slot="intro">
+          <p class="yt-prose">
+            Kurgu programınızda 16:9 zaman çizelgesinin en üst katmanına koyun; koyu alan kırpmada kaybolur. 4K projede %200
+            ölçekleyin. <a href="https://creativecommons.org/licenses/by/4.0/deed.tr" rel="license noopener" target="_blank">CC BY 4.0</a>:
+            ticari işlerde de kullanabilirsiniz, tek şart atıf (“Rast Creative Studio — rastcreative.com”).
+          </p>
+        </Fragment>
+      </SectionHeading>
+      <ul class="yt-tpls" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))">
+        {
+          templates.map((t) => (
+            <li>
+              <a href={TPL + t.file} download>
+                <img src={TPL + t.file} alt={`${t.label} şeffaf kırpma maskesi önizlemesi`} width="192" height="108" loading="lazy" decoding="async" />
+                <span>{t.label}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p><a class="ev-btn ev-btn--sun" href={TPL + "rast-kirpma-cerceveleri.zip"} download>Tüm maskeler (ZIP)</a></p>
+    </Section>
+
+    <Extras
+      faqs={faqs}
+      pageUrl={PAGE_URL}
+      linkText="En-boy oranı ve kırpma önizleme"
+      attribution="Kırpma maskesi: Rast Creative Studio — rastcreative.com"
+      current={PATH}
+      ctaTitle="Tek çekimden yatay ve dikey video"
+    >
+      <Fragment slot="sources">
+        <p>Kırpma ölçüleri matematiksel hesaptır (yaklaşık değil). Platform oranları şu kaynaklardan:</p>
+        <ul class="yt-sources">
+          <li>Instagram Yardım Merkezi, “Reel size & aspect ratios on Instagram”: Reels 1,91:1 ile 9:16 arasında yüklenebilir, en düşük 720 px (erişim 30.10.2026). <a href="https://help.instagram.com/1038071743007909" rel="noopener" target="_blank">help.instagram.com</a></li>
+          <li>Meta Ads Guide, Instagram akış ve Reels reklam ölçüleri: akışta 1:1 ve 4:5, Reels/Story'de 9:16 (erişim 30.10.2026). <a href="https://www.facebook.com/business/ads-guide" rel="noopener" target="_blank">facebook.com/business/ads-guide</a></li>
+          <li>Instagram profil ızgarasının 1:1'den 3:4'e geçişi: Adam Mosseri'nin Ocak 2025 duyurusu, haberi: Gadgets360 (erişim 30.10.2026). <a href="https://www.gadgets360.com/apps/news/instagram-update-profile-grid-reels-duration-three-minute-7517402" rel="noopener" target="_blank">gadgets360.com</a></li>
+          <li>YouTube Yardım, “Add video thumbnails”: videolar için 16:9 önerisi (erişim 30.10.2026). <a href="https://support.google.com/youtube/answer/72431?hl=tr" rel="noopener" target="_blank">support.google.com</a></li>
+          <li>FFmpeg Filters Documentation, crop ve scale filtreleri. <a href="https://ffmpeg.org/ffmpeg-filters.html#crop" rel="noopener" target="_blank">ffmpeg.org</a></li>
+        </ul>
+      </Fragment>
+      <Fragment slot="cta">
+        Rast Creative Studio, çekimi baştan çoklu format için planlar: yatay film, dikey Reels ve akış kesimleri aynı çekim
+        gününden çıkar. Düzenli içerik için <a href="/sosyal-medya-icerigi/">sosyal medya içeriği</a>, tek seferlik işler için
+        <a href="/video-cekimi/">video çekimi</a> ve <a href="/tanitim-filmi/">tanıtım filmi</a> sayfalarına bakabilirsiniz.
+      </Fragment>
+    </Extras>
+  </div>
+</BaseLayout>
+
+<script>
+  import { exportCanvasPng, drawCredit, loadLogo, wireDrop, isVideoFile, isImageFile, fmtTime, canvasPoint, pngWithMeta, downloadBlob } from "./_yaratici/client";
+
+  const PAGE = "https://rastcreative.com/araclar/en-boy-orani/";
+  const PATH = "/araclar/en-boy-orani/";
+  const RATIOS: Record<string, { w: number; h: number; label: string; use: string; out: [number, number] }> = {
+    "9x16": { w: 9, h: 16, label: "9:16", use: "Reels, TikTok, Shorts, Story · teslim 1080×1920", out: [1080, 1920] },
+    "4x5": { w: 4, h: 5, label: "4:5", use: "Instagram/Facebook akış · teslim 1080×1350", out: [1080, 1350] },
+    "3x4": { w: 3, h: 4, label: "3:4", use: "Instagram profil ızgarası / 3:4 gönderi · teslim 1080×1440", out: [1080, 1440] },
+    "1x1": { w: 1, h: 1, label: "1:1", use: "Kare gönderi · teslim 1080×1080", out: [1080, 1080] },
+    "16x9": { w: 16, h: 9, label: "16:9", use: "YouTube, web, TV · teslim 1920×1080", out: [1920, 1080] },
+    "4x3": { w: 4, h: 3, label: "4:3", use: "4:3 ekranlar · teslim 1440×1080", out: [1440, 1080] },
+  };
+  const MINI = ["9x16", "4x5", "3x4", "1x1"];
+
+  const root = document.querySelector<HTMLElement>("[data-tool]");
+  if (root) init(root);
+
+  function init(root: HTMLElement) {
+    const $ = <T extends Element>(s: string) => root.querySelector<T>(s)!;
+    const canvas = $<HTMLCanvasElement>("[data-canvas]");
+    const ctx = canvas.getContext("2d")!;
+    const out = $<HTMLCanvasElement>("[data-out]");
+    const octx = out.getContext("2d")!;
+    const warn = $<HTMLElement>("[data-warn]");
+    const info = $<HTMLElement>("[data-info]");
+    const useEl = $<HTMLElement>("[data-use]");
+    const zoom = $<HTMLInputElement>("[data-zoom]");
+    const zoomV = $<HTMLElement>("[data-zoomv]");
+    const thirds = $<HTMLInputElement>("[data-thirds]");
+    const custom = $<HTMLElement>("[data-custom]");
+    const cw = $<HTMLInputElement>("[data-cw]");
+    const ch = $<HTMLInputElement>("[data-ch]");
+    const ff = $<HTMLElement>("[data-ffmpeg]");
+    const player = $<HTMLElement>("[data-player]");
+    const playBtn = $<HTMLButtonElement>("[data-play]");
+    const seek = $<HTMLInputElement>("[data-seek]");
+    const timeEl = $<HTMLElement>("[data-time]");
+    const clearBtn = $<HTMLButtonElement>("[data-clear]");
+    const minis = document.querySelector<HTMLElement>("[data-minis]")!;
+    const logo = loadLogo();
+
+    // synthetic 16:9 sample so the tool shows something useful before upload
+    const sample = document.createElement("canvas");
+    sample.width = 1920;
+    sample.height = 1080;
+    paintSample(sample.getContext("2d")!);
+
+    const st = {
+      media: sample as CanvasImageSource,
+      sw: 1920,
+      sh: 1080,
+      name: "ornek",
+      ratio: "9x16",
+      cx: 0.5, // crop centre (0..1 of source)
+      cy: 0.5,
+      zoom: 1,
+      url: "",
+      video: null as HTMLVideoElement | null,
+    };
+
+    function ratio() {
+      if (st.ratio === "custom") {
+        const w = Math.max(0.01, Number(cw.value) || 1);
+        const h = Math.max(0.01, Number(ch.value) || 1);
+        return { w, h, label: `${w}:${h}`, use: "Özel oran", out: [0, 0] as [number, number] };
+      }
+      return RATIOS[st.ratio];
+    }
+
+    function cropFor(r: { w: number; h: number }, cx = st.cx, cy = st.cy, z = st.zoom) {
+      let w = st.sh * (r.w / r.h);
+      let h = st.sh;
+      if (w > st.sw) {
+        w = st.sw;
+        h = st.sw * (r.h / r.w);
+      }
+      w /= z;
+      h /= z;
+      let x = cx * st.sw - w / 2;
+      let y = cy * st.sh - h / 2;
+      x = Math.min(Math.max(0, x), st.sw - w);
+      y = Math.min(Math.max(0, y), st.sh - h);
+      return { x: Math.round(x), y: Math.round(y), w: Math.round(w), h: Math.round(h) };
+    }
+
+    function sizeCanvas() {
+      const maxW = 1600;
+      const k = Math.min(1, maxW / st.sw, 1600 / st.sh);
+      canvas.width = Math.round(st.sw * k);
+      canvas.height = Math.round(st.sh * k);
+    }
+
+    function draw() {
+      const r = ratio();
+      const c = cropFor(r);
+      const k = canvas.width / st.sw;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(st.media, 0, 0, canvas.width, canvas.height);
+      // dim outside
+      ctx.fillStyle = "rgba(12,12,16,.62)";
+      const X = c.x * k, Y = c.y * k, Wc = c.w * k, Hc = c.h * k;
+      ctx.fillRect(0, 0, canvas.width, Y);
+      ctx.fillRect(0, Y + Hc, canvas.width, canvas.height - Y - Hc);
+      ctx.fillRect(0, Y, X, Hc);
+      ctx.fillRect(X + Wc, Y, canvas.width - X - Wc, Hc);
+      ctx.strokeStyle = "#3ddc84";
+      ctx.lineWidth = Math.max(2, canvas.width / 400);
+      ctx.strokeRect(X, Y, Wc, Hc);
+      if (thirds.checked) {
+        ctx.strokeStyle = "rgba(255,255,255,.45)";
+        ctx.lineWidth = 1;
+        for (const i of [1, 2]) {
+          line(X + (Wc * i) / 3, Y, X + (Wc * i) / 3, Y + Hc);
+          line(X, Y + (Hc * i) / 3, X + Wc, Y + (Hc * i) / 3);
+        }
+      }
+      const fs = Math.max(14, canvas.width / 60);
+      ctx.font = `700 ${fs}px system-ui, sans-serif`;
+      const lbl = `${r.label} · ${c.w}×${c.h} px`;
+      const tw = ctx.measureText(lbl).width;
+      ctx.fillStyle = "rgba(12,12,16,.75)";
+      ctx.beginPath();
+      ctx.roundRect(X + 8, Y + 8, tw + fs, fs * 1.8, fs * 0.9);
+      ctx.fill();
+      ctx.fillStyle = "#3ddc84";
+      ctx.fillText(lbl, X + 8 + fs / 2, Y + 8 + fs * 1.25);
+
+      // output preview
+      const ow = 540;
+      const oh = Math.round(ow * (c.h / c.w));
+      if (oh > 960) {
+        out.height = 960;
+        out.width = Math.round(960 * (c.w / c.h));
+      } else {
+        out.width = ow;
+        out.height = oh;
+      }
+      octx.drawImage(st.media, c.x, c.y, c.w, c.h, 0, 0, out.width, out.height);
+
+      // info + warnings
+      const o = r.out;
+      useEl.textContent = r.use;
+      let msg = `Kırpma: x ${c.x}, y ${c.y}, ${c.w}×${c.h} px (kaynak ${st.sw}×${st.sh}). Kalan alan %${Math.round(((c.w * c.h) / (st.sw * st.sh)) * 100)}.`;
+      if (o[0]) {
+        const up = o[0] / c.w;
+        msg += ` Teslim ${o[0]}×${o[1]} için ölçek ×${up.toFixed(2).replace(".", ",")}.`;
+        if (up > 1.05) {
+          warn.textContent = `Kırpılan alan ${c.w}×${c.h} px; ${o[0]}×${o[1]} teslim için yaklaşık ${up.toFixed(1).replace(".", ",")} kat büyütülmesi gerekiyor, görüntü yumuşar. Dikey ve yatay birlikte yayınlanacaksa 4K çekin ya da daha geniş bir kadraj seçin.`;
+          warn.hidden = false;
+        } else warn.hidden = true;
+      } else warn.hidden = true;
+      info.textContent = msg;
+      const outName = st.name === "ornek" ? "girdi" : st.name.replace(/\.[^.]+$/, "") || "girdi";
+      const scale = o[0] ? `,scale=${o[0]}:${o[1]}` : "";
+      const ext = st.video ? "mp4" : "png";
+      ff.textContent = st.video
+        ? `ffmpeg -i "${st.name}" -vf "crop=${c.w}:${c.h}:${c.x}:${c.y}${scale}" -c:a copy "${outName}-${r.label.replace(":", "x")}.${ext}"`
+        : `ffmpeg -i "${st.name === "ornek" ? "girdi.jpg" : st.name}" -vf "crop=${c.w}:${c.h}:${c.x}:${c.y}${scale}" "${outName}-${r.label.replace(":", "x")}.${ext}"`;
+      drawMinis();
+    }
+
+    function line(a: number, b: number, c: number, d: number) {
+      ctx.beginPath();
+      ctx.moveTo(a, b);
+      ctx.lineTo(c, d);
+      ctx.stroke();
+    }
+
+    // mini previews of 4 ratios
+    const miniEls: Record<string, HTMLCanvasElement> = {};
+    for (const id of MINI) {
+      const r = RATIOS[id];
+      const a = document.createElement("button");
+      a.type = "button";
+      a.className = "yt-btn";
+      a.style.cssText = "display:grid;gap:.4rem;justify-items:center;padding:.6rem;border-radius:.9rem;height:auto";
+      const cv = document.createElement("canvas");
+      cv.width = 120;
+      cv.height = Math.round((120 * r.h) / r.w);
+      cv.style.cssText = `width:${Math.round((140 * r.w) / Math.max(r.w, r.h * 0.75))}px;max-width:100%;height:auto;border-radius:.4rem;background:#0e0e10`;
+      cv.setAttribute("aria-hidden", "true");
+      const sp = document.createElement("span");
+      sp.textContent = `${r.label}`;
+      a.append(cv, sp);
+      a.setAttribute("aria-label", `${r.label} oranına geç`);
+      a.addEventListener("click", () => {
+        const radio = root.querySelector<HTMLInputElement>(`input[name="ratio"][value="${id}"]`);
+        if (radio) {
+          radio.checked = true;
+          radio.dispatchEvent(new Event("change"));
+        }
+      });
+      const li = document.createElement("div");
+      li.append(a);
+      minis.append(li);
+      miniEls[id] = cv;
+    }
+    function drawMinis() {
+      for (const id of MINI) {
+        const cv = miniEls[id];
+        const c = cropFor(RATIOS[id], st.cx, st.cy, 1);
+        cv.getContext("2d")!.drawImage(st.media, c.x, c.y, c.w, c.h, 0, 0, cv.width, cv.height);
+      }
+    }
+
+    // ---------- interaction
+    let drag: { dx: number; dy: number } | null = null;
+    canvas.addEventListener("pointerdown", (ev) => {
+      const p = canvasPoint(canvas, ev);
+      const k = canvas.width / st.sw;
+      const c = cropFor(ratio());
+      const sx = p.x / k, sy = p.y / k;
+      // grab anywhere: inside → drag offset, outside → jump centre there
+      if (!(sx >= c.x && sx <= c.x + c.w && sy >= c.y && sy <= c.y + c.h)) {
+        st.cx = sx / st.sw;
+        st.cy = sy / st.sh;
+        normalise();
+      }
+      const c2 = cropFor(ratio());
+      drag = { dx: sx - (c2.x + c2.w / 2), dy: sy - (c2.y + c2.h / 2) };
+      canvas.setPointerCapture(ev.pointerId);
+      draw();
+    });
+    canvas.addEventListener("pointermove", (ev) => {
+      if (!drag) return;
+      const p = canvasPoint(canvas, ev);
+      const k = canvas.width / st.sw;
+      st.cx = (p.x / k - drag.dx) / st.sw;
+      st.cy = (p.y / k - drag.dy) / st.sh;
+      normalise();
+      draw();
+    });
+    const end = () => (drag = null);
+    canvas.addEventListener("pointerup", end);
+    canvas.addEventListener("pointercancel", end);
+    canvas.addEventListener("keydown", (ev) => {
+      const step = ev.shiftKey ? 0.05 : 0.01;
+      if (ev.key === "ArrowLeft") st.cx -= step;
+      else if (ev.key === "ArrowRight") st.cx += step;
+      else if (ev.key === "ArrowUp") st.cy -= step;
+      else if (ev.key === "ArrowDown") st.cy += step;
+      else return;
+      ev.preventDefault();
+      normalise();
+      draw();
+    });
+    // keep centre consistent with clamped crop so the next drag doesn't jump
+    function normalise() {
+      const c = cropFor(ratio());
+      st.cx = (c.x + c.w / 2) / st.sw;
+      st.cy = (c.y + c.h / 2) / st.sh;
+    }
+
+    root.querySelectorAll<HTMLInputElement>('input[name="ratio"]').forEach((r) =>
+      r.addEventListener("change", () => {
+        st.ratio = r.value;
+        custom.hidden = r.value !== "custom";
+        normalise();
+        draw();
+      }),
+    );
+    [cw, ch].forEach((i) => i.addEventListener("input", () => draw()));
+    zoom.addEventListener("input", () => {
+      st.zoom = Number(zoom.value) / 100;
+      zoomV.textContent = `%${zoom.value}`;
+      normalise();
+      draw();
+    });
+    thirds.addEventListener("change", draw);
+    $<HTMLButtonElement>("[data-center]").addEventListener("click", () => {
+      st.cx = 0.5;
+      st.cy = 0.5;
+      draw();
+    });
+
+    // ---------- media
+    let raf = 0;
+    function loop() {
+      draw();
+      const v = st.video;
+      if (v) {
+        seek.value = String(v.currentTime);
+        timeEl.textContent = `${fmtTime(v.currentTime)} / ${fmtTime(v.duration || 0)}`;
+        if (!v.paused && !v.ended) raf = requestAnimationFrame(loop);
+      }
+    }
+    function reset() {
+      cancelAnimationFrame(raf);
+      st.video?.pause();
+      if (st.url) URL.revokeObjectURL(st.url);
+      Object.assign(st, { media: sample, sw: 1920, sh: 1080, name: "ornek", url: "", video: null, cx: 0.5, cy: 0.5 });
+      player.hidden = true;
+      clearBtn.hidden = true;
+      sizeCanvas();
+      draw();
+    }
+    function load(f: File) {
+      if (!isVideoFile(f) && !isImageFile(f)) {
+        warn.textContent = "Bu dosya türü desteklenmiyor. JPG, PNG, WebP, MP4, MOV ya da WebM seçin.";
+        warn.hidden = false;
+        return;
+      }
+      reset();
+      st.url = URL.createObjectURL(f);
+      st.name = f.name;
+      if (isVideoFile(f)) {
+        const v = document.createElement("video");
+        v.muted = true;
+        v.playsInline = true;
+        v.preload = "auto";
+        v.src = st.url;
+        v.addEventListener("loadeddata", () => {
+          Object.assign(st, { media: v, video: v, sw: v.videoWidth, sh: v.videoHeight });
+          seek.max = String(v.duration || 0);
+          player.hidden = false;
+          clearBtn.hidden = false;
+          sizeCanvas();
+          loop();
+        });
+        v.addEventListener("seeked", loop);
+        v.addEventListener("play", () => {
+          playBtn.textContent = "Durdur";
+          loop();
+        });
+        v.addEventListener("pause", () => (playBtn.textContent = "Oynat"));
+        v.addEventListener("error", () => {
+          warn.textContent = "Video açılamadı. Tarayıcınız bu codec'i desteklemiyor olabilir (ör. bazı HEVC .mov dosyaları); MP4 (H.264) deneyin.";
+          warn.hidden = false;
+        });
+      } else {
+        const img = new Image();
+        img.onload = () => {
+          Object.assign(st, { media: img, sw: img.naturalWidth, sh: img.naturalHeight });
+          clearBtn.hidden = false;
+          sizeCanvas();
+          draw();
+        };
+        img.src = st.url;
+      }
+    }
+    wireDrop($<HTMLElement>("[data-drop]"), $<HTMLInputElement>("[data-file]"), (fs) => load(fs[0]));
+    clearBtn.addEventListener("click", () => {
+      $<HTMLInputElement>("[data-file]").value = "";
+      reset();
+    });
+    playBtn.addEventListener("click", () => {
+      const v = st.video;
+      if (v) v.paused ? v.play() : v.pause();
+    });
+    seek.addEventListener("input", () => {
+      if (st.video) st.video.currentTime = Number(seek.value);
+    });
+
+    // ---------- downloads
+    const base = () => (st.name === "ornek" ? "ornek" : st.name.replace(/\.[^.]+$/, "").replace(/[^\w-]+/g, "-").slice(0, 40));
+    $<HTMLButtonElement>("[data-dl-crop]").addEventListener("click", () => {
+      const r = ratio();
+      const c = cropFor(r);
+      const cv = document.createElement("canvas");
+      cv.width = c.w;
+      cv.height = c.h;
+      cv.getContext("2d")!.drawImage(st.media, c.x, c.y, c.w, c.h, 0, 0, c.w, c.h);
+      exportCanvasPng(cv, `rast-kirpma-${base()}-${r.label.replace(":", "x")}-${c.w}x${c.h}.png`, PAGE, "Rast Creative aspect ratio crop tool", "Your own image; tool by Rast Creative Studio");
+    });
+    $<HTMLButtonElement>("[data-dl-frame]").addEventListener("click", () => {
+      const r = ratio();
+      const c = cropFor(r);
+      const cv = document.createElement("canvas");
+      cv.width = st.sw;
+      cv.height = st.sh;
+      const g = cv.getContext("2d")!;
+      g.fillStyle = "rgba(12,12,16,.6)";
+      g.fillRect(0, 0, st.sw, st.sh);
+      g.clearRect(c.x, c.y, c.w, c.h);
+      g.strokeStyle = "#3ddc84";
+      g.lineWidth = Math.max(3, st.sw / 400);
+      g.strokeRect(c.x, c.y, c.w, c.h);
+      const s = st.sw / 1920;
+      g.fillStyle = "#fff";
+      g.font = `700 ${Math.round(30 * s)}px system-ui, sans-serif`;
+      // label + credit in the dark (cropped-away) area when there is room
+      const side = c.x > st.sw - c.x - c.w ? "left" : "right";
+      const roomX = side === "left" ? c.x : st.sw - c.x - c.w;
+      const roomY = Math.max(c.y, st.sh - c.y - c.h);
+      if (roomX > 260 * s) {
+        const x0 = side === "left" ? 30 * s : c.x + c.w + 30 * s;
+        g.fillText(`${r.label} · ${c.w}×${c.h}`, x0, 60 * s);
+        g.font = `500 ${Math.round(22 * s)}px system-ui, sans-serif`;
+        g.fillText(`x ${c.x}, y ${c.y}`, x0, 96 * s);
+        drawCredit(g, logo, x0, st.sh - 70 * s, s * 0.9, PATH);
+      } else if (roomY > 90 * s) {
+        const y0 = c.y > st.sh - c.y - c.h ? 20 * s : c.y + c.h + 20 * s;
+        g.fillText(`${r.label} · ${c.w}×${c.h}`, 30 * s, y0 + 34 * s);
+        drawCredit(g, logo, st.sw - 30 * s, y0, s * 0.9, PATH, "right");
+      }
+      exportCanvasPng(cv, `rast-kirpma-cercevesi-${r.label.replace(":", "x")}-${st.sw}x${st.sh}.png`, PAGE, "Rast Creative aspect ratio crop tool", "CC BY 4.0 - Rast Creative Studio - rastcreative.com");
+    });
+    $<HTMLButtonElement>("[data-copy-ff]").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(ff.textContent || "");
+      } catch {}
+      $<HTMLElement>("[data-ff-copied]").textContent = " Kopyalandı.";
+    });
+    void pngWithMeta;
+    void downloadBlob;
+
+    logo.onload = () => draw();
+    sizeCanvas();
+    draw();
+  }
+
+  function paintSample(g: CanvasRenderingContext2D) {
+    const W = 1920, H = 1080;
+    const sky = g.createLinearGradient(0, 0, 0, H);
+    sky.addColorStop(0, "#c98a54");
+    sky.addColorStop(0.6, "#7b5a8f");
+    sky.addColorStop(1, "#2c3a5c");
+    g.fillStyle = sky;
+    g.fillRect(0, 0, W, H);
+    g.fillStyle = "rgba(20,18,30,.55)";
+    g.beginPath();
+    g.moveTo(0, 820);
+    for (let x = 0; x <= W; x += 80) g.lineTo(x, 760 + Math.sin(x / 170) * 50);
+    g.lineTo(W, H);
+    g.lineTo(0, H);
+    g.fill();
+    const person = (x: number, s: number, c: string) => {
+      g.fillStyle = c;
+      g.beginPath();
+      g.arc(x, 430 * s + (1 - s) * 400, 70 * s, 0, Math.PI * 2);
+      g.fill();
+      g.beginPath();
+      g.roundRect(x - 120 * s, 520 * s + (1 - s) * 400, 240 * s, 560 * s, 90 * s);
+      g.fill();
+    };
+    person(640, 1, "rgba(255,240,225,.9)");
+    person(1340, 0.92, "rgba(255,240,225,.75)");
+    g.fillStyle = "rgba(255,255,255,.95)";
+    g.font = "700 64px system-ui, sans-serif";
+    g.fillText("Örnek 16:9 kare", 70, 120);
+    g.font = "500 34px system-ui, sans-serif";
+    g.fillText("Kendi görselinizi ya da videonuzu açın", 70, 172);
+    g.font = "600 30px system-ui, sans-serif";
+    g.fillText("Konuk A", 585, 1000);
+    g.fillText("Konuk B", 1285, 1000);
+  }
+</script>

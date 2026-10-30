@@ -1,0 +1,511 @@
+---
+/**
+ * /araclar/kapak-sablonlari/ — Reels cover (1080x1920) + YouTube thumbnail
+ * (1280x720) templates: transparent PNG guides + layered SVG, plus an in-browser
+ * checker that shows the cover at real feed sizes. 100% client-side.
+ * Static files: scripts/generate-creator-templates.py.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Section from "../../components/Section.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import Extras from "./_yaratici/Extras.astro";
+import { SITE } from "../../consts";
+import { breadcrumb, faqPage } from "../../lib/schema";
+import "./_yaratici/tool.css";
+
+const PATH = "/araclar/kapak-sablonlari/";
+const PAGE_URL = new URL(PATH, SITE.url).href;
+const title = "Reels Kapak ve YouTube Küçük Resim Şablonu";
+const description =
+  "Ücretsiz Reels kapağı (1080×1920) ve YouTube küçük resim (1280×720) şablonları: güvenli alanlı şeffaf PNG ve katmanlı SVG. Kapağı gerçek boyutta test edin.";
+
+const T = PATH;
+const files = [
+  { file: "rast-reels-kapak-1080x1920.png", label: "Reels kapağı · PNG", size: "1080×1920", w: 108, h: 192 },
+  { file: "rast-reels-kapak-1080x1920.svg", label: "Reels kapağı · katmanlı SVG", size: "1080×1920", w: 108, h: 192 },
+  { file: "rast-youtube-kucuk-resim-1280x720.png", label: "YouTube küçük resmi · PNG", size: "1280×720", w: 192, h: 108 },
+  { file: "rast-youtube-kucuk-resim-3840x2160.png", label: "YouTube küçük resmi · PNG 4K", size: "3840×2160", w: 192, h: 108 },
+  { file: "rast-youtube-kucuk-resim-1280x720.svg", label: "YouTube küçük resmi · katmanlı SVG", size: "1280×720", w: 192, h: 108 },
+];
+
+const faqs = [
+  {
+    question: "Reels kapağı kaç piksel olmalı?",
+    answer:
+      "1080×1920 piksel (9:16). Kapak tam ekranda tamamen görünür; profil ızgarasında ortadaki yaklaşık 1080×1440 (3:4), akışta 1080×1350 (4:5) bölüm görünür. Başlığı ve yüzü şablondaki yeşil kesikli alanda tutun.",
+  },
+  {
+    question: "YouTube küçük resmi kaç piksel olmalı?",
+    answer:
+      "16:9 oranında. Uzun yıllar standart 1280×720 (en az 640 piksel genişlik) idi; YouTube yardım sayfası artık videolar için 3840×2160 öneriyor. Mobilden yüklemede sınır 2 MB, masaüstünde 50 MB. Paketteki SVG her iki boyuta da kayıpsız ölçeklenir.",
+  },
+  {
+    question: "YouTube küçük resminde nereye yazı koymamalıyım?",
+    answer:
+      "Sağ alt köşeye: video süresi etiketi her küçük resmin üstüne bu köşede çizilir. İzlenmiş videolarda en altta kırmızı ilerleme çubuğu, bazı yüzeylerde sol altta canlı yayın ya da altyazı rozeti çıkar. YouTube bunların piksel ölçüsünü yayımlamaz; şablondaki alanlar gözleme dayalı, bilerek geniş tutulmuş yaklaşık değerlerdir.",
+  },
+  {
+    question: "Katmanlı SVG'yi Canva'da kullanabilir miyim?",
+    answer:
+      "Canva SVG'yi tek bir görsel olarak içe aktarır, katmanları ayırmaz; Canva'da şeffaf PNG şablonu en üst katmana koyup kullanın. Figma, Illustrator ve Inkscape SVG'deki Arka plan, Başlık, Rehber ve İmza katmanlarını ayrı ayrı açar. Dışa aktarmadan önce rehber ve imza katmanlarını gizleyin.",
+  },
+  {
+    question: "Kapak kontrol aracına yüklediğim görsel bir sunucuya gidiyor mu?",
+    answer:
+      "Hayır. Görsel yalnızca tarayıcınızda açılır; önizlemeler ve indirilen PNG'ler tarayıcınızda oluşturulur. Hiçbir sunucuya gönderilmez, sayfada üçüncü taraf takip kodu yoktur.",
+  },
+  {
+    question: "Şablonları ticari işlerde kullanabilir miyim?",
+    answer:
+      "Evet. Şablonlar CC BY 4.0 lisanslıdır: müşteri işlerinde, eğitimlerde ve ticari projelerde kullanabilir, uyarlayabilirsiniz. Tek şart atıf: “Kapak şablonu: Rast Creative Studio — rastcreative.com”.",
+  },
+];
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Araçlar", path: "/araclar/" },
+    { name: "Kapak şablonları", path: PATH },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: "Reels kapağı ve YouTube küçük resim şablonları",
+    alternateName: "Reels cover 1080x1920 and YouTube thumbnail 1280x720 safe zone templates",
+    url: PAGE_URL,
+    inLanguage: "tr",
+    isAccessibleForFree: true,
+    encodingFormat: ["image/png", "image/svg+xml"],
+    description,
+    license: "https://creativecommons.org/licenses/by/4.0/deed.tr",
+    creator: { "@id": `${SITE.url}#business` },
+    copyrightHolder: { "@id": `${SITE.url}#business` },
+    creditText: "Rast Creative Studio — rastcreative.com",
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "Kapak ve küçük resim kontrolü",
+    url: `${PAGE_URL}#kontrol`,
+    applicationCategory: "DesignApplication",
+    operatingSystem: "Web",
+    browserRequirements: "Modern bir web tarayıcısı; JavaScript gerekli",
+    isAccessibleForFree: true,
+    inLanguage: "tr",
+    offers: { "@type": "Offer", price: "0", priceCurrency: "TRY" },
+    provider: { "@id": `${SITE.url}#business` },
+  },
+  faqPage(faqs),
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <div class="yt-page">
+    <Section width="wide" space="tight">
+      <nav class="crumbs" aria-label="Sayfa yolu">
+        <a href="/">Ana sayfa</a> <span aria-hidden="true">/</span> <a href="/araclar/">Araçlar</a>
+        <span aria-hidden="true">/</span> <span aria-current="page">Kapak şablonları</span>
+      </nav>
+      <SectionHeading as="h1" eyebrow="Şablon · Ücretsiz · CC BY 4.0">
+        Reels kapağı ve YouTube küçük resim şablonları
+        <Fragment slot="intro">
+          <p>
+            Kapak, videonuzun açılmadan önceki tek reklamıdır. Reels kapağı (1080×1920) ve YouTube küçük resmi (1280×720) için
+            ızgara kırpmasını, süre etiketini ve arayüz alanlarını işaretleyen şeffaf PNG ve katmanlı SVG şablonları indirin;
+            hazır kapağınızı aşağıda gerçek boyutlarda test edin.
+          </p>
+        </Fragment>
+      </SectionHeading>
+
+      <ul class="yt-tpls" id="sablonlar" style="grid-template-columns:repeat(auto-fill,minmax(170px,1fr))">
+        {files.map((t) => (
+          <li>
+            <a href={T + t.file} download>
+              <img src={T + t.file} alt={`${t.label} şablon önizlemesi`} width={t.w} height={t.h} loading="lazy" decoding="async" />
+              <span>{t.label}</span>
+              <small>{t.size}</small>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p><a class="ev-btn ev-btn--sun" href={T + "rast-kapak-sablonlari.zip"} download>Tüm şablonlar (ZIP)</a></p>
+      <p class="yt-small">
+        Renkler: <strong>turuncu</strong> Instagram profil ızgarası 3:4 · <strong>mavi kesikli</strong> akış 4:5 ·
+        <strong>yeşil kesikli</strong> başlık ve yüz güvenli alanı · <strong>kırmızı</strong> süre etiketi ve ilerleme çubuğu ·
+        koyu bantlar arayüz. Küçük Rast imzası rehber katmanındadır; şablonu kapatınca kaybolur.
+      </p>
+
+      <ol class="howto" aria-label="Nasıl kullanılır">
+        <li><strong>1. Şablonu indirin.</strong> Canva için PNG, Figma/Illustrator için katmanlı SVG. Tasarımın en üstüne koyun.</li>
+        <li><strong>2. Başlığı güvenli alana yazın.</strong> 3–5 kelime, kalın yazı, arka planla güçlü kontrast. Köşeleri boş bırakın.</li>
+        <li><strong>3. Gerçek boyutta test edin.</strong> Bitmiş kapağı aşağıdaki kontrole yükleyin; telefonda göründüğü boyutlarda okunuyor mu bakın.</li>
+      </ol>
+    </Section>
+
+    <Section width="wide" space="tight" id="kontrol">
+      <SectionHeading eyebrow="Araç · Kayıt yok">Kapağınızı gerçek boyutta kontrol edin</SectionHeading>
+      <div class="yt-tool yt-tool--split" data-tool>
+        <div class="yt-stage">
+          <div class="yt-chips" role="radiogroup" aria-label="Kapak türü">
+            <label class="yt-chip"><input type="radio" name="mode" value="reels" checked /><span>Reels kapağı 9:16</span></label>
+            <label class="yt-chip"><input type="radio" name="mode" value="yt" /><span>YouTube küçük resmi 16:9</span></label>
+          </div>
+          <label class="yt-drop" data-drop>
+            <input type="file" class="yt-sr" data-file accept="image/jpeg,image/png,image/webp" />
+            <span class="yt-drop__title">Kapak görselini seçin ya da sürükleyin</span>
+            <span class="yt-drop__hint">JPG, PNG, WebP · yalnızca tarayıcınızda açılır</span>
+          </label>
+          <div class="yt-canvaswrap" data-wrap style="max-width:400px;width:100%;margin-inline:auto">
+            <canvas width="1080" height="1920" data-canvas tabindex="0" role="img" aria-label="Kapak ve şablon katmanı; görseli sürükleyerek konumlandırın"></canvas>
+          </div>
+          <p class="yt-warn" data-warn aria-live="polite" hidden></p>
+        </div>
+        <div>
+          <fieldset>
+            <legend>Ayarlar</legend>
+            <div class="yt-checks">
+              <label><input type="checkbox" data-guide checked /> Şablon katmanını göster</label>
+            </div>
+            <div class="yt-fields" style="margin-top:.8rem">
+              <label class="yt-field">Yakınlaştırma <input type="range" min="100" max="300" value="100" data-zoom /></label>
+              <label class="yt-field">Deneme başlığı <input type="text" maxlength="40" placeholder="ör. 3 hata" data-title /></label>
+            </div>
+            <p class="yt-small">Görsel sürükleyerek kaydırılır. Deneme başlığı, kendi kapağınızda yazı yoksa okunurluğu test etmek içindir.</p>
+          </fieldset>
+          <div class="yt-h3">Telefonda göründüğü boyutlar</div>
+          <div data-previews style="display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-end"></div>
+          <p class="yt-note" data-note aria-live="polite"></p>
+          <div class="yt-actions">
+            <button type="button" class="ev-btn ev-btn--sun" data-dl-check>Kontrol görselini indir</button>
+            <button type="button" class="ev-btn" data-dl-cover>Kapağı indir (şablonsuz)</button>
+          </div>
+          <p class="yt-small">Kontrol görseli şablon katmanı ve küçük önizlemelerle birlikte, Rast imzalı bir PNG'dir. “Kapağı indir” yalnızca sizin görselinizi ve deneme başlığınızı tam boyutta verir.</p>
+        </div>
+      </div>
+    </Section>
+
+    <Section width="default" space="tight" id="ipuclari">
+      <SectionHeading eyebrow="Pratik">Okunan bir kapak için</SectionHeading>
+      <ul class="yt-tips">
+        <li><strong>Küçük boyutta düşünün.</strong> Reels kapağı ızgarada ≈120 piksel genişliğe, YouTube küçük resmi önerilerde ≈170 piksele iner. Bu boyutta okunmayan yazı işe yaramaz.</li>
+        <li><strong>Tek fikir, 3–5 kelime.</strong> Uzun açıklama başlıkta ya da açıklamada kalsın; kapak bir etikettir.</li>
+        <li><strong>Yüz ve ifade.</strong> Yakın plan bir yüz küçük boyutta en hızlı okunan şeydir; gözler üst üçte bir çizgisinde olsun.</li>
+        <li><strong>Kontrast.</strong> İnce yazıyı karışık fotoğrafın üstüne koymayın; düz bir alan, koyu bant ya da kalın kontur kullanın.</li>
+        <li><strong>YouTube'da sağ alt köşe yok sayılır.</strong> Logo ya da önemli kelime süre etiketinin altında kalır.</li>
+        <li><strong>Dikey videonun kendisi için</strong> <a href="/araclar/guvenli-alan/">güvenli alan kontrolünü</a>, profil düzeni için <a href="/araclar/instagram-grid-sablonu/">Instagram grid şablonunu</a> kullanın.</li>
+      </ul>
+    </Section>
+
+    <Extras
+      faqs={faqs}
+      pageUrl={PAGE_URL}
+      linkText="Reels kapak ve YouTube küçük resim şablonları"
+      attribution="Kapak şablonu: Rast Creative Studio — rastcreative.com"
+      current={PATH}
+      ctaTitle="Kapağı da videoyla birlikte tasarlıyoruz"
+    >
+      <Fragment slot="sources">
+        <ul class="yt-sources">
+          <li>YouTube Yardım, “Add video thumbnails”: videolar için 3840×2160 önerisi, en az 640 px genişlik, JPG/PNG, mobilde 2 MB, masaüstünde 50 MB sınırı, 16:9 oran (erişim 30.10.2026). <a href="https://support.google.com/youtube/answer/72431?hl=tr" rel="noopener" target="_blank">support.google.com</a></li>
+          <li>Instagram Yardım Merkezi, “Reel size & aspect ratios on Instagram”: Reels oranları ve kapak notu (erişim 30.10.2026). <a href="https://help.instagram.com/1038071743007909" rel="noopener" target="_blank">help.instagram.com</a></li>
+          <li>Instagram profil ızgarasının 3:4'e geçişi (Ocak 2025), haberi: Gadgets360 (erişim 30.10.2026). <a href="https://www.gadgets360.com/apps/news/instagram-update-profile-grid-reels-duration-three-minute-7517402" rel="noopener" target="_blank">gadgets360.com</a></li>
+          <li>Reels arayüz bantları: <a href="/araclar/guvenli-alan/">güvenli alan kontrolü</a> sayfasındaki yaklaşık değerler.</li>
+          <li>
+            YouTube süre etiketi, ilerleme çubuğu ve rozet alanları için resmî piksel ölçüsü yoktur. Şablondaki alanlar (sağ alt
+            ≈256×120 px, alt ≈22 px şerit, %6 kenar payı, ortada %80×%76 metin alanı) bağımsız rehberlerdeki gözlemlerle
+            karşılaştırılıp bilerek geniş tutulmuştur: <a href="https://yt-thumbnail-preview.app/guides/thumbnail-safe-zone/" rel="noopener" target="_blank">yt-thumbnail-preview.app</a> ·
+            <a href="https://thumbnailsgrabber.com/youtube-thumbnail-safe-zone" rel="noopener" target="_blank">thumbnailsgrabber.com</a> (erişim 30.10.2026).
+          </li>
+        </ul>
+      </Fragment>
+      <Fragment slot="cta">
+        Rast Creative Studio, videoyu kapağı, küçük resmi ve platform kesimleriyle birlikte teslim eder. YouTube ve Reels için
+        düzenli üretim <a href="/sosyal-medya-icerigi/">sosyal medya içeriği</a>, marka filmleri <a href="/tanitim-filmi/">tanıtım filmi</a>
+        ve <a href="/reklam-filmi/">reklam filmi</a> sayfalarında.
+      </Fragment>
+    </Extras>
+  </div>
+</BaseLayout>
+
+<script>
+  import { exportCanvasPng, drawCredit, loadLogo, wireDrop, isImageFile, canvasPoint } from "./_yaratici/client";
+
+  const PAGE = "https://rastcreative.com/araclar/kapak-sablonlari/";
+  const MODES = {
+    reels: {
+      w: 1080, h: 1920, guide: "/araclar/kapak-sablonlari/rast-reels-kapak-1080x1920.png",
+      previews: [
+        { label: "Profil ızgarası (3:4)", w: 120, h: 160, crop: { x: 0, y: 240, w: 1080, h: 1440 }, icon: true },
+        { label: "Akış (4:5)", w: 200, h: 250, crop: { x: 0, y: 285, w: 1080, h: 1350 } },
+        { label: "Tam ekran (9:16)", w: 110, h: 196, crop: { x: 0, y: 0, w: 1080, h: 1920 } },
+      ],
+      safe: { x: 90, y: 360, w: 900, h: 1200 },
+    },
+    yt: {
+      w: 1280, h: 720, guide: "/araclar/kapak-sablonlari/rast-youtube-kucuk-resim-1280x720.png",
+      previews: [
+        { label: "Ana sayfa (mobil ≈360 px)", w: 320, h: 180, crop: { x: 0, y: 0, w: 1280, h: 720 }, badge: true },
+        { label: "Önerilenler (≈170 px)", w: 168, h: 94, crop: { x: 0, y: 0, w: 1280, h: 720 }, badge: true },
+      ],
+      safe: { x: 128, y: 86, w: 1024, h: 548 },
+    },
+  } as const;
+  type Mode = keyof typeof MODES;
+
+  const root = document.querySelector<HTMLElement>("[data-tool]");
+  if (root) init(root);
+
+  function init(root: HTMLElement) {
+    const $ = <T extends Element>(s: string) => root.querySelector<T>(s)!;
+    const canvas = $<HTMLCanvasElement>("[data-canvas]");
+    const ctx = canvas.getContext("2d")!;
+    const wrap = $<HTMLElement>("[data-wrap]");
+    const warn = $<HTMLElement>("[data-warn]");
+    const note = $<HTMLElement>("[data-note]");
+    const zoom = $<HTMLInputElement>("[data-zoom]");
+    const titleIn = $<HTMLInputElement>("[data-title]");
+    const guideCb = $<HTMLInputElement>("[data-guide]");
+    const prevBox = $<HTMLElement>("[data-previews]");
+    const logo = loadLogo();
+    const guides: Record<string, HTMLImageElement> = {};
+    for (const m of Object.keys(MODES) as Mode[]) {
+      const im = new Image();
+      im.src = MODES[m].guide;
+      im.onload = () => render();
+      guides[m] = im;
+    }
+    const st = { mode: "reels" as Mode, img: null as HTMLImageElement | null, url: "", px: 0.5, py: 0.5, z: 1 };
+    let prevCanvases: HTMLCanvasElement[] = [];
+
+    function buildPreviews() {
+      prevBox.innerHTML = "";
+      prevCanvases = MODES[st.mode].previews.map((p) => {
+        const fig = document.createElement("figure");
+        fig.style.cssText = "display:grid;gap:.35rem;margin:0;justify-items:start";
+        const c = document.createElement("canvas");
+        c.width = p.w * 2;
+        c.height = p.h * 2;
+        c.style.cssText = `width:${p.w}px;height:${p.h}px;border-radius:${st.mode === "yt" ? 8 : 2}px;background:#0e0e10`;
+        c.setAttribute("role", "img");
+        c.setAttribute("aria-label", `${p.label} önizlemesi`);
+        const cap = document.createElement("figcaption");
+        cap.className = "yt-small";
+        cap.textContent = p.label;
+        fig.append(c, cap);
+        prevBox.append(fig);
+        return c;
+      });
+    }
+
+    // render the cover alone (no guides) into a context at template size
+    function paintCover(g: CanvasRenderingContext2D) {
+      const M = MODES[st.mode];
+      g.fillStyle = "#2c2a33";
+      g.fillRect(0, 0, M.w, M.h);
+      if (st.img) {
+        const s = Math.max(M.w / st.img.naturalWidth, M.h / st.img.naturalHeight) * st.z;
+        const dw = st.img.naturalWidth * s, dh = st.img.naturalHeight * s;
+        g.drawImage(st.img, (M.w - dw) * st.px, (M.h - dh) * st.py, dw, dh);
+      } else {
+        const gr = g.createLinearGradient(0, 0, M.w, M.h);
+        gr.addColorStop(0, "#c98a54");
+        gr.addColorStop(0.55, "#7b5a8f");
+        gr.addColorStop(1, "#2c3a5c");
+        g.fillStyle = gr;
+        g.fillRect(0, 0, M.w, M.h);
+        g.fillStyle = "rgba(255,255,255,.8)";
+        g.font = `600 ${st.mode === "yt" ? 34 : 44}px system-ui, sans-serif`;
+        g.textAlign = "center";
+        g.fillText("Kapak görselinizi seçin", M.w / 2, st.mode === "yt" ? 200 : 520);
+        g.textAlign = "left";
+      }
+      const t = titleIn.value.trim();
+      if (t) {
+        const sf = M.safe;
+        let fs = st.mode === "yt" ? 120 : 130;
+        g.font = `800 ${fs}px system-ui, sans-serif`;
+        while (g.measureText(t.toLocaleUpperCase("tr")).width > sf.w - 40 && fs > 30) {
+          fs -= 4;
+          g.font = `800 ${fs}px system-ui, sans-serif`;
+        }
+        const T = t.toLocaleUpperCase("tr");
+        const tw = g.measureText(T).width;
+        const cx = sf.x + sf.w / 2;
+        const cy = st.mode === "yt" ? sf.y + sf.h * 0.62 : sf.y + sf.h * 0.62;
+        g.fillStyle = "rgba(0,0,0,.55)";
+        g.beginPath();
+        g.roundRect(cx - tw / 2 - 30, cy - fs * 0.95, tw + 60, fs * 1.3, 18);
+        g.fill();
+        g.fillStyle = "#fff";
+        g.textAlign = "center";
+        g.fillText(T, cx, cy);
+        g.textAlign = "left";
+      }
+    }
+
+    function render() {
+      const M = MODES[st.mode];
+      canvas.width = M.w;
+      canvas.height = M.h;
+      wrap.style.maxWidth = st.mode === "yt" ? "100%" : "400px";
+      paintCover(ctx);
+      // previews from the clean cover
+      prevCanvases.forEach((c, i) => {
+        const p = M.previews[i];
+        const g = c.getContext("2d")!;
+        g.imageSmoothingQuality = "high";
+        g.drawImage(canvas, p.crop.x, p.crop.y, p.crop.w, p.crop.h, 0, 0, c.width, c.height);
+        if ("badge" in p && p.badge) {
+          const s = c.width / 360;
+          g.fillStyle = "rgba(0,0,0,.8)";
+          g.beginPath();
+          g.roundRect(c.width - 8 * s - 44 * s, c.height - 8 * s - 20 * s, 44 * s, 20 * s, 4 * s);
+          g.fill();
+          g.fillStyle = "#fff";
+          g.font = `600 ${12 * s}px system-ui, sans-serif`;
+          g.textAlign = "center";
+          g.fillText("12:34", c.width - 8 * s - 22 * s, c.height - 8 * s - 6 * s);
+          g.textAlign = "left";
+        }
+        if ("icon" in p && p.icon) {
+          const s = c.width / 120;
+          g.strokeStyle = "#fff";
+          g.lineWidth = 1.5 * s;
+          g.beginPath();
+          g.roundRect(c.width - 20 * s, 6 * s, 13 * s, 13 * s, 3 * s);
+          g.stroke();
+        }
+      });
+      if (guideCb.checked && guides[st.mode].complete) ctx.drawImage(guides[st.mode], 0, 0, M.w, M.h);
+      if (st.img) {
+        const iw = st.img.naturalWidth, ih = st.img.naturalHeight;
+        const r = iw / ih, want = M.w / M.h;
+        const msgs: string[] = [];
+        if (Math.abs(r - want) > 0.02) msgs.push(`Görsel ${iw}×${ih}; ${st.mode === "yt" ? "16:9" : "9:16"} değil, kenarları kırpıldı. Sürükleyerek konumlandırın.`);
+        if (iw < M.w * 0.99 && ih < M.h * 0.99) msgs.push(`Çözünürlük düşük (${iw}×${ih}); en az ${M.w}×${M.h} önerilir.`);
+        warn.textContent = msgs.join(" ");
+        warn.hidden = !msgs.length;
+      } else warn.hidden = true;
+      note.textContent =
+        st.mode === "yt"
+          ? "Küçük önizlemelerde başlığınız hâlâ okunuyor mu? Sağ alttaki süre etiketi neyi kapatıyor?"
+          : "Izgara önizlemesinde başlık kesiliyor mu? Akışta (4:5) üst ve alt kenarlar da kırpılır.";
+    }
+
+    // drag to pan
+    let drag: { x: number; y: number; px: number; py: number } | null = null;
+    canvas.addEventListener("pointerdown", (ev) => {
+      if (!st.img) return;
+      const p = canvasPoint(canvas, ev);
+      drag = { x: p.x, y: p.y, px: st.px, py: st.py };
+      canvas.setPointerCapture(ev.pointerId);
+    });
+    canvas.addEventListener("pointermove", (ev) => {
+      if (!drag || !st.img) return;
+      const M = MODES[st.mode];
+      const p = canvasPoint(canvas, ev);
+      const s = Math.max(M.w / st.img.naturalWidth, M.h / st.img.naturalHeight) * st.z;
+      const fx = st.img.naturalWidth * s - M.w, fy = st.img.naturalHeight * s - M.h;
+      st.px = fx > 0.5 ? Math.min(1, Math.max(0, drag.px - (p.x - drag.x) / fx)) : 0.5;
+      st.py = fy > 0.5 ? Math.min(1, Math.max(0, drag.py - (p.y - drag.y) / fy)) : 0.5;
+      render();
+    });
+    const end = () => (drag = null);
+    canvas.addEventListener("pointerup", end);
+    canvas.addEventListener("pointercancel", end);
+    canvas.addEventListener("keydown", (ev) => {
+      const k = ev.shiftKey ? 0.1 : 0.02;
+      if (ev.key === "ArrowLeft") st.px = Math.max(0, st.px - k);
+      else if (ev.key === "ArrowRight") st.px = Math.min(1, st.px + k);
+      else if (ev.key === "ArrowUp") st.py = Math.max(0, st.py - k);
+      else if (ev.key === "ArrowDown") st.py = Math.min(1, st.py + k);
+      else return;
+      ev.preventDefault();
+      render();
+    });
+
+    root.querySelectorAll<HTMLInputElement>('input[name="mode"]').forEach((r) =>
+      r.addEventListener("change", () => {
+        st.mode = r.value as Mode;
+        st.px = 0.5;
+        st.py = 0.5;
+        buildPreviews();
+        render();
+      }),
+    );
+    zoom.addEventListener("input", () => {
+      st.z = Number(zoom.value) / 100;
+      render();
+    });
+    titleIn.addEventListener("input", render);
+    guideCb.addEventListener("change", render);
+    wireDrop($<HTMLElement>("[data-drop]"), $<HTMLInputElement>("[data-file]"), (fs) => {
+      const f = fs.find(isImageFile);
+      if (!f) {
+        warn.textContent = "Desteklenmeyen dosya. JPG, PNG ya da WebP seçin.";
+        warn.hidden = false;
+        return;
+      }
+      if (st.url) URL.revokeObjectURL(st.url);
+      st.url = URL.createObjectURL(f);
+      const im = new Image();
+      im.onload = () => {
+        st.img = im;
+        st.px = 0.5;
+        st.py = 0.5;
+        // auto-switch mode by aspect
+        const r = im.naturalWidth / im.naturalHeight;
+        const want: Mode = r > 1.2 ? "yt" : "reels";
+        if (want !== st.mode) {
+          const radio = root.querySelector<HTMLInputElement>(`input[name="mode"][value="${want}"]`)!;
+          radio.checked = true;
+          st.mode = want;
+          buildPreviews();
+        }
+        render();
+      };
+      im.src = st.url;
+    });
+
+    $<HTMLButtonElement>("[data-dl-cover]").addEventListener("click", () => {
+      const M = MODES[st.mode];
+      const c = document.createElement("canvas");
+      c.width = M.w;
+      c.height = M.h;
+      paintCover(c.getContext("2d")!);
+      exportCanvasPng(c, `rast-kapak-${st.mode === "yt" ? "youtube-1280x720" : "reels-1080x1920"}.png`, PAGE, "Rast Creative cover checker", "Your own image; tool by Rast Creative Studio");
+    });
+    $<HTMLButtonElement>("[data-dl-check]").addEventListener("click", () => {
+      const M = MODES[st.mode];
+      // sheet: main (with guide) + previews at 2x + credit
+      const pad = 40;
+      const scale = st.mode === "yt" ? 0.75 : 0.5;
+      const mw = M.w * scale, mh = M.h * scale;
+      const pv = M.previews.map((p) => ({ w: p.w * 2, h: p.h * 2, label: p.label }));
+      const colW = Math.max(...pv.map((p) => p.w));
+      const W = Math.round(pad * 3 + mw + colW);
+      const H = Math.round(Math.max(mh, pv.reduce((a, p) => a + p.h + 50, 0)) + pad * 2 + 80);
+      const c = document.createElement("canvas");
+      c.width = W;
+      c.height = H;
+      const g = c.getContext("2d")!;
+      g.fillStyle = "#16141a";
+      g.fillRect(0, 0, W, H);
+      g.drawImage(canvas, pad, pad, mw, mh);
+      let y = pad;
+      pv.forEach((p, i) => {
+        g.drawImage(prevCanvases[i], pad * 2 + mw, y, p.w, p.h);
+        g.fillStyle = "rgba(255,255,255,.8)";
+        g.font = "500 20px system-ui, sans-serif";
+        g.fillText(p.label, pad * 2 + mw, y + p.h + 28);
+        y += p.h + 50;
+      });
+      drawCredit(g, logo, pad, H - 60, 1, "/araclar/kapak-sablonlari/");
+      exportCanvasPng(c, `rast-kapak-kontrol-${st.mode === "yt" ? "youtube" : "reels"}.png`, PAGE, "Rast Creative cover checker");
+    });
+
+    logo.onload = render;
+    buildPreviews();
+    render();
+  }
+</script>

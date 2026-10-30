@@ -1,0 +1,740 @@
+---
+/**
+ * /araclar/altyazi-kontrolu/ — SRT/VTT subtitle checker. 100% client-side.
+ * Checks chars per line, reading speed (CPS), line count, durations, gaps and
+ * overlaps, Turkish character problems (mojibake, Windows-1254); exports a fixed
+ * SRT for the trivial fixes; burn-in preview against Reels/TikTok/Shorts UI zones.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Section from "../../components/Section.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import Extras from "./_yaratici/Extras.astro";
+import { SITE } from "../../consts";
+import { breadcrumb, faqPage } from "../../lib/schema";
+import ZONES from "../../data/safe-zones.json";
+import "./_yaratici/tool.css";
+
+const PATH = "/araclar/altyazi-kontrolu/";
+const PAGE_URL = new URL(PATH, SITE.url).href;
+const title = "Altyazı Kontrolü: SRT/VTT Satır ve Okuma Hızı";
+const description =
+  "Ücretsiz SRT/VTT altyazı kontrolü: satır başına karakter, okuma hızı (KBS), satır sayısı, süre, çakışma ve Türkçe karakter hataları. Düzeltilmiş SRT indirin.";
+
+const faqs = [
+  {
+    question: "Türkçe altyazıda bir satır kaç karakter olmalı?",
+    answer:
+      "Netflix'in Türkçe altyazı rehberi satır başına en fazla 42 karakter ve en fazla 2 satır öngörür. Dikey videoda (Reels, TikTok, Shorts) ekran dar ve yazı büyük olduğu için biz satır başına 32 karaktere yakın kalmayı öneriyoruz; bu bir platform kuralı değil, kendi pratiğimizdir.",
+  },
+  {
+    question: "Okuma hızı (KBS / CPS) nedir, kaç olmalı?",
+    answer:
+      "Okuma hızı, altyazıdaki karakter sayısının (boşluklar dahil) ekranda kalma süresine bölünmesidir: saniyede karakter. Netflix Türkçe rehberi yetişkin içerik için saniyede 17 karakter önerir, gerektiğinde 20'ye kadar izin verir; çocuk içeriğinde 13 (en fazla 17).",
+  },
+  {
+    question: "Altyazı en az ve en fazla kaç saniye ekranda kalmalı?",
+    answer:
+      "Netflix genel kuralına göre bir altyazı en az 5/6 saniye (yaklaşık 0,83 sn) ve en fazla 7 saniye ekranda kalmalı. Ardışık iki altyazı arasında en az 2 kare boşluk olmalı; 3–11 karelik (24 fps'te) boşluklar 2 kareye kapatılır.",
+  },
+  {
+    question: "Altyazıda ş, ğ, ı yerine Ã, Ä± gibi karakterler çıkıyor, neden?",
+    answer:
+      "Dosya UTF-8 olarak kaydedilmiş ama bir program onu Windows-1252/1254 gibi eski bir kodlamayla okumuş (ya da tersi). Araç bu bozuk karakterleri tanır ve düzeltilmiş SRT'de doğru Türkçe harflere çevirir. Düzeltilmiş dosya her zaman UTF-8 olarak indirilir.",
+  },
+  {
+    question: "Araç neleri otomatik düzeltiyor, neleri düzeltmiyor?",
+    answer:
+      "Otomatik: numaralandırma, gereksiz boşluklar, bozuk Türkçe karakterler, VTT'den SRT'ye dönüşüm, çakışan zamanlar, 2 kareden kısa boşluklar ve yer varsa çok kısa altyazıların uzatılması. İsterseniz tek satırda kalan uzun cümleler iki satıra dengelenir. Okuma hızı yüksek altyazıları kısaltmak ya da bölmek çeviri kararı olduğu için araç bunları yalnızca işaretler.",
+  },
+  {
+    question: "Altyazı dosyam bir sunucuya gönderiliyor mu?",
+    answer:
+      "Hayır. Dosya tarayıcınızda okunur, kontrol ve düzeltme de tarayıcınızda yapılır; hiçbir sunucuya gönderilmez, kaydedilmez. Sayfada üçüncü taraf takip kodu yoktur.",
+  },
+];
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Araçlar", path: "/araclar/" },
+    { name: "Altyazı kontrolü", path: PATH },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "Altyazı Kontrolü (SRT/VTT)",
+    alternateName: "SRT / VTT subtitle checker (CPL, CPS, timing, Turkish characters)",
+    url: PAGE_URL,
+    applicationCategory: "MultimediaApplication",
+    operatingSystem: "Web",
+    browserRequirements: "Modern bir web tarayıcısı; JavaScript gerekli",
+    isAccessibleForFree: true,
+    inLanguage: "tr",
+    offers: { "@type": "Offer", price: "0", priceCurrency: "TRY" },
+    description,
+    featureList: [
+      "SRT ve WebVTT okuma (UTF-8 ve Windows-1254)",
+      "Satır başına karakter ve satır sayısı kontrolü",
+      "Okuma hızı (saniyede karakter) kontrolü",
+      "En kısa / en uzun süre, boşluk ve çakışma kontrolü",
+      "Bozuk Türkçe karakter tespiti ve onarımı",
+      "Düzeltilmiş SRT indirme",
+      "Dikey video güvenli alan önizlemesi",
+    ],
+    provider: { "@id": `${SITE.url}#business` },
+    creator: { "@id": `${SITE.url}#business` },
+  },
+  faqPage(faqs),
+];
+const plats = ZONES.platforms.filter((p) => p.id !== "instagram-story");
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <div class="yt-page">
+    <Section width="wide" space="tight">
+      <nav class="crumbs" aria-label="Sayfa yolu">
+        <a href="/">Ana sayfa</a> <span aria-hidden="true">/</span> <a href="/araclar/">Araçlar</a>
+        <span aria-hidden="true">/</span> <span aria-current="page">Altyazı kontrolü</span>
+      </nav>
+      <SectionHeading as="h1" eyebrow="Araç · Ücretsiz · Kayıt yok">
+        Altyazı kontrolü: SRT ve VTT dosyanızı yayından önce test edin
+        <Fragment slot="intro">
+          <p>
+            Uzun satırlar, okunamayacak kadar hızlı geçen altyazılar, çakışan zamanlar ve “ÅŸ” gibi bozuk Türkçe
+            karakterler izleyiciyi videodan koparır. Dosyanızı açın; araç her altyazıyı satır uzunluğu, okuma hızı, süre ve
+            karakter açısından kontrol etsin, basit hataları düzeltip temiz bir SRT versin. <strong>Dosyanız tarayıcınızdan çıkmaz.</strong>
+          </p>
+        </Fragment>
+      </SectionHeading>
+
+      <ol class="howto" aria-label="Nasıl kullanılır">
+        <li><strong>1. Dosyayı açın ya da yapıştırın.</strong> .srt veya .vtt. UTF-8 ve Windows-1254 (Türkçe) kodlama otomatik tanınır. Denemek için örnek dosyayı yükleyin.</li>
+        <li><strong>2. Kuralları seçin.</strong> Netflix Türkçe (42 karakter, 17 KBS) ya da dikey video için daha kısa satırlar. Kare hızını videonuza göre girin.</li>
+        <li><strong>3. Düzeltin, indirin.</strong> Hatalı altyazılara tıklayıp dikey önizlemede görün; düzeltilmiş SRT'yi UTF-8 olarak indirin.</li>
+      </ol>
+
+      <div class="yt-tool" data-tool>
+        <div class="yt-tool yt-tool--split" style="padding:0;border:0;background:none">
+          <div class="yt-stage">
+            <label class="yt-drop" data-drop>
+              <input type="file" class="yt-sr" data-file accept=".srt,.vtt,.txt,text/plain,text/vtt,application/x-subrip" />
+              <span class="yt-drop__title">SRT / VTT dosyası seçin ya da buraya sürükleyin</span>
+              <span class="yt-drop__hint">Yalnızca tarayıcınızda okunur</span>
+            </label>
+            <label class="yt-small" for="srt-in">ya da altyazı metnini yapıştırın</label>
+            <textarea id="srt-in" class="yt-textarea" rows="9" data-input spellcheck="false" placeholder={"1\n00:00:01,000 --> 00:00:03,200\nMerhaba, bu bir örnek altyazı.\n"}></textarea>
+            <div class="yt-actions" style="margin:0">
+              <button type="button" class="ev-btn ev-btn--sun" data-check>Kontrol et</button>
+              <button type="button" class="yt-btn" data-sample>Örnek dosyayı yükle</button>
+            </div>
+            <p class="yt-warn" data-enc aria-live="polite" hidden></p>
+          </div>
+          <div>
+            <fieldset>
+              <legend>Kurallar</legend>
+              <label class="yt-field">Hazır ayar
+                <select data-preset>
+                  <option value="netflix">Netflix Türkçe (yetişkin): 42 karakter · 17 KBS · 2 satır</option>
+                  <option value="dikey">Dikey video (Rast önerisi): 32 karakter · 17 KBS · 2 satır</option>
+                  <option value="cocuk">Netflix Türkçe (çocuk): 42 karakter · 13 KBS · 2 satır</option>
+                  <option value="ozel">Özel</option>
+                </select>
+              </label>
+              <div class="yt-fields" style="margin-top:.8rem">
+                <label class="yt-field">Satır başına en fazla karakter <input type="number" min="10" max="80" value="42" data-r="cpl" /></label>
+                <label class="yt-field">En fazla satır <input type="number" min="1" max="4" value="2" data-r="lines" /></label>
+                <label class="yt-field">Hedef okuma hızı (KBS) <input type="number" min="5" max="40" step="0.5" value="17" data-r="cps" /></label>
+                <label class="yt-field">Üst sınır (KBS) <input type="number" min="5" max="40" step="0.5" value="20" data-r="cpsMax" /></label>
+                <label class="yt-field">En kısa süre (sn) <input type="number" min="0.2" max="5" step="0.01" value="0.83" data-r="minDur" /></label>
+                <label class="yt-field">En uzun süre (sn) <input type="number" min="1" max="20" step="0.5" value="7" data-r="maxDur" /></label>
+                <label class="yt-field">En az boşluk (kare) <input type="number" min="0" max="12" value="2" data-r="gapFrames" /></label>
+                <label class="yt-field">Kare hızı (fps)
+                  <select data-r="fps">
+                    <option>23.976</option><option>24</option><option selected>25</option><option>29.97</option><option>30</option><option>50</option><option>60</option>
+                  </select>
+                </label>
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend>Düzeltilmiş SRT'de</legend>
+              <div class="yt-checks">
+                <label><input type="checkbox" data-fix="basic" checked disabled /> Numaralandırma, boşluklar, VTT → SRT, UTF-8 (her zaman)</label>
+                <label><input type="checkbox" data-fix="mojibake" checked /> Bozuk Türkçe karakterleri onar (Ã¼ → ü, ÅŸ → ş …)</label>
+                <label><input type="checkbox" data-fix="overlap" checked /> Çakışmaları ve 2 kareden kısa boşlukları düzelt</label>
+                <label><input type="checkbox" data-fix="short" checked /> Çok kısa altyazıları yer varsa uzat</label>
+                <label><input type="checkbox" data-fix="chain" /> Küçük boşlukları (½ saniyeden kısa) 2 kareye kapat</label>
+                <label><input type="checkbox" data-fix="balance" /> Tek satıra sığmayan cümleyi iki satıra böl</label>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+
+        <div data-results hidden>
+          <div class="yt-h3">Sonuç</div>
+          <p data-summary class="yt-note" aria-live="polite"></p>
+          <div class="yt-actions">
+            <button type="button" class="ev-btn ev-btn--sun" data-dl>Düzeltilmiş SRT'yi indir</button>
+            <label class="yt-checks"><span style="display:flex;gap:.5rem;align-items:center"><input type="checkbox" data-only checked /> Yalnızca sorunlu altyazıları göster</span></label>
+          </div>
+          <div class="yt-tablewrap" style="max-height:34rem;overflow:auto">
+            <table class="yt-table">
+              <caption>Satıra tıklayınca dikey önizlemede gösterilir. KBS = saniyede karakter (boşluklar dahil).</caption>
+              <thead>
+                <tr><th scope="col">#</th><th scope="col">Zaman</th><th scope="col">Metin</th><th scope="col">Kr/satır</th><th scope="col">KBS</th><th scope="col">Bulgular</th></tr>
+              </thead>
+              <tbody data-rows></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="yt-tool yt-tool--narrowstage" style="padding:0;border:0;background:none" data-burn>
+          <div class="yt-canvaswrap" style="max-width:420px;width:100%;margin-inline:auto">
+            <canvas width="1080" height="1920" data-canvas role="img" aria-label="Seçili altyazının dikey videoda yakılmış (burn-in) önizlemesi ve platform arayüz alanları"></canvas>
+          </div>
+          <div>
+            <div class="yt-h3">Yakılmış altyazı önizlemesi (isteğe bağlı)</div>
+            <p class="yt-note">Altyazıyı videoya gömecekseniz (burn-in) konumu ve yazı boyutunu deneyin; yazı platform arayüzünün altında kalırsa uyarı görürsünüz.</p>
+            <fieldset>
+              <legend>Format ve arayüz</legend>
+              <div class="yt-chips">
+                <label class="yt-chip"><input type="radio" name="fmt" value="v" checked /><span>Dikey 9:16</span></label>
+                <label class="yt-chip"><input type="radio" name="fmt" value="h" /><span>Yatay 16:9</span></label>
+              </div>
+              <div class="yt-chips" style="margin-top:.6rem" data-platwrap>
+                {plats.map((p, i) => (
+                  <label class="yt-chip"><input type="radio" name="plat" value={p.id} checked={i === 0} /><span>{p.label}</span></label>
+                ))}
+              </div>
+            </fieldset>
+            <div class="yt-fields">
+              <label class="yt-field">Yazı boyutu (px) <input type="range" min="28" max="96" value="54" data-fs /></label>
+              <label class="yt-field">Dikey konum (alttan %) <input type="range" min="5" max="70" value="30" data-pos /></label>
+            </div>
+            <label class="yt-field" style="margin-top:.8rem">Önizlenen altyazı
+              <select data-cue></select>
+            </label>
+            <p class="yt-warn" data-burnwarn aria-live="polite" hidden></p>
+            <p class="yt-ok" data-burnok aria-live="polite" hidden></p>
+            <div class="yt-actions"><button type="button" class="ev-btn" data-png>Önizlemeyi PNG indir</button></div>
+          </div>
+        </div>
+      </div>
+    </Section>
+
+    <Section width="default" space="tight" id="kurallar">
+      <SectionHeading eyebrow="Ölçüler">Türkçe altyazıda temel ölçüler</SectionHeading>
+      <div class="yt-tablewrap">
+        <table class="yt-table">
+          <caption>Kaynak: Netflix Zaman Kodlu Metin Rehberleri (Türkçe ve Genel), erişim 30.10.2026. “Dikey video” satırı Rast önerisidir.</caption>
+          <thead><tr><th scope="col">Kural</th><th scope="col">Netflix Türkçe</th><th scope="col">Dikey video (öneri)</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Satır başına karakter</th><td>en fazla 42</td><td>≈ 32</td></tr>
+            <tr><th scope="row">Satır sayısı</th><td>en fazla 2</td><td>en fazla 2</td></tr>
+            <tr><th scope="row">Okuma hızı (yetişkin)</th><td>17 KBS, gerekirse 20</td><td>17 KBS</td></tr>
+            <tr><th scope="row">Okuma hızı (çocuk)</th><td>13 KBS, gerekirse 17</td><td>13 KBS</td></tr>
+            <tr><th scope="row">En kısa süre</th><td>5/6 saniye (≈0,83 sn)</td><td>≈ 1 sn</td></tr>
+            <tr><th scope="row">En uzun süre</th><td>7 saniye</td><td>≈ 5 sn</td></tr>
+            <tr><th scope="row">Altyazılar arası boşluk</th><td>en az 2 kare</td><td>en az 2 kare</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="yt-tips">
+        <li><strong>Sosyal medyada çoğu kişi sessiz izler.</strong> Yakılmış altyazıyı alttaki açıklama metninin üstüne, ekranın yaklaşık ortasına alın; konumu <a href="/araclar/guvenli-alan/">güvenli alan kontrolü</a> ile doğrulayın.</li>
+        <li><strong>Satırı anlamdan bölün.</strong> “ve, ama, çünkü” gibi bağlaçlar ikinci satırın başına gelsin; sıfatı isminden, ismi edatından ayırmayın.</li>
+        <li><strong>Kodlamayı UTF-8 yapın.</strong> Eski oynatıcılar ve bazı TV'ler Windows-1254 bekleyebilir; web, YouTube ve sosyal medya için UTF-8 en güvenli seçimdir.</li>
+        <li><strong>Dışa aktarma:</strong> altyazıyı ayrı dosya (SRT) olarak mı yükleyeceğiniz yoksa videoya mı gömeceğiniz platforma göre değişir; ayrıntılar <a href="/rehber/video-export-ayarlari/">video export ayarları rehberinde</a>.</li>
+      </ul>
+    </Section>
+
+    <Extras
+      faqs={faqs}
+      pageUrl={PAGE_URL}
+      linkText="Altyazı kontrolü (SRT/VTT)"
+      attribution="Altyazı kontrolü: Rast Creative Studio — rastcreative.com"
+      current={PATH}
+      ctaTitle="Altyazısı, kurgusu ve formatıyla hazır video"
+    >
+      <Fragment slot="sources">
+        <ul class="yt-sources">
+          <li>Netflix Partner Help Center, “Turkish Timed Text Style Guide”: satır başına 42 karakter; okuma hızı yetişkin 17 KBS (gerektiğinde 20), çocuk 13 KBS (gerektiğinde 17) (erişim 30.10.2026). <a href="https://partnerhelp.netflixstudios.com/hc/en-us/articles/215828598-Turkish-Timed-Text-Style-Guide" rel="noopener" target="_blank">partnerhelp.netflixstudios.com</a></li>
+          <li>Netflix Partner Help Center, “Timed Text Style Guide: General Requirements”: en kısa süre 5/6 saniye, en uzun süre 7 saniye, en fazla 2 satır (erişim 30.10.2026). <a href="https://partnerhelp.netflixstudios.com/hc/en-us/articles/215758617-Timed-Text-Style-Guide-General-Requirements" rel="noopener" target="_blank">partnerhelp.netflixstudios.com</a></li>
+          <li>Netflix Partner Help Center, “Subtitle Timing Guidelines”: altyazılar arasında en az 2 kare; 24 fps'te 3–11 karelik boşluklar 2 kareye kapatılır (erişim 30.10.2026). <a href="https://partnerhelp.netflixstudios.com/hc/en-us/articles/360051554394-Timed-Text-Style-Guide-Subtitle-Timing-Guidelines" rel="noopener" target="_blank">partnerhelp.netflixstudios.com</a></li>
+          <li>W3C, “WebVTT: The Web Video Text Tracks Format” (VTT okuma ve dönüştürme için). <a href="https://www.w3.org/TR/webvtt1/" rel="noopener" target="_blank">w3.org</a></li>
+          <li>Dikey video arayüz alanları: <a href="/araclar/guvenli-alan/">güvenli alan kontrolü</a> sayfasındaki yaklaşık değerler. Dikey video için 32 karakter ve 1–5 sn önerisi Rast Creative'in kendi üretim pratiğidir, bir platform kuralı değildir.</li>
+        </ul>
+        <p>
+          Okuma hızı, satır sonları ve biçimlendirme etiketleri (&lt;i&gt; vb.) çıkarılıp boşluklar dahil karakter sayısının
+          süreye bölünmesiyle hesaplanır. Araçlar arasında küçük farklar normaldir.
+        </p>
+      </Fragment>
+      <Fragment slot="cta">
+        Rast Creative Studio, videoları altyazısıyla birlikte teslim eder: Türkçe altyazı, dikey formatta okunur yerleşim ve
+        platforma göre dışa aktarma. Düzenli içerik için <a href="/sosyal-medya-icerigi/">sosyal medya içeriği</a>, tek seferlik
+        işler için <a href="/video-cekimi/">video çekimi</a> ve <a href="/tanitim-filmi/">tanıtım filmi</a> sayfalarına bakabilirsiniz.
+      </Fragment>
+    </Extras>
+  </div>
+</BaseLayout>
+
+<script>
+  import DATA from "../../data/safe-zones.json";
+  import { exportCanvasPng, drawCredit, loadLogo, wireDrop, downloadBlob } from "./_yaratici/client";
+
+  const PAGE = "https://rastcreative.com/araclar/altyazi-kontrolu/";
+  type Cue = { idx: number; start: number; end: number; lines: string[]; raw: string };
+  type Issue = { level: "err" | "warn" | "info"; text: string };
+
+  const PRESETS: Record<string, Record<string, number>> = {
+    netflix: { cpl: 42, lines: 2, cps: 17, cpsMax: 20, minDur: 0.83, maxDur: 7 },
+    dikey: { cpl: 32, lines: 2, cps: 17, cpsMax: 20, minDur: 1, maxDur: 5 },
+    cocuk: { cpl: 42, lines: 2, cps: 13, cpsMax: 17, minDur: 0.83, maxDur: 7 },
+  };
+
+  const SAMPLE = `WEBVTT
+
+00:00:00.500 --> 00:00:01.000
+Merhaba!
+
+00:00:01.020 --> 00:00:04.000
+Bugün size Sakarya'da bir gün boyunca çektiğimiz tanıtım filminin hikâyesini anlatacağız.
+
+00:00:03.800 --> 00:00:06.000
+Ã‡ekim gÃ¼nÃ¼ sabah altÄ±da baÅŸladÄ±.
+
+00:00:06.200 --> 00:00:07.000
+Işık, ses ve kurgu ekibi hazırdı ama hava hiç de planladığımız gibi değildi.
+
+00:00:07.500   -->   00:00:16.000
+Yine de   akşam üstü
+güzel bir ışık yakaladık.
+
+00:00:16.040 --> 00:00:18.500
+Detaylar videonun sonunda.
+`;
+
+  // mojibake (UTF-8 read as cp1252/1254) → Turkish + common letters
+  const MOJI: [string, string][] = [
+    ["Ã‡", "Ç"], ["Ã§", "ç"], ["Ä\u009e", "Ğ"], ["Äž", "Ğ"], ["ÄŸ", "ğ"], ["Ä°", "İ"], ["Ä±", "ı"],
+    ["Ã–", "Ö"], ["Ã¶", "ö"], ["Å\u009e", "Ş"], ["Åž", "Ş"], ["ÅŸ", "ş"], ["Ãœ", "Ü"], ["Ã¼", "ü"],
+    ["Ã¢", "â"], ["Ã®", "î"], ["Ã»", "û"], ["Ã©", "é"], ["â€™", "’"], ["â€˜", "‘"], ["â€œ", "“"], ["â€\u009d", "”"],
+    ["â€", "”"], ["â€¦", "…"], ["â€“", "–"], ["â€”", "—"], ["Â ", " "], ["Â", ""],
+  ];
+  // dedupe order: longer first
+  MOJI.sort((a, b) => b[0].length - a[0].length);
+  const mojiRe = /Ã.|Ä.|Å.|â€|Â/;
+  const fixMoji = (s: string) => {
+    let o = s;
+    for (const [a, b] of MOJI) o = o.split(a).join(b);
+    return o;
+  };
+
+  // ---------------------------------------------------------------- parsing
+  function toSec(t: string) {
+    const m = t.trim().match(/^(?:(\d+):)?(\d{1,2}):(\d{2})[.,](\d{1,3})$/);
+    if (!m) return NaN;
+    return (Number(m[1] || 0) * 3600 + Number(m[2]) * 60 + Number(m[3]) + Number(m[4].padEnd(3, "0")) / 1000);
+  }
+  function fmtSrt(s: number) {
+    const ms = Math.max(0, Math.round(s * 1000));
+    const h = Math.floor(ms / 3600000), m = Math.floor((ms % 3600000) / 60000), sec = Math.floor((ms % 60000) / 1000), r = ms % 1000;
+    return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")},${String(r).padStart(3, "0")}`;
+  }
+  const short = (s: number) => fmtSrt(s).slice(3);
+  const nf = (x: number, d = 1) => x.toFixed(d).replace(".", ",");
+
+  function parse(text: string) {
+    const errs: string[] = [];
+    const t = text.replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n");
+    const isVtt = /^WEBVTT/.test(t.trim());
+    const blocks = t.split(/\n{2,}/);
+    const cues: Cue[] = [];
+    let n = 0;
+    for (const b of blocks) {
+      const lines = b.split("\n").filter((l, i, a) => !(i === a.length - 1 && l === ""));
+      if (!lines.length || !lines.join("").trim()) continue;
+      if (/^WEBVTT/.test(lines[0]) || /^(NOTE|STYLE|REGION)\b/.test(lines[0])) continue;
+      const ti = lines.findIndex((l) => l.includes("-->"));
+      if (ti < 0) {
+        errs.push(`Zaman satırı bulunamayan blok atlandı: “${lines[0].slice(0, 40)}”`);
+        continue;
+      }
+      const [a, rest] = lines[ti].split("-->");
+      const bTime = rest.trim().split(/\s+/)[0];
+      const start = toSec(a), end = toSec(bTime);
+      n++;
+      if (isNaN(start) || isNaN(end)) {
+        errs.push(`${n}. altyazıda zaman biçimi okunamadı: “${lines[ti].trim()}”`);
+        continue;
+      }
+      const textLines = lines.slice(ti + 1);
+      cues.push({ idx: n, start, end, lines: textLines, raw: b });
+    }
+    return { cues, errs, isVtt };
+  }
+
+  const clean = (l: string) => l.replace(/<[^>]+>/g, "").replace(/\{\\[^}]*\}/g, "");
+  const tidy = (l: string) => l.replace(/[ \t\u00a0]+/g, " ").trim();
+  const charCount = (lines: string[]) => lines.map((l) => clean(l).trim()).join(" ").length;
+
+  // ---------------------------------------------------------------- checking
+  function rules() {
+    const v = (k: string) => Number((document.querySelector(`[data-r="${k}"]`) as HTMLInputElement).value);
+    return { cpl: v("cpl"), lines: v("lines"), cps: v("cps"), cpsMax: v("cpsMax"), minDur: v("minDur"), maxDur: v("maxDur"), gapFrames: v("gapFrames"), fps: v("fps") };
+  }
+
+  function check(cues: Cue[], R: ReturnType<typeof rules>) {
+    const frame = 1 / R.fps;
+    const minGap = R.gapFrames * frame - 0.0005;
+    const report = cues.map((c, i) => {
+      const iss: Issue[] = [];
+      const ls = c.lines.map((l) => clean(l));
+      const dur = c.end - c.start;
+      const chars = charCount(c.lines);
+      const cps = dur > 0 ? chars / dur : Infinity;
+      const maxLine = Math.max(0, ...ls.map((l) => tidy(l).length));
+      if (dur <= 0) iss.push({ level: "err", text: "Bitiş başlangıçtan önce" });
+      if (!ls.join("").trim()) iss.push({ level: "err", text: "Boş altyazı" });
+      if (maxLine > R.cpl) iss.push({ level: "err", text: `Satır ${maxLine} karakter (en fazla ${R.cpl})` });
+      if (ls.length > R.lines) iss.push({ level: "err", text: `${ls.length} satır (en fazla ${R.lines})` });
+      if (dur > 0 && cps > R.cpsMax) iss.push({ level: "err", text: `Okuma hızı ${nf(cps)} KBS (üst sınır ${nf(R.cpsMax)})` });
+      else if (dur > 0 && cps > R.cps) iss.push({ level: "warn", text: `Okuma hızı ${nf(cps)} KBS (hedef ${nf(R.cps)})` });
+      if (dur > 0 && dur < R.minDur - 0.0005) iss.push({ level: "warn", text: `Süre ${nf(dur, 2)} sn (en az ${nf(R.minDur, 2)})` });
+      if (dur > R.maxDur + 0.0005) iss.push({ level: "warn", text: `Süre ${nf(dur, 2)} sn (en fazla ${nf(R.maxDur, 1)})` });
+      const next = cues[i + 1];
+      if (next) {
+        const gap = next.start - c.end;
+        if (gap < -0.0005) iss.push({ level: "err", text: `Sonrakiyle ${nf(-gap, 3)} sn çakışıyor` });
+        else if (gap < minGap) iss.push({ level: "err", text: `Sonrakiyle boşluk ${(gap * 1000).toFixed(0)} ms (< ${R.gapFrames} kare)` });
+        else if (gap < 0.5 && gap > 2 * frame + 0.0005) iss.push({ level: "info", text: `Boşluk ${Math.round(gap / frame)} kare: 2 kareye kapatılabilir` });
+      }
+      if (i > 0 && c.start < cues[i - 1].start) iss.push({ level: "err", text: "Sıra dışı (önceki altyazıdan önce başlıyor)" });
+      const raw = c.lines.join("\n");
+      if (mojiRe.test(raw)) iss.push({ level: "err", text: "Bozuk Türkçe karakter (kodlama)" });
+      if (/\uFFFD/.test(raw)) iss.push({ level: "err", text: "Okunamayan karakter (�) — dosya kodlaması yanlış" });
+      else if (/[A-Za-zçğıöşüÇĞİÖŞÜ]\?[a-zçğıöşü]/.test(raw)) iss.push({ level: "warn", text: "Kelime içinde “?” — kayıp Türkçe harf olabilir" });
+      if (c.lines.some((l) => /^\s|\s$| {2,}/.test(l))) iss.push({ level: "info", text: "Fazla boşluk" });
+      if (/-->.*\b(position|line|align|size):/.test(c.raw)) iss.push({ level: "info", text: "VTT konum ayarı (SRT'de kaldırılır)" });
+      return { cue: c, iss, chars, cps, dur, maxLine };
+    });
+    return report;
+  }
+
+  // ---------------------------------------------------------------- fixing
+  function balance(l: string, max: number) {
+    const s = tidy(l);
+    if (s.length <= max) return [s];
+    const mid = s.length / 2;
+    let best = -1;
+    for (let i = 0; i < s.length; i++) if (s[i] === " " && (best < 0 || Math.abs(i - mid) < Math.abs(best - mid))) best = i;
+    if (best < 0) return [s];
+    const a = s.slice(0, best), b = s.slice(best + 1);
+    return a.length <= max && b.length <= max ? [a, b] : [s];
+  }
+
+  function fix(cues: Cue[], R: ReturnType<typeof rules>, opt: Record<string, boolean>) {
+    const frame = 1 / R.fps;
+    const minGap = R.gapFrames * frame;
+    const out = cues
+      .map((c) => ({ ...c, lines: c.lines.map((l) => (opt.mojibake ? fixMoji(l) : l)).map(tidy).filter((l) => l !== "") }))
+      .filter((c) => c.lines.length && c.end > c.start)
+      .sort((a, b) => a.start - b.start);
+    const changes: string[] = [];
+    for (let i = 0; i < out.length; i++) {
+      const c = out[i];
+      const n = out[i + 1];
+      if (opt.balance && c.lines.length === 1 && c.lines[0].length > R.cpl && R.lines >= 2) {
+        const b = balance(c.lines[0], R.cpl);
+        if (b.length === 2) {
+          c.lines = b;
+          changes.push(`#${i + 1}: iki satıra bölündü`);
+        }
+      }
+      if (n) {
+        const gap = n.start - c.end;
+        if (opt.overlap && gap < minGap - 0.0005) {
+          const newEnd = n.start - minGap;
+          if (newEnd > c.start + 0.2) {
+            c.end = newEnd;
+            changes.push(`#${i + 1}: bitiş ${short(newEnd)} (çakışma/boşluk)`);
+          }
+        } else if (opt.chain && gap > minGap + 0.0005 && gap < 0.5) {
+          c.end = n.start - minGap;
+          changes.push(`#${i + 1}: boşluk 2 kareye kapatıldı`);
+        }
+      }
+      if (opt.short && c.end - c.start < R.minDur) {
+        const limit = n ? n.start - minGap : Infinity;
+        const want = c.start + R.minDur;
+        const newEnd = Math.min(want, limit);
+        if (newEnd > c.end + 0.0005) {
+          c.end = newEnd;
+          changes.push(`#${i + 1}: süre ${nf(newEnd - c.start, 2)} sn'ye uzatıldı`);
+        }
+      }
+    }
+    const srt = out.map((c, i) => `${i + 1}\n${fmtSrt(c.start)} --> ${fmtSrt(c.end)}\n${c.lines.join("\n")}\n`).join("\n");
+    return { srt, changes, cues: out };
+  }
+
+  // ---------------------------------------------------------------- UI
+  const root = document.querySelector<HTMLElement>("[data-tool]");
+  if (root) init(root);
+
+  function init(root: HTMLElement) {
+    const $ = <T extends Element>(s: string) => root.querySelector<T>(s)!;
+    const input = $<HTMLTextAreaElement>("[data-input]");
+    const enc = $<HTMLElement>("[data-enc]");
+    const results = $<HTMLElement>("[data-results]");
+    const summary = $<HTMLElement>("[data-summary]");
+    const rows = $<HTMLElement>("[data-rows]");
+    const only = $<HTMLInputElement>("[data-only]");
+    const cueSel = $<HTMLSelectElement>("[data-cue]");
+    let fileName = "altyazi";
+    let lastReport: ReturnType<typeof check> = [];
+    let lastCues: Cue[] = [];
+
+    function decode(buf: ArrayBuffer) {
+      try {
+        const t = new TextDecoder("utf-8", { fatal: true }).decode(buf);
+        enc.hidden = true;
+        return t;
+      } catch {
+        const t = new TextDecoder("windows-1254").decode(buf);
+        enc.textContent = "Dosya UTF-8 değil; Türkçe Windows-1254 kodlamasıyla okundu. Düzeltilmiş SRT UTF-8 olarak indirilir.";
+        enc.hidden = false;
+        return t;
+      }
+    }
+    wireDrop($<HTMLElement>("[data-drop]"), $<HTMLInputElement>("[data-file]"), async (fs) => {
+      const f = fs[0];
+      if (f.size > 5_000_000) {
+        enc.textContent = "Dosya çok büyük (5 MB üstü). Altyazı dosyası mı seçtiniz?";
+        enc.hidden = false;
+        return;
+      }
+      fileName = f.name.replace(/\.[^.]+$/, "");
+      input.value = decode(await f.arrayBuffer());
+      run();
+    });
+    $<HTMLButtonElement>("[data-sample]").addEventListener("click", () => {
+      fileName = "ornek";
+      input.value = SAMPLE;
+      enc.hidden = true;
+      run();
+    });
+    $<HTMLButtonElement>("[data-check]").addEventListener("click", run);
+    $<HTMLSelectElement>("[data-preset]").addEventListener("change", (e) => {
+      const p = PRESETS[(e.target as HTMLSelectElement).value];
+      if (p) for (const k in p) (document.querySelector(`[data-r="${k}"]`) as HTMLInputElement).value = String(p[k]);
+      if (input.value.trim()) run();
+    });
+    root.querySelectorAll<HTMLInputElement>("[data-r]").forEach((el) =>
+      el.addEventListener("change", () => {
+        $<HTMLSelectElement>("[data-preset]").value = "ozel";
+        if (input.value.trim()) run();
+      }),
+    );
+    only.addEventListener("change", render);
+
+    function run() {
+      const { cues, errs, isVtt } = parse(input.value);
+      lastCues = cues;
+      lastReport = check(cues, rules());
+      results.hidden = false;
+      const nErr = lastReport.filter((r) => r.iss.some((i) => i.level === "err")).length;
+      const nWarn = lastReport.filter((r) => !r.iss.some((i) => i.level === "err") && r.iss.some((i) => i.level === "warn")).length;
+      const total = cues.length;
+      const avgCps = total ? lastReport.reduce((a, r) => a + (isFinite(r.cps) ? r.cps : 0), 0) / total : 0;
+      const allText = cues.map((c) => c.lines.join(" ")).join(" ");
+      const trWords = /[çğıöşüÇĞİÖŞÜ]/.test(allText);
+      let s = `${total} altyazı okundu${isVtt ? " (WebVTT)" : ""}. ${nErr} altyazıda hata, ${nWarn} altyazıda uyarı. Ortalama okuma hızı ${avgCps.toFixed(1).replace(".", ",")} KBS.`;
+      if (errs.length) s += ` Okunamayan: ${errs.join(" · ")}`;
+      if (total > 5 && !trWords && /[a-z]{3,}/i.test(allText)) s += " Metinde hiç ç, ğ, ı, ö, ş, ü yok: Türkçe karakterler kaybolmuş olabilir.";
+      if (!total) s = "Altyazı bulunamadı. Dosyanın SRT ya da VTT olduğundan emin olun.";
+      summary.textContent = s;
+      render();
+      cueSel.innerHTML = "";
+      cues.forEach((c, i) => {
+        const o = document.createElement("option");
+        o.value = String(i);
+        o.textContent = `#${c.idx} ${short(c.start)} — ${clean(c.lines.join(" ")).slice(0, 50)}`;
+        cueSel.append(o);
+      });
+      const firstBad = lastReport.findIndex((r) => r.iss.some((i) => i.level !== "info"));
+      cueSel.value = String(Math.max(0, firstBad));
+      burn();
+    }
+
+    function render() {
+      rows.innerHTML = "";
+      lastReport.forEach((r, i) => {
+        if (only.checked && !r.iss.length) return;
+        const tr = document.createElement("tr");
+        tr.tabIndex = 0;
+        tr.style.cursor = "pointer";
+        const td = (t: string | Node) => {
+          const c = document.createElement("td");
+          if (typeof t === "string") c.textContent = t;
+          else c.append(t);
+          tr.append(c);
+          return c;
+        };
+        td(String(r.cue.idx));
+        td(`${short(r.cue.start)}\n${short(r.cue.end)}`).style.whiteSpace = "pre";
+        td(r.cue.lines.map(clean).join("\n")).style.whiteSpace = "pre-wrap";
+        td(String(r.maxLine));
+        td(isFinite(r.cps) ? nf(r.cps) : "—");
+        const box = document.createElement("div");
+        box.style.cssText = "display:flex;flex-wrap:wrap;gap:.3rem";
+        if (!r.iss.length) {
+          const b = document.createElement("span");
+          b.className = "yt-badge yt-badge--ok";
+          b.textContent = "Sorun yok";
+          box.append(b);
+        }
+        r.iss.forEach((x) => {
+          const b = document.createElement("span");
+          b.className = `yt-badge yt-badge--${x.level === "err" ? "err" : x.level === "warn" ? "warn" : "ok"}`;
+          b.textContent = x.text;
+          box.append(b);
+        });
+        td(box);
+        const pick = () => {
+          cueSel.value = String(i);
+          burn();
+          document.querySelector("[data-burn]")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        };
+        tr.addEventListener("click", pick);
+        tr.addEventListener("keydown", (e) => e.key === "Enter" && pick());
+        rows.append(tr);
+      });
+      if (!rows.children.length) {
+        const tr = document.createElement("tr");
+        const c = document.createElement("td");
+        c.colSpan = 6;
+        c.textContent = lastReport.length ? "Seçili kurallara göre sorunlu altyazı yok." : "—";
+        tr.append(c);
+        rows.append(tr);
+      }
+    }
+
+    $<HTMLButtonElement>("[data-dl]").addEventListener("click", () => {
+      if (!lastCues.length) return;
+      const opt: Record<string, boolean> = {};
+      root.querySelectorAll<HTMLInputElement>("[data-fix]").forEach((c) => (opt[c.dataset.fix!] = c.checked));
+      const res = fix(lastCues, rules(), opt);
+      downloadBlob(new Blob(["\uFEFF" + res.srt.replace(/\n/g, "\r\n")], { type: "application/x-subrip;charset=utf-8" }), `rast-duzeltilmis-${fileName.replace(/[^\w-]+/g, "-").slice(0, 40)}.srt`);
+      summary.textContent += ` İndirilen dosyada ${res.changes.length} zaman/satır düzeltmesi yapıldı.`;
+    });
+
+    // ---------------------------------------------------------------- burn-in preview
+    const canvas = $<HTMLCanvasElement>("[data-canvas]");
+    const ctx = canvas.getContext("2d")!;
+    const fsIn = $<HTMLInputElement>("[data-fs]");
+    const posIn = $<HTMLInputElement>("[data-pos]");
+    const bw = $<HTMLElement>("[data-burnwarn]");
+    const bok = $<HTMLElement>("[data-burnok]");
+    const logo = loadLogo();
+    let credit = false;
+    const fmt = () => (root.querySelector<HTMLInputElement>('input[name="fmt"]:checked')!.value as "v" | "h");
+    const plat = () => DATA.platforms.find((p) => p.id === root.querySelector<HTMLInputElement>('input[name="plat"]:checked')!.value)!;
+
+    function wrap(text: string, maxW: number) {
+      const words = text.split(/\s+/);
+      const out: string[] = [];
+      let cur = "";
+      for (const w of words) {
+        const t = cur ? cur + " " + w : w;
+        if (ctx.measureText(t).width > maxW && cur) {
+          out.push(cur);
+          cur = w;
+        } else cur = t;
+      }
+      if (cur) out.push(cur);
+      return out;
+    }
+
+    function burn() {
+      const v = fmt() === "v";
+      canvas.width = v ? 1080 : 1920;
+      canvas.height = v ? 1920 : 1080;
+      (canvas.parentElement as HTMLElement).style.maxWidth = v ? "420px" : "100%";
+      root.querySelector<HTMLElement>("[data-platwrap]")!.hidden = !v;
+      const W = canvas.width, H = canvas.height;
+      const g = ctx.createLinearGradient(0, 0, W, H);
+      g.addColorStop(0, "#c98a54");
+      g.addColorStop(0.55, "#7b5a8f");
+      g.addColorStop(1, "#2c3a5c");
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, W, H);
+      const p = plat();
+      if (v) {
+        ctx.fillStyle = "rgba(12,12,16,.55)";
+        ctx.fillRect(0, 0, W, p.top);
+        ctx.fillRect(0, H - p.bottom, W, p.bottom);
+        if (p.rail) ctx.fillRect(p.rail.x, p.rail.y1, W - p.rail.x, p.rail.y2 - p.rail.y1);
+        ctx.fillStyle = "rgba(255,255,255,.85)";
+        ctx.font = "600 28px system-ui, sans-serif";
+        ctx.fillText(`${p.label} arayüzü (yaklaşık)`, 40, Math.min(70, p.top - 30));
+      } else {
+        ctx.strokeStyle = "rgba(255,255,255,.5)";
+        ctx.setLineDash([16, 10]);
+        ctx.lineWidth = 3;
+        ctx.strokeRect(W * 0.05, H * 0.05, W * 0.9, H * 0.9);
+        ctx.setLineDash([]);
+        ctx.fillStyle = "rgba(255,255,255,.85)";
+        ctx.font = "600 28px system-ui, sans-serif";
+        ctx.fillText("%90 başlık güvenli alanı", W * 0.05 + 10, H * 0.05 + 36);
+      }
+      const i = Number(cueSel.value || 0);
+      const cue = lastCues[i];
+      const text = cue ? clean(fixMoji(cue.lines.join(" "))).replace(/\s+/g, " ").trim() : "Altyazınız burada görünür; iki satırı geçmesin.";
+      const fs = Number(fsIn.value) * (v ? 1 : 0.9);
+      ctx.font = `700 ${fs}px system-ui, sans-serif`;
+      const sideMargin = v ? Math.max(p.left, p.right) + 20 : W * 0.1;
+      const lines = cue && cue.lines.length ? cue.lines.map((l) => clean(fixMoji(l)).trim()).flatMap((l) => wrap(l, W - sideMargin * 2)) : wrap(text, W - sideMargin * 2);
+      const lh = fs * 1.25;
+      const blockH = lines.length * lh + fs * 0.6;
+      const bottomY = H - (Number(posIn.value) / 100) * H;
+      const topY = bottomY - blockH;
+      ctx.textAlign = "center";
+      let maxW = 0;
+      lines.forEach((l) => (maxW = Math.max(maxW, ctx.measureText(l).width)));
+      ctx.fillStyle = "rgba(0,0,0,.62)";
+      ctx.beginPath();
+      ctx.roundRect(W / 2 - maxW / 2 - fs * 0.4, topY, maxW + fs * 0.8, blockH, fs * 0.25);
+      ctx.fill();
+      ctx.fillStyle = "#fff";
+      lines.forEach((l, k) => ctx.fillText(l, W / 2, topY + fs * 0.3 + lh * (k + 0.8)));
+      ctx.textAlign = "left";
+      const x1 = W / 2 - maxW / 2 - fs * 0.4, x2 = W / 2 + maxW / 2 + fs * 0.4;
+      const probs: string[] = [];
+      if (v) {
+        if (bottomY > H - p.bottom) probs.push(`alt arayüz bandına (${p.bottom} px) giriyor`);
+        if (topY < p.top) probs.push("üst arayüz bandına giriyor");
+        if (p.rail && x2 > p.rail.x && bottomY > p.rail.y1 && topY < p.rail.y2) probs.push("sağdaki buton sütununun altında kalıyor");
+        if (x1 < p.left) probs.push("sol kenara çok yakın");
+      } else if (bottomY > H * 0.95 || topY < H * 0.05 || x1 < W * 0.05) probs.push("%90 güvenli alanın dışına taşıyor");
+      if (lines.length > 2) probs.push(`${lines.length} satıra kırılıyor (yazıyı küçültün ya da altyazıyı bölün)`);
+      ctx.strokeStyle = probs.length ? "#ff4d4d" : "#3ddc84";
+      ctx.lineWidth = 4;
+      ctx.strokeRect(x1, topY, x2 - x1, blockH);
+      bw.hidden = !probs.length;
+      bok.hidden = !!probs.length;
+      bw.textContent = probs.length ? `Altyazı ${probs.join(", ")}.` : "";
+      bok.textContent = probs.length ? "" : "Altyazı bu konumda arayüzün altında kalmıyor.";
+      if (credit) drawCredit(ctx, logo, 40, H - 74, 1, "/araclar/altyazi-kontrolu/");
+    }
+    [fsIn, posIn, cueSel].forEach((el) => el.addEventListener("input", burn));
+    root.querySelectorAll<HTMLInputElement>('input[name="fmt"], input[name="plat"]').forEach((el) => el.addEventListener("change", burn));
+    $<HTMLButtonElement>("[data-png]").addEventListener("click", () => {
+      credit = true;
+      burn();
+      exportCanvasPng(canvas, `rast-altyazi-onizleme-${fmt() === "v" ? "9x16" : "16x9"}.png`, PAGE, "Rast Creative subtitle checker");
+      credit = false;
+      burn();
+    });
+    logo.onload = burn;
+    burn();
+  }
+</script>

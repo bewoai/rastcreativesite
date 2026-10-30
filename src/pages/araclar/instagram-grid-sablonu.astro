@@ -1,0 +1,629 @@
+---
+/**
+ * /araclar/instagram-grid-sablonu/ — Instagram profile grid (3:4) previewer +
+ * Reels cover crop guide + downloadable layered PNG set. 100% client-side.
+ * Static files: scripts/generate-creator-templates.py.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Section from "../../components/Section.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import Extras from "./_yaratici/Extras.astro";
+import { SITE } from "../../consts";
+import { breadcrumb, faqPage } from "../../lib/schema";
+import "./_yaratici/tool.css";
+
+const PATH = "/araclar/instagram-grid-sablonu/";
+const PAGE_URL = new URL(PATH, SITE.url).href;
+const title = "Instagram Grid Şablonu (3:4) ve Kapak Kırpma";
+const description =
+  "Ücretsiz Instagram profil ızgarası önizleme: Reels kapağınız ve gönderileriniz 3:4 ızgarada nasıl kırpılıyor görün. Katmanlı PNG şablonlar ve Canva/Figma ölçüleri.";
+
+const T = PATH;
+const files = [
+  { file: "rast-ig-reels-kapak-izgara-rehberi-1080x1920.png", label: "Reels kapağı ızgara rehberi", size: "1080×1920", w: 108, h: 192 },
+  { file: "rast-ig-gonderi-3x4-1080x1440.png", label: "Gönderi 3:4", size: "1080×1440", w: 108, h: 144 },
+  { file: "rast-ig-gonderi-4x5-1080x1350.png", label: "Gönderi 4:5", size: "1080×1350", w: 108, h: 135 },
+  { file: "rast-ig-gonderi-1x1-1080x1080.png", label: "Gönderi 1:1", size: "1080×1080", w: 108, h: 108 },
+  { file: "rast-ig-profil-izgara-planlayici-3x3.png", label: "Profil ızgarası planlayıcı", size: "1088×1538", w: 108, h: 153 },
+];
+const layers = [
+  "rast-ig-kapak-katman-1-izgara-3x4.png",
+  "rast-ig-kapak-katman-2-akis-4x5.png",
+  "rast-ig-kapak-katman-3-metin-guvenli.png",
+  "rast-ig-kapak-katman-4-reels-arayuz.png",
+  "rast-ig-kapak-katman-5-etiket-imza.png",
+];
+
+const sizes = [
+  ["Reels kapağı", "1080×1920", "9:16", "Izgarada ortadaki 1080×1440 görünür"],
+  ["Gönderi (ızgaraya tam oturur)", "1080×1440", "3:4", "Izgarada kırpılmaz"],
+  ["Gönderi (akış)", "1080×1350", "4:5", "Izgarada kenarlardan ≈34 px kırpılır"],
+  ["Kare gönderi", "1080×1080", "1:1", "Izgarada kenarlardan 135 px kırpılır"],
+  ["Yatay gönderi", "1080×566", "1,91:1", "Izgarada büyük kısmı kırpılır"],
+  ["Story", "1080×1920", "9:16", "Ayrı ölçüler: güvenli alan aracı"],
+  ["Profil fotoğrafı", "320×320 (en az)", "1:1", "Daire olarak gösterilir"],
+];
+
+const faqs = [
+  {
+    question: "Instagram profil ızgarası hangi oranda?",
+    answer:
+      "Instagram, Ocak 2025'te profil ızgarasını kareden (1:1) dikey dikdörtgene (3:4) geçirdi. Mobil uygulamada küçük resimler 3:4 gösterilir; masaüstü web bazı hesaplarda hâlâ farklı görünebilir. Izgaraya tam oturan gönderi boyutu 1080×1440 pikseldir.",
+  },
+  {
+    question: "Reels kapağı ızgarada nasıl kırpılıyor?",
+    answer:
+      "Reels kapağı 1080×1920 (9:16) yüklenir; profil ızgarası bunun ortasındaki yaklaşık 1080×1440 piksellik 3:4 alanı gösterir, yani üstten ve alttan yaklaşık 240 piksel görünmez. Akışta ise 4:5 (1080×1350) kesilir. Başlığı ve yüzü ortadaki alanda tutun; yükleme sırasında “profil kırpması” ayarıyla konumu kaydırabilirsiniz.",
+  },
+  {
+    question: "Instagram yardım sayfası Reels kapağı için 420×654 diyor, hangisi doğru?",
+    answer:
+      "Instagram Yardım Merkezi kapak fotoğrafı için hâlâ 420×654 (1:1,55) önerisini gösteriyor. Uygulamada kapak Reels ile aynı 9:16 karede kullanılır; 1080×1920 yüklemek hem tam ekranda hem ızgarada keskin sonuç verir. Biz 1080×1920 öneriyoruz.",
+  },
+  {
+    question: "Katmanlı PNG seti Photoshop'ta nasıl açılır?",
+    answer:
+      "ZIP'teki katmanlar klasöründe aynı boyutta (1080×1920) beş şeffaf PNG var. Photoshop'ta Dosya > Komut Dosyaları > Dosyaları Yığına Yükle ile tek belgede katman olarak açın; Figma ve Canva'da dosyaları aynı konuma (0,0) sürükleyin. Dışa aktarmadan önce rehber katmanlarını gizleyin.",
+  },
+  {
+    question: "Yüklediğim görseller bir sunucuya gidiyor mu?",
+    answer:
+      "Hayır. Görseller yalnızca tarayıcınızda açılır, ızgara önizlemesi ve indirilen PNG tarayıcınızda oluşturulur. Hiçbir sunucuya gönderilmez, sayfada üçüncü taraf takip kodu yoktur.",
+  },
+  {
+    question: "Şablonları müşteri işlerinde kullanabilir miyim?",
+    answer:
+      "Evet. Şablonlar CC BY 4.0 lisanslıdır: müşteri işlerinde, eğitimlerde ve ticari projelerde kullanabilir, uyarlayabilirsiniz. Tek şart atıf: “Instagram grid şablonu: Rast Creative Studio — rastcreative.com”.",
+  },
+];
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Araçlar", path: "/araclar/" },
+    { name: "Instagram grid şablonu", path: PATH },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "Instagram Profil Izgarası Önizleme",
+    alternateName: "Instagram 3:4 profile grid preview and Reels cover crop guide",
+    url: PAGE_URL,
+    applicationCategory: "DesignApplication",
+    operatingSystem: "Web",
+    browserRequirements: "Modern bir web tarayıcısı; JavaScript gerekli",
+    isAccessibleForFree: true,
+    inLanguage: "tr",
+    offers: { "@type": "Offer", price: "0", priceCurrency: "TRY" },
+    description,
+    featureList: ["3:4 profil ızgarası önizleme (9 kutu)", "Kapak kırpma konumunu sürükleme", "Reels kapağı 3:4 / 4:5 kırpma rehberi", "PNG dışa aktarma"],
+    provider: { "@id": `${SITE.url}#business` },
+    creator: { "@id": `${SITE.url}#business` },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: "Instagram grid ve Reels kapağı şablonları (katmanlı PNG)",
+    url: `${PAGE_URL}#sablonlar`,
+    inLanguage: "tr",
+    isAccessibleForFree: true,
+    encodingFormat: "image/png",
+    license: "https://creativecommons.org/licenses/by/4.0/deed.tr",
+    creator: { "@id": `${SITE.url}#business` },
+    copyrightHolder: { "@id": `${SITE.url}#business` },
+    creditText: "Rast Creative Studio — rastcreative.com",
+  },
+  faqPage(faqs),
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <div class="yt-page">
+    <Section width="wide" space="tight">
+      <nav class="crumbs" aria-label="Sayfa yolu">
+        <a href="/">Ana sayfa</a> <span aria-hidden="true">/</span> <a href="/araclar/">Araçlar</a>
+        <span aria-hidden="true">/</span> <span aria-current="page">Instagram grid şablonu</span>
+      </nav>
+      <SectionHeading as="h1" eyebrow="Araç + şablon · Ücretsiz">
+        Instagram profil ızgarası (3:4) önizleme ve Reels kapak rehberi
+        <Fragment slot="intro">
+          <p>
+            Profil ızgarası artık kare değil, 3:4. Reels kapağınızdaki başlık ızgarada kesiliyor mu, yeni gönderi
+            diğerleriyle uyumlu mu? Kapaklarınızı ve gönderilerinizi yükleyin, profilde nasıl görüneceklerini yayından önce
+            görün. Altta katmanlı PNG şablonlar ve Canva/Figma ölçüleri var. <strong>Görselleriniz tarayıcınızdan çıkmaz.</strong>
+          </p>
+        </Fragment>
+      </SectionHeading>
+
+      <ol class="howto" aria-label="Nasıl kullanılır">
+        <li><strong>1. Görselleri seçin.</strong> En fazla 9 kapak ya da gönderi (JPG, PNG, WebP). İlk seçtiğiniz, profilde en yeni (sol üst) olur.</li>
+        <li><strong>2. Kırpmayı ayarlayın.</strong> Bir kutuya tıklayın; sağdaki 9:16 görünümde turuncu 3:4 çerçeveyi sürükleyerek ızgarada görünecek bölümü seçin.</li>
+        <li><strong>3. Kontrol edin, indirin.</strong> Başlık yeşil alanda mı? Izgara önizlemesini PNG olarak indirin; uygulamada aynı konumu “profil kırpması” ile seçin.</li>
+      </ol>
+
+      <div class="yt-tool yt-tool--split" data-tool>
+        <div class="yt-stage">
+          <label class="yt-drop" data-drop>
+            <input type="file" class="yt-sr" data-file multiple accept="image/jpeg,image/png,image/webp" />
+            <span class="yt-drop__title">Kapak ya da gönderi seçin (en fazla 9)</span>
+            <span class="yt-drop__hint">Birden çok dosya seçebilirsiniz · yalnızca tarayıcınızda açılır</span>
+          </label>
+          <div class="yt-canvaswrap" style="max-width:520px;width:100%;margin-inline:auto;background:#fff">
+            <canvas width="1080" height="1900" data-grid tabindex="0" role="img" aria-label="Instagram profil ızgarası önizlemesi; kutuya tıklayarak seçin"></canvas>
+          </div>
+          <p class="yt-small">Profil başlığı ve simgeler temsilidir. Seçili kutu turuncu çerçeveyle gösterilir; ok tuşlarıyla kutular arasında gezebilirsiniz.</p>
+        </div>
+        <div>
+          <div class="yt-h3">Seçili görsel: tam kare ve kırpmalar</div>
+          <div class="yt-canvaswrap" style="max-width:300px;margin-inline:auto">
+            <canvas width="1080" height="1920" data-detail tabindex="0" role="img" aria-label="Seçili görsel; turuncu çerçeve ızgarada görünen 3:4 bölüm, sürükleyerek taşıyın"></canvas>
+          </div>
+          <fieldset style="margin-top:1rem">
+            <legend>Katmanlar</legend>
+            <div class="yt-checks">
+              <label><input type="checkbox" data-o="feed" checked /> Akış 4:5 kırpması (mavi)</label>
+              <label><input type="checkbox" data-o="safe" checked /> Başlık + yüz güvenli alanı (yeşil)</label>
+              <label><input type="checkbox" data-o="icon" checked /> Reels simgesi (ızgara kutusunda)</label>
+            </div>
+          </fieldset>
+          <p class="yt-note" data-note aria-live="polite"></p>
+          <div class="yt-actions">
+            <button type="button" class="ev-btn ev-btn--sun" data-export>Izgara önizlemesini indir (PNG)</button>
+            <button type="button" class="yt-btn" data-reset>Konumu ortala</button>
+            <button type="button" class="yt-btn" data-clear>Görselleri temizle</button>
+          </div>
+        </div>
+      </div>
+    </Section>
+
+    <Section width="default" space="tight" id="olculer">
+      <SectionHeading eyebrow="Canva · Figma · Photoshop">Instagram ölçüleri ve ızgarada ne görünür?</SectionHeading>
+      <div class="yt-tablewrap">
+        <table class="yt-table">
+          <caption>Canva'da “Özel boyut”, Figma'da Frame olarak bu ölçüleri girin. Izgara kırpma değerleri ortadan kırpmaya göre hesaplanmıştır.</caption>
+          <thead><tr><th scope="col">Format</th><th scope="col">Boyut (px)</th><th scope="col">Oran</th><th scope="col">Profil ızgarasında</th></tr></thead>
+          <tbody>
+            {sizes.map((s) => (
+              <tr><th scope="row">{s[0]}</th><td>{s[1]}</td><td>{s[2]}</td><td>{s[3]}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <ul class="yt-tips">
+        <li><strong>Kapakta 3–5 kelime.</strong> Izgarada her kutu telefon genişliğinin üçte biri kadardır; uzun cümle okunmaz.</li>
+        <li><strong>Sağ üst köşeyi boş bırakın.</strong> Izgara kutusunda Reels ve çoklu fotoğraf simgesi bu köşede görünür.</li>
+        <li><strong>Tutarlı kapak dili.</strong> Aynı yazı tipi, renk ve konum, profili tek bir hesap gibi gösterir. Hazır kapak tasarım rehberleri için <a href="/araclar/kapak-sablonlari/">kapak şablonları</a> sayfasına bakın.</li>
+        <li><strong>Yatay çekimden kapak:</strong> 16:9 kareden 9:16 ve 3:4 kesimleri <a href="/araclar/en-boy-orani/">en-boy oranı aracında</a> deneyin.</li>
+      </ul>
+    </Section>
+
+    <Section width="wide" space="tight" id="sablonlar">
+      <SectionHeading eyebrow="İndir · CC BY 4.0">
+        Şablonlar: Reels kapağı, gönderi ve ızgara planlayıcı
+        <Fragment slot="intro">
+          <p class="yt-prose">
+            Şeffaf PNG'ler tasarımınızın en üst katmanına konur. ZIP'te aynı Reels kapak rehberi beş ayrı katman olarak da var
+            (Photoshop'ta “Dosyaları Yığına Yükle”, Figma/Canva'da üst üste). Lisans
+            <a href="https://creativecommons.org/licenses/by/4.0/deed.tr" rel="license noopener" target="_blank">CC BY 4.0</a>; atıf:
+            “Rast Creative Studio — rastcreative.com”.
+          </p>
+        </Fragment>
+      </SectionHeading>
+      <ul class="yt-tpls">
+        {files.map((t) => (
+          <li>
+            <a href={T + t.file} download>
+              <img src={T + t.file} alt={`${t.label} şablonu önizlemesi`} width={t.w} height={t.h} loading="lazy" decoding="async" />
+              <span>{t.label}</span>
+              <small>{t.size}</small>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <details class="yt-prose" style="margin-bottom:1rem">
+        <summary>Katmanları tek tek indir (1080×1920)</summary>
+        <ul class="yt-sources">
+          {layers.map((l) => <li><a href={`${T}katmanlar/${l}`} download>{l}</a></li>)}
+        </ul>
+      </details>
+      <p><a class="ev-btn ev-btn--sun" href={T + "rast-instagram-grid-sablonlari.zip"} download>Tüm şablonlar + katmanlar (ZIP)</a></p>
+    </Section>
+
+    <Extras
+      faqs={faqs}
+      pageUrl={PAGE_URL}
+      linkText="Instagram grid şablonu ve önizleme"
+      attribution="Instagram grid şablonu: Rast Creative Studio — rastcreative.com"
+      current={PATH}
+      ctaTitle="Profil ızgarasını baştan planlıyoruz"
+    >
+      <Fragment slot="sources">
+        <ul class="yt-sources">
+          <li>Instagram Yardım Merkezi, “Reel size & aspect ratios on Instagram”: Reels 1,91:1 ile 9:16 arası; kapak için 420×654 (1:1,55) önerisi (erişim 30.10.2026). <a href="https://help.instagram.com/1038071743007909" rel="noopener" target="_blank">help.instagram.com</a></li>
+          <li>Profil ızgarasının 3:4'e geçişi, Adam Mosseri'nin Ocak 2025 duyurusu; haberi: Gadgets360 ve Planoly (erişim 30.10.2026). <a href="https://www.gadgets360.com/apps/news/instagram-update-profile-grid-reels-duration-three-minute-7517402" rel="noopener" target="_blank">gadgets360.com</a> · <a href="https://www.planoly.com/blog/instagram-updates-jan-2025" rel="noopener" target="_blank">planoly.com</a></li>
+          <li>Buffer, “Instagram Post Size Guide 2026”: akış 1080×1080 / 1080×1350 / 1080×566, ızgara önizlemesi 3:4, profil fotoğrafı 320×320 (erişim 30.10.2026). <a href="https://buffer.com/resources/instagram-image-size" rel="noopener" target="_blank">buffer.com</a></li>
+          <li>Reels arayüz bantları: <a href="/araclar/guvenli-alan/">güvenli alan kontrolü</a> sayfasındaki yaklaşık değerler. Başlık güvenli alanı (900×1200) ve sağ üst simge kutusu Rast Creative'in ekran görüntüsü ölçümlerine dayanan yaklaşık değerlerdir.</li>
+        </ul>
+        <p>Izgara ve akış kırpma ölçüleri ortadan kırpma hesabıdır; Instagram kırpma konumunu değiştirmenize izin verir.</p>
+      </Fragment>
+      <Fragment slot="cta">
+        Rast Creative Studio, markalar için Reels ve gönderileri tutarlı bir kapak diliyle üretir: çekim, kurgu, kapak ve
+        yayın planı birlikte düşünülür. Ayrıntılar <a href="/sosyal-medya-icerigi/">sosyal medya içeriği</a> ve
+        <a href="/urun-mekan-cekimi/">ürün ve mekân çekimi</a> sayfalarında.
+      </Fragment>
+    </Extras>
+  </div>
+</BaseLayout>
+
+<script>
+  import TPL from "./_yaratici/templates.json";
+  import { exportCanvasPng, drawCredit, loadLogo, wireDrop, isImageFile, canvasPoint } from "./_yaratici/client";
+
+  const PAGE = "https://rastcreative.com/araclar/instagram-grid-sablonu/";
+  type Tile = { img: HTMLImageElement | HTMLCanvasElement | null; w: number; h: number; ox: number; oy: number; reel: boolean; url?: string; hue: number };
+
+  const W = 1080;
+  const GAP = 3;
+  const TW = (W - GAP * 2) / 3;
+  const TH = TW * (4 / 3);
+  const HEAD = 460;
+  const H = Math.ceil(HEAD + TH * 3 + GAP * 2 + 70);
+
+  const root = document.querySelector<HTMLElement>("[data-tool]");
+  if (root) init(root);
+
+  function init(root: HTMLElement) {
+    const $ = <T extends Element>(s: string) => root.querySelector<T>(s)!;
+    const grid = $<HTMLCanvasElement>("[data-grid]");
+    const g = grid.getContext("2d")!;
+    const detail = $<HTMLCanvasElement>("[data-detail]");
+    const d = detail.getContext("2d")!;
+    const note = $<HTMLElement>("[data-note]");
+    const logo = loadLogo();
+    grid.height = H;
+    const opts: Record<string, boolean> = { feed: true, safe: true, icon: true };
+    let credit = false;
+
+    const tiles: Tile[] = Array.from({ length: 9 }, (_, i) => ({ img: null, w: 1080, h: 1920, ox: 0.5, oy: 0.5, reel: i % 3 !== 1, hue: (i * 37) % 360 }));
+    tiles[0].img = sampleCover();
+    let sel = 0;
+
+    // crop window (source px) for a 3:4 view of a tile
+    function win(t: Tile, rw = 3, rh = 4) {
+      let w = t.h * (rw / rh), h = t.h;
+      if (w > t.w) {
+        w = t.w;
+        h = t.w * (rh / rw);
+      }
+      return { x: (t.w - w) * t.ox, y: (t.h - h) * t.oy, w, h };
+    }
+
+    function tileRect(i: number) {
+      const col = i % 3, row = Math.floor(i / 3);
+      return { x: col * (TW + GAP), y: HEAD + row * (TH + GAP), w: TW, h: TH };
+    }
+
+    function drawGrid() {
+      g.fillStyle = "#fff";
+      g.fillRect(0, 0, W, H);
+      // representative profile header
+      g.fillStyle = "#dcd6ce";
+      g.beginPath();
+      g.arc(120, 140, 82, 0, Math.PI * 2);
+      g.fill();
+      g.fillStyle = "#1d1915";
+      g.font = "700 34px system-ui, sans-serif";
+      g.fillText("markaniz", 240, 92);
+      const bar = (x: number, y: number, w: number, h: number, c = "#e7e2db") => {
+        g.fillStyle = c;
+        g.beginPath();
+        g.roundRect(x, y, w, h, h / 2);
+        g.fill();
+      };
+      [["128", "gönderi"], ["4.210", "takipçi"], ["310", "takip"]].forEach(([n, l], i) => {
+        g.fillStyle = "#1d1915";
+        g.font = "700 30px system-ui, sans-serif";
+        g.fillText(n, 240 + i * 220, 160);
+        g.font = "400 24px system-ui, sans-serif";
+        g.fillText(l, 240 + i * 220, 194);
+      });
+      bar(40, 250, 520, 22);
+      bar(40, 288, 700, 22);
+      bar(40, 336, 490, 64, "#efebe6");
+      bar(550, 336, 490, 64, "#efebe6");
+      g.fillStyle = "#1d1915";
+      g.fillRect(0, HEAD - 6, W / 3, 3);
+      ["▦", "▶", "◎"].forEach((s, i) => {
+        g.font = "400 30px system-ui, sans-serif";
+        g.textAlign = "center";
+        g.fillText(s, W / 6 + (i * W) / 3, HEAD - 22);
+        g.textAlign = "left";
+      });
+      tiles.forEach((t, i) => {
+        const r = tileRect(i);
+        if (t.img) {
+          const c = win(t);
+          g.drawImage(t.img, c.x, c.y, c.w, c.h, r.x, r.y, r.w, r.h);
+        } else {
+          const gr = g.createLinearGradient(r.x, r.y, r.x + r.w, r.y + r.h);
+          gr.addColorStop(0, `hsl(${t.hue} 22% 78%)`);
+          gr.addColorStop(1, `hsl(${(t.hue + 40) % 360} 18% 62%)`);
+          g.fillStyle = gr;
+          g.fillRect(r.x, r.y, r.w, r.h);
+          g.fillStyle = "rgba(255,255,255,.75)";
+          g.font = "600 26px system-ui, sans-serif";
+          g.textAlign = "center";
+          g.fillText(`${i + 1}`, r.x + r.w / 2, r.y + r.h / 2 + 9);
+          g.textAlign = "left";
+        }
+        if (opts.icon && t.reel) reelIcon(g, r.x + r.w - 44, r.y + 18, 28);
+        if (i === sel && !credit) {
+          g.strokeStyle = "#ff8a1f";
+          g.lineWidth = 6;
+          g.strokeRect(r.x + 3, r.y + 3, r.w - 6, r.h - 6);
+        }
+      });
+      if (credit) {
+        g.fillStyle = "#1d1915";
+        g.fillRect(0, H - 70, W, 70);
+        drawCredit(g, logo, 24, H - 54, 0.95, "/araclar/instagram-grid-sablonu/");
+      } else {
+        g.fillStyle = "#8a8075";
+        g.font = "500 22px system-ui, sans-serif";
+        g.fillText("Önizleme · temsili profil başlığı", 24, H - 28);
+      }
+    }
+
+    function reelIcon(c: CanvasRenderingContext2D, x: number, y: number, s: number) {
+      c.save();
+      c.strokeStyle = "#fff";
+      c.fillStyle = "#fff";
+      c.lineWidth = 3;
+      c.shadowColor = "rgba(0,0,0,.5)";
+      c.shadowBlur = 6;
+      c.beginPath();
+      c.roundRect(x, y, s, s, 7);
+      c.stroke();
+      c.beginPath();
+      c.moveTo(x + s * 0.4, y + s * 0.3);
+      c.lineTo(x + s * 0.72, y + s * 0.5);
+      c.lineTo(x + s * 0.4, y + s * 0.7);
+      c.closePath();
+      c.fill();
+      c.restore();
+    }
+
+    function drawDetail() {
+      const t = tiles[sel];
+      // detail canvas follows the tile's own aspect (max 1080 wide)
+      const k = Math.min(1080 / t.w, 1920 / t.h);
+      detail.width = Math.round(t.w * k);
+      detail.height = Math.round(t.h * k);
+      const DW = detail.width, DH = detail.height;
+      if (t.img) d.drawImage(t.img, 0, 0, DW, DH);
+      else {
+        d.fillStyle = `hsl(${t.hue} 22% 70%)`;
+        d.fillRect(0, 0, DW, DH);
+        d.fillStyle = "rgba(255,255,255,.85)";
+        d.font = "600 44px system-ui, sans-serif";
+        d.textAlign = "center";
+        d.fillText("Boş kutu", DW / 2, DH / 2);
+        d.font = "400 32px system-ui, sans-serif";
+        d.fillText("Görsel seçin", DW / 2, DH / 2 + 50);
+        d.textAlign = "left";
+      }
+      const c = win(t);
+      const X = c.x * k, Y = c.y * k, CW = c.w * k, CH = c.h * k;
+      d.fillStyle = "rgba(12,12,16,.6)";
+      d.fillRect(0, 0, DW, Y);
+      d.fillRect(0, Y + CH, DW, DH - Y - CH);
+      d.fillRect(0, Y, X, CH);
+      d.fillRect(X + CW, Y, DW - X - CW, CH);
+      d.strokeStyle = "#ffb800";
+      d.lineWidth = 6;
+      d.strokeRect(X + 3, Y + 3, CW - 6, CH - 6);
+      if (opts.feed) {
+        const f = win(t, 4, 5);
+        // feed shows the centre crop (Instagram doesn't use the profile crop there)
+        const fx = ((t.w - f.w) / 2) * k, fy = ((t.h - f.h) / 2) * k;
+        d.save();
+        d.setLineDash([22, 14]);
+        d.strokeStyle = "#4da3ff";
+        d.lineWidth = 4;
+        d.strokeRect(fx + 2, fy, f.w * k - 4, f.h * k);
+        d.restore();
+      }
+      if (opts.safe) {
+        // title/face safe = 3:4 window inset ~8% (900x1200 on a 1080x1440 window)
+        const ix = CW * (90 / 1080), iy = CH * (120 / 1440);
+        d.save();
+        d.setLineDash([22, 14]);
+        d.strokeStyle = "#3ddc84";
+        d.lineWidth = 5;
+        d.strokeRect(X + ix, Y + iy, CW - 2 * ix, CH - 2 * iy);
+        d.restore();
+        if (opts.icon && t.reel) {
+          const s = CW * 0.12;
+          d.strokeStyle = "rgba(255,255,255,.85)";
+          d.lineWidth = 3;
+          d.beginPath();
+          d.roundRect(X + CW - s - CW * 0.02, Y + CW * 0.02, s, s, 12);
+          d.stroke();
+        }
+      }
+      d.fillStyle = "rgba(12,12,16,.78)";
+      d.beginPath();
+      d.roundRect(16, 16, 520, 52, 26);
+      d.fill();
+      d.fillStyle = "#ffb800";
+      d.font = "700 28px system-ui, sans-serif";
+      d.fillText(`Izgarada görünen: ${Math.round(c.w)}×${Math.round(c.h)} px`, 34, 52);
+      const ratio = t.w / t.h;
+      const kind = Math.abs(ratio - 9 / 16) < 0.02 ? "9:16 (Reels kapağı)" : Math.abs(ratio - 3 / 4) < 0.02 ? "3:4" : Math.abs(ratio - 4 / 5) < 0.02 ? "4:5" : Math.abs(ratio - 1) < 0.02 ? "1:1" : `${t.w}×${t.h}`;
+      const lost = Math.round((1 - (c.w * c.h) / (t.w * t.h)) * 100);
+      note.textContent = t.img
+        ? `Kutu ${sel + 1}: ${kind}, ${t.w}×${t.h} px. Izgarada görselin %${lost}'i görünmez.${t.w < 1080 ? " Genişlik 1080 px'ten küçük; Instagram'da yumuşak görünebilir." : ""}`
+        : `Kutu ${sel + 1} boş. Görsel seçin; ilk seçilen görsel sol üstteki (en yeni) kutuya gelir.`;
+    }
+
+    function draw() {
+      drawGrid();
+      drawDetail();
+    }
+
+    // ---------- interaction: select tile on grid, drag crop on grid or detail
+    let drag: { kind: "grid" | "detail"; sx: number; sy: number; ox: number; oy: number } | null = null;
+    grid.addEventListener("pointerdown", (ev) => {
+      const p = canvasPoint(grid, ev);
+      for (let i = 0; i < 9; i++) {
+        const r = tileRect(i);
+        if (p.x >= r.x && p.x <= r.x + r.w && p.y >= r.y && p.y <= r.y + r.h) {
+          sel = i;
+          drag = { kind: "grid", sx: p.x, sy: p.y, ox: tiles[i].ox, oy: tiles[i].oy };
+          grid.setPointerCapture(ev.pointerId);
+          draw();
+          return;
+        }
+      }
+    });
+    detail.addEventListener("pointerdown", (ev) => {
+      const p = canvasPoint(detail, ev);
+      drag = { kind: "detail", sx: p.x, sy: p.y, ox: tiles[sel].ox, oy: tiles[sel].oy };
+      detail.setPointerCapture(ev.pointerId);
+    });
+    function move(ev: PointerEvent, cv: HTMLCanvasElement) {
+      if (!drag) return;
+      const t = tiles[sel];
+      const p = canvasPoint(cv, ev);
+      const c = win(t);
+      const k = drag.kind === "detail" ? detail.width / t.w : TW / c.w;
+      const sign = drag.kind === "detail" ? 1 : -1; // on the grid you drag the image, on the detail the frame
+      const dx = ((p.x - drag.sx) / k) * sign, dy = ((p.y - drag.sy) / k) * sign;
+      const fx = t.w - c.w, fy = t.h - c.h;
+      t.ox = fx > 0 ? Math.min(1, Math.max(0, drag.ox + dx / fx)) : 0.5;
+      t.oy = fy > 0 ? Math.min(1, Math.max(0, drag.oy + dy / fy)) : 0.5;
+      draw();
+    }
+    grid.addEventListener("pointermove", (e) => move(e, grid));
+    detail.addEventListener("pointermove", (e) => move(e, detail));
+    const end = () => (drag = null);
+    [grid, detail].forEach((c) => {
+      c.addEventListener("pointerup", end);
+      c.addEventListener("pointercancel", end);
+    });
+    grid.addEventListener("keydown", (ev) => {
+      const m: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -3, ArrowDown: 3 };
+      if (!(ev.key in m)) return;
+      ev.preventDefault();
+      sel = Math.min(8, Math.max(0, sel + m[ev.key]));
+      draw();
+    });
+    detail.addEventListener("keydown", (ev) => {
+      const t = tiles[sel];
+      const st = ev.shiftKey ? 0.1 : 0.02;
+      if (ev.key === "ArrowUp") t.oy = Math.max(0, t.oy - st);
+      else if (ev.key === "ArrowDown") t.oy = Math.min(1, t.oy + st);
+      else if (ev.key === "ArrowLeft") t.ox = Math.max(0, t.ox - st);
+      else if (ev.key === "ArrowRight") t.ox = Math.min(1, t.ox + st);
+      else return;
+      ev.preventDefault();
+      draw();
+    });
+
+    root.querySelectorAll<HTMLInputElement>("[data-o]").forEach((c) =>
+      c.addEventListener("change", () => {
+        opts[c.dataset.o!] = c.checked;
+        draw();
+      }),
+    );
+    $<HTMLButtonElement>("[data-reset]").addEventListener("click", () => {
+      tiles[sel].ox = 0.5;
+      tiles[sel].oy = 0.5;
+      draw();
+    });
+    $<HTMLButtonElement>("[data-clear]").addEventListener("click", () => {
+      tiles.forEach((t) => {
+        if (t.url) URL.revokeObjectURL(t.url);
+        Object.assign(t, { img: null, w: 1080, h: 1920, ox: 0.5, oy: 0.5, url: undefined });
+      });
+      tiles[0].img = sampleCover();
+      sel = 0;
+      $<HTMLInputElement>("[data-file]").value = "";
+      draw();
+    });
+
+    wireDrop($<HTMLElement>("[data-drop]"), $<HTMLInputElement>("[data-file]"), (fs) => {
+      const imgs = fs.filter(isImageFile).slice(0, 9);
+      if (!imgs.length) {
+        note.textContent = "Desteklenmeyen dosya. JPG, PNG ya da WebP seçin.";
+        return;
+      }
+      // new uploads become the newest posts (top-left), older ones shift right/down
+      const old = tiles.filter((t) => t.img && t.url);
+      const loaded: Tile[] = [];
+      let left = imgs.length;
+      imgs.forEach((f, i) => {
+        const url = URL.createObjectURL(f);
+        const im = new Image();
+        im.onload = () => {
+          loaded[i] = { img: im, w: im.naturalWidth, h: im.naturalHeight, ox: 0.5, oy: 0.5, reel: Math.abs(im.naturalWidth / im.naturalHeight - 9 / 16) < 0.02, url, hue: 0 };
+          if (--left === 0) {
+            const all = [...loaded.filter(Boolean), ...old].slice(0, 9);
+            for (let k = 0; k < 9; k++) {
+              if (all[k]) tiles[k] = all[k];
+              else tiles[k] = { img: null, w: 1080, h: 1920, ox: 0.5, oy: 0.5, reel: k % 3 !== 1, hue: (k * 37) % 360 };
+            }
+            sel = 0;
+            draw();
+          }
+        };
+        im.onerror = () => {
+          if (--left === 0) draw();
+        };
+        im.src = url;
+      });
+    });
+
+    $<HTMLButtonElement>("[data-export]").addEventListener("click", () => {
+      credit = true;
+      drawGrid();
+      exportCanvasPng(grid, "rast-instagram-izgara-onizleme.png", PAGE, "Rast Creative Instagram grid preview");
+      credit = false;
+      drawGrid();
+    });
+
+    logo.onload = draw;
+    void TPL;
+    draw();
+  }
+
+  function sampleCover() {
+    const c = document.createElement("canvas");
+    c.width = 1080;
+    c.height = 1920;
+    const g = c.getContext("2d")!;
+    const gr = g.createLinearGradient(0, 0, 1080, 1920);
+    gr.addColorStop(0, "#c98a54");
+    gr.addColorStop(0.55, "#7b5a8f");
+    gr.addColorStop(1, "#2c3a5c");
+    g.fillStyle = gr;
+    g.fillRect(0, 0, 1080, 1920);
+    g.fillStyle = "rgba(255,240,225,.9)";
+    g.beginPath();
+    g.arc(540, 980, 150, 0, Math.PI * 2);
+    g.fill();
+    g.beginPath();
+    g.roundRect(330, 1150, 420, 700, 160);
+    g.fill();
+    g.fillStyle = "#fff";
+    g.textAlign = "center";
+    g.font = "800 110px system-ui, sans-serif";
+    g.fillText("3 İPUCU", 540, 560);
+    g.font = "700 64px system-ui, sans-serif";
+    g.fillText("Örnek kapak", 540, 650);
+    g.font = "700 64px system-ui, sans-serif";
+    g.fillText("Üstte kalan yazı ↑", 540, 170);
+    g.fillText("Altta kalan yazı ↓", 540, 1800);
+    return c;
+  }
+</script>

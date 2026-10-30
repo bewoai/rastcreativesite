@@ -1,0 +1,109 @@
+/* Shared styles for the creator tools (/araclar/en-boy-orani/, /altyazi-kontrolu/,
+   /instagram-grid-sablonu/, /kapak-sablonlari/). Imported only by those pages.
+   Mirrors the look of /araclar/guvenli-alan/ (scoped there). */
+.yt-page .crumbs { margin-bottom: 1.2rem; font-size: 0.9rem; color: var(--ink-soft); }
+.yt-page .crumbs a { color: var(--amber-text); }
+.yt-page .howto { display: grid; gap: 0.6rem; margin: 1.6rem 0 2rem; color: var(--ink-soft); line-height: var(--leading-body); }
+@media (min-width: 900px) { .yt-page .howto { grid-template-columns: repeat(3, 1fr); gap: 1.2rem; } }
+.yt-page .howto strong { color: var(--ink); }
+.yt-tool {
+  display: grid; gap: 1.6rem; padding: clamp(1rem, 2.5vw, 1.6rem);
+  border: 1px solid var(--line); border-radius: 1.2rem;
+  background: color-mix(in srgb, var(--paper) 82%, transparent);
+}
+@media (min-width: 960px) {
+  .yt-tool--split { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); align-items: start; }
+  .yt-tool--narrowstage { grid-template-columns: minmax(0, 420px) minmax(0, 1fr); align-items: start; }
+}
+.yt-tool > * { min-width: 0; }
+.yt-stage { display: grid; gap: 0.8rem; }
+.yt-drop {
+  display: grid; gap: 0.2rem; padding: 1rem; border: 2px dashed var(--line-strong);
+  border-radius: 0.9rem; text-align: center; cursor: pointer; min-height: var(--tap-min);
+}
+.yt-drop:focus-within, .yt-drop.is-over { border-color: var(--amber); background: color-mix(in srgb, var(--amber) 10%, var(--paper)); }
+.yt-drop__title { font-weight: 600; color: var(--ink); }
+.yt-drop__hint { font-size: 0.85rem; color: var(--ink-soft); }
+.yt-canvaswrap { position: relative; border-radius: 1rem; overflow: hidden; background: #0e0e10; box-shadow: 0 20px 40px -24px rgba(0,0,0,.5); }
+.yt-canvaswrap canvas { display: block; width: 100%; height: auto; touch-action: none; }
+.yt-canvaswrap canvas:focus-visible { outline: 3px solid var(--amber); outline-offset: -3px; }
+.yt-warn { padding: 0.7rem 0.9rem; border-radius: 0.7rem; background: color-mix(in srgb, #e0a020 18%, var(--paper)); color: var(--ink); font-size: 0.92rem; line-height: 1.45; }
+.yt-ok { padding: 0.7rem 0.9rem; border-radius: 0.7rem; background: color-mix(in srgb, #3ddc84 16%, var(--paper)); color: var(--ink); font-size: 0.92rem; line-height: 1.45; }
+.yt-player { display: flex; align-items: center; gap: 0.7rem; }
+.yt-player input { flex: 1; accent-color: var(--amber); }
+.yt-pbtn, .yt-btn {
+  min-height: var(--tap-min); padding: 0.4rem 1rem; border: 1px solid var(--line-strong); border-radius: 999px;
+  background: var(--paper); color: var(--ink); font-weight: 600; cursor: pointer; font: inherit;
+}
+.yt-pbtn:hover, .yt-btn:hover { border-color: var(--amber); }
+.yt-time { font-family: var(--font-utility); font-size: 0.85rem; color: var(--ink-soft); white-space: nowrap; }
+.yt-page fieldset { border: 0; padding: 0; margin: 0 0 1.3rem; min-width: 0; }
+.yt-page legend, .yt-h3 { margin-bottom: 0.7rem; font-family: var(--font-display); font-size: 1.2rem; color: var(--ink); }
+.yt-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.yt-chip { position: relative; cursor: pointer; }
+.yt-chip input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.yt-chip span {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0.5rem 0.95rem;
+  border: 1px solid var(--line-strong); border-radius: 999px; background: color-mix(in srgb, var(--paper) 70%, transparent);
+  font-size: 0.95rem; color: var(--ink);
+}
+.yt-chip input:checked + span { border-color: var(--amber); background: color-mix(in srgb, var(--amber) 16%, var(--paper)); font-weight: 600; }
+.yt-chip input:focus-visible + span { outline: 2px solid var(--amber); outline-offset: 2px; }
+.yt-checks { display: grid; gap: 0.55rem; color: var(--ink); }
+.yt-checks label { display: flex; gap: 0.6rem; align-items: flex-start; cursor: pointer; line-height: 1.4; }
+.yt-checks input { width: 1.2rem; height: 1.2rem; margin-top: 0.1rem; flex: none; accent-color: var(--amber); }
+.yt-fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.8rem; }
+.yt-field { display: grid; gap: 0.25rem; font-size: 0.9rem; color: var(--ink-soft); }
+.yt-field input, .yt-field select, .yt-textarea {
+  width: 100%; min-height: 44px; padding: 0.45rem 0.6rem; border: 1px solid var(--line-strong); border-radius: 0.6rem;
+  background: var(--paper); color: var(--ink); font: inherit;
+}
+.yt-textarea { font-family: ui-monospace, monospace; font-size: 0.85rem; line-height: 1.45; resize: vertical; }
+.yt-page input[type="range"] { accent-color: var(--amber); width: 100%; }
+.yt-note { color: var(--ink-soft); line-height: var(--leading-body); font-size: 0.95rem; }
+.yt-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; margin: 1rem 0 0.6rem; }
+.yt-small { font-size: 0.85rem; color: var(--ink-soft); line-height: 1.5; }
+.yt-code {
+  display: block; width: 100%; padding: 0.6rem 0.7rem; border: 1px solid var(--line); border-radius: 0.6rem;
+  background: var(--paper); color: var(--ink); font-family: ui-monospace, monospace; font-size: 0.82rem; overflow-x: auto; white-space: pre;
+}
+.yt-tpls { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; margin: 1.4rem 0; }
+.yt-tpls a {
+  display: grid; gap: 0.5rem; justify-items: center; align-content: start; padding: 0.8rem; border: 1px solid var(--line); border-radius: 0.9rem;
+  color: var(--ink); text-align: center; font-size: 0.9rem; text-decoration: none;
+}
+.yt-tpls a:hover, .yt-tpls a:focus-visible { border-color: var(--amber); }
+.yt-tpls img { max-width: 100%; height: auto; border-radius: 0.5rem; background: linear-gradient(160deg, #c98a54, #7b5a8f 55%, #2c3a5c); }
+.yt-tpls small { color: var(--ink-soft); }
+.yt-tablewrap { overflow-x: auto; margin-top: 1.2rem; }
+.yt-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; color: var(--ink); }
+.yt-table caption { caption-side: bottom; padding-top: 0.6rem; text-align: left; font-size: 0.85rem; color: var(--ink-soft); }
+.yt-table th, .yt-table td { padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.yt-table thead th { font-family: var(--font-utility); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); white-space: nowrap; }
+.yt-tips, .yt-sources {
+  display: grid; gap: 0.8rem; margin-top: 1.2rem; padding-left: 1.2rem; list-style: disc; color: var(--ink-soft); line-height: var(--leading-body);
+}
+.yt-tips strong { color: var(--ink); }
+.yt-page .yt-sources a, .yt-page .yt-box a:not(.ev-btn), .yt-tool a, .yt-page .yt-prose a, .yt-related a { color: var(--amber-text); }
+.yt-prose { color: var(--ink-soft); line-height: var(--leading-body); }
+.yt-faq { display: grid; gap: 1.2rem; margin-top: 1.2rem; }
+.yt-faq dt { font-weight: 600; color: var(--ink); }
+.yt-faq dd { margin: 0.3rem 0 0; color: var(--ink-soft); line-height: var(--leading-body); }
+.yt-box {
+  display: grid; gap: 0.8rem; padding: clamp(1.2rem, 3vw, 1.8rem); border: 1px solid var(--line); border-radius: 1.2rem;
+  background: color-mix(in srgb, var(--paper) 80%, transparent); color: var(--ink-soft); line-height: var(--leading-body);
+}
+.yt-box h2 { font-family: var(--font-display); font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.7rem); color: var(--ink); }
+.yt-box textarea {
+  width: 100%; padding: 0.7rem; border: 1px solid var(--line-strong); border-radius: 0.6rem; background: var(--paper); color: var(--ink);
+  font-family: ui-monospace, monospace; font-size: 0.85rem; resize: none;
+}
+.yt-box .ev-btn, .yt-box > a { justify-self: start; }
+.yt-related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.6rem 1.2rem; margin-top: 1rem; padding: 0; list-style: none; }
+.yt-related li { line-height: 1.4; }
+.yt-related small { display: block; color: var(--ink-soft); }
+.yt-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.yt-badge { display: inline-block; padding: 0.1rem 0.5rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
+.yt-badge--err { background: color-mix(in srgb, #e5484d 22%, var(--paper)); color: var(--ink); }
+.yt-badge--warn { background: color-mix(in srgb, #e0a020 25%, var(--paper)); color: var(--ink); }
+.yt-badge--ok { background: color-mix(in srgb, #3ddc84 22%, var(--paper)); color: var(--ink); }
