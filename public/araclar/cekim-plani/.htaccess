@@ -2,8 +2,8 @@
 <IfModule mod_mime.c>
   AddType application/vnd.openxmlformats-officedocument.wordprocessingml.document .docx
   AddType application/vnd.openxmlformats-officedocument.spreadsheetml.sheet .xlsx
-  AddType "text/csv; charset=utf-8" .csv
-  AddType "text/markdown; charset=utf-8" .md
+  AddType text/csv .csv
+  AddType text/markdown .md
 </IfModule>
 <IfModule mod_headers.c>
   <FilesMatch "\.(docx|xlsx|csv|md|zip)$">
