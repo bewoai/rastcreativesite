@@ -75,6 +75,7 @@ export const PRIMARY_CTA = {
 export const SOCIAL: readonly NavItem[] = [
   { label: "Instagram", href: "https://instagram.com/rastcreative", icon: "instagram" },
   { label: "YouTube", href: "https://www.youtube.com/@RastCreativeStudio", icon: "youtube" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/rastcreative/", icon: "linkedin" },
   // { label: "TikTok",  href: "", icon: "tiktok" },    // §5
 ];
 
