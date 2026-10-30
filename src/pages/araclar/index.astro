@@ -9,20 +9,46 @@ import { breadcrumb } from "../../lib/schema";
 import { SITE } from "../../consts";
 
 const description =
-  "Rast Creative Studio'nun ücretsiz araçları: Reels, TikTok ve Shorts güvenli alan kontrolü ile çekim günü planlayıcı. Kayıt gerektirmez, tarayıcıda çalışır.";
+  "Rast Creative Studio'nun ücretsiz araçları: güvenli alan kontrolü, bitrate hesaplayıcı, altyazı kontrolü, export rehberi, storyboard ve brief şablonları, SFX ve LUT paketleri. Kayıt gerektirmez.";
 
-const tools = [
+const groups = [
   {
-    href: "/araclar/guvenli-alan/",
-    name: "Reels / TikTok / Shorts güvenli alan kontrolü",
-    text: "Görselinizi ya da videonuzu açın; platform arayüzünün kanca metnini, altyazıyı ve logoyu kapatıp kapatmadığını görün. CC BY 4.0 şeffaf PNG şablonlar.",
+    title: "Kontrol ve hesap araçları",
+    tools: [
+      { href: "/araclar/guvenli-alan/", name: "Reels / TikTok / Shorts güvenli alan kontrolü", text: "Görselinizi ya da videonuzu açın; platform arayüzünün kanca metnini, altyazıyı ve logoyu kapatıp kapatmadığını görün. CC BY 4.0 şeffaf PNG şablonlar." },
+      { href: "/araclar/bitrate-hesaplayici/", name: "Video bitrate ve dosya boyutu hesaplayıcı", text: "Bitrate'ten dosya boyutu, hedef boyuttan bitrate ve kartın kaç dakika kaydedeceği; hazır platform değerleri ve FFmpeg komutu." },
+      { href: "/araclar/en-boy-orani/", name: "En-boy oranı ve kırpma önizleyici", text: "16:9 videonuzun 9:16, 4:5, 1:1 ve 3:4'te nasıl kırpılacağını görün; kırpma çerçevesini ve maskeleri indirin." },
+      { href: "/araclar/altyazi-kontrolu/", name: "Altyazı kontrolü (SRT / VTT)", text: "Satır uzunluğu, okuma hızı, çakışma ve bozuk Türkçe karakterleri bulur; düzeltilmiş SRT verir." },
+      { href: "/araclar/cekim-plani/", name: "Çekim planı (call sheet) oluşturucu", text: "Lokasyon, ekip, saat programı ve ekipmanı girin; yazdırılabilir çekim planı ve JSON dosyası alın." },
+      { href: "/cekim-planlayici/", name: "Çekim günü içerik planlayıcı", text: "Sektörünüzü ve kanallarınızı seçin; tek çekim gününden çıkabilecek içerikleri ve hazırlık listesini görün." },
+    ],
   },
   {
-    href: "/cekim-planlayici/",
-    name: "Çekim günü planlayıcı",
-    text: "Sektörünüzü ve kanallarınızı seçin; tek çekim gününden çıkabilecek içerikleri ve hazırlık listesini görün.",
+    title: "Rehberler",
+    tools: [
+      { href: "/rehber/video-export-ayarlari/", name: "1080p ve 4K video export ayarları rehberi", text: "YouTube, Vimeo, Instagram ve TikTok için ideal export ayarları; Premiere, DaVinci, Final Cut ve CapCut menü yolları ve PDF kopya kâğıdı." },
+    ],
+  },
+  {
+    title: "Şablonlar ve belgeler",
+    tools: [
+      { href: "/araclar/instagram-grid-sablonu/", name: "Instagram profil ızgarası (3:4) şablonu", text: "Reels kapağınızın yeni profil ızgarasında nasıl kırpıldığını önizleyin; katmanlı PNG seti ve 3x3 planlayıcı." },
+      { href: "/araclar/kapak-sablonlari/", name: "Reels kapağı ve YouTube küçük resim şablonları", text: "1080×1920 kapak ve 1280×720 / 4K küçük resim için güvenli alanlı PNG ve SVG şablonlar, kapak kontrolü." },
+      { href: "/araclar/storyboard-sablonu/", name: "Storyboard ve çekim listesi şablonu", text: "16:9 ve 9:16 storyboard, plan listesi; doldurulabilir PDF, Excel, Word ve Notion sürümleri." },
+      { href: "/araclar/brief-formu/", name: "Video brief formu", text: "Bir video projesine başlamadan önce müşteriden alınması gereken bilgiler; doldurulabilir PDF ve Word." },
+      { href: "/araclar/cekim-kontrol-listesi/", name: "Çekim günü kontrol listesi", text: "Kamera, ses, ışık, medya, güç, izin ve yedekleme için 47 maddelik liste." },
+      { href: "/araclar/cekim-izin-formu/", name: "Görüntü ve ses kullanım izin formu (KVKK taslağı)", text: "Aydınlatma metni, ayrı açık rıza ve veli onayı bölümleriyle genel bir taslak; hukuki danışmanlık değildir." },
+    ],
+  },
+  {
+    title: "Ücretsiz paketler",
+    tools: [
+      { href: "/araclar/sfx-paketi/", name: "Rast SFX Pack Vol.1 (40 ses efekti)", text: "Whoosh, riser, vuruş, geçiş, glitch ve bildirim sesleri; 48 kHz WAV, kurgu için hazır." },
+      { href: "/araclar/lut-paketi/", name: "Rast LUT Pack (5 .cube LUT)", text: "Rec.709 görüntü için 5 hafif renk görünümü; Premiere, DaVinci, Final Cut ve CapCut kurulumuyla." },
+    ],
   },
 ];
+const tools = groups.flatMap((g) => g.tools);
 
 const jsonLd = [
   breadcrumb([
@@ -54,16 +80,21 @@ const jsonLd = [
         </p>
       </Fragment>
     </SectionHeading>
-    <ul class="tools">
-      {
-        tools.map((t) => (
-          <li>
-            <h2><a href={t.href}>{t.name}</a></h2>
-            <p>{t.text}</p>
-          </li>
-        ))
-      }
-    </ul>
+    {
+      groups.map((g) => (
+        <>
+          <h2 class="group">{g.title}</h2>
+          <ul class="tools">
+            {g.tools.map((t) => (
+              <li>
+                <h3><a href={t.href}>{t.name}</a></h3>
+                <p>{t.text}</p>
+              </li>
+            ))}
+          </ul>
+        </>
+      ))
+    }
   </Section>
 </BaseLayout>
 
@@ -79,7 +110,11 @@ const jsonLd = [
     border-radius: 1.2rem;
     background: color-mix(in srgb, var(--paper) 80%, transparent);
   }
-  .tools h2 {
+  .group {
+    margin: 2.2rem 0 0.4rem;
+    font-size: 1.15rem;
+  }
+  .tools h3 {
     font-family: var(--font-display);
     font-size: clamp(1.2rem, 1.05rem + 0.6vw, 1.5rem);
   }
