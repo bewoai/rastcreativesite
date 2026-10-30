@@ -16,8 +16,10 @@ import SectionHeading from "../SectionHeading.astro";
 import Button from "../Button.astro";
 import { PRIMARY_CTA, SITE } from "../../consts";
 import { breadcrumb, faqPage } from "../../lib/schema";
-import { relatedTools } from "../../data/belgeler/kardes-araclar";
 import BelgeIndir from "./BelgeIndir.astro";
+import ToolHeader from "./ToolHeader.astro";
+import ToolFaq from "./ToolFaq.astro";
+import MoreTools from "./MoreTools.astro";
 
 export interface Download {
   href: string;
@@ -47,7 +49,8 @@ interface Props {
   howto: { name: string; text: string }[];
   howtoTitle: string;
   faqs: { question: string; answer: string }[];
-  related: string[];
+  /** Unused since the gallery strip (MoreTools) replaced the link list; kept so pages need no edit. */
+  related?: string[];
   /** Main schema node (DigitalDocument / WebApplication); breadcrumb, HowTo, FAQ are added here. */
   schema: Record<string, unknown>;
   citeLabel: string;
@@ -72,7 +75,13 @@ const kb = (href: string) => {
 };
 const downloads = (p.downloads ?? []).map((d) => ({ ...d, size: kb(d.href) }));
 const zipSize = p.zip ? kb(p.zip) : "";
-const related = relatedTools(p.related, p.path);
+const primary = downloads.find((d) => d.primary) ?? downloads[0];
+const headerCta = p.toolFirst
+  ? { href: "#arac", label: "Aracı kullan" }
+  : p.zip
+    ? { href: p.zip, label: `Hepsini indir (ZIP, ${zipSize})`, download: true }
+    : { href: primary.href, label: `İndir (${primary.format})`, download: true };
+const headerCta2 = p.toolFirst ? (downloads.length ? { href: "#ornek", label: "Örnek PDF" } : undefined) : { href: "#onizleme", label: "Sayfaları gör" };
 
 const citeHtml = `${p.citeLabel}: <a href="${PAGE_URL}">Rast Creative Studio</a>`;
 
@@ -96,14 +105,9 @@ const jsonLd = [
 
 <BaseLayout title={p.title} description={p.description} jsonLd={jsonLd} image={p.image}>
   <Section width="wide" space="tight">
-    <nav class="crumbs" aria-label="Sayfa yolu">
-      <a href="/">Ana sayfa</a> <span aria-hidden="true">/</span> <a href="/araclar/">Araçlar</a>
-      <span aria-hidden="true">/</span> <span aria-current="page">{p.crumb}</span>
-    </nav>
-    <SectionHeading as="h1" eyebrow={p.eyebrow}>
-      {p.h1}
-      <Fragment slot="intro"><slot name="intro" /></Fragment>
-    </SectionHeading>
+    <ToolHeader href={p.path} h1={p.h1} crumb={p.crumb} cta={headerCta} cta2={headerCta2} badgeExtra={p.eyebrow.split(" · ").slice(1).join(" · ") || undefined}>
+      <slot name="intro" />
+    </ToolHeader>
     <slot name="top" />
     {!p.toolFirst && <BelgeIndir downloads={downloads} zip={p.zip} zipSize={zipSize} />}
   </Section>
@@ -139,7 +143,7 @@ const jsonLd = [
 
   <Section width="default" space="tight" id="nasil-kullanilir">
     <SectionHeading eyebrow="Nasıl kullanılır">{p.howtoTitle}</SectionHeading>
-    <ol class="steps">
+    <ol class="at-steps">
       {
         p.howto.map((s) => (
           <li>
@@ -154,21 +158,13 @@ const jsonLd = [
 
   <Section width="default" space="tight" id="sss">
     <SectionHeading eyebrow="SSS">Sık sorulan sorular</SectionHeading>
-    <dl class="faq">
-      {
-        p.faqs.map((f) => (
-          <div class="faq__item">
-            <dt>{f.question}</dt>
-            <dd>{f.answer}</dd>
-          </div>
-        ))
-      }
-    </dl>
+    <ToolFaq faqs={p.faqs} />
   </Section>
 
   <Section width="default" space="tight" id="kaynak-goster">
-    <div class="box">
-      <h2>Kaynak göster</h2>
+    <details class="at-fold">
+      <summary><h2>Kaynak göster</h2></summary>
+      <div class="at-fold__body box">
       <p>
         Bu sayfayı bir yazıda, eğitimde ya da kaynak listesinde paylaşmak isterseniz aşağıdaki bağlantıyı
         kopyalayabilirsiniz. Dosyaları kullanırken atıf satırı: <em>“Şablon: Rast Creative Studio — rastcreative.com”</em>.
@@ -180,22 +176,10 @@ const jsonLd = [
         <span class="small" data-copied aria-live="polite"></span>
       </div>
     </div>
+    </details>
   </Section>
 
-  {
-    related.length > 0 && (
-      <Section width="default" space="tight" id="ilgili">
-        <SectionHeading eyebrow="Ücretsiz araçlar">İlgili araç ve şablonlar</SectionHeading>
-        <ul class="rel">
-          {related.map((r) => (
-            <li>
-              <a href={r.href}>{r.name}</a>
-            </li>
-          ))}
-        </ul>
-      </Section>
-    )
-  }
+  <MoreTools current={p.path} />
 
   <Section width="default" space="tight">
     <div class="box cta">

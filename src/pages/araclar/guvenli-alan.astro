@@ -13,6 +13,9 @@ import Button from "../../components/Button.astro";
 import { PRIMARY_CTA, SITE } from "../../consts";
 import { breadcrumb, faqPage } from "../../lib/schema";
 import ZONES from "../../data/safe-zones.json";
+import ToolHeader from "../../components/araclar/ToolHeader.astro";
+import MoreTools from "../../components/araclar/MoreTools.astro";
+import ToolFaq from "../../components/araclar/ToolFaq.astro";
 
 const PATH = "/araclar/guvenli-alan/";
 const PAGE_URL = new URL(PATH, SITE.url).href;
@@ -118,28 +121,20 @@ const jsonLd = [
 
 <BaseLayout title={title} description={description} jsonLd={jsonLd}>
   <Section width="wide" space="tight">
-    <nav class="crumbs" aria-label="Sayfa yolu">
-      <a href="/">Ana sayfa</a> <span aria-hidden="true">/</span> <a href="/araclar/">Araçlar</a>
-      <span aria-hidden="true">/</span> <span aria-current="page">Güvenli alan kontrolü</span>
-    </nav>
-    <SectionHeading as="h1" eyebrow="Araç · Ücretsiz · Kayıt yok">
-      Reels, TikTok ve Shorts güvenli alan kontrolü
-      <Fragment slot="intro">
+    <ToolHeader
+      href="/araclar/guvenli-alan/"
+      h1="Reels, TikTok ve Shorts güvenli alan kontrolü"
+      cta2={{ href: "#sablonlar", label: "Şablonlar (PNG + ZIP)" }}
+    >
         <p>
           Dikey videoda yazdığınız kanca cümlesi, altyazı ya da logo; kullanıcı adı, açıklama ve beğeni butonlarının
           altında kalabilir. Görselinizi ya da videonuzu bırakın, her platformun arayüzünün neyi kapattığını
           yayınlamadan önce görün. <strong>Dosyanız hiçbir sunucuya yüklenmez</strong>; her şey tarayıcınızda çalışır.
         </p>
-      </Fragment>
-    </SectionHeading>
+      
+    </ToolHeader>
 
-    <ol class="howto" aria-label="Nasıl kullanılır">
-      <li><strong>1. Dosyanızı seçin.</strong> JPG, PNG, WebP görsel ya da MP4, MOV, WebM video. En doğru sonuç 1080×1920 (9:16) dosyayla alınır.</li>
-      <li><strong>2. Platformu seçin.</strong> Koyu alanlar arayüzün kapladığı yerler, yeşil çerçeve güvenli alan. Videoyu oynatıp kaydırın; katmanlar üstte kalır.</li>
-      <li><strong>3. Düzeltin, indirin.</strong> Metni çerçevenin içine taşıyın; kareyi PNG olarak indirin ya da şablonu kurgu programınıza koyun.</li>
-    </ol>
-
-    <div class="tool" data-tool>
+    <div id="arac" class="tool" data-tool>
       <div class="tool__stage">
         <label class="drop" data-drop>
           <input
@@ -211,6 +206,11 @@ const jsonLd = [
         </p>
       </div>
     </div>
+    <ol class="at-steps" aria-label="Nasıl kullanılır">
+      <li><strong>Dosyanızı seçin.</strong> JPG, PNG, WebP görsel ya da MP4, MOV, WebM video. En doğru sonuç 1080×1920 (9:16) dosyayla alınır.</li>
+      <li><strong>Platformu seçin.</strong> Koyu alanlar arayüzün kapladığı yerler, yeşil çerçeve güvenli alan. Videoyu oynatıp kaydırın; katmanlar üstte kalır.</li>
+      <li><strong>Düzeltin, indirin.</strong> Metni çerçevenin içine taşıyın; kareyi PNG olarak indirin ya da şablonu kurgu programınıza koyun.</li>
+    </ol>
   </Section>
 
   <Section width="wide" space="tight" id="sablonlar">
@@ -294,21 +294,13 @@ const jsonLd = [
 
   <Section width="default" space="tight" id="sss">
     <SectionHeading eyebrow="SSS">Sık sorulan sorular</SectionHeading>
-    <dl class="faq">
-      {
-        faqs.map((f) => (
-          <div class="faq__item">
-            <dt>{f.question}</dt>
-            <dd>{f.answer}</dd>
-          </div>
-        ))
-      }
-    </dl>
+    <ToolFaq faqs={faqs} />
   </Section>
 
   <Section width="default" space="tight" id="kaynak-goster">
-    <div class="cite">
-      <h2>Bu aracı sitende kullan / kaynak göster</h2>
+    <details class="at-fold">
+      <summary><h2>Bu aracı sitende kullan / kaynak göster</h2></summary>
+      <div class="at-fold__body cite">
       <p>
         Bir yazıda, eğitimde ya da kaynak listesinde bu araca yer vermek isterseniz aşağıdaki bağlantıyı kopyalayabilirsiniz.
         Şablonları kullanırken atıf satırı: <em>“Güvenli alan şablonu: Rast Creative Studio — rastcreative.com”</em>.
@@ -318,10 +310,13 @@ const jsonLd = [
       <button type="button" class="ev-btn" data-copy>Kopyala</button>
       <span class="small" data-copied aria-live="polite"></span>
     </div>
+    </details>
   </Section>
 
   <Section width="default" space="tight" id="kaynaklar">
-    <SectionHeading eyebrow="Şeffaflık">Kaynaklar ve notlar</SectionHeading>
+    <details class="at-fold">
+      <summary><h2>Kaynaklar ve notlar</h2></summary>
+      <div class="at-fold__body">
     <p>
       Platformlar organik videolar için piksel ölçüsü yayımlamıyor; yalnızca reklamlar için oran ya da şablon veriyor.
       Tablodaki değerler aşağıdaki kaynaklar ve kendi ekran görüntüsü ölçümlerimizle birleştirilip yuvarlandı. Son kontrol:
@@ -358,11 +353,14 @@ const jsonLd = [
       Platform adları sahiplerinin ticari markalarıdır; bu araç hiçbir platformla bağlantılı değildir ve logolarını kullanmaz.
       Arayüz siluetleri temsilidir.
     </p>
+      </div>
+    </details>
   </Section>
 
   <Section width="default" space="tight">
-    <div class="en" lang="en">
-      <h2>In English: free safe zone checker and templates</h2>
+    <details class="at-fold" lang="en">
+      <summary><h2>In English: free safe zone checker and templates</h2></summary>
+      <div class="at-fold__body en">
       <p>
         Check where Instagram Reels, TikTok, YouTube Shorts and Instagram Story UI covers a 1080×1920 video. Drop an image or
         video (it never leaves your browser), toggle platform overlays, scrub the video and export a PNG. Transparent safe zone
@@ -370,7 +368,10 @@ const jsonLd = [
         rastcreative.com”. Values are approximate and vary by device and app version.
       </p>
     </div>
+    </details>
   </Section>
+
+  <MoreTools current="/araclar/guvenli-alan/" />
 
   <Section width="default" space="tight">
     <div class="cta">
@@ -1266,7 +1267,7 @@ const jsonLd = [
     color: var(--ink);
   }
   .sources a,
-  .cta a:not(.ev-btn),
+  .cta a:not(.ev-btn, .btn),
   .tool a,
   #sablonlar p a:not(.ev-btn) {
     color: var(--amber-text);

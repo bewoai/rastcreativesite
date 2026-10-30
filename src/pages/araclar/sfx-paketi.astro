@@ -11,6 +11,9 @@ import Button from "../../components/Button.astro";
 import { PRIMARY_CTA, SITE } from "../../consts";
 import { breadcrumb, faqPage } from "../../lib/schema";
 import SOUNDS from "../../data/sfx-paketi.json";
+import ToolHeader from "../../components/araclar/ToolHeader.astro";
+import MoreTools from "../../components/araclar/MoreTools.astro";
+import ToolFaq from "../../components/araclar/ToolFaq.astro";
 
 const PATH = "/araclar/sfx-paketi/";
 const PAGE_URL = new URL(PATH, SITE.url).href;
@@ -173,20 +176,21 @@ const jsonLd = [
 
 <BaseLayout title={title} description={description} jsonLd={jsonLd}>
   <Section width="wide" space="tight">
-    <nav class="crumbs" aria-label="Sayfa yolu">
-      <a href="/">Ana sayfa</a> <span aria-hidden="true">/</span> <a href="/araclar/">Araçlar</a>
-      <span aria-hidden="true">/</span> <span aria-current="page">SFX paketi</span>
-    </nav>
-    <SectionHeading as="h1" eyebrow="Ücretsiz · WAV · Ticari kullanım serbest">
-      Rast SFX Pack Vol.1: kısa video kurgusu için 40 ses efekti
-      <Fragment slot="intro">
+    <ToolHeader
+      href="/araclar/sfx-paketi/"
+      h1="Rast SFX Pack Vol.1: kısa video kurgusu için 40 ses efekti"
+      cta={{ href: ZIP, label: `Paketi indir (ZIP, ${ZIP_MB})`, download: true }}
+      cta2={{ href: "#sesler", label: "Önce dinle" }}
+      preview
+      badgeExtra="Ücretsiz · Ticari kullanım serbest"
+    >
         <p>
           Reels, TikTok ve Shorts kurgusunda her kesmenin, her metin girişinin bir sesi olmalı. Kendi işlerimizde
           kullandığımız whoosh, riser, impact, glitch, deklanşör, kağıt ve bildirim seslerini tek pakette topladık.
           Hepsini aşağıda tarayıcıda dinleyebilir, tek tıkla indirebilirsiniz. Kayıt yok, e-posta istemiyoruz.
         </p>
-      </Fragment>
-    </SectionHeading>
+      
+    </ToolHeader>
 
     <div class="facts">
       <ul>
@@ -195,7 +199,6 @@ const jsonLd = [
         <li><strong>Seviyesi ayarlı</strong> · sessizlik kırpılmış</li>
         <li><strong>Lisans:</strong> {ownCount} ses CC BY 4.0, {cc0Count} ses CC0</li>
       </ul>
-      <a class="ev-btn ev-btn--sun" href={ZIP} download>Paketi indir (ZIP, {ZIP_MB})</a>
     </div>
   </Section>
 
@@ -282,21 +285,13 @@ const jsonLd = [
 
   <Section width="default" space="tight" id="sss">
     <SectionHeading eyebrow="SSS">Sık sorulan sorular</SectionHeading>
-    <dl class="faq">
-      {
-        faqs.map((f) => (
-          <div class="faq__item">
-            <dt>{f.question}</dt>
-            <dd>{f.answer}</dd>
-          </div>
-        ))
-      }
-    </dl>
+    <ToolFaq faqs={faqs} />
   </Section>
 
   <Section width="default" space="tight" id="kaynak-goster">
-    <div class="cite">
-      <h2>Kaynak göster</h2>
+    <details class="at-fold">
+      <summary><h2>Kaynak göster</h2></summary>
+      <div class="at-fold__body cite">
       <p>
         Bir yazıda, eğitimde ya da kaynak listesinde bu pakete yer vermek isterseniz aşağıdaki bağlantıyı kopyalayabilirsiniz.
         Videolarda atıf satırı: <em>“Ses efektleri: Rast Creative Studio — rastcreative.com”</em>.
@@ -306,11 +301,13 @@ const jsonLd = [
       <button type="button" class="ev-btn" data-copy>Kopyala</button>
       <span class="small" data-copied aria-live="polite"></span>
     </div>
+    </details>
   </Section>
 
   <Section width="default" space="tight">
-    <div class="en" lang="en">
-      <h2>In English: free SFX pack for short-form video</h2>
+    <details class="at-fold" lang="en">
+      <summary><h2>In English: free SFX pack for short-form video</h2></summary>
+      <div class="at-fold__body en">
       <p>
         Rast SFX Pack Vol.1 is a free pack of {items.length} sound effects for Reels, TikTok and Shorts editing: whooshes, risers,
         impacts, swells, glitches, UI clicks and pops, camera shutters, paper and tape, notification dings, transitions and two
@@ -318,7 +315,10 @@ const jsonLd = [
         rastcreative.com”), the CC0 sounds stay CC0. Commercial use is allowed; please don't resell the pack as is.
       </p>
     </div>
+    </details>
   </Section>
+
+  <MoreTools current="/araclar/sfx-paketi/" />
 
   <Section width="default" space="tight">
     <div class="cta">
@@ -490,7 +490,7 @@ const jsonLd = [
   }
   #kullanim p a,
   #lisans a,
-  .cta a:not(.ev-btn) {
+  .cta a:not(.ev-btn, .btn) {
     color: var(--amber-text);
   }
   #kullanim p,

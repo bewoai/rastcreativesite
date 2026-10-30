@@ -12,6 +12,7 @@ import Extras from "./_yaratici/Extras.astro";
 import { SITE } from "../../consts";
 import { breadcrumb, faqPage } from "../../lib/schema";
 import "./_yaratici/tool.css";
+import ToolHeader from "../../components/araclar/ToolHeader.astro";
 
 const PATH = "/araclar/kapak-sablonlari/";
 const PAGE_URL = new URL(PATH, SITE.url).href;
@@ -102,20 +103,18 @@ const jsonLd = [
 <BaseLayout title={title} description={description} jsonLd={jsonLd}>
   <div class="yt-page">
     <Section width="wide" space="tight">
-      <nav class="crumbs" aria-label="Sayfa yolu">
-        <a href="/">Ana sayfa</a> <span aria-hidden="true">/</span> <a href="/araclar/">Araçlar</a>
-        <span aria-hidden="true">/</span> <span aria-current="page">Kapak şablonları</span>
-      </nav>
-      <SectionHeading as="h1" eyebrow="Şablon · Ücretsiz · CC BY 4.0">
-        Reels kapağı ve YouTube küçük resim şablonları
-        <Fragment slot="intro">
+      <ToolHeader
+        href="/araclar/kapak-sablonlari/"
+        h1="Reels kapağı ve YouTube küçük resim şablonları"
+        cta={{ href: "#arac", label: "Kapağı kontrol et" }}
+      >
           <p>
             Kapak, videonuzun açılmadan önceki tek reklamıdır. Reels kapağı (1080×1920) ve YouTube küçük resmi (1280×720) için
             ızgara kırpmasını, süre etiketini ve arayüz alanlarını işaretleyen şeffaf PNG ve katmanlı SVG şablonları indirin;
             hazır kapağınızı aşağıda gerçek boyutlarda test edin.
           </p>
-        </Fragment>
-      </SectionHeading>
+        
+      </ToolHeader>
 
       <ul class="yt-tpls" id="sablonlar" style="grid-template-columns:repeat(auto-fill,minmax(170px,1fr))">
         {files.map((t) => (
@@ -135,16 +134,11 @@ const jsonLd = [
         koyu bantlar arayüz. Küçük Rast imzası rehber katmanındadır; şablonu kapatınca kaybolur.
       </p>
 
-      <ol class="howto" aria-label="Nasıl kullanılır">
-        <li><strong>1. Şablonu indirin.</strong> Canva için PNG, Figma/Illustrator için katmanlı SVG. Tasarımın en üstüne koyun.</li>
-        <li><strong>2. Başlığı güvenli alana yazın.</strong> 3–5 kelime, kalın yazı, arka planla güçlü kontrast. Köşeleri boş bırakın.</li>
-        <li><strong>3. Gerçek boyutta test edin.</strong> Bitmiş kapağı aşağıdaki kontrole yükleyin; telefonda göründüğü boyutlarda okunuyor mu bakın.</li>
-      </ol>
     </Section>
 
     <Section width="wide" space="tight" id="kontrol">
       <SectionHeading eyebrow="Araç · Kayıt yok">Kapağınızı gerçek boyutta kontrol edin</SectionHeading>
-      <div class="yt-tool yt-tool--split" data-tool>
+      <div id="arac" class="yt-tool yt-tool--split" data-tool>
         <div class="yt-stage">
           <div class="yt-chips" role="radiogroup" aria-label="Kapak türü">
             <label class="yt-chip"><input type="radio" name="mode" value="reels" checked /><span>Reels kapağı 9:16</span></label>
@@ -182,6 +176,11 @@ const jsonLd = [
           <p class="yt-small">Kontrol görseli şablon katmanı ve küçük önizlemelerle birlikte, Rast imzalı bir PNG'dir. “Kapağı indir” yalnızca sizin görselinizi ve deneme başlığınızı tam boyutta verir.</p>
         </div>
       </div>
+      <ol class="at-steps" aria-label="Nasıl kullanılır">
+        <li><strong>Şablonu indirin.</strong> Canva için PNG, Figma/Illustrator için katmanlı SVG. Tasarımın en üstüne koyun.</li>
+        <li><strong>Başlığı güvenli alana yazın.</strong> 3–5 kelime, kalın yazı, arka planla güçlü kontrast. Köşeleri boş bırakın.</li>
+        <li><strong>Gerçek boyutta test edin.</strong> Bitmiş kapağı aşağıdaki kontrole yükleyin; telefonda göründüğü boyutlarda okunuyor mu bakın.</li>
+      </ol>
     </Section>
 
     <Section width="default" space="tight" id="ipuclari">

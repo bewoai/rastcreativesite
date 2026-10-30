@@ -1,0 +1,25 @@
+---
+/**
+ * FAQ as an accordion (<details>). Same question/answer text as the page's
+ * FAQPage JSON-LD; answers stay in the HTML, so they remain visible text.
+ */
+import "../../styles/araclar.css";
+
+interface Props {
+  faqs: { question: string; answer: string }[];
+  /** Open the first item. */
+  openFirst?: boolean;
+}
+const { faqs, openFirst = true } = Astro.props;
+---
+
+<div class="at-faq">
+  {
+    faqs.map((f, i) => (
+      <details open={openFirst && i === 0}>
+        <summary>{f.question}</summary>
+        <p>{f.answer}</p>
+      </details>
+    ))
+  }
+</div>

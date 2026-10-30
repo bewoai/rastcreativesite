@@ -13,6 +13,7 @@ import { SITE } from "../../consts";
 import { breadcrumb, faqPage } from "../../lib/schema";
 import ZONES from "../../data/safe-zones.json";
 import "./_yaratici/tool.css";
+import ToolHeader from "../../components/araclar/ToolHeader.astro";
 
 const PATH = "/araclar/altyazi-kontrolu/";
 const PAGE_URL = new URL(PATH, SITE.url).href;
@@ -92,28 +93,19 @@ const plats = ZONES.platforms.filter((p) => p.id !== "instagram-story");
 <BaseLayout title={title} description={description} jsonLd={jsonLd}>
   <div class="yt-page">
     <Section width="wide" space="tight">
-      <nav class="crumbs" aria-label="Sayfa yolu">
-        <a href="/">Ana sayfa</a> <span aria-hidden="true">/</span> <a href="/araclar/">Araçlar</a>
-        <span aria-hidden="true">/</span> <span aria-current="page">Altyazı kontrolü</span>
-      </nav>
-      <SectionHeading as="h1" eyebrow="Araç · Ücretsiz · Kayıt yok">
-        Altyazı kontrolü: SRT ve VTT dosyanızı yayından önce test edin
-        <Fragment slot="intro">
+      <ToolHeader
+        href="/araclar/altyazi-kontrolu/"
+        h1="Altyazı kontrolü: SRT ve VTT dosyanızı yayından önce test edin"
+      >
           <p>
             Uzun satırlar, okunamayacak kadar hızlı geçen altyazılar, çakışan zamanlar ve “ÅŸ” gibi bozuk Türkçe
             karakterler izleyiciyi videodan koparır. Dosyanızı açın; araç her altyazıyı satır uzunluğu, okuma hızı, süre ve
             karakter açısından kontrol etsin, basit hataları düzeltip temiz bir SRT versin. <strong>Dosyanız tarayıcınızdan çıkmaz.</strong>
           </p>
-        </Fragment>
-      </SectionHeading>
+        
+      </ToolHeader>
 
-      <ol class="howto" aria-label="Nasıl kullanılır">
-        <li><strong>1. Dosyayı açın ya da yapıştırın.</strong> .srt veya .vtt. UTF-8 ve Windows-1254 (Türkçe) kodlama otomatik tanınır. Denemek için örnek dosyayı yükleyin.</li>
-        <li><strong>2. Kuralları seçin.</strong> Netflix Türkçe (42 karakter, 17 KBS) ya da dikey video için daha kısa satırlar. Kare hızını videonuza göre girin.</li>
-        <li><strong>3. Düzeltin, indirin.</strong> Hatalı altyazılara tıklayıp dikey önizlemede görün; düzeltilmiş SRT'yi UTF-8 olarak indirin.</li>
-      </ol>
-
-      <div class="yt-tool" data-tool>
+      <div id="arac" class="yt-tool" data-tool>
         <div class="yt-tool yt-tool--split" style="padding:0;border:0;background:none">
           <div class="yt-stage">
             <label class="yt-drop" data-drop>
@@ -219,6 +211,11 @@ const plats = ZONES.platforms.filter((p) => p.id !== "instagram-story");
           </div>
         </div>
       </div>
+      <ol class="at-steps" aria-label="Nasıl kullanılır">
+        <li><strong>Dosyayı açın ya da yapıştırın.</strong> .srt veya .vtt. UTF-8 ve Windows-1254 (Türkçe) kodlama otomatik tanınır. Denemek için örnek dosyayı yükleyin.</li>
+        <li><strong>Kuralları seçin.</strong> Netflix Türkçe (42 karakter, 17 KBS) ya da dikey video için daha kısa satırlar. Kare hızını videonuza göre girin.</li>
+        <li><strong>Düzeltin, indirin.</strong> Hatalı altyazılara tıklayıp dikey önizlemede görün; düzeltilmiş SRT'yi UTF-8 olarak indirin.</li>
+      </ol>
     </Section>
 
     <Section width="default" space="tight" id="kurallar">

@@ -12,6 +12,8 @@ import SectionHeading from "../components/SectionHeading.astro";
 import Button from "../components/Button.astro";
 import { CONTACT, PRIMARY_CTA, SITE } from "../consts";
 import { breadcrumb } from "../lib/schema";
+import ToolHeader from "../components/araclar/ToolHeader.astro";
+import MoreTools from "../components/araclar/MoreTools.astro";
 
 const title = "Çekim Günü Planlayıcı: Tek Çekimden Hangi İçerikler Çıkar?";
 const description =
@@ -63,17 +65,20 @@ const jsonLd = [
 
 <BaseLayout title="Çekim Günü Planlayıcı" description={description} jsonLd={jsonLd}>
   <Section width="narrow">
-    <SectionHeading as="h1" eyebrow="Araç · Ücretsiz">
-      Tek çekim gününden hangi içerikler çıkar?
-      <Fragment slot="intro">
+    <ToolHeader
+      href="/cekim-planlayici/"
+      h1="Tek çekim gününden hangi içerikler çıkar?"
+      cta={{ href: "#arac", label: "Planlamaya başla" }}
+      crumb="Çekim günü planlayıcı"
+    >
         <p>
           Üç soruyu cevaplayın; bir çekim gününden çıkarılabilecek içerikleri, her birinin hangi işi
           göreceğini ve çekimden önce neleri hazırlamanız gerektiğini listeleyelim.
         </p>
-      </Fragment>
-    </SectionHeading>
+      
+    </ToolHeader>
 
-    <form class="planner" data-planner data-wa={CONTACT.whatsapp}>
+    <form id="arac" class="planner" data-planner data-wa={CONTACT.whatsapp}>
       <fieldset>
         <legend><span>1</span> Sektörünüz</legend>
         <div class="chips">
@@ -137,6 +142,7 @@ const jsonLd = [
       </div>
     </section>
   </Section>
+  <MoreTools current="/cekim-planlayici/" />
 </BaseLayout>
 
 <script>

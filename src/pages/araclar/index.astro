@@ -1,54 +1,21 @@
 ---
 /**
- * /araclar/ — index of Rast's free browser tools (linkable assets).
+ * /araclar/ — visual gallery of Rast's free tools, templates, documents and packs.
+ * Data: src/data/araclar.ts. Card previews: public/araclar/kartlar/ (scripts/araclar-kartlar/).
+ * The type filter is CSS-only (radio + :has); without :has support every card stays visible.
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Section from "../../components/Section.astro";
-import SectionHeading from "../../components/SectionHeading.astro";
+import Button from "../../components/Button.astro";
+import ToolCard from "../../components/araclar/ToolCard.astro";
 import { breadcrumb } from "../../lib/schema";
-import { SITE } from "../../consts";
+import { SITE, PRIMARY_CTA } from "../../consts";
+import { ARACLAR, TUR_FILTER } from "../../data/araclar";
 
 const description =
   "Rast Creative Studio'nun ücretsiz araçları: güvenli alan kontrolü, bitrate hesaplayıcı, altyazı kontrolü, export rehberi, storyboard ve brief şablonları, SFX ve LUT paketleri. Kayıt gerektirmez.";
 
-const groups = [
-  {
-    title: "Kontrol ve hesap araçları",
-    tools: [
-      { href: "/araclar/guvenli-alan/", name: "Reels / TikTok / Shorts güvenli alan kontrolü", text: "Görselinizi ya da videonuzu açın; platform arayüzünün kanca metnini, altyazıyı ve logoyu kapatıp kapatmadığını görün. CC BY 4.0 şeffaf PNG şablonlar." },
-      { href: "/araclar/bitrate-hesaplayici/", name: "Video bitrate ve dosya boyutu hesaplayıcı", text: "Bitrate'ten dosya boyutu, hedef boyuttan bitrate ve kartın kaç dakika kaydedeceği; hazır platform değerleri ve FFmpeg komutu." },
-      { href: "/araclar/en-boy-orani/", name: "En-boy oranı ve kırpma önizleyici", text: "16:9 videonuzun 9:16, 4:5, 1:1 ve 3:4'te nasıl kırpılacağını görün; kırpma çerçevesini ve maskeleri indirin." },
-      { href: "/araclar/altyazi-kontrolu/", name: "Altyazı kontrolü (SRT / VTT)", text: "Satır uzunluğu, okuma hızı, çakışma ve bozuk Türkçe karakterleri bulur; düzeltilmiş SRT verir." },
-      { href: "/araclar/cekim-plani/", name: "Çekim planı (call sheet) oluşturucu", text: "Lokasyon, ekip, saat programı ve ekipmanı girin; yazdırılabilir çekim planı ve JSON dosyası alın." },
-      { href: "/cekim-planlayici/", name: "Çekim günü içerik planlayıcı", text: "Sektörünüzü ve kanallarınızı seçin; tek çekim gününden çıkabilecek içerikleri ve hazırlık listesini görün." },
-    ],
-  },
-  {
-    title: "Rehberler",
-    tools: [
-      { href: "/rehber/video-export-ayarlari/", name: "1080p ve 4K video export ayarları rehberi", text: "YouTube, Vimeo, Instagram ve TikTok için ideal export ayarları; Premiere, DaVinci, Final Cut ve CapCut menü yolları ve PDF kopya kâğıdı." },
-    ],
-  },
-  {
-    title: "Şablonlar ve belgeler",
-    tools: [
-      { href: "/araclar/instagram-grid-sablonu/", name: "Instagram profil ızgarası (3:4) şablonu", text: "Reels kapağınızın yeni profil ızgarasında nasıl kırpıldığını önizleyin; katmanlı PNG seti ve 3x3 planlayıcı." },
-      { href: "/araclar/kapak-sablonlari/", name: "Reels kapağı ve YouTube küçük resim şablonları", text: "1080×1920 kapak ve 1280×720 / 4K küçük resim için güvenli alanlı PNG ve SVG şablonlar, kapak kontrolü." },
-      { href: "/araclar/storyboard-sablonu/", name: "Storyboard ve çekim listesi şablonu", text: "16:9 ve 9:16 storyboard, plan listesi; doldurulabilir PDF, Excel, Word ve Notion sürümleri." },
-      { href: "/araclar/brief-formu/", name: "Video brief formu", text: "Bir video projesine başlamadan önce müşteriden alınması gereken bilgiler; doldurulabilir PDF ve Word." },
-      { href: "/araclar/cekim-kontrol-listesi/", name: "Çekim günü kontrol listesi", text: "Kamera, ses, ışık, medya, güç, izin ve yedekleme için 47 maddelik liste." },
-      { href: "/araclar/cekim-izin-formu/", name: "Görüntü ve ses kullanım izin formu (KVKK taslağı)", text: "Aydınlatma metni, ayrı açık rıza ve veli onayı bölümleriyle genel bir taslak; hukuki danışmanlık değildir." },
-    ],
-  },
-  {
-    title: "Ücretsiz paketler",
-    tools: [
-      { href: "/araclar/sfx-paketi/", name: "Rast SFX Pack Vol.1 (40 ses efekti)", text: "Whoosh, riser, vuruş, geçiş, glitch ve bildirim sesleri; 48 kHz WAV, kurgu için hazır." },
-      { href: "/araclar/lut-paketi/", name: "Rast LUT Pack (5 .cube LUT)", text: "Rec.709 görüntü için 5 hafif renk görünümü; Premiere, DaVinci, Final Cut ve CapCut kurulumuyla." },
-    ],
-  },
-];
-const tools = groups.flatMap((g) => g.tools);
+const counts = Object.fromEntries(TUR_FILTER.map((f) => [f.id, ARACLAR.filter((t) => t.type === f.id).length]));
 
 const jsonLd = [
   breadcrumb([
@@ -59,7 +26,7 @@ const jsonLd = [
     "@context": "https://schema.org",
     "@type": "ItemList",
     name: "Rast Creative ücretsiz araçlar",
-    itemListElement: tools.map((t, i) => ({
+    itemListElement: ARACLAR.map((t, i) => ({
       "@type": "ListItem",
       position: i + 1,
       name: t.name,
@@ -70,61 +37,338 @@ const jsonLd = [
 ---
 
 <BaseLayout title="Ücretsiz Video ve İçerik Araçları" description={description} jsonLd={jsonLd}>
-  <Section width="narrow">
-    <SectionHeading as="h1" eyebrow="Araçlar · Ücretsiz">
-      Video ve sosyal medya için ücretsiz araçlar
-      <Fragment slot="intro">
+  <Section width="wide" space="tight" class="ah">
+    <div class="ah__grid">
+      <div class="ah__text">
+        <p class="ah__eyebrow"><span aria-hidden="true"></span>{ARACLAR.length} ücretsiz araç · Kayıt yok</p>
+        <h1>Video ve sosyal medya için <em>ücretsiz araçlar</em></h1>
+        <p class="ah__sub">Tarayıcıda çalışır, dosyanız bilgisayarınızdan çıkmaz.</p>
+      </div>
+      <div class="ah__frame" aria-hidden="true">
+        <div class="ah__phone">
+          <span class="ah__thirds"></span>
+          <span class="ah__safe"></span>
+          <span class="ah__scan"></span>
+          <span class="ah__rec"><b></b>REC</span>
+          <span class="ah__ratio">9:16</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gal">
+      <fieldset class="gal__filter">
+        <legend class="ev-sr">Türe göre filtrele</legend>
+        <label><input type="radio" name="tur" value="hepsi" checked /><span>Tümü <small>{ARACLAR.length}</small></span></label>
+        {
+          TUR_FILTER.map((f) => (
+            <label>
+              <input type="radio" name="tur" value={f.id} />
+              <span>
+                {f.label} <small>{counts[f.id]}</small>
+              </span>
+            </label>
+          ))
+        }
+      </fieldset>
+
+      <ul class="gal__grid">
+        {
+          ARACLAR.map((t, i) => (
+            <li data-type={t.type}>
+              <ToolCard item={t} eager={i < 3} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </Section>
+
+  <Section width="wide" space="tight">
+    <div class="ah-cta">
+      <div>
+        <h2>Araçlarla uğraşmak yerine videoyu biz çekelim</h2>
         <p>
-          Kendi işimizde her gün kullandığımız kontrolleri herkesin kullanabileceği hale getirdik. Kayıt yok, dosyalarınız
-          tarayıcınızdan çıkmaz.
+          Bu araçlar kendi işimizde her gün kullandığımız kontroller. Çekimden teslime kadar tamamını isterseniz
+          <a href="/video-cekimi/">video çekimi</a> ve <a href="/sosyal-medya-icerigi/">sosyal medya içeriği</a> sayfalarına bakın.
         </p>
-      </Fragment>
-    </SectionHeading>
-    {
-      groups.map((g) => (
-        <>
-          <h2 class="group">{g.title}</h2>
-          <ul class="tools">
-            {g.tools.map((t) => (
-              <li>
-                <h3><a href={t.href}>{t.name}</a></h3>
-                <p>{t.text}</p>
-              </li>
-            ))}
-          </ul>
-        </>
-      ))
-    }
+      </div>
+      <Button href={PRIMARY_CTA.href}>Görüşelim</Button>
+    </div>
   </Section>
 </BaseLayout>
 
 <style>
-  .tools {
+  /* ───── Hero ───── */
+  .ah__grid {
+    display: grid;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .ah__grid {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 3rem;
+    }
+  }
+  .ah__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0 0 1rem;
+    font: 700 0.78rem/1 var(--font-utility);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .ah__eyebrow span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ff6a1a;
+    box-shadow: 0 0 10px #ff6a1a;
+  }
+  .ah__text h1 {
+    margin: 0;
+    max-width: 17ch;
+    font-family: var(--font-display);
+    font-size: clamp(2.3rem, 1.4rem + 3.6vw, 4.3rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .ah__text h1 em {
+    font-style: italic;
+    color: var(--sun-text, #94420f);
+  }
+  .ah__sub {
+    margin: 1rem 0 0;
+    font-size: clamp(1.05rem, 1rem + 0.35vw, 1.25rem);
+    color: var(--ink-soft);
+  }
+
+  /* 9:16 viewfinder motif */
+  .ah__frame {
+    display: none;
+  }
+  @media (min-width: 900px) {
+    .ah__frame {
+      display: block;
+      padding-right: 2rem;
+    }
+  }
+  .ah__phone {
+    position: relative;
+    width: 150px;
+    aspect-ratio: 9 / 16;
+    border-radius: 22px;
+    overflow: hidden;
+    background:
+      radial-gradient(80% 60% at 70% 10%, rgba(255, 106, 26, 0.55), transparent 70%),
+      linear-gradient(180deg, #2a221c, #100d0b);
+    box-shadow:
+      0 40px 70px -30px rgba(60, 36, 16, 0.7),
+      0 0 0 6px #1e1915,
+      0 0 0 7px rgba(255, 255, 255, 0.35);
+    rotate: 4deg;
+  }
+  .ah__safe {
+    position: absolute;
+    inset: 12% 13% 22% 6%;
+    border: 1.5px dashed rgba(120, 230, 160, 0.85);
+    border-radius: 6px;
+  }
+  .ah__thirds {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, transparent 33.1%, rgba(255, 255, 255, 0.14) 33.3%, transparent 33.6%, transparent 66.4%, rgba(255, 255, 255, 0.14) 66.6%, transparent 66.9%),
+      linear-gradient(180deg, transparent 33.1%, rgba(255, 255, 255, 0.14) 33.3%, transparent 33.6%, transparent 66.4%, rgba(255, 255, 255, 0.14) 66.6%, transparent 66.9%);
+  }
+  .ah__scan {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 30%;
+    background: linear-gradient(180deg, transparent, rgba(255, 140, 70, 0.2), transparent);
+    animation: ah-scan 5.5s ease-in-out infinite;
+  }
+  .ah__rec {
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font: 700 0.62rem/1 var(--font-utility);
+    letter-spacing: 0.14em;
+    color: rgba(255, 255, 255, 0.8);
+  }
+  .ah__rec b {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #ff3b1f;
+    animation: ah-blink 1.4s steps(2, jump-none) infinite;
+  }
+  .ah__ratio {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    font: 700 0.7rem/1 var(--font-utility);
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  @keyframes ah-scan {
+    0%,
+    100% {
+      translate: 0 -40%;
+    }
+    50% {
+      translate: 0 280%;
+    }
+  }
+  @keyframes ah-blink {
+    50% {
+      opacity: 0.15;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ah__scan,
+    .ah__rec b {
+      animation: none;
+    }
+  }
+
+  /* ───── Gallery ───── */
+  .gal {
+    margin-top: clamp(2rem, 4vw, 3rem);
+  }
+  .gal__filter {
+    display: flex;
+    gap: 0.3rem;
+    margin: 0 0 1.4rem;
+    padding: 0.3rem;
+    border: 1px solid var(--edge, rgba(255, 255, 255, 0.62));
+    border-radius: 999px;
+    background: var(--glass, rgba(250, 246, 240, 0.5));
+    width: fit-content;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .gal__filter::-webkit-scrollbar {
+    display: none;
+  }
+  .gal__filter label {
+    position: relative;
+    flex: none;
+    cursor: pointer;
+  }
+  .gal__filter input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+  .gal__filter span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    padding: 0.45rem 1rem;
+    border-radius: 999px;
+    font-weight: 650;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    transition: background var(--dur-fast, 160ms) ease, color var(--dur-fast, 160ms) ease;
+  }
+  .gal__filter small {
+    font: 700 0.72rem/1 var(--font-utility);
+    opacity: 0.7;
+  }
+  .gal__filter label:hover span {
+    color: var(--ink);
+  }
+  .gal__filter input:checked + span {
+    background: var(--ink);
+    color: var(--on-ink, #faf9f6);
+  }
+  .gal__filter input:focus-visible + span {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+  }
+  .gal__grid {
+    display: grid;
+    gap: clamp(1rem, 2vw, 1.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 720px) {
+    .gal__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1100px) {
+    .gal__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .gal:has(input[value="arac"]:checked) li:not([data-type="arac"]),
+  .gal:has(input[value="sablon"]:checked) li:not([data-type="sablon"]),
+  .gal:has(input[value="belge"]:checked) li:not([data-type="belge"]),
+  .gal:has(input[value="paket"]:checked) li:not([data-type="paket"]),
+  .gal:has(input[value="rehber"]:checked) li:not([data-type="rehber"]) {
+    display: none;
+  }
+  .gal:has(.gal__filter input:checked:not([value="hepsi"])) .gal__grid > li {
+    animation: gal-in 360ms var(--ease-out, ease) both;
+  }
+  @keyframes gal-in {
+    from {
+      opacity: 0;
+      translate: 0 8px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .gal .gal__grid > li {
+      animation: none;
+    }
+  }
+
+  /* ───── CTA ───── */
+  .ah-cta {
     display: grid;
     gap: 1.2rem;
-    margin-top: 2rem;
+    align-items: center;
+    padding: clamp(1.4rem, 3vw, 2.2rem);
+    border-radius: 1.4rem;
+    color: var(--on-ink, #faf9f6);
+    background:
+      radial-gradient(70% 120% at 100% 0%, rgba(226, 83, 3, 0.45), transparent 60%),
+      linear-gradient(180deg, #1d1915, #110f0d);
   }
-  .tools li {
-    padding: 1.4rem;
-    border: 1px solid var(--line);
-    border-radius: 1.2rem;
-    background: color-mix(in srgb, var(--paper) 80%, transparent);
+  @media (min-width: 820px) {
+    .ah-cta {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
   }
-  .group {
-    margin: 2.2rem 0 0.4rem;
-    font-size: 1.15rem;
-  }
-  .tools h3 {
+  .ah-cta h2 {
+    margin: 0 0 0.4rem;
     font-family: var(--font-display);
-    font-size: clamp(1.2rem, 1.05rem + 0.6vw, 1.5rem);
+    font-size: clamp(1.4rem, 1.1rem + 1.2vw, 2rem);
+    color: inherit;
   }
-  .tools a {
-    color: var(--ink);
-    text-decoration-color: var(--amber);
+  .ah-cta p {
+    margin: 0;
+    max-width: 60ch;
+    color: rgba(250, 249, 246, 0.78);
+    line-height: 1.55;
   }
-  .tools p {
-    margin-top: 0.4rem;
-    color: var(--ink-soft);
-    line-height: var(--leading-body);
+  .ah-cta p a {
+    color: #ffb27d;
   }
 </style>

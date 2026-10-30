@@ -12,6 +12,9 @@ import Button from "../../components/Button.astro";
 import { PRIMARY_CTA, SITE } from "../../consts";
 import { breadcrumb, faqPage } from "../../lib/schema";
 import { YOUTUBE, VIMEO, LIMITS, EXPORT_SOURCES, CHECKED } from "../../data/export-specs";
+import ToolHeader from "../../components/araclar/ToolHeader.astro";
+import MoreTools from "../../components/araclar/MoreTools.astro";
+import ToolFaq from "../../components/araclar/ToolFaq.astro";
 
 const PATH = "/araclar/bitrate-hesaplayici/";
 const PAGE_URL = new URL(PATH, SITE.url).href;
@@ -99,28 +102,19 @@ const ytRows = (["2160", "1440", "1080", "720"] as const).map((r) => ({
 
 <BaseLayout title={title} description={description} jsonLd={jsonLd}>
   <Section width="wide" space="tight">
-    <nav class="crumbs" aria-label="Sayfa yolu">
-      <a href="/">Ana sayfa</a> <span aria-hidden="true">/</span> <a href="/araclar/">Araçlar</a>
-      <span aria-hidden="true">/</span> <span aria-current="page">Bitrate hesaplayıcı</span>
-    </nav>
-    <SectionHeading as="h1" eyebrow="Araç · Ücretsiz · Kayıt yok">
-      Video bitrate ve dosya boyutu hesaplayıcı
-      <Fragment slot="intro">
+    <ToolHeader
+      href="/araclar/bitrate-hesaplayici/"
+      h1="Video bitrate ve dosya boyutu hesaplayıcı"
+    >
         <p>
           Dışa aktarmadan önce dosyanın kaç MB tutacağını, bir platformun boyut sınırına sığmak için bitrate'i ne kadar
           düşürmeniz gerektiğini ya da kartınızın kaç dakika kayıt alacağını hesaplayın. YouTube, Vimeo ve Apple ProRes
           değerleri resmî kaynaklardan alınmıştır. <strong>Dosya yüklemezsiniz</strong>; hesap tarayıcınızda yapılır.
         </p>
-      </Fragment>
-    </SectionHeading>
+      
+    </ToolHeader>
 
-    <ol class="howto" aria-label="Nasıl kullanılır">
-      <li><strong>1. Ne hesaplayacağınızı seçin.</strong> Dosya boyutu, hedef boyuta göre bitrate ya da kart kayıt süresi.</li>
-      <li><strong>2. Değerleri girin.</strong> Bitrate'i bilmiyorsanız platform ve çözünürlük seçip önerilen değeri tek tıkla doldurun.</li>
-      <li><strong>3. Sonucu kullanın.</strong> Değeri kurgu programınıza yazın, FFmpeg komutunu kopyalayın ya da hesabın bağlantısını paylaşın.</li>
-    </ol>
-
-    <form class="tool" data-calc onsubmit="return false" novalidate>
+    <form id="arac" class="tool" data-calc onsubmit="return false" novalidate>
       <fieldset class="modes">
         <legend>Ne hesaplamak istiyorsunuz?</legend>
         <div class="chips">
@@ -259,6 +253,11 @@ const ytRows = (["2160", "1440", "1080", "720"] as const).map((r) => ({
       </div>
       <noscript><p class="warn">Hesaplayıcı için JavaScript gerekli. Aşağıdaki tablolar ve formül JavaScript olmadan da kullanılabilir.</p></noscript>
     </form>
+    <ol class="at-steps" aria-label="Nasıl kullanılır">
+      <li><strong>Ne hesaplayacağınızı seçin.</strong> Dosya boyutu, hedef boyuta göre bitrate ya da kart kayıt süresi.</li>
+      <li><strong>Değerleri girin.</strong> Bitrate'i bilmiyorsanız platform ve çözünürlük seçip önerilen değeri tek tıkla doldurun.</li>
+      <li><strong>Sonucu kullanın.</strong> Değeri kurgu programınıza yazın, FFmpeg komutunu kopyalayın ya da hesabın bağlantısını paylaşın.</li>
+    </ol>
   </Section>
 
   <Section width="default" space="tight" id="formul">
@@ -326,21 +325,13 @@ const ytRows = (["2160", "1440", "1080", "720"] as const).map((r) => ({
 
   <Section width="default" space="tight" id="sss">
     <SectionHeading eyebrow="SSS">Sık sorulan sorular</SectionHeading>
-    <dl class="faq">
-      {
-        faqs.map((f) => (
-          <div class="faq__item">
-            <dt>{f.question}</dt>
-            <dd>{f.answer}</dd>
-          </div>
-        ))
-      }
-    </dl>
+    <ToolFaq faqs={faqs} />
   </Section>
 
   <Section width="default" space="tight" id="kaynak-goster">
-    <div class="cite">
-      <h2>Bu aracı sitende kullan / kaynak göster</h2>
+    <details class="at-fold">
+      <summary><h2>Bu aracı sitende kullan / kaynak göster</h2></summary>
+      <div class="at-fold__body cite">
       <p>
         Bir yazıda, ders notunda ya da kaynak listesinde bu hesaplayıcıya yer vermek isterseniz aşağıdaki bağlantıyı
         kopyalayabilirsiniz.
@@ -352,10 +343,13 @@ const ytRows = (["2160", "1440", "1080", "720"] as const).map((r) => ({
       <button type="button" class="ev-btn" data-copy>Kopyala</button>
       <span class="small" data-cite-copied aria-live="polite"></span>
     </div>
+    </details>
   </Section>
 
   <Section width="default" space="tight" id="kaynaklar">
-    <SectionHeading eyebrow="Şeffaflık">Kaynaklar</SectionHeading>
+    <details class="at-fold">
+      <summary><h2>Kaynaklar</h2></summary>
+      <div class="at-fold__body">
     <p>Referans değerler aşağıdaki resmî sayfalardan alındı. Son kontrol: {CHECKED}.</p>
     <ul class="sources">
       {
@@ -371,18 +365,11 @@ const ytRows = (["2160", "1440", "1080", "720"] as const).map((r) => ({
       PCM ses değerleri hesaplanmıştır (48.000 örnek × bit derinliği × 2 kanal). Platform adları sahiplerinin ticari
       markalarıdır; bu araç hiçbir platformla bağlantılı değildir.
     </p>
+      </div>
+    </details>
   </Section>
 
-  <Section width="default" space="tight">
-    <div class="related">
-      <h2>İlgili ücretsiz araçlar</h2>
-      <ul>
-        <li><a href="/rehber/video-export-ayarlari/">1080p ve 4K için video export ayarları rehberi</a></li>
-        <li><a href="/araclar/guvenli-alan/">Reels, TikTok ve Shorts güvenli alan kontrolü</a></li>
-        <li><a href="/araclar/en-boy-orani/">En-boy oranı hesaplayıcı</a></li>
-      </ul>
-    </div>
-  </Section>
+  <MoreTools current="/araclar/bitrate-hesaplayici/" />
 
   <Section width="default" space="tight">
     <div class="cta">
@@ -950,7 +937,7 @@ const ytRows = (["2160", "1440", "1080", "720"] as const).map((r) => ({
   }
   .sources a,
   #tablo a,
-  .cta a:not(.ev-btn),
+  .cta a:not(.ev-btn, .btn),
   .related a {
     color: var(--amber-text);
   }

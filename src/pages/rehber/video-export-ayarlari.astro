@@ -13,6 +13,9 @@ import Button from "../../components/Button.astro";
 import { PRIMARY_CTA, SITE } from "../../consts";
 import { breadcrumb, faqPage } from "../../lib/schema";
 import { YOUTUBE, VIMEO, PRORES, LIMITS, EXPORT_SOURCES, CHECKED } from "../../data/export-specs";
+import ToolHeader from "../../components/araclar/ToolHeader.astro";
+import MoreTools from "../../components/araclar/MoreTools.astro";
+import ToolFaq from "../../components/araclar/ToolFaq.astro";
 
 const PATH = "/rehber/video-export-ayarlari/";
 const PAGE_URL = new URL(PATH, SITE.url).href;
@@ -170,20 +173,20 @@ const jsonLd = [
 
 <BaseLayout title={title} description={description} jsonLd={jsonLd} ogType="article">
   <Section width="wide" space="tight">
-    <nav class="crumbs" aria-label="Sayfa yolu">
-      <a href="/">Ana sayfa</a> <span aria-hidden="true">/</span> <a href="/araclar/">Araçlar</a>
-      <span aria-hidden="true">/</span> <span aria-current="page">Video export ayarları</span>
-    </nav>
-    <SectionHeading as="h1" eyebrow="Rehber · Ücretsiz kopya kâğıdı">
-      1080p ve 4K için video export ayarları
-      <Fragment slot="intro">
+    <ToolHeader
+      href="/rehber/video-export-ayarlari/"
+      h1="1080p ve 4K için video export ayarları"
+      cta={{ href: DL + PDF, label: "Kopya kâğıdı (PDF)", download: true }}
+      cta2={{ href: "#platformlar", label: "Platform tablosu" }}
+      badgeExtra="Ücretsiz · PDF kopya kâğıdı"
+    >
         <p>
           Kurgu bitti, sıra dışa aktarmada: hangi codec, kaç Mbps, hangi kare hızı? Bu rehber YouTube, Vimeo, Instagram
           Reels ve TikTok için 1080p ve 4K ayarlarını platformların kendi belgelerine dayanarak tek sayfada topluyor.
           Resmî değerlerle bizim önerimizi ayrı gösteriyoruz. Son kontrol: {CHECKED}.
         </p>
-      </Fragment>
-    </SectionHeading>
+      
+    </ToolHeader>
 
     <div class="quick">
       {
@@ -439,21 +442,13 @@ const jsonLd = [
 
   <Section width="default" space="tight" id="sss">
     <SectionHeading eyebrow="SSS">Sık sorulan sorular</SectionHeading>
-    <dl class="faq">
-      {
-        faqs.map((q) => (
-          <div class="faq__item">
-            <dt>{q.question}</dt>
-            <dd>{q.answer}</dd>
-          </div>
-        ))
-      }
-    </dl>
+    <ToolFaq faqs={faqs} />
   </Section>
 
   <Section width="default" space="tight" id="kaynak-goster">
-    <div class="cite">
-      <h2>Bu rehberi kaynak göster</h2>
+    <details class="at-fold">
+      <summary><h2>Bu rehberi kaynak göster</h2></summary>
+      <div class="at-fold__body cite">
       <p>
         Bir yazıda, eğitimde ya da forum cevabında bu rehbere yer vermek isterseniz aşağıdaki bağlantıyı kopyalayabilirsiniz.
         Kopya kâğıdını paylaşırken atıf satırı: <em>“Video export ayarları: Rast Creative Studio — rastcreative.com”</em>.
@@ -465,10 +460,13 @@ const jsonLd = [
       <button type="button" class="ev-btn" data-copy>Kopyala</button>
       <span class="small" data-copied aria-live="polite"></span>
     </div>
+    </details>
   </Section>
 
   <Section width="default" space="tight" id="kaynaklar">
-    <SectionHeading eyebrow="Şeffaflık">Kaynaklar</SectionHeading>
+    <details class="at-fold">
+      <summary><h2>Kaynaklar</h2></summary>
+      <div class="at-fold__body">
     <p>Platform değerleri aşağıdaki resmî sayfalardan alındı; “Rast önerisi” olarak işaretlenen değerler bizim tavsiyemizdir. Son kontrol: {CHECKED}.</p>
     <ul class="sources">
       {
@@ -484,19 +482,11 @@ const jsonLd = [
       Program menü adları sürüme ve dile göre değişebilir. Platform ve program adları sahiplerinin ticari
       markalarıdır; bu rehber hiçbiriyle bağlantılı değildir.
     </p>
+      </div>
+    </details>
   </Section>
 
-  <Section width="default" space="tight">
-    <div class="related">
-      <h2>İlgili ücretsiz araçlar</h2>
-      <ul>
-        <li><a href="/araclar/bitrate-hesaplayici/">Video bitrate ve dosya boyutu hesaplayıcı</a></li>
-        <li><a href="/araclar/guvenli-alan/">Reels, TikTok ve Shorts güvenli alan kontrolü</a></li>
-        <li><a href="/araclar/en-boy-orani/">En-boy oranı hesaplayıcı</a></li>
-        <li><a href="/araclar/altyazi-kontrolu/">Altyazı kontrolü</a></li>
-      </ul>
-    </div>
-  </Section>
+  <MoreTools current="/rehber/video-export-ayarlari/" />
 
   <Section width="default" space="tight">
     <div class="cta">
@@ -599,7 +589,7 @@ const jsonLd = [
   .prose a,
   .tips a,
   .sources a,
-  .cta a:not(.ev-btn),
+  .cta a:not(.ev-btn, .btn),
   .related a {
     color: var(--amber-text);
   }

@@ -1,0 +1,30 @@
+---
+/** "Diğer ücretsiz araçlar" strip: 4 gallery cards + link to /araclar/. */
+import Section from "../Section.astro";
+import ToolCard from "./ToolCard.astro";
+import { otherTools } from "../../data/araclar";
+import "../../styles/araclar.css";
+
+interface Props {
+  current: string;
+  count?: number;
+}
+const { current, count = 4 } = Astro.props;
+const items = otherTools(current, count);
+---
+
+<Section width="wide" space="tight" id="diger-araclar" class="at-more">
+  <div class="at-more__head">
+    <h2>Diğer ücretsiz araçlar</h2>
+    <a href="/araclar/">Tümünü gör <span aria-hidden="true">→</span></a>
+  </div>
+  <ul class="at-more__grid">
+    {
+      items.map((t) => (
+        <li>
+          <ToolCard item={t} as="h3" sizes="(min-width: 1180px) 290px, (min-width: 720px) 46vw, 92vw" />
+        </li>
+      ))
+    }
+  </ul>
+</Section>

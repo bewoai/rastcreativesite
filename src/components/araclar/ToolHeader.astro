@@ -1,0 +1,98 @@
+---
+/**
+ * Compact, tool-first page header for every /araclar/ page:
+ * breadcrumb · type badge · H1 · one-line purpose · 2–3 chips · primary CTA.
+ * The page's longer intro paragraph goes in the default slot and renders
+ * collapsed ("Ayrıntılar") so the tool itself starts above the fold.
+ * Pack/document pages can show the gallery preview on the right (preview).
+ */
+import "../../styles/araclar.css";
+import { aracByHref, TUR_LABEL } from "../../data/araclar";
+
+interface Props {
+  href: string;
+  /** Keep each page's existing, SEO-tuned H1 text. */
+  h1: string;
+  cta?: { href: string; label: string; download?: boolean };
+  /** Secondary link next to the CTA. */
+  cta2?: { href: string; label: string; download?: boolean };
+  /** Card preview on the right (default on). Tools hide it below 1000px so the tool stays above the fold. */
+  preview?: boolean;
+  /** Extra word in the badge, e.g. "Ücretsiz · CC BY 4.0". */
+  badgeExtra?: string;
+  crumb?: string;
+}
+const p = Astro.props;
+const item = aracByHref(p.href);
+const cta = p.cta ?? { href: "#arac", label: item.type === "arac" ? "Aracı kullan" : "İndir" };
+const badge = `${TUR_LABEL[item.type]} · ${p.badgeExtra ?? "Ücretsiz · Kayıt yok"}`;
+const hasMore = Astro.slots.has("default");
+const img = `/araclar/kartlar/${item.slug}`;
+const preview = p.preview ?? true;
+const isAnchor = (h: string) => h.startsWith("#");
+---
+
+<header class:list={["th", { "th--media": preview, "th--tool": item.type === "arac" }]}>
+  <nav class="th__crumbs" aria-label="Sayfa yolu">
+    <a href="/">Ana sayfa</a> <span aria-hidden="true">/</span> <a href="/araclar/">Araçlar</a>
+    <span aria-hidden="true">/</span> <span aria-current="page">{p.crumb ?? item.title}</span>
+  </nav>
+  <div class="th__grid">
+    <div class="th__text">
+      <p class="th__badge"><span aria-hidden="true"></span>{badge}</p>
+      <h1 class="th__title">{p.h1}</h1>
+      <p class="th__purpose">{item.purpose}</p>
+      <ul class="th__chips" aria-label="Özellikler">
+        {item.chips.map((c) => <li>{c}</li>)}
+      </ul>
+      <div class="th__actions">
+        <a class="ev-btn ev-btn--sun" href={cta.href} download={cta.download ? "" : undefined}>
+          {cta.label}
+          <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true">
+            {
+              cta.download || !isAnchor(cta.href) ? (
+                <path d="M8 2v9m0 0 3.5-3.5M8 11 4.5 7.5M3 14h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+              ) : (
+                <path d="M8 2v11m0 0 4-4m-4 4-4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+              )
+            }
+          </svg>
+        </a>
+        {
+          p.cta2 && (
+            <a class="ev-btn" href={p.cta2.href} download={p.cta2.download ? "" : undefined}>
+              {p.cta2.label}
+            </a>
+          )
+        }
+      </div>
+      {
+        hasMore && (
+          <details class="th__more">
+            <summary>Ayrıntılar</summary>
+            <div class="th__moretext">
+              <slot />
+            </div>
+          </details>
+        )
+      }
+    </div>
+    {
+      preview && (
+        <figure class="th__media">
+          <img
+            src={`${img}.webp`}
+            srcset={`${img}-480.webp 480w, ${img}.webp 960w`}
+            sizes="(min-width: 1000px) 460px, 92vw"
+            width="960"
+            height="720"
+            alt={`${item.name}: önizleme`}
+            loading={item.type === "arac" ? "lazy" : "eager"}
+            fetchpriority={item.type === "arac" ? undefined : "high"}
+            decoding="async"
+          />
+        </figure>
+      )
+    }
+  </div>
+</header>

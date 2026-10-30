@@ -11,6 +11,7 @@ import Extras from "./_yaratici/Extras.astro";
 import { SITE } from "../../consts";
 import { breadcrumb, faqPage } from "../../lib/schema";
 import "./_yaratici/tool.css";
+import ToolHeader from "../../components/araclar/ToolHeader.astro";
 
 const PATH = "/araclar/instagram-grid-sablonu/";
 const PAGE_URL = new URL(PATH, SITE.url).href;
@@ -120,28 +121,20 @@ const jsonLd = [
 <BaseLayout title={title} description={description} jsonLd={jsonLd}>
   <div class="yt-page">
     <Section width="wide" space="tight">
-      <nav class="crumbs" aria-label="Sayfa yolu">
-        <a href="/">Ana sayfa</a> <span aria-hidden="true">/</span> <a href="/araclar/">Araçlar</a>
-        <span aria-hidden="true">/</span> <span aria-current="page">Instagram grid şablonu</span>
-      </nav>
-      <SectionHeading as="h1" eyebrow="Araç + şablon · Ücretsiz">
-        Instagram profil ızgarası (3:4) önizleme ve Reels kapak rehberi
-        <Fragment slot="intro">
+      <ToolHeader
+        href="/araclar/instagram-grid-sablonu/"
+        h1="Instagram profil ızgarası (3:4) önizleme ve Reels kapak rehberi"
+        cta={{ href: "#arac", label: "Önizlemeyi aç" }}
+      >
           <p>
             Profil ızgarası artık kare değil, 3:4. Reels kapağınızdaki başlık ızgarada kesiliyor mu, yeni gönderi
             diğerleriyle uyumlu mu? Kapaklarınızı ve gönderilerinizi yükleyin, profilde nasıl görüneceklerini yayından önce
             görün. Altta katmanlı PNG şablonlar ve Canva/Figma ölçüleri var. <strong>Görselleriniz tarayıcınızdan çıkmaz.</strong>
           </p>
-        </Fragment>
-      </SectionHeading>
+        
+      </ToolHeader>
 
-      <ol class="howto" aria-label="Nasıl kullanılır">
-        <li><strong>1. Görselleri seçin.</strong> En fazla 9 kapak ya da gönderi (JPG, PNG, WebP). İlk seçtiğiniz, profilde en yeni (sol üst) olur.</li>
-        <li><strong>2. Kırpmayı ayarlayın.</strong> Bir kutuya tıklayın; sağdaki 9:16 görünümde turuncu 3:4 çerçeveyi sürükleyerek ızgarada görünecek bölümü seçin.</li>
-        <li><strong>3. Kontrol edin, indirin.</strong> Başlık yeşil alanda mı? Izgara önizlemesini PNG olarak indirin; uygulamada aynı konumu “profil kırpması” ile seçin.</li>
-      </ol>
-
-      <div class="yt-tool yt-tool--split" data-tool>
+      <div id="arac" class="yt-tool yt-tool--split" data-tool>
         <div class="yt-stage">
           <label class="yt-drop" data-drop>
             <input type="file" class="yt-sr" data-file multiple accept="image/jpeg,image/png,image/webp" />
@@ -174,6 +167,11 @@ const jsonLd = [
           </div>
         </div>
       </div>
+      <ol class="at-steps" aria-label="Nasıl kullanılır">
+        <li><strong>Görselleri seçin.</strong> En fazla 9 kapak ya da gönderi (JPG, PNG, WebP). İlk seçtiğiniz, profilde en yeni (sol üst) olur.</li>
+        <li><strong>Kırpmayı ayarlayın.</strong> Bir kutuya tıklayın; sağdaki 9:16 görünümde turuncu 3:4 çerçeveyi sürükleyerek ızgarada görünecek bölümü seçin.</li>
+        <li><strong>Kontrol edin, indirin.</strong> Başlık yeşil alanda mı? Izgara önizlemesini PNG olarak indirin; uygulamada aynı konumu “profil kırpması” ile seçin.</li>
+      </ol>
     </Section>
 
     <Section width="default" space="tight" id="olculer">

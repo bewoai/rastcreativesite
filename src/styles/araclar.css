@@ -1,0 +1,356 @@
+/*
+  Araçlar (/araclar/*) — shared tool-page pieces: compact ToolHeader, numbered
+  step cards, collapsible long sections, FAQ accordion, "Diğer ücretsiz araçlar"
+  strip. Imported by the components in src/components/araclar/. Uses the Evren
+  tokens (fog, glass, sun) from tokens.css / evren.css.
+*/
+
+/* ───── ToolHeader ───── */
+.th {
+  margin-bottom: clamp(1.4rem, 3vw, 2.2rem);
+}
+.th__crumbs {
+  margin-bottom: 1rem;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+.th__crumbs a {
+  color: var(--amber-text);
+}
+.th__grid {
+  display: grid;
+  gap: clamp(1.2rem, 3vw, 2.6rem);
+  align-items: center;
+}
+@media (min-width: 1000px) {
+  .th--media .th__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 460px);
+  }
+}
+.th__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0 0 0.85rem;
+  padding: 0.42rem 0.8rem 0.4rem;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--on-ink, #faf9f6);
+  font: 700 0.72rem/1 var(--font-utility);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.th__badge span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff6a1a;
+  box-shadow: 0 0 8px #ff6a1a;
+}
+.th__title {
+  margin: 0;
+  max-width: 22ch;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 1.3rem + 2.6vw, 3.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+.th__purpose {
+  margin: 0.8rem 0 0;
+  max-width: 56ch;
+  font-size: clamp(1.05rem, 1rem + 0.3vw, 1.2rem);
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.th__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.th__chips li {
+  padding: 0.34rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: rgba(255, 255, 255, 0.4);
+  font: 600 0.8rem/1.2 var(--font-utility);
+  color: var(--ink);
+}
+.th__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.25rem;
+}
+.th__actions .ev-btn svg {
+  margin-left: 0.15rem;
+}
+.th__more {
+  margin-top: 1.1rem;
+  max-width: 62ch;
+  color: var(--ink-soft);
+}
+.th__more summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  cursor: pointer;
+  font: 600 0.92rem/1 var(--font-utility);
+  color: var(--ink-soft);
+  list-style: none;
+}
+.th__more summary::-webkit-details-marker {
+  display: none;
+}
+.th__more summary::after {
+  content: "+";
+  font-size: 1.1rem;
+  color: var(--amber-text);
+}
+.th__more[open] summary::after {
+  content: "–";
+}
+.th__moretext p {
+  margin: 0 0 0.6rem;
+  line-height: var(--leading-body);
+}
+.th__media {
+  margin: 0;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: #15120f;
+  box-shadow: 0 34px 60px -34px rgba(60, 36, 16, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.5);
+}
+.th__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+@media (max-width: 999px) {
+  .th__media {
+    max-width: 520px;
+  }
+}
+
+/* ───── Numbered step cards (was a 3-paragraph list) ───── */
+.at-steps {
+  counter-reset: at-step;
+  display: grid;
+  gap: 0.8rem;
+  margin: clamp(1.4rem, 3vw, 2rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 820px) {
+  .at-steps {
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  }
+}
+.at-steps > li {
+  counter-increment: at-step;
+  position: relative;
+  padding: 1rem 1.1rem 1.05rem 3.6rem;
+  border-radius: 1rem;
+  background: var(--glass, rgba(250, 246, 240, 0.5));
+  border: 1px solid var(--edge, rgba(255, 255, 255, 0.62));
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.at-steps > li::before {
+  content: counter(at-step);
+  position: absolute;
+  left: 1rem;
+  top: 0.85rem;
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  background: var(--amber);
+  color: #fff;
+  font: 700 0.95rem/1 var(--font-utility);
+}
+.at-steps > li strong {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--ink);
+  font-size: 1rem;
+}
+
+/* ───── Collapsible long sections (sources, citation, English) ───── */
+.at-fold {
+  border-radius: 1rem;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--paper) 55%, transparent);
+}
+.at-fold > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 56px;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  list-style: none;
+}
+.at-fold > summary::-webkit-details-marker {
+  display: none;
+}
+.at-fold > summary h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 1rem + 0.5vw, 1.4rem);
+}
+.at-fold > summary::after {
+  content: "+";
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  color: var(--amber-text);
+  font-size: 1.1rem;
+}
+.at-fold[open] > summary::after {
+  content: "–";
+}
+.at-fold > .at-fold__body {
+  padding: 0 1.2rem 1.2rem;
+}
+
+/* ───── FAQ accordion ───── */
+.at-faq {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 1.4rem;
+}
+.at-faq details {
+  border-radius: 1rem;
+  border: 1px solid var(--edge, rgba(255, 255, 255, 0.62));
+  background: var(--glass, rgba(250, 246, 240, 0.5));
+}
+.at-faq summary {
+  position: relative;
+  display: block;
+  padding: 1rem 3.2rem 1rem 1.2rem;
+  cursor: pointer;
+  font-weight: 650;
+  color: var(--ink);
+  line-height: 1.4;
+  list-style: none;
+}
+.at-faq summary::-webkit-details-marker {
+  display: none;
+}
+.at-faq summary::after {
+  content: "+";
+  position: absolute;
+  right: 1.1rem;
+  top: 50%;
+  translate: 0 -50%;
+  color: var(--amber-text);
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+.at-faq details[open] summary::after {
+  content: "–";
+}
+.at-faq details p {
+  margin: 0;
+  padding: 0 1.2rem 1.1rem;
+  color: var(--ink-soft);
+  line-height: var(--leading-body);
+}
+
+/* ───── "Diğer ücretsiz araçlar" strip ───── */
+.at-more__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem 1.2rem;
+}
+.at-more__head h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.3rem);
+}
+.at-more__head a {
+  font-weight: 650;
+  color: var(--amber-text);
+}
+.at-more__grid {
+  display: grid;
+  gap: 1rem;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 720px) {
+  .at-more__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1180px) {
+  .at-more__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (max-width: 719px) {
+  /* phones: a swipeable row keeps the strip visual without a tall stack */
+  .at-more__grid {
+    grid-auto-flow: column;
+    grid-auto-columns: 78%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 0.6rem;
+    margin-inline: calc(-1 * var(--container-pad));
+    padding-inline: var(--container-pad);
+    scroll-padding-inline: var(--container-pad);
+  }
+  .at-more__grid > li {
+    scroll-snap-align: start;
+  }
+}
+/* old box styles inside a fold: the fold is the box now */
+.at-fold > .at-fold__body.cite,
+.at-fold > .at-fold__body.box,
+.at-fold > .at-fold__body.yt-box,
+.at-fold > .at-fold__body.en {
+  margin: 0;
+  padding: 0 1.2rem 1.2rem;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+/* a section that only holds a collapsed fold doesn't need full section padding */
+.section:has(> .section__inner > .at-fold:only-child) {
+  padding-block: 0.35rem;
+}
+.section:has(> .section__inner > .at-fold:only-child) + .section:not(:has(> .section__inner > .at-fold:only-child)) {
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+@media (max-width: 999px) {
+  .th--tool .th__media {
+    display: none;
+  }
+}
+@media (max-width: 599px) {
+  /* the tool starts right under the header on phones; the jump link only adds height */
+  .th--tool .th__actions .ev-btn--sun[href="#arac"] {
+    display: none;
+  }
+  .th--tool .th__actions:not(:has(.ev-btn:not(.ev-btn--sun))) {
+    display: none;
+  }
+}

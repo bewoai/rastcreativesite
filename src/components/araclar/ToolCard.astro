@@ -1,0 +1,215 @@
+---
+/**
+ * Gallery card for one free tool/template/document/pack (src/data/araclar.ts).
+ * Whole card is one link; the preview is a real capture of the tool in action
+ * (public/araclar/kartlar/<slug>.webp, 960×720 + 480w). Used on /araclar/ and in
+ * the "Diğer ücretsiz araçlar" strip on every tool page.
+ */
+import { TUR_LABEL, ctaLabel, type Arac } from "../../data/araclar";
+
+interface Props {
+  item: Arac;
+  /** Heading level inside the card (h2 on the index, h3 in strips). */
+  as?: "h2" | "h3";
+  /** Above-the-fold cards load eagerly. */
+  eager?: boolean;
+  /** Slightly smaller sizes hint for 4-up strips. */
+  sizes?: string;
+}
+const { item, as: Tag = "h2", eager = false, sizes = "(min-width: 1180px) 370px, (min-width: 720px) 46vw, 92vw" } = Astro.props;
+const img = `/araclar/kartlar/${item.slug}`;
+const cta = ctaLabel(item.type);
+---
+
+<a class="tc" href={item.href} data-type={item.type}>
+  <span class="tc__media">
+    <img
+      src={`${img}.webp`}
+      srcset={`${img}-480.webp 480w, ${img}.webp 960w`}
+      sizes={sizes}
+      width="960"
+      height="720"
+      alt={`${item.name}: önizleme`}
+      loading={eager ? "eager" : "lazy"}
+      decoding="async"
+    />
+    <span class="tc__badge">{TUR_LABEL[item.type]}</span>
+  </span>
+  <span class="tc__body">
+    <Tag class="tc__title">{item.title}</Tag>
+    <span class="tc__benefit">{item.benefit}</span>
+    <span class="tc__chips">
+      {item.chips.map((c) => <span>{c}</span>)}
+    </span>
+    <span class:list={["tc__go", { "is-dl": cta === "İndir" }]} aria-hidden="true">
+      {cta}
+      <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+        {
+          cta === "İndir" ? (
+            <path d="M8 2v9m0 0 3.5-3.5M8 11 4.5 7.5M3 14h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          ) : (
+            <path d="M3 8h10m0 0-4-4m4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          )
+        }
+      </svg>
+    </span>
+  </span>
+</a>
+
+<style>
+  .tc {
+    --tc-r: 1.25rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-radius: var(--tc-r);
+    overflow: hidden;
+    color: var(--ink);
+    text-decoration: none;
+    background: var(--glass-strong, rgba(250, 246, 240, 0.74));
+    border: 1px solid var(--edge, rgba(255, 255, 255, 0.62));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.7),
+      0 22px 44px -32px rgba(96, 62, 30, 0.45);
+    transition:
+      transform var(--dur, 280ms) var(--ease-out, ease),
+      box-shadow var(--dur, 280ms) var(--ease-out, ease);
+  }
+  .tc__media {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: #15120f;
+  }
+  .tc__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 600ms var(--ease-out, ease);
+  }
+  .tc__badge {
+    position: absolute;
+    left: 0.85rem;
+    top: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.38rem 0.7rem 0.36rem;
+    border-radius: 999px;
+    background: rgba(17, 15, 13, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #f4efe8;
+    font: 700 0.7rem/1 var(--font-utility);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+  .tc__badge::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #ff6a1a;
+    box-shadow: 0 0 8px #ff6a1a;
+  }
+  .tc__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.45rem;
+    padding: 1.05rem 1.15rem 1.15rem;
+  }
+  .tc__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 1.1rem + 0.45vw, 1.5rem);
+    font-weight: 600;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+  }
+  .tc__benefit {
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+    line-height: 1.4;
+  }
+  .tc__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 0.25rem 0 0.9rem;
+  }
+  .tc__chips span {
+    padding: 0.28rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.45);
+    font: 600 0.74rem/1.2 var(--font-utility);
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  .tc__go {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: auto;
+    min-height: 40px;
+    padding: 0.5rem 1.05rem;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--on-ink, #faf9f6);
+    font-weight: 700;
+    font-size: 0.92rem;
+    transition: background var(--dur-fast, 160ms) ease;
+  }
+  .tc__go.is-dl {
+    background: var(--amber);
+    color: #fff;
+  }
+  .tc__go svg {
+    transition: transform var(--dur, 280ms) var(--ease-out, ease);
+  }
+  .tc:hover,
+  .tc:focus-visible {
+    transform: translateY(-4px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.7),
+      0 34px 60px -30px rgba(96, 62, 30, 0.6),
+      0 0 0 1px color-mix(in srgb, var(--amber) 35%, transparent);
+  }
+  .tc:hover .tc__media img,
+  .tc:focus-visible .tc__media img {
+    transform: scale(1.045);
+  }
+  .tc:hover .tc__go svg,
+  .tc:focus-visible .tc__go svg {
+    transform: translateX(3px);
+  }
+  .tc:hover .tc__go.is-dl svg,
+  .tc:focus-visible .tc__go.is-dl svg {
+    transform: translateY(2px);
+  }
+  .tc:focus-visible {
+    outline: 3px solid var(--amber);
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tc,
+    .tc__media img,
+    .tc__go svg {
+      transition: none;
+    }
+    .tc:hover,
+    .tc:focus-visible {
+      transform: none;
+    }
+    .tc:hover .tc__media img,
+    .tc:focus-visible .tc__media img {
+      transform: none;
+    }
+  }
+</style>
