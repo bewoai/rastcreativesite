@@ -1,0 +1,759 @@
+---
+/**
+ * Guide: ideal export settings for 1080p and 4K (YouTube, Vimeo, Instagram,
+ * TikTok, ProRes master). Numbers come from src/data/export-specs.ts (official
+ * sources, shared with /araclar/bitrate-hesaplayici/). Downloadable cheat
+ * sheet: public/rehber/video-export-ayarlari/ (scripts/generate-export-cheatsheet.py).
+ * "Rast önerisi" values are our recommendation, labelled as such on the page.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Section from "../../components/Section.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import Button from "../../components/Button.astro";
+import { PRIMARY_CTA, SITE } from "../../consts";
+import { breadcrumb, faqPage } from "../../lib/schema";
+import { YOUTUBE, VIMEO, PRORES, LIMITS, EXPORT_SOURCES, CHECKED } from "../../data/export-specs";
+
+const PATH = "/rehber/video-export-ayarlari/";
+const PAGE_URL = new URL(PATH, SITE.url).href;
+const title = "1080p ve 4K Video Export Ayarları Rehberi";
+const description =
+  "1080p ve 4K için ideal video export ayarları: YouTube, Vimeo, Instagram Reels ve TikTok için codec, bitrate, kare hızı, ses, renk ve program adımları.";
+const PUBLISHED = "2026-10-30";
+const DL = "/rehber/video-export-ayarlari/";
+const PDF = "rast-video-export-ayarlari.pdf";
+const PNG = "rast-video-export-ayarlari.png";
+
+const f = (n: number) => String(n).replace(".", ",");
+const r = (x: readonly number[]) => (x[0] === x[1] ? f(x[0]) : `${f(x[0])}–${f(x[1])}`);
+const pr = (res: string, fps: string, i: number) => PRORES[res][fps][i];
+
+const quick = [
+  {
+    h: "1080p (Full HD)",
+    items: [
+      ["Çözünürlük", "1920×1080 yatay · 1080×1920 dikey"],
+      ["Kapsayıcı / codec", "MP4 · H.264, High profil"],
+      ["Kare hızı", "Çekildiği gibi (25, 30, 50, 60), sabit"],
+      ["Bitrate", "VBR 2 geçiş · 25/30 fps: hedef 16 Mbps · 50/60 fps: hedef 24 Mbps"],
+      ["Renk", "Rec.709 · 4:2:0 · 8-bit"],
+      ["Ses", "AAC-LC · 48 kHz · stereo · 320 kbps"],
+    ],
+  },
+  {
+    h: "4K (UHD)",
+    items: [
+      ["Çözünürlük", "3840×2160 yatay · 2160×3840 dikey"],
+      ["Kapsayıcı / codec", "MP4 · H.264 High ya da H.265 (HEVC)"],
+      ["Kare hızı", "Çekildiği gibi, sabit"],
+      ["Bitrate", "VBR 2 geçiş · 25/30 fps: hedef 45 Mbps · 50/60 fps: hedef 68 Mbps"],
+      ["Renk", "SDR: Rec.709 · HDR: Rec.2020 + PQ ya da HLG, 10-bit"],
+      ["Ses", "AAC-LC · 48 kHz · stereo · 320 kbps"],
+    ],
+  },
+];
+
+const steps = [
+  {
+    name: "Kaynağı kontrol edin",
+    text: "Zaman çizelgesinin çözünürlüğü ve kare hızı çekimle aynı olsun. Telefon görüntüsü değişken kare hızlıysa (VFR) kurguya almadan önce sabit kare hızına çevirin.",
+  },
+  {
+    name: "Kapsayıcı ve codec'i seçin",
+    text: "Teslim dosyası için MP4 içinde H.264 (High profil) seçin. 4K ve HDR işlerde H.265 (HEVC) daha küçük dosya verir; arşiv için ProRes 422 HQ .mov kullanın.",
+  },
+  {
+    name: "Çözünürlük ve kare hızını sabitleyin",
+    text: "Çözünürlüğü zaman çizelgesiyle aynı bırakın, kare hızını değiştirmeyin (25 fps çekimi 30'a çevirmeyin). Piksel oranı kare (1,0) olsun.",
+  },
+  {
+    name: "Bitrate'i ayarlayın",
+    text: "Bitrate modunu VBR, 2 geçiş yapın. Hedef bitrate'i tablodaki değere, maksimum bitrate'i hedefin yaklaşık 1,5 katına yazın. Boyut sınırı varsa bitrate hesaplayıcıyı kullanın.",
+  },
+  {
+    name: "Rengi ve sesi ayarlayın",
+    text: "SDR işlerde Rec.709, 4:2:0, 8-bit kullanın. Sesi AAC-LC, 48 kHz, stereo, 320 kbps yapın.",
+  },
+  {
+    name: "Dışa aktarın ve kontrol edin",
+    text: "“Hızlı başlat” (Fast Start) seçeneği varsa açın. Dosyayı yayınlamadan önce telefonda ve bilgisayarda baştan sona izleyin; bantlaşma, takılma ve ses kayması arayın.",
+  },
+];
+
+const faqs = [
+  {
+    question: "1080p video için en iyi export ayarı nedir?",
+    answer: `MP4 kapsayıcı, H.264 High profil, 1920×1080 (dikeyde 1080×1920), çekildiği kare hızında sabit fps, VBR 2 geçiş ve AAC-LC 48 kHz stereo ses. YouTube 1080p için 24/25/30 fps'te ${r(YOUTUBE.sdr["1080"].std)} Mbps, 50/60 fps'te ${r(YOUTUBE.sdr["1080"].high)} Mbps; Vimeo ${r(VIMEO["1080"])} Mbps öneriyor. Biz platform yeniden sıkıştırdığı için 25/30 fps'te 16 Mbps hedefliyoruz.`,
+  },
+  {
+    question: "4K video export ayarları nasıl olmalı?",
+    answer: `3840×2160, H.264 High ya da H.265 (HEVC), VBR 2 geçiş. YouTube 4K SDR için 24/25/30 fps'te ${r(YOUTUBE.sdr["2160"].std)} Mbps, 48/50/60 fps'te ${r(YOUTUBE.sdr["2160"].high)} Mbps; HDR için ${r(YOUTUBE.hdr["2160"].std)} ve ${r(YOUTUBE.hdr["2160"].high)} Mbps öneriyor. Vimeo 4K için ${r(VIMEO["2160"])} Mbps aralığını veriyor.`,
+  },
+  {
+    question: "Instagram Reels için hangi ayarla dışa aktarmalıyım?",
+    answer: `9:16 dikey, 1080×1920, H.264, MP4 ya da MOV, AAC stereo ses. Instagram Yardım Merkezi Reels için en az ${LIMITS.instagramMinFps} FPS ve en az 720 piksel istiyor; Meta reklam rehberi sabit kare hızı, kare piksel, progresif tarama, 128 kbps üstü stereo AAC ve en fazla ${LIMITS.metaMaxGB} GB öneriyor (reklamlarda önerilen çözünürlük 1440×2560). Meta organik Reels için bir bitrate değeri yayımlamıyor.`,
+  },
+  {
+    question: "H.264 mü H.265 (HEVC) mi seçmeliyim?",
+    answer:
+      "Her yerde sorunsuz açılması gereken teslim dosyası için H.264. H.265 aynı kalitede genellikle daha küçük dosya verir ve 4K ile HDR'de avantajlıdır; YouTube ve Vimeo kabul eder, ancak eski bilgisayarlarda ve bazı tarayıcılarda oynatma sorunu çıkabilir. Kazanç içeriğe göre değiştiği için kesin bir yüzde vermiyoruz.",
+  },
+  {
+    question: "CBR mi VBR mi kullanmalıyım?",
+    answer:
+      "Dosya yükleyecekseniz VBR (değişken bitrate), mümkünse 2 geçiş. YouTube ve Vimeo değişken bitrate öneriyor; VBR sahne sakin olduğunda veri biriktirip hareketli sahnelerde harcar. CBR (sabit bitrate) canlı yayında anlamlıdır. Vimeo kalite odaklı kodlamada CRF değerini 18 ya da altında tutmayı öneriyor.",
+  },
+  {
+    question: "Yükledikten sonra video neden bulanık görünüyor?",
+    answer:
+      "Platformlar her yüklemeyi kendi ayarlarıyla yeniden sıkıştırır. Çok düşük bitrate'le dışa aktarılan dosya bu ikinci sıkıştırmada daha da bozulur, bu yüzden kaynak dosyayı önerilen değerin biraz üstünde verin. YouTube'da yüksek çözünürlüklü sürümler yüklemeden bir süre sonra hazır olur; Instagram'da “En yüksek kalitede yükle” ayarını açın.",
+  },
+  {
+    question: "Videonun ana kopyasını nasıl arşivlemeliyim?",
+    answer: `Teslim MP4'ünden ayrı olarak ProRes 422 HQ .mov bir master saklayın. Apple'ın verdiği hedef değerlere göre 1080p 25 fps ProRes 422 HQ yaklaşık ${pr("1920x1080", "25", 3)} Mbps (saatte ≈83 GB), 4K UHD 25 fps yaklaşık ${pr("3840x2160", "25", 3)} Mbps (saatte ≈332 GB) tutar. Sonradan farklı platformlara bu dosyadan dışa aktarırsınız.`,
+  },
+];
+
+const citeHtml = `<a href="${PAGE_URL}">Video export ayarları rehberi — Rast Creative</a>`;
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Araçlar", path: "/araclar/" },
+    { name: "Video export ayarları", path: PATH },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    headline: "1080p ve 4K video export ayarları: YouTube, Vimeo, Instagram ve TikTok",
+    description,
+    url: PAGE_URL,
+    mainEntityOfPage: PAGE_URL,
+    inLanguage: "tr",
+    datePublished: PUBLISHED,
+    dateModified: PUBLISHED,
+    author: { "@id": `${SITE.url}#organization` },
+    publisher: { "@id": `${SITE.url}#organization` },
+    about: ["Video dışa aktarma", "Bitrate", "H.264", "H.265", "Apple ProRes"],
+    citation: EXPORT_SOURCES.map((s) => s.url),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: "1080p ve 4K video nasıl dışa aktarılır?",
+    description: "Teslim dosyası için codec, kare hızı, bitrate, renk ve ses ayarı adımları.",
+    inLanguage: "tr",
+    totalTime: "PT10M",
+    step: steps.map((s, i) => ({
+      "@type": "HowToStep",
+      position: i + 1,
+      name: s.name,
+      text: s.text,
+      url: `${PAGE_URL}#adim-${i + 1}`,
+    })),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: "Video export ayarları kopya kâğıdı (PDF/PNG)",
+    url: `${SITE.url}${DL}${PDF}`,
+    encodingFormat: "application/pdf",
+    inLanguage: "tr",
+    isAccessibleForFree: true,
+    license: "https://creativecommons.org/licenses/by/4.0/deed.tr",
+    creator: { "@id": `${SITE.url}#organization` },
+    isPartOf: PAGE_URL,
+  },
+  faqPage(faqs),
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd} ogType="article">
+  <Section width="wide" space="tight">
+    <nav class="crumbs" aria-label="Sayfa yolu">
+      <a href="/">Ana sayfa</a> <span aria-hidden="true">/</span> <a href="/araclar/">Araçlar</a>
+      <span aria-hidden="true">/</span> <span aria-current="page">Video export ayarları</span>
+    </nav>
+    <SectionHeading as="h1" eyebrow="Rehber · Ücretsiz kopya kâğıdı">
+      1080p ve 4K için video export ayarları
+      <Fragment slot="intro">
+        <p>
+          Kurgu bitti, sıra dışa aktarmada: hangi codec, kaç Mbps, hangi kare hızı? Bu rehber YouTube, Vimeo, Instagram
+          Reels ve TikTok için 1080p ve 4K ayarlarını platformların kendi belgelerine dayanarak tek sayfada topluyor.
+          Resmî değerlerle bizim önerimizi ayrı gösteriyoruz. Son kontrol: {CHECKED}.
+        </p>
+      </Fragment>
+    </SectionHeading>
+
+    <div class="quick">
+      {
+        quick.map((q) => (
+          <article class="card">
+            <h2>{q.h}</h2>
+            <dl>
+              {q.items.map(([k, v]) => (
+                <div>
+                  <dt>{k}</dt>
+                  <dd>{v}</dd>
+                </div>
+              ))}
+            </dl>
+          </article>
+        ))
+      }
+    </div>
+    <p class="small">
+      Bitrate satırları <strong>Rast önerisidir</strong>: YouTube'un önerdiği değerlerin üstünde, Vimeo'nun aralığının
+      içinde kalacak şekilde seçtik; platform videoyu yeniden sıkıştırdığı için biraz pay bırakmak daha temiz sonuç verir.
+      Resmî değerler aşağıdaki tabloda.
+    </p>
+    <p class="dl">
+      <a class="ev-btn ev-btn--sun" href={DL + PDF} download>Kopya kâğıdını indir (PDF)</a>
+      <a class="ev-btn" href={DL + PNG} download>PNG olarak indir</a>
+      <a class="ev-btn" href="/araclar/bitrate-hesaplayici/">Bitrate hesaplayıcı</a>
+    </p>
+    <p class="small">
+      Kopya kâğıdı <a href="https://creativecommons.org/licenses/by/4.0/deed.tr" rel="license noopener" target="_blank">CC BY 4.0</a>
+      lisanslıdır: ekibinizle, öğrencilerinizle paylaşabilir, basabilirsiniz. Atıf: “Rast Creative Studio — rastcreative.com”.
+    </p>
+  </Section>
+
+  <Section width="default" space="tight" id="platformlar">
+    <SectionHeading eyebrow="Resmî değerler">Platforma göre export ayarları</SectionHeading>
+    <div class="tablewrap">
+      <table class="zt">
+        <caption>Platformların kendi yardım ve reklam sayfalarından, erişim {CHECKED}. “—” = platform değer yayımlamıyor.</caption>
+        <thead>
+          <tr>
+            <th scope="col">Platform</th>
+            <th scope="col">Codec / dosya</th>
+            <th scope="col">1080p bitrate</th>
+            <th scope="col">4K bitrate</th>
+            <th scope="col">Ses</th>
+            <th scope="col">Not</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">YouTube (SDR)</th>
+            <td>MP4 · H.264 High</td>
+            <td>{r(YOUTUBE.sdr["1080"].std)} Mbps (24–30 fps)<br />{r(YOUTUBE.sdr["1080"].high)} Mbps (48–60 fps)</td>
+            <td>{r(YOUTUBE.sdr["2160"].std)} Mbps<br />{r(YOUTUBE.sdr["2160"].high)} Mbps</td>
+            <td>AAC-LC 48 kHz · stereo {YOUTUBE.audioKbps.stereo} kbps</td>
+            <td>Kapalı GOP (fps'in yarısı), 2 B-kare, 4:2:0, BT.709, moov başta</td>
+          </tr>
+          <tr>
+            <th scope="row">YouTube (HDR)</th>
+            <td>MP4 · 10-bit</td>
+            <td>{r(YOUTUBE.hdr["1080"].std)} / {r(YOUTUBE.hdr["1080"].high)} Mbps</td>
+            <td>{r(YOUTUBE.hdr["2160"].std)} / {r(YOUTUBE.hdr["2160"].high)} Mbps</td>
+            <td>Aynı</td>
+            <td>480p ve altı HDR desteklenmiyor</td>
+          </tr>
+          <tr>
+            <th scope="row">Vimeo</th>
+            <td>H.264 High · ProRes 422 HQ · H.265</td>
+            <td>{r(VIMEO["1080"])} Mbps</td>
+            <td>{r(VIMEO["2160"])} Mbps</td>
+            <td>AAC-LC 48 kHz · {VIMEO.audioKbps} kb/s</td>
+            <td>Sabit kare hızı; CRF 18 ya da altı</td>
+          </tr>
+          <tr>
+            <th scope="row">Instagram Reels</th>
+            <td>MP4 / MOV · H.264</td>
+            <td>—</td>
+            <td>—</td>
+            <td>Stereo AAC 128 kbps+</td>
+            <td>9:16 1080×1920; en az {LIMITS.instagramMinFps} FPS ve 720 px; reklamda en fazla {LIMITS.metaMaxGB} GB</td>
+          </tr>
+          <tr>
+            <th scope="row">TikTok (reklam)</th>
+            <td>.mp4 / .mov</td>
+            <td colspan="2">En az {LIMITS.tiktokAdMinKbps} kbps; en fazla {LIMITS.tiktokAdMaxMB} MB</td>
+            <td>—</td>
+            <td>Dikey 9:16 en az 540×960</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small">
+      Instagram ve TikTok organik videolar için bitrate yayımlamıyor; bu platformlarda 1080p için yukarıdaki 1080p
+      önerimiz yeterlidir. Dikey videoda metnin arayüz altında kalmaması için
+      <a href="/araclar/guvenli-alan/">güvenli alan kontrolünü</a> kullanabilirsiniz.
+    </p>
+  </Section>
+
+  <Section width="default" space="tight" id="adimlar">
+    <SectionHeading eyebrow="Adım adım">Her programda aynı altı adım</SectionHeading>
+    <ol class="steps">
+      {
+        steps.map((s, i) => (
+          <li id={`adim-${i + 1}`}>
+            <strong>{s.name}.</strong> {s.text}
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
+
+  <Section width="default" space="tight" id="ayarlar">
+    <SectionHeading eyebrow="Ne işe yarar?">Export ayarları tek tek</SectionHeading>
+    <div class="prose">
+      <h3>Kapsayıcı: MP4 mü MOV mu?</h3>
+      <p>
+        Kapsayıcı, görüntü ve sesi taşıyan dosya kabıdır. Teslim için MP4 en uyumlu seçenektir; YouTube MP4 öneriyor ve
+        dosyanın başında “moov atom” bulunmasını (Fast Start / hızlı başlat) istiyor. MOV daha çok ProRes master için kullanılır.
+      </p>
+      <h3>Codec: H.264, H.265 ve ProRes</h3>
+      <p>
+        <strong>H.264</strong> her cihazda açılır, teslim dosyası için varsayılan tercihtir; profili “High” seçin (YouTube ve
+        Vimeo ikisi de High profil öneriyor). <strong>H.265 (HEVC)</strong> aynı kalitede genellikle daha küçük dosya verir,
+        4K ve HDR işlerde avantajlıdır; Vimeo, H.264'ün 4K'ya kadar desteklendiğini, H.265'in 8K'ya kadar çıktığını belirtiyor.
+        <strong>ProRes</strong> kurgu ve arşiv codec'idir; dosyası büyüktür ama kuşaklar boyunca kalite kaybetmez.
+      </p>
+      <h3>Bitrate modu: VBR 2 geçiş</h3>
+      <p>
+        VBR (değişken bitrate) sakin sahnelerde az, hareketli sahnelerde çok veri kullanır; 2 geçişte program önce videoyu
+        analiz eder, sonra kodlar. Yükleme için en iyi sonuç budur. Hedef bitrate'i tablodan alın, maksimumu hedefin yaklaşık
+        1,5 katı tutun. Kalite odaklı (CRF) kodlama yapan programlarda Vimeo CRF 18 ya da altını öneriyor. Dosyanın kaç MB
+        tutacağını <a href="/araclar/bitrate-hesaplayici/">bitrate hesaplayıcıyla</a> önceden görebilirsiniz.
+      </p>
+      <h3>Kare hızı: çekildiği gibi, sabit</h3>
+      <p>
+        YouTube içeriğin kaydedildiği kare hızında yüklenmesini, Vimeo sabit kare hızını öneriyor. 25 fps çekimi 30'a
+        çevirmek kare tekrarı ve takılma yaratır. Instagram'ın yardım sayfası Reels için en az {LIMITS.instagramMinFps} FPS
+        diyor: Instagram için özel çekiyorsanız baştan 30 ya da 60 fps çekin; elinizde 25 fps görüntü varsa kare hızını
+        değiştirmeden yükleyip telefonda kontrol edin. Türkiye'de şebeke 50 Hz olduğu için yapay ışık altında 30 fps
+        çekerken titreme görürseniz enstantaneyi 1/50 ya da 1/100'e alın.
+      </p>
+      <h3>Anahtar kare (GOP)</h3>
+      <p>
+        YouTube kapalı GOP ve kare hızının yarısı kadar GOP uzunluğu öneriyor: 25 fps'te yaklaşık 12–13, 30 fps'te 15, 60 fps'te
+        30 karede bir anahtar kare. Çoğu programda “otomatik” bırakmak da sorun çıkarmaz.
+      </p>
+      <h3>Renk: Rec.709, 4:2:0, 8-bit</h3>
+      <p>
+        SDR teslimde Rec.709 (BT.709) kullanın. YouTube renk etiketi eksikse BT.709 varsayıyor, tam aralığı (full range) sınırlı
+        aralığa çeviriyor ve HDR aktarım fonksiyonu olmadan gelen BT.2020 içeriği 8-bit BT.709'a dönüştürüyor. HDR teslim
+        ediyorsanız Rec.2020 ile PQ ya da HLG ve 10-bit kullanın.
+      </p>
+      <h3>Ses: AAC-LC, 48 kHz</h3>
+      <p>
+        YouTube AAC-LC (ya da Opus), 48 kHz ve stereo için {YOUTUBE.audioKbps.stereo} kbps; Vimeo AAC-LC, 48 kHz, {VIMEO.audioKbps} kb/s;
+        Meta 128 kbps üstü stereo AAC öneriyor. 320 kbps çoğu teslim için yeterli ve güvenli bir değerdir.
+      </p>
+    </div>
+  </Section>
+
+  <Section width="default" space="tight" id="programlar">
+    <SectionHeading eyebrow="Programlar">Premiere Pro, DaVinci Resolve, Final Cut Pro ve CapCut'ta nereden ayarlanır?</SectionHeading>
+    <div class="progs">
+      <article>
+        <h3>Adobe Premiere Pro</h3>
+        <p>
+          Export ekranında Format: <em>H.264</em>. Video bölümünde çözünürlük ve kare hızını “kaynakla eşleştir” bırakın,
+          Profile: <em>High</em>. Bitrate Settings altında Bitrate Encoding: <em>VBR, 2 pass</em>, Target Bitrate'e
+          tablodaki değeri, Maximum Bitrate'e yaklaşık 1,5 katını yazın. Audio: <em>AAC, 48000 Hz, Stereo, 320 kbps</em>.
+        </p>
+      </article>
+      <article>
+        <h3>DaVinci Resolve</h3>
+        <p>
+          Deliver sayfasında Custom Export → Format: <em>MP4</em>, Codec: <em>H.264</em> ya da <em>H.265</em>. Quality
+          bölümünde “Restrict to” seçip değeri kb/s olarak girin (16 Mbps = 16000). Kare hızı ve çözünürlük proje ayarından
+          gelir; Audio sekmesinde <em>AAC</em>, 320 kb/s seçin.
+        </p>
+      </article>
+      <article>
+        <h3>Final Cut Pro</h3>
+        <p>
+          Share → Export File. Video codec olarak <em>H.264</em>, <em>HEVC</em> ya da master için <em>Apple ProRes 422 HQ</em>
+          seçin. Final Cut bitrate'i sayıyla girmenize izin vermez; belirli bir bitrate ya da dosya boyutu gerekiyorsa ProRes
+          master alıp Compressor veya HandBrake ile kodlayın.
+        </p>
+      </article>
+      <article>
+        <h3>CapCut (masaüstü)</h3>
+        <p>
+          Export penceresinde Resolution: <em>1080p</em> ya da <em>4K</em>, Frame rate: çekim kare hızı, Codec: <em>H.264</em>
+          (4K için HEVC), Format: <em>mp4</em>. Bit rate menüsünde “Higher” ya da özel değer seçin.
+        </p>
+      </article>
+    </div>
+    <p class="small">Menü adları programın sürümüne ve diline göre farklı olabilir (Ekim 2026 sürümlerine göre yazıldı).</p>
+  </Section>
+
+  <Section width="default" space="tight" id="master">
+    <SectionHeading eyebrow="Arşiv">Master dosya: ProRes 422 HQ</SectionHeading>
+    <div class="prose">
+      <p>
+        Teslim MP4'ü platform içindir; ileride yeni bir kesim, yeni bir oran ya da farklı bir platform gerektiğinde elinizde
+        kalitesi bozulmamış bir ana kopya olmalı. Apple'ın ProRes teknik belgesindeki hedef değerler:
+      </p>
+    </div>
+    <div class="tablewrap">
+      <table class="zt">
+        <caption>Mbps (yaklaşık saatlik boyut). Kaynak: Apple ProRes White Paper, Nisan 2022. Gerçek değer içeriğe göre biraz değişir.</caption>
+        <thead>
+          <tr>
+            <th scope="col">Format</th>
+            <th scope="col">ProRes 422 LT</th>
+            <th scope="col">ProRes 422</th>
+            <th scope="col">ProRes 422 HQ</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            [
+              ["1080p 25 fps", "1920x1080", "25"],
+              ["1080p 30 fps", "1920x1080", "30"],
+              ["4K UHD 25 fps", "3840x2160", "25"],
+              ["4K UHD 30 fps", "3840x2160", "30"],
+            ].map(([label, res, fps]) => (
+              <tr>
+                <th scope="row">{label}</th>
+                {[1, 2, 3].map((i) => (
+                  <td>
+                    {pr(res, fps, i)} <small>(≈{Math.round((pr(res, fps, i) * 3600) / 8000)} GB/sa)</small>
+                  </td>
+                ))}
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </Section>
+
+  <Section width="default" space="tight" id="hatalar">
+    <SectionHeading eyebrow="Kontrol">En sık yapılan export hataları</SectionHeading>
+    <ul class="tips">
+      <li><strong>Kare hızını değiştirmek:</strong> 25 fps çekimi 30 ya da 60 fps dışa aktarmak takılma yaratır; çekildiği gibi bırakın.</li>
+      <li><strong>Telefon görüntüsünü VFR bırakmak:</strong> değişken kare hızı ses kaymasına yol açabilir; kurgudan önce sabit kare hızına çevirin.</li>
+      <li><strong>Çok düşük bitrate:</strong> gökyüzü ve gradyanlarda bantlaşma, karanlık sahnelerde blok görülür. Platform ikinci kez sıkıştırdığında daha da belirginleşir.</li>
+      <li><strong>Yanlış renk etiketi:</strong> SDR videoyu Rec.2020 ya da HDR etiketli vermek renkleri soluk veya yanlış gösterir.</li>
+      <li><strong>Dikey videoyu yatay zaman çizelgesinde dışa aktarmak:</strong> siyah bantlı 1920×1080 dosya çıkar; Reels ve TikTok için zaman çizelgesi 1080×1920 olmalı. <a href="/araclar/en-boy-orani/">En-boy oranı hesaplayıcı</a> ile ölçüleri kontrol edebilirsiniz.</li>
+      <li><strong>Son kontrolü atlamak:</strong> dosyayı yayınlamadan önce baştan sona, sesli ve telefonda izleyin.</li>
+    </ul>
+  </Section>
+
+  <Section width="default" space="tight" id="sss">
+    <SectionHeading eyebrow="SSS">Sık sorulan sorular</SectionHeading>
+    <dl class="faq">
+      {
+        faqs.map((q) => (
+          <div class="faq__item">
+            <dt>{q.question}</dt>
+            <dd>{q.answer}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Section>
+
+  <Section width="default" space="tight" id="kaynak-goster">
+    <div class="cite">
+      <h2>Bu rehberi kaynak göster</h2>
+      <p>
+        Bir yazıda, eğitimde ya da forum cevabında bu rehbere yer vermek isterseniz aşağıdaki bağlantıyı kopyalayabilirsiniz.
+        Kopya kâğıdını paylaşırken atıf satırı: <em>“Video export ayarları: Rast Creative Studio — rastcreative.com”</em>.
+      </p>
+      <label for="cite-code" class="small">HTML bağlantısı</label>
+      <textarea id="cite-code" readonly rows="2" data-cite>{citeHtml}</textarea>
+      <label for="cite-plain" class="small">Düz metin</label>
+      <textarea id="cite-plain" readonly rows="1">{`Video export ayarları rehberi — Rast Creative Studio, ${PAGE_URL}`}</textarea>
+      <button type="button" class="ev-btn" data-copy>Kopyala</button>
+      <span class="small" data-copied aria-live="polite"></span>
+    </div>
+  </Section>
+
+  <Section width="default" space="tight" id="kaynaklar">
+    <SectionHeading eyebrow="Şeffaflık">Kaynaklar</SectionHeading>
+    <p>Platform değerleri aşağıdaki resmî sayfalardan alındı; “Rast önerisi” olarak işaretlenen değerler bizim tavsiyemizdir. Son kontrol: {CHECKED}.</p>
+    <ul class="sources">
+      {
+        EXPORT_SOURCES.map((s) => (
+          <li>
+            {s.text} (erişim 30.10.2026){" "}
+            <a href={s.url} rel="noopener" target="_blank">{s.host}</a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="small">
+      Program menü adları sürüme ve dile göre değişebilir. Platform ve program adları sahiplerinin ticari
+      markalarıdır; bu rehber hiçbiriyle bağlantılı değildir.
+    </p>
+  </Section>
+
+  <Section width="default" space="tight">
+    <div class="related">
+      <h2>İlgili ücretsiz araçlar</h2>
+      <ul>
+        <li><a href="/araclar/bitrate-hesaplayici/">Video bitrate ve dosya boyutu hesaplayıcı</a></li>
+        <li><a href="/araclar/guvenli-alan/">Reels, TikTok ve Shorts güvenli alan kontrolü</a></li>
+        <li><a href="/araclar/en-boy-orani/">En-boy oranı hesaplayıcı</a></li>
+        <li><a href="/araclar/altyazi-kontrolu/">Altyazı kontrolü</a></li>
+      </ul>
+    </div>
+  </Section>
+
+  <Section width="default" space="tight">
+    <div class="cta">
+      <h2>Çekimden teslim dosyasına kadar</h2>
+      <p>
+        Rast Creative Studio videoları kullanılacağı yere göre teslim eder: YouTube, Reels ve reklam için ayrı dosyalar,
+        arşiv için master. <a href="/video-cekimi/">Video çekimi</a>, <a href="/reklam-filmi/">reklam filmi</a> ve
+        <a href="/sosyal-medya-icerigi/">sosyal medya içeriği</a> sayfalarına göz atabilirsiniz.
+      </p>
+      <Button href={PRIMARY_CTA.href}>Görüşelim</Button>
+    </div>
+  </Section>
+</BaseLayout>
+
+<script>
+  const copyBtn = document.querySelector<HTMLButtonElement>("[data-copy]");
+  copyBtn?.addEventListener("click", async () => {
+    const ta = document.querySelector<HTMLTextAreaElement>("[data-cite]")!;
+    const out = document.querySelector<HTMLElement>("[data-copied]")!;
+    try {
+      await navigator.clipboard.writeText(ta.value);
+    } catch {
+      ta.select();
+      document.execCommand("copy");
+    }
+    out.textContent = "Kopyalandı.";
+  });
+</script>
+
+<style>
+  .crumbs {
+    margin-bottom: 1.2rem;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .crumbs a {
+    color: var(--amber-text);
+  }
+  .quick {
+    display: grid;
+    gap: 1.2rem;
+    margin: 1.8rem 0 1rem;
+  }
+  @media (min-width: 900px) {
+    .quick {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .card {
+    padding: clamp(1rem, 2.5vw, 1.5rem);
+    border: 1px solid var(--line);
+    border-radius: 1.2rem;
+    background: color-mix(in srgb, var(--paper) 82%, transparent);
+  }
+  .card h2 {
+    margin-bottom: 0.8rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.7rem);
+    color: var(--ink);
+  }
+  .card dl {
+    display: grid;
+    gap: 0.55rem;
+  }
+  .card dl div {
+    display: grid;
+    gap: 0.1rem;
+  }
+  @media (min-width: 560px) {
+    .card dl div {
+      grid-template-columns: 9.5rem 1fr;
+      gap: 0.8rem;
+    }
+  }
+  .card dt {
+    font-family: var(--font-utility);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+    padding-top: 0.15rem;
+  }
+  .card dd {
+    margin: 0;
+    color: var(--ink);
+    line-height: 1.45;
+  }
+  .dl {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin: 1.2rem 0 0.6rem;
+  }
+  .small {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .small a,
+  .prose a,
+  .tips a,
+  .sources a,
+  .cta a:not(.ev-btn),
+  .related a {
+    color: var(--amber-text);
+  }
+  .tablewrap {
+    overflow-x: auto;
+    margin: 1.2rem 0 0.8rem;
+  }
+  .zt {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+    color: var(--ink);
+  }
+  .zt caption {
+    caption-side: bottom;
+    padding-top: 0.6rem;
+    text-align: left;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .zt th,
+  .zt td {
+    padding: 0.6rem 0.7rem;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+    min-width: 8rem;
+  }
+  .zt thead th {
+    font-family: var(--font-utility);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+  }
+  .zt small {
+    color: var(--ink-soft);
+  }
+  .steps {
+    display: grid;
+    gap: 0.8rem;
+    margin-top: 1.2rem;
+    padding-left: 1.4rem;
+    list-style: decimal;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .steps strong,
+  .tips strong,
+  .prose strong {
+    color: var(--ink);
+  }
+  .prose {
+    display: grid;
+    gap: 0.7rem;
+    margin-top: 1rem;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .prose h3,
+  .progs h3 {
+    margin-top: 0.8rem;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--ink);
+  }
+  .progs {
+    display: grid;
+    gap: 1rem;
+    margin: 1.2rem 0 0.6rem;
+  }
+  @media (min-width: 900px) {
+    .progs {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .progs article {
+    padding: 1rem 1.2rem;
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .progs h3 {
+    margin: 0 0 0.4rem;
+  }
+  .progs em,
+  .prose em {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .tips,
+  .sources {
+    display: grid;
+    gap: 0.8rem;
+    margin-top: 1.2rem;
+    padding-left: 1.2rem;
+    list-style: disc;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .faq {
+    display: grid;
+    gap: 1.2rem;
+    margin-top: 1.2rem;
+  }
+  .faq dt {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .faq dd {
+    margin: 0.3rem 0 0;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .cite,
+  .cta,
+  .related {
+    display: grid;
+    gap: 0.8rem;
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+    border: 1px solid var(--line);
+    border-radius: 1.2rem;
+    background: color-mix(in srgb, var(--paper) 80%, transparent);
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .cite h2,
+  .cta h2,
+  .related h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.7rem);
+    color: var(--ink);
+  }
+  .related ul {
+    display: grid;
+    gap: 0.4rem;
+    padding-left: 1.2rem;
+    list-style: disc;
+  }
+  .cite textarea {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 0.6rem;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: ui-monospace, monospace;
+    font-size: 0.85rem;
+    resize: none;
+  }
+  .cite .ev-btn,
+  .cta :global(a) {
+    justify-self: start;
+  }
+</style>

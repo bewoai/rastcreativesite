@@ -1,0 +1,1000 @@
+---
+/**
+ * Free video bitrate / file size calculator. 100% client-side math, no file
+ * input at all. Reference numbers: src/data/export-specs.ts (official sources,
+ * shared with /rehber/video-export-ayarlari/). State syncs to the URL query so
+ * a calculation can be shared. Linkable asset — keep it useful, no prices.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Section from "../../components/Section.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import Button from "../../components/Button.astro";
+import { PRIMARY_CTA, SITE } from "../../consts";
+import { breadcrumb, faqPage } from "../../lib/schema";
+import { YOUTUBE, VIMEO, LIMITS, EXPORT_SOURCES, CHECKED } from "../../data/export-specs";
+
+const PATH = "/araclar/bitrate-hesaplayici/";
+const PAGE_URL = new URL(PATH, SITE.url).href;
+const title = "Video Bitrate ve Dosya Boyutu Hesaplayıcı";
+const description =
+  "Ücretsiz video bitrate hesaplayıcı: bitrate ve süreden dosya boyutunu, hedef boyuttan (ör. 500 MB, 4 GB) gereken bitrate'i ve kartın kaç dakika kaydedeceğini bulun.";
+
+const fmt = (n: number) => String(n).replace(".", ",");
+const range = (r: readonly number[]) => (r[0] === r[1] ? `${fmt(r[0])}` : `${fmt(r[0])}–${fmt(r[1])}`);
+
+const faqs = [
+  {
+    question: "Video dosya boyutu nasıl hesaplanır?",
+    answer:
+      "Dosya boyutu (MB) = (video bitrate + ses bitrate, kbps) × süre (saniye) ÷ 8 ÷ 1000. Örneğin 3 dakikalık, 8 Mbps video ve 320 kbps sesli bir dosya yaklaşık (8000 + 320) × 180 ÷ 8000 ≈ 187 MB olur. Değişken bitrate (VBR) ve kapsayıcı (MP4/MOV) payı yüzünden gerçek dosya birkaç yüzde farklı çıkabilir.",
+  },
+  {
+    question: "1080p video için kaç Mbps bitrate gerekir?",
+    answer: `YouTube, 1080p SDR yüklemeler için 24/25/30 fps'te ${range(YOUTUBE.sdr["1080"].std)} Mbps, 48/50/60 fps'te ${range(YOUTUBE.sdr["1080"].high)} Mbps önerir; Vimeo 1080p için ${range(VIMEO["1080"])} Mbps aralığını verir. Platform videoyu zaten yeniden sıkıştırdığı için bu değerlerin biraz üstünde bir kaynak dosya yüklemek genelde daha temiz sonuç verir.`,
+  },
+  {
+    question: "4K video için kaç Mbps bitrate gerekir?",
+    answer: `YouTube 4K (2160p) SDR yüklemeler için 24/25/30 fps'te ${range(YOUTUBE.sdr["2160"].std)} Mbps, 48/50/60 fps'te ${range(YOUTUBE.sdr["2160"].high)} Mbps; HDR için ${range(YOUTUBE.hdr["2160"].std)} ve ${range(YOUTUBE.hdr["2160"].high)} Mbps önerir. Vimeo 4K için ${range(VIMEO["2160"])} Mbps aralığını verir.`,
+  },
+  {
+    question: "Videoyu 500 MB ya da 4 GB altına nasıl sığdırırım?",
+    answer: `“Hedef boyut → bitrate” sekmesinde hedef boyutu ve süreyi girin; araç ses bitrate'ini çıkarıp yüzde 2 güvenlik payı bırakarak kullanabileceğiniz en yüksek video bitrate'ini verir. TikTok reklamlarında (Spark olmayan) sınır ${LIMITS.tiktokAdMaxMB} MB, Meta'da (Instagram ve Facebook reklam videoları) ${LIMITS.metaMaxGB} GB'tır.`,
+  },
+  {
+    question: "Hesaplanan boyut ile bilgisayarımın gösterdiği boyut neden farklı?",
+    answer:
+      "Araç 1 MB = 1.000.000 bayt kullanır (platformlar ve kart üreticileri gibi). Windows Gezgini 1 GB'ı 1.073.741.824 bayt sayar, bu yüzden aynı dosya Windows'ta yaklaşık yüzde 7 daha küçük görünür. Sonuçta ikisini de gösteriyoruz.",
+  },
+  {
+    question: "Girdiğim değerler bir sunucuya gönderiliyor mu?",
+    answer:
+      "Hayır. Araç dosya istemez, tüm hesap tarayıcınızda yapılır. Değerler yalnızca paylaşabilmeniz için adres çubuğundaki bağlantıya yazılır; sayfada üçüncü taraf takip kodu yoktur.",
+  },
+];
+
+const citeHtml = `<a href="${PAGE_URL}">Video bitrate hesaplayıcı — Rast Creative</a>`;
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Araçlar", path: "/araclar/" },
+    { name: "Bitrate hesaplayıcı", path: PATH },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "Video Bitrate ve Dosya Boyutu Hesaplayıcı",
+    alternateName: "Video bitrate calculator",
+    url: PAGE_URL,
+    applicationCategory: "MultimediaApplication",
+    operatingSystem: "Web",
+    browserRequirements: "Modern bir web tarayıcısı; JavaScript gerekli",
+    isAccessibleForFree: true,
+    inLanguage: "tr",
+    offers: { "@type": "Offer", price: "0", priceCurrency: "TRY" },
+    description,
+    featureList: [
+      "Bitrate ve süreden dosya boyutu",
+      "Hedef dosya boyutundan gereken video bitrate'i",
+      "Kart ya da diskin kaç dakika kayıt alacağı",
+      "YouTube, Vimeo ve Apple ProRes referans değerleri",
+      "Hesaba göre FFmpeg komutu",
+      "Paylaşılabilir hesap bağlantısı",
+    ],
+    provider: { "@id": `${SITE.url}#business` },
+    creator: { "@id": `${SITE.url}#business` },
+  },
+  faqPage(faqs),
+];
+
+const ytRows = (["2160", "1440", "1080", "720"] as const).map((r) => ({
+  res: r === "2160" ? "2160p (4K)" : r === "1440" ? "1440p" : `${r}p`,
+  sdrStd: range(YOUTUBE.sdr[r].std),
+  sdrHigh: range(YOUTUBE.sdr[r].high),
+  hdrStd: range(YOUTUBE.hdr[r].std),
+  hdrHigh: range(YOUTUBE.hdr[r].high),
+  vimeo: range(VIMEO[r]),
+}));
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <Section width="wide" space="tight">
+    <nav class="crumbs" aria-label="Sayfa yolu">
+      <a href="/">Ana sayfa</a> <span aria-hidden="true">/</span> <a href="/araclar/">Araçlar</a>
+      <span aria-hidden="true">/</span> <span aria-current="page">Bitrate hesaplayıcı</span>
+    </nav>
+    <SectionHeading as="h1" eyebrow="Araç · Ücretsiz · Kayıt yok">
+      Video bitrate ve dosya boyutu hesaplayıcı
+      <Fragment slot="intro">
+        <p>
+          Dışa aktarmadan önce dosyanın kaç MB tutacağını, bir platformun boyut sınırına sığmak için bitrate'i ne kadar
+          düşürmeniz gerektiğini ya da kartınızın kaç dakika kayıt alacağını hesaplayın. YouTube, Vimeo ve Apple ProRes
+          değerleri resmî kaynaklardan alınmıştır. <strong>Dosya yüklemezsiniz</strong>; hesap tarayıcınızda yapılır.
+        </p>
+      </Fragment>
+    </SectionHeading>
+
+    <ol class="howto" aria-label="Nasıl kullanılır">
+      <li><strong>1. Ne hesaplayacağınızı seçin.</strong> Dosya boyutu, hedef boyuta göre bitrate ya da kart kayıt süresi.</li>
+      <li><strong>2. Değerleri girin.</strong> Bitrate'i bilmiyorsanız platform ve çözünürlük seçip önerilen değeri tek tıkla doldurun.</li>
+      <li><strong>3. Sonucu kullanın.</strong> Değeri kurgu programınıza yazın, FFmpeg komutunu kopyalayın ya da hesabın bağlantısını paylaşın.</li>
+    </ol>
+
+    <form class="tool" data-calc onsubmit="return false" novalidate>
+      <fieldset class="modes">
+        <legend>Ne hesaplamak istiyorsunuz?</legend>
+        <div class="chips">
+          <label class="chip"><input type="radio" name="mode" value="size" checked /><span>Bitrate → dosya boyutu</span></label>
+          <label class="chip"><input type="radio" name="mode" value="bitrate" /><span>Hedef boyut → bitrate</span></label>
+          <label class="chip"><input type="radio" name="mode" value="card" /><span>Kart kaç dakika kaydeder?</span></label>
+        </div>
+      </fieldset>
+
+      <div class="grid">
+        <div class="col">
+          <fieldset data-show="size bitrate">
+            <legend>Video süresi</legend>
+            <div class="dur">
+              <label>Saat <input type="number" inputmode="numeric" min="0" max="99" step="1" value="0" data-in="h" /></label>
+              <label>Dakika <input type="number" inputmode="numeric" min="0" max="59" step="1" value="3" data-in="m" /></label>
+              <label>Saniye <input type="number" inputmode="numeric" min="0" max="59" step="1" value="0" data-in="s" /></label>
+            </div>
+          </fieldset>
+
+          <fieldset data-show="bitrate">
+            <legend>Hedef dosya boyutu</legend>
+            <div class="row">
+              <input type="number" inputmode="decimal" min="0" step="any" value="500" data-in="target" aria-label="Hedef boyut" />
+              <select data-in="targetUnit" aria-label="Birim">
+                <option value="MB" selected>MB</option>
+                <option value="GB">GB</option>
+              </select>
+            </div>
+            <div class="quick">
+              <span class="small">Hızlı seç:</span>
+              <button type="button" class="mini" data-target="500" data-unit="MB">500 MB (TikTok reklam)</button>
+              <button type="button" class="mini" data-target="4" data-unit="GB">4 GB (Meta)</button>
+              <button type="button" class="mini" data-target="25" data-unit="MB">25 MB</button>
+            </div>
+          </fieldset>
+
+          <fieldset data-show="card">
+            <legend>Kart / disk kapasitesi</legend>
+            <div class="row">
+              <input type="number" inputmode="decimal" min="0" step="any" value="128" data-in="cap" aria-label="Kapasite" />
+              <select data-in="capUnit" aria-label="Birim">
+                <option value="GB" selected>GB</option>
+                <option value="TB">TB</option>
+              </select>
+            </div>
+            <p class="small">Kartın üzerinde yazan değeri girin. Biçimlendirme sonrası kullanılabilir alan birkaç yüzde daha azdır.</p>
+          </fieldset>
+
+          <fieldset data-show="size card">
+            <legend>Video bitrate</legend>
+            <div class="row">
+              <input type="number" inputmode="decimal" min="0" step="any" value="16" data-in="vbr" aria-label="Video bitrate" />
+              <span class="unit">Mbps</span>
+            </div>
+          </fieldset>
+
+          <fieldset data-show="size bitrate card">
+            <legend>Ses bitrate</legend>
+            <select data-in="abr" aria-label="Ses bitrate">
+              <option value="0">Ses yok</option>
+              <option value="128">128 kbps (Meta alt sınırı)</option>
+              <option value="192">192 kbps</option>
+              <option value="256">256 kbps</option>
+              <option value="320" selected>320 kbps (Vimeo önerisi)</option>
+              <option value="384">384 kbps (YouTube stereo önerisi)</option>
+              <option value="512">512 kbps (YouTube 5.1 önerisi)</option>
+              <option value="1536">1536 kbps (PCM 48 kHz 16-bit stereo)</option>
+              <option value="2304">2304 kbps (PCM 48 kHz 24-bit stereo)</option>
+            </select>
+          </fieldset>
+        </div>
+
+        <div class="col">
+          <fieldset class="ref" data-show="size card bitrate">
+            <legend>Referans değer bul</legend>
+            <div class="refgrid">
+              <label>Platform / codec
+                <select data-in="plat">
+                  <option value="yt-sdr" selected>YouTube (SDR)</option>
+                  <option value="yt-hdr">YouTube (HDR)</option>
+                  <option value="vimeo">Vimeo</option>
+                  <option value="pr-proxy">ProRes 422 Proxy</option>
+                  <option value="pr-lt">ProRes 422 LT</option>
+                  <option value="pr-422">ProRes 422</option>
+                  <option value="pr-hq">ProRes 422 HQ</option>
+                  <option value="pr-4444">ProRes 4444</option>
+                  <option value="pr-xq">ProRes 4444 XQ</option>
+                </select>
+              </label>
+              <label>Çözünürlük
+                <select data-in="res">
+                  <option value="3840x2160">4K UHD (3840×2160)</option>
+                  <option value="4096x2160">DCI 4K (4096×2160)</option>
+                  <option value="2560x1440">1440p (2560×1440)</option>
+                  <option value="1920x1080" selected>1080p (1920×1080 / 1080×1920)</option>
+                  <option value="1280x720">720p (1280×720)</option>
+                </select>
+              </label>
+              <label>Kare hızı
+                <select data-in="fps">
+                  <option value="24">23,976 / 24 fps</option>
+                  <option value="25" selected>25 fps</option>
+                  <option value="30">29,97 / 30 fps</option>
+                  <option value="50">50 fps</option>
+                  <option value="60">59,94 / 60 fps</option>
+                </select>
+              </label>
+            </div>
+            <p class="refout" data-ref aria-live="polite"></p>
+            <button type="button" class="ev-btn" data-use>Bu değeri video bitrate'e yaz</button>
+          </fieldset>
+        </div>
+      </div>
+
+      <div class="result" aria-live="polite">
+        <p class="big" data-big></p>
+        <ul class="details" data-details></ul>
+        <p class="warn" data-warn hidden></p>
+      </div>
+
+      <details class="ff" data-ffwrap>
+        <summary>Bu hesapla FFmpeg komutu (H.264, iki geçiş)</summary>
+        <p class="small">
+          Kurgu programınız yoksa ya da bir dosyayı yeniden sıkıştırmak istiyorsanız. <code>girdi.mov</code> yerine kendi dosyanızın
+          adını yazın. Windows'ta ilk satırdaki <code>/dev/null</code> yerine <code>NUL</code> kullanın.
+        </p>
+        <textarea readonly rows="5" data-ff aria-label="FFmpeg komutu"></textarea>
+        <button type="button" class="ev-btn" data-copy-ff>Komutu kopyala</button>
+      </details>
+
+      <div class="actions">
+        <button type="button" class="ev-btn ev-btn--sun" data-share>Hesabın bağlantısını kopyala</button>
+        <button type="button" class="ev-btn" data-copy-result>Sonucu metin olarak kopyala</button>
+        <span class="small" data-copied aria-live="polite"></span>
+      </div>
+      <noscript><p class="warn">Hesaplayıcı için JavaScript gerekli. Aşağıdaki tablolar ve formül JavaScript olmadan da kullanılabilir.</p></noscript>
+    </form>
+  </Section>
+
+  <Section width="default" space="tight" id="formul">
+    <SectionHeading eyebrow="Formül">Bitrate ile dosya boyutu nasıl hesaplanır?</SectionHeading>
+    <div class="prose">
+      <p>
+        Bitrate, videonun saniyede kullandığı veri miktarıdır. Mbps (megabit/saniye) olarak yazılır; dosya boyutu ise
+        megabayt (MB) ile ölçülür ve 1 bayt = 8 bit'tir. Bu yüzden:
+      </p>
+      <p class="formula">Dosya boyutu (MB) = (video Mbps + ses Mbps) × süre (sn) ÷ 8</p>
+      <p class="formula">Gereken video bitrate (Mbps) = hedef boyut (MB) × 8 ÷ süre (sn) − ses Mbps</p>
+      <p>
+        Örnek: 60 saniyelik bir Reels'i 1080×1920, 16 Mbps video ve 320 kbps (0,32 Mbps) sesle dışa aktarırsanız
+        (16 + 0,32) × 60 ÷ 8 ≈ <strong>122 MB</strong> tutar. Aynı süreyi 25 MB'a sığdırmak için 25 × 8 ÷ 60 − 0,32 ≈
+        <strong>3 Mbps</strong> video bitrate'e inmeniz gerekir; 1080p için bu düşük bir değerdir, kalite gözle görülür düşer.
+      </p>
+      <p class="small">
+        Değişken bitrate (VBR) kodlamada program ortalamayı tutturmaya çalışır; kapsayıcı (MP4/MOV) da küçük bir pay ekler.
+        Hedef boyut hesabında bu yüzden yüzde 2 güvenlik payı bırakıyoruz.
+      </p>
+    </div>
+  </Section>
+
+  <Section width="default" space="tight" id="tablo">
+    <SectionHeading eyebrow="Referans">YouTube ve Vimeo önerilen bitrate tablosu</SectionHeading>
+    <div class="tablewrap">
+      <table class="zt">
+        <caption>
+          Mbps. YouTube: “standart” = 24/25/30 fps, “yüksek” = 48/50/60 fps. Vimeo kare hızına göre ayırmaz. Kaynak: YouTube
+          Yardım ve Vimeo Help Center, erişim {CHECKED}.
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Çözünürlük</th>
+            <th scope="col">YouTube SDR standart</th>
+            <th scope="col">YouTube SDR yüksek</th>
+            <th scope="col">YouTube HDR standart</th>
+            <th scope="col">YouTube HDR yüksek</th>
+            <th scope="col">Vimeo</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            ytRows.map((r) => (
+              <tr>
+                <th scope="row">{r.res}</th>
+                <td>{r.sdrStd}</td>
+                <td>{r.sdrHigh}</td>
+                <td>{r.hdrStd}</td>
+                <td>{r.hdrHigh}</td>
+                <td>{r.vimeo}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="small">
+      Instagram, Facebook ve TikTok organik videolar için bir bitrate değeri yayımlamıyor. Meta reklam videolarında sınır
+      {LIMITS.metaMaxGB} GB ve ses için 128 kbps üstü stereo AAC; TikTok reklamlarında (Spark olmayan) en fazla {LIMITS.tiktokAdMaxMB} MB ve
+      en az {LIMITS.tiktokAdMinKbps} kbps. Hangi ayarla dışa aktaracağınızı adım adım
+      <a href="/rehber/video-export-ayarlari/">video export ayarları rehberinde</a> anlattık.
+    </p>
+  </Section>
+
+  <Section width="default" space="tight" id="sss">
+    <SectionHeading eyebrow="SSS">Sık sorulan sorular</SectionHeading>
+    <dl class="faq">
+      {
+        faqs.map((f) => (
+          <div class="faq__item">
+            <dt>{f.question}</dt>
+            <dd>{f.answer}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Section>
+
+  <Section width="default" space="tight" id="kaynak-goster">
+    <div class="cite">
+      <h2>Bu aracı sitende kullan / kaynak göster</h2>
+      <p>
+        Bir yazıda, ders notunda ya da kaynak listesinde bu hesaplayıcıya yer vermek isterseniz aşağıdaki bağlantıyı
+        kopyalayabilirsiniz.
+      </p>
+      <label for="cite-code" class="small">HTML bağlantısı</label>
+      <textarea id="cite-code" readonly rows="2" data-cite>{citeHtml}</textarea>
+      <label for="cite-plain" class="small">Düz metin</label>
+      <textarea id="cite-plain" readonly rows="1" data-cite-plain>{`Video bitrate hesaplayıcı — Rast Creative Studio, ${PAGE_URL}`}</textarea>
+      <button type="button" class="ev-btn" data-copy>Kopyala</button>
+      <span class="small" data-cite-copied aria-live="polite"></span>
+    </div>
+  </Section>
+
+  <Section width="default" space="tight" id="kaynaklar">
+    <SectionHeading eyebrow="Şeffaflık">Kaynaklar</SectionHeading>
+    <p>Referans değerler aşağıdaki resmî sayfalardan alındı. Son kontrol: {CHECKED}.</p>
+    <ul class="sources">
+      {
+        EXPORT_SOURCES.map((s) => (
+          <li>
+            {s.text} (erişim 30.10.2026){" "}
+            <a href={s.url} rel="noopener" target="_blank">{s.host}</a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="small">
+      PCM ses değerleri hesaplanmıştır (48.000 örnek × bit derinliği × 2 kanal). Platform adları sahiplerinin ticari
+      markalarıdır; bu araç hiçbir platformla bağlantılı değildir.
+    </p>
+  </Section>
+
+  <Section width="default" space="tight">
+    <div class="related">
+      <h2>İlgili ücretsiz araçlar</h2>
+      <ul>
+        <li><a href="/rehber/video-export-ayarlari/">1080p ve 4K için video export ayarları rehberi</a></li>
+        <li><a href="/araclar/guvenli-alan/">Reels, TikTok ve Shorts güvenli alan kontrolü</a></li>
+        <li><a href="/araclar/en-boy-orani/">En-boy oranı hesaplayıcı</a></li>
+      </ul>
+    </div>
+  </Section>
+
+  <Section width="default" space="tight">
+    <div class="cta">
+      <h2>Ayarla uğraşmak yerine teslime hazır video</h2>
+      <p>
+        Rast Creative Studio her işi kullanılacağı yere göre dışa aktarır: YouTube için ayrı, Reels için ayrı, arşiv için
+        ProRes master. <a href="/video-cekimi/">Video çekimi</a>, <a href="/reklam-filmi/">reklam filmi</a> ve
+        <a href="/sosyal-medya-icerigi/">sosyal medya içeriği</a> sayfalarına bakabilirsiniz.
+      </p>
+      <Button href={PRIMARY_CTA.href}>Görüşelim</Button>
+    </div>
+  </Section>
+</BaseLayout>
+
+<script>
+  import { YOUTUBE, VIMEO, PRORES, PRORES_CODECS, LIMITS } from "../../data/export-specs";
+
+  const form = document.querySelector<HTMLFormElement>("[data-calc]");
+  if (form) init(form);
+
+  function init(root: HTMLFormElement) {
+    const $ = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const inp = (k: string) => $<HTMLInputElement>(`[data-in="${k}"]`);
+    const nf = (d = 1) => new Intl.NumberFormat("tr-TR", { maximumFractionDigits: d, minimumFractionDigits: 0 });
+    const n = (k: string) => {
+      const v = parseFloat(String(inp(k).value).replace(",", "."));
+      return Number.isFinite(v) && v >= 0 ? v : 0;
+    };
+    const big = $("[data-big]");
+    const details = $("[data-details]");
+    const warn = $("[data-warn]");
+    const refOut = $("[data-ref]");
+    const ff = $<HTMLTextAreaElement>("[data-ff]");
+    const ffWrap = $<HTMLDetailsElement>("[data-ffwrap]");
+    const copied = $("[data-copied]");
+    let refValue = 0;
+    let lastText = "";
+
+    const mode = () => (root.querySelector<HTMLInputElement>('input[name="mode"]:checked')?.value ?? "size") as "size" | "bitrate" | "card";
+    const seconds = () => n("h") * 3600 + n("m") * 60 + n("s");
+
+    function sizeLine(bytes: number) {
+      const mb = bytes / 1e6;
+      const main = mb >= 1000 ? `${nf(2).format(mb / 1000)} GB` : `${nf(1).format(mb)} MB`;
+      const gib = bytes / 1024 ** 3;
+      const win = gib >= 1 ? `${nf(2).format(gib)} GB` : `${nf(1).format(bytes / 1024 ** 2)} MB`;
+      return { main, win };
+    }
+    const dur = (s: number) => {
+      const h = Math.floor(s / 3600);
+      const m = Math.floor((s % 3600) / 60);
+      const sec = Math.round(s % 60);
+      return [h ? `${h} sa` : "", m ? `${m} dk` : "", !h && sec ? `${sec} sn` : ""].filter(Boolean).join(" ") || "0 sn";
+    };
+
+    // ---------- reference lookup ----------
+    function reference() {
+      const plat = inp("plat").value;
+      const res = inp("res").value;
+      const fps = inp("fps").value;
+      const high = Number(fps) >= 48;
+      const key = res === "4096x2160" || res === "3840x2160" ? "2160" : res.split("x")[1];
+      let text = "";
+      refValue = 0;
+      if (plat.startsWith("yt-")) {
+        const t = plat === "yt-hdr" ? YOUTUBE.hdr : YOUTUBE.sdr;
+        const r = (t as Record<string, { std: readonly number[]; high: readonly number[] }>)[key]?.[high ? "high" : "std"];
+        if (r) {
+          refValue = r[1];
+          text = `YouTube ${plat === "yt-hdr" ? "HDR" : "SDR"} önerisi: ${r[0] === r[1] ? nf().format(r[0]) : `${nf().format(r[0])}–${nf().format(r[1])}`} Mbps (${high ? "48/50/60" : "24/25/30"} fps).`;
+        }
+      } else if (plat === "vimeo") {
+        const r = (VIMEO as Record<string, readonly number[] | number>)[key] as readonly number[] | undefined;
+        if (r) {
+          refValue = r[1];
+          text = `Vimeo önerisi: ${r[0]}–${r[1]} Mbps (kare hızından bağımsız). Üst değeri dolduruyoruz.`;
+        }
+      } else if (plat.startsWith("pr-")) {
+        const codec = plat.slice(3) as (typeof PRORES_CODECS)[number];
+        const idx = PRORES_CODECS.indexOf(codec);
+        const row = PRORES[res]?.[fps];
+        if (row) {
+          refValue = row[idx];
+          text = `Apple'ın hedef değeri: yaklaşık ${nf(0).format(row[idx])} Mbps. ProRes .mov olarak dışa aktarılır; boyut içerikle çok az değişir.`;
+        } else text = "Apple bu çözünürlük için tablo vermiyor (ProRes için 720p, 1080p, UHD ve DCI 4K seçin).";
+      }
+      if (!text) text = "Bu kombinasyon için kaynakta değer yok.";
+      refOut.textContent = text;
+      $<HTMLButtonElement>("[data-use]").disabled = !refValue;
+      if (refValue) $<HTMLButtonElement>("[data-use]").textContent = `${nf().format(refValue)} Mbps'yi video bitrate'e yaz`;
+    }
+
+    function ytFor() {
+      const res = inp("res").value;
+      const key = res === "4096x2160" || res === "3840x2160" ? "2160" : res.split("x")[1];
+      const r = (YOUTUBE.sdr as Record<string, { std: readonly number[]; high: readonly number[] }>)[key];
+      return r ? r[Number(inp("fps").value) >= 48 ? "high" : "std"] : null;
+    }
+
+    // ---------- main calc ----------
+    function calc() {
+      const m = mode();
+      root.querySelectorAll<HTMLElement>("[data-show]").forEach((el) => {
+        el.hidden = !el.dataset.show!.split(" ").includes(m);
+      });
+      const abrK = n("abr") || Number(inp("abr").value);
+      const secs = seconds();
+      const items: string[] = [];
+      const warns: string[] = [];
+      let videoKbps = 0;
+
+      if (m === "size") {
+        const vK = n("vbr") * 1000;
+        videoKbps = vK;
+        if (!secs || !vK) {
+          big.textContent = "Süre ve video bitrate girin.";
+        } else {
+          const bytes = ((vK + abrK) * 1000 * secs) / 8;
+          const s = sizeLine(bytes);
+          big.innerHTML = `Tahmini dosya boyutu: <strong>${s.main}</strong>`;
+          items.push(`Windows Gezgini'nde yaklaşık ${s.win} görünür.`);
+          items.push(`Dakika başına ≈ ${nf(1).format(((vK + abrK) * 60) / 8000)} MB · toplam bitrate ${nf(2).format((vK + abrK) / 1000)} Mbps · süre ${dur(secs)}.`);
+          if (bytes > LIMITS.metaMaxGB * 1e9) warns.push(`Bu dosya Meta'nın ${LIMITS.metaMaxGB} GB reklam videosu sınırını aşıyor.`);
+          else if (bytes > LIMITS.tiktokAdMaxMB * 1e6) items.push(`TikTok reklam sınırı (${LIMITS.tiktokAdMaxMB} MB) için fazla; Meta'nın ${LIMITS.metaMaxGB} GB sınırının altında.`);
+        }
+      } else if (m === "bitrate") {
+        const tgt = n("target") * (inp("targetUnit").value === "GB" ? 1e9 : 1e6);
+        if (!secs || !tgt) {
+          big.textContent = "Hedef boyut ve süre girin.";
+        } else {
+          const totalK = (tgt * 0.98 * 8) / secs / 1000;
+          const vK = Math.floor(totalK - abrK);
+          videoKbps = vK;
+          if (vK <= 0) {
+            big.textContent = "Bu süre için hedef boyut ses verisine bile yetmiyor.";
+            warns.push("Süreyi kısaltın, sesi düşürün ya da hedef boyutu büyütün.");
+          } else {
+            big.innerHTML = `En fazla video bitrate: <strong>${nf(1).format(vK / 1000)} Mbps</strong> <span class="small">(${nf(0).format(vK)} kbps)</span>`;
+            items.push(`Toplam ${nf(2).format(totalK / 1000)} Mbps; ${nf(0).format(abrK)} kbps ses ve %2 güvenlik payı düşüldü · süre ${dur(secs)}.`);
+            items.push("Kurgu programında “VBR, 2 geçiş” seçip hedef bitrate'e bu değeri yazın; maksimum bitrate'i hedefin en fazla 1,5 katı tutun.");
+            const yt = ytFor();
+            if (yt) {
+              const ratio = vK / 1000 / yt[0];
+              items.push(`Seçili çözünürlük ve kare hızı için YouTube önerisi ${nf().format(yt[0])} Mbps; bu değer onun yaklaşık ${nf(ratio < 1 ? 2 : 1).format(ratio)} katı.`);
+              if (ratio > 3) items.push("Hedef boyut bu süre için bol: bu kadar yükseğe çıkmanız gerekmez, önerilen bitrate'in biraz üstü yeterli.");
+              if (ratio < 0.6) warns.push("Bu bitrate seçili çözünürlük için düşük; blok ve bantlaşma görülebilir. Çözünürlüğü düşürmeyi (ör. 1080p → 720p) ya da videoyu kısaltmayı düşünün.");
+            }
+            if (vK < LIMITS.tiktokAdMinKbps) warns.push(`TikTok reklamları en az ${LIMITS.tiktokAdMinKbps} kbps ister; bu değerin altındasınız.`);
+          }
+        }
+      } else {
+        const cap = n("cap") * (inp("capUnit").value === "TB" ? 1e12 : 1e9);
+        const vK = n("vbr") * 1000;
+        videoKbps = vK;
+        if (!cap || !vK) {
+          big.textContent = "Kapasite ve video bitrate girin.";
+        } else {
+          const s = (cap * 8) / ((vK + abrK) * 1000);
+          big.innerHTML = `Yaklaşık kayıt süresi: <strong>${dur(s)}</strong>`;
+          items.push(`Biçimlendirme payıyla gerçekte biraz daha az (kabaca ${dur(s * 0.95)}).`);
+          items.push(`Toplam ${nf(1).format((vK + abrK) / 1000)} Mbps ile saatte ≈ ${nf(0).format(((vK + abrK) * 3600) / 8e6)} GB yazılır.`);
+          items.push("Kameranın gerçek bitrate'i için kayıt menüsündeki değere bakın (ör. “150 Mbps”, “ALL-I”).");
+        }
+      }
+
+      details.innerHTML = items.map((t) => `<li>${t}</li>`).join("");
+      warn.hidden = !warns.length;
+      warn.textContent = warns.join(" ");
+
+      // ffmpeg (only for delivery modes with a valid bitrate)
+      ffWrap.hidden = m === "card" || videoKbps <= 0;
+      if (!ffWrap.hidden) {
+        const fpsN = Number(inp("fps").value);
+        const g = Math.max(1, Math.round(fpsN / 2));
+        const common = `-c:v libx264 -preset slow -profile:v high -pix_fmt yuv420p -b:v ${Math.round(videoKbps)}k -g ${g} -bf 2`;
+        const audio = abrK ? `-c:a aac -b:a ${Math.min(abrK, 512)}k -ar 48000` : "-an";
+        ff.value =
+          `ffmpeg -y -i girdi.mov ${common} -pass 1 -an -f null /dev/null\n` +
+          `ffmpeg -i girdi.mov ${common} -pass 2 ${audio} -movflags +faststart cikti.mp4`;
+      }
+
+      lastText = [big.textContent, ...items, ...warns].join("\n") + `\n— Hesap: Rast Creative Studio · ${location.origin}${location.pathname}`;
+      syncUrl();
+    }
+
+    // ---------- URL state ----------
+    const KEYS = ["h", "m", "s", "target", "targetUnit", "cap", "capUnit", "vbr", "abr", "plat", "res", "fps"];
+    function syncUrl() {
+      const p = new URLSearchParams();
+      p.set("mod", mode());
+      KEYS.forEach((k) => p.set(k, inp(k).value));
+      history.replaceState(null, "", `${location.pathname}?${p.toString()}${location.hash}`);
+    }
+    function readUrl() {
+      const p = new URLSearchParams(location.search);
+      const md = p.get("mod");
+      if (md) {
+        const r = root.querySelector<HTMLInputElement>(`input[name="mode"][value="${CSS.escape(md)}"]`);
+        if (r) r.checked = true;
+      }
+      KEYS.forEach((k) => {
+        const v = p.get(k);
+        if (v === null) return;
+        const el = inp(k);
+        if (el instanceof HTMLSelectElement) {
+          if ([...el.options].some((o) => o.value === v)) el.value = v;
+        } else if (/^\d+([.,]\d+)?$/.test(v)) el.value = v.replace(",", ".");
+      });
+    }
+
+    async function copy(text: string, out: HTMLElement, msg = "Kopyalandı.") {
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.append(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+      }
+      out.textContent = msg;
+      setTimeout(() => (out.textContent = ""), 2500);
+    }
+
+    root.addEventListener("input", () => {
+      reference();
+      calc();
+    });
+    root.addEventListener("change", () => {
+      reference();
+      calc();
+    });
+    $("[data-use]").addEventListener("click", () => {
+      if (!refValue) return;
+      inp("vbr").value = String(refValue);
+      if (mode() === "bitrate") (root.querySelector<HTMLInputElement>('input[name="mode"][value="size"]')!).checked = true;
+      calc();
+    });
+    root.querySelectorAll<HTMLButtonElement>("[data-target]").forEach((b) =>
+      b.addEventListener("click", () => {
+        inp("target").value = b.dataset.target!;
+        inp("targetUnit").value = b.dataset.unit!;
+        calc();
+      }),
+    );
+    $("[data-share]").addEventListener("click", () => copy(location.href, copied, "Bağlantı kopyalandı."));
+    $("[data-copy-result]").addEventListener("click", () => copy(lastText, copied));
+    $("[data-copy-ff]").addEventListener("click", () => copy(ff.value, copied, "Komut kopyalandı."));
+
+    readUrl();
+    reference();
+    calc();
+  }
+
+  const citeBtn = document.querySelector<HTMLButtonElement>("[data-copy]");
+  citeBtn?.addEventListener("click", async () => {
+    const ta = document.querySelector<HTMLTextAreaElement>("[data-cite]")!;
+    const out = document.querySelector<HTMLElement>("[data-cite-copied]")!;
+    try {
+      await navigator.clipboard.writeText(ta.value);
+    } catch {
+      ta.select();
+      document.execCommand("copy");
+    }
+    out.textContent = "Kopyalandı.";
+  });
+</script>
+
+<style>
+  .crumbs {
+    margin-bottom: 1.2rem;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .crumbs a {
+    color: var(--amber-text);
+  }
+  .howto {
+    display: grid;
+    gap: 0.6rem;
+    margin: 1.6rem 0 2rem;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  @media (min-width: 900px) {
+    .howto {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+    }
+  }
+  .howto strong {
+    color: var(--ink);
+  }
+  .tool {
+    display: grid;
+    gap: 1.4rem;
+    padding: clamp(1rem, 2.5vw, 1.6rem);
+    border: 1px solid var(--line);
+    border-radius: 1.2rem;
+    background: color-mix(in srgb, var(--paper) 82%, transparent);
+    color: var(--ink);
+  }
+  .grid {
+    display: grid;
+    gap: 1.4rem;
+  }
+  @media (min-width: 900px) {
+    .grid {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+  }
+  fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0 0 1.2rem;
+    min-width: 0;
+  }
+  fieldset[hidden] {
+    display: none;
+  }
+  .modes {
+    margin: 0;
+  }
+  legend {
+    margin-bottom: 0.6rem;
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    color: var(--ink);
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .chip {
+    position: relative;
+    cursor: pointer;
+  }
+  .chip input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+  .chip span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.5rem 0.95rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--paper) 70%, transparent);
+    font-size: 0.95rem;
+  }
+  .chip input:checked + span {
+    border-color: var(--amber);
+    background: color-mix(in srgb, var(--amber) 16%, var(--paper));
+    font-weight: 600;
+  }
+  .chip input:focus-visible + span {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+  }
+  input[type="number"],
+  select {
+    min-height: 44px;
+    padding: 0.45rem 0.7rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 0.6rem;
+    background: var(--paper);
+    color: var(--ink);
+    font: inherit;
+    width: 100%;
+  }
+  .dur {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+  }
+  .dur label,
+  .refgrid label {
+    display: grid;
+    gap: 0.25rem;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .row {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+  }
+  .row input {
+    flex: 1;
+  }
+  .row select {
+    width: auto;
+  }
+  .unit {
+    font-weight: 600;
+  }
+  .quick {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+    margin-top: 0.6rem;
+  }
+  .mini {
+    min-height: 36px;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink);
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .mini:hover,
+  .mini:focus-visible {
+    border-color: var(--amber);
+  }
+  .ref {
+    padding: 1rem;
+    border: 1px dashed var(--line-strong);
+    border-radius: 0.9rem;
+  }
+  .refgrid {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .refout {
+    margin: 0.8rem 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+  .result {
+    padding: 1rem 1.2rem;
+    border-radius: 0.9rem;
+    background: color-mix(in srgb, var(--amber) 9%, var(--paper));
+    border: 1px solid color-mix(in srgb, var(--amber) 40%, var(--line));
+  }
+  .big {
+    font-size: clamp(1.15rem, 1rem + 0.8vw, 1.5rem);
+    line-height: 1.35;
+  }
+  .details {
+    display: grid;
+    gap: 0.35rem;
+    margin-top: 0.6rem;
+    padding-left: 1.1rem;
+    list-style: disc;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .warn {
+    margin-top: 0.8rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: 0.7rem;
+    background: color-mix(in srgb, #e0a020 18%, var(--paper));
+    font-size: 0.92rem;
+    line-height: 1.45;
+  }
+  .ff summary {
+    cursor: pointer;
+    font-weight: 600;
+    padding: 0.6rem 0;
+  }
+  .ff[hidden] {
+    display: none;
+  }
+  .ff textarea,
+  .cite textarea {
+    width: 100%;
+    margin: 0.5rem 0;
+    padding: 0.7rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 0.6rem;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: ui-monospace, monospace;
+    font-size: 0.8rem;
+    resize: vertical;
+  }
+  code {
+    font-family: ui-monospace, monospace;
+    font-size: 0.9em;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    align-items: center;
+  }
+  .small {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .prose {
+    display: grid;
+    gap: 0.9rem;
+    margin-top: 1rem;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .prose strong {
+    color: var(--ink);
+  }
+  .formula {
+    padding: 0.7rem 1rem;
+    border-left: 3px solid var(--amber);
+    background: color-mix(in srgb, var(--paper) 80%, transparent);
+    font-family: ui-monospace, monospace;
+    font-size: 0.92rem;
+    color: var(--ink);
+  }
+  .tablewrap {
+    overflow-x: auto;
+    margin-top: 1.2rem;
+  }
+  .zt {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    color: var(--ink);
+  }
+  .zt caption {
+    caption-side: bottom;
+    padding-top: 0.6rem;
+    text-align: left;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .zt th,
+  .zt td {
+    padding: 0.6rem 0.7rem;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    white-space: nowrap;
+  }
+  .zt thead th {
+    font-family: var(--font-utility);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+    white-space: normal;
+  }
+  #tablo p,
+  .sources {
+    margin-top: 1rem;
+  }
+  .sources {
+    display: grid;
+    gap: 0.8rem;
+    padding-left: 1.2rem;
+    list-style: disc;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .sources a,
+  #tablo a,
+  .cta a:not(.ev-btn),
+  .related a {
+    color: var(--amber-text);
+  }
+  .faq {
+    display: grid;
+    gap: 1.2rem;
+    margin-top: 1.2rem;
+  }
+  .faq dt {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .faq dd {
+    margin: 0.3rem 0 0;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .cite,
+  .cta,
+  .related {
+    display: grid;
+    gap: 0.8rem;
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+    border: 1px solid var(--line);
+    border-radius: 1.2rem;
+    background: color-mix(in srgb, var(--paper) 80%, transparent);
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .cite h2,
+  .cta h2,
+  .related h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.7rem);
+    color: var(--ink);
+  }
+  .related ul {
+    display: grid;
+    gap: 0.4rem;
+    padding-left: 1.2rem;
+    list-style: disc;
+  }
+  .cite .ev-btn,
+  .cta :global(a) {
+    justify-self: start;
+  }
+</style>
