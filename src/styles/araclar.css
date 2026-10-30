@@ -148,8 +148,15 @@
   list-style: none;
 }
 @media (min-width: 820px) {
+  /* flex + centre: a short last row (e.g. 4 + 1) stays centred instead of hugging the left edge */
   .at-steps {
-    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .at-steps > li {
+    flex: 1 1 14rem;
+    max-width: calc((100% - 1.6rem) / 3);
   }
 }
 .at-steps > li {

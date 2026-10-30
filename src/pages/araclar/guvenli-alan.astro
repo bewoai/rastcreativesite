@@ -146,6 +146,7 @@ const jsonLd = [
           <span class="drop__title">Dosya seçin ya da buraya sürükleyin</span>
           <span class="drop__hint">Görsel veya video · yalnızca tarayıcınızda açılır</span>
         </label>
+        <button type="button" class="sample" data-sample-frame>Dosyanız yok mu? <strong>Örnek kareyle dene</strong></button>
         <div class="frame">
           <canvas
             width={W}
@@ -811,6 +812,12 @@ const jsonLd = [
       fileIn.value = "";
       clearMedia();
     });
+    root.querySelector<HTMLButtonElement>("[data-sample-frame]")?.addEventListener("click", async () => {
+      // stock talking-head frame (Pexels) with a Turkish hook + caption, so the overlays visibly matter
+      const res = await fetch("/araclar/guvenli-alan/rast-ornek-kare-1080x1920.jpg");
+      if (!res.ok) return;
+      load(new File([await res.blob()], "rast-ornek-kare-1080x1920.jpg", { type: "image/jpeg" }));
+    });
 
     playBtn.addEventListener("click", () => {
       const v = st.media;
@@ -1040,6 +1047,26 @@ const jsonLd = [
   .drop__title {
     font-weight: 600;
     color: var(--ink);
+  }
+  .sample {
+    justify-self: center;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 0.92rem;
+    color: inherit;
+    opacity: 0.85;
+    cursor: pointer;
+    padding: 0.2rem 0.4rem;
+  }
+  .sample strong {
+    color: var(--amber);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .sample:hover,
+  .sample:focus-visible {
+    opacity: 1;
   }
   .drop__hint {
     font-size: 0.85rem;

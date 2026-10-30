@@ -1,0 +1,29 @@
+{
+  "_note": "Stock frames for the /araclar/ card previews and tool samples. All from Pexels (Pexels License: free commercial use, no attribution required; checked 2026-10-30). 'video' = poster frame of a Pexels stock video. kartlar.py downloads them into scripts/araclar-kartlar/.cache/ (gitignored). One photo per card — never reuse a key on two cards.",
+  "items": {
+    "th-reels":    {"id": 8048443,  "type": "video", "q": "h=1920", "card": "guvenli-alan (Reels) + tool sample 'Örnek kareyle dene'", "title": "Woman Talking In Front of the Camera"},
+    "th-tiktok":   {"id": 8360267,  "type": "video", "q": "h=1920", "card": "guvenli-alan (TikTok)", "title": "Man Talking While Looking at Camera"},
+    "th-altyazi":  {"id": 5147319,  "type": "video", "q": "h=1920", "card": "altyazi-kontrolu", "title": "Woman Talking while Sitting"},
+    "th-kapak":    {"id": 8135595,  "type": "video", "q": "h=1920", "card": "kapak-sablonlari (Reels kapağı)", "title": "A Man Vlogging"},
+    "th-youtube":  {"id": 8136027,  "type": "video", "q": "w=1600", "card": "kapak-sablonlari (YouTube küçük resim)", "title": "A Woman Explaining while Doing Hand Gestures"},
+    "th-enboy":    {"id": 8135343,  "type": "video", "q": "w=1920", "card": "en-boy-orani", "title": "Man Talking While Looking at Camera"},
+    "g-th1":       {"id": 8685427,  "type": "video", "q": "w=1600", "card": "instagram-grid-sablonu", "title": "Close Up Video of a Woman Wearing Hijab Talking"},
+    "g-th2":       {"id": 8202010,  "type": "video", "q": "w=1600", "card": "instagram-grid-sablonu", "title": "Woman Smiling and Looking at the Camera"},
+    "g-th3":       {"id": 7262665,  "type": "video", "q": "h=1920", "card": "instagram-grid-sablonu", "title": "Man Talking to Camera"},
+    "g-urun":      {"id": 7668404,  "type": "video", "q": "h=1920", "card": "instagram-grid-sablonu", "title": "Woman Vlogging About Her Product"},
+    "g-burger":    {"id": 28272159, "type": "photo", "q": "h=1920", "card": "instagram-grid-sablonu", "title": "Burger on Black Background"},
+    "g-latte":     {"id": 30157168, "type": "photo", "q": "h=1920", "card": "instagram-grid-sablonu", "title": "Close-up of Latte Art in a Cozy Coffee Shop"},
+    "g-pasta":     {"id": 35183327, "type": "photo", "q": "h=1920", "card": "instagram-grid-sablonu", "title": "Assorted Pastries and Croissants in Bakery Display"},
+    "g-cilt":      {"id": 34939703, "type": "photo", "q": "h=1920", "card": "instagram-grid-sablonu", "title": "Elegant Minimalist Skincare Product Flatlay"},
+    "g-istanbul":  {"id": 35611167, "type": "photo", "q": "h=1920", "card": "instagram-grid-sablonu", "title": "Bustling Street Scene in Historic Istanbul"},
+    "lut":         {"id": 29415527, "type": "photo", "q": "w=1600", "card": "lut-paketi (önce/sonra, rast-soguk-gece)", "title": "Golden Hour Portrait of Woman Outdoors"},
+    "bitrate":     {"id": 35746669, "type": "photo", "q": "w=1920", "card": "bitrate-hesaplayici (4K kare)", "title": "Scenic Road Trip through Mountainous Landscape"},
+    "export":      {"id": 31718971, "type": "photo", "q": "w=1920", "card": "video-export-ayarlari (kurgu ekranı)", "title": "Professional Video Editing Interface on Computer Screen"},
+    "planlayici":  {"id": 38041122, "type": "photo", "q": "w=1920", "card": "cekim-planlayici (masa)", "title": "Dark Office Workspace with Laptop and Notebook"},
+    "d-storyboard":{"id": 5627838,  "type": "photo", "q": "w=1920", "card": "storyboard-sablonu (masa)", "title": "A Grayscale of a Clapperboard beside Camera Lens"},
+    "d-brief":     {"id": 5827789,  "type": "photo", "q": "w=1920", "card": "brief-formu (masa)", "title": "Black Notebook and Pen Near a Laptop on the Wooden Surface"},
+    "d-checklist": {"id": 7263910,  "type": "photo", "q": "w=1920", "card": "cekim-kontrol-listesi (ekipman)", "title": "Traveler Equipment on Black Background Flat Lay"},
+    "d-izin":      {"id": 5827790,  "type": "photo", "q": "w=1920", "card": "cekim-izin-formu (masa)", "title": "Wooden Table with Laptop and a Cup of Coffee on Top"},
+    "d-plan":      {"id": 15404793, "type": "photo", "q": "w=1920", "card": "cekim-plani (masa)", "title": "Cup of Coffee on a Dark Wooden Surface"}
+  }
+}
