@@ -35,9 +35,17 @@ const title = `${location.name} ${service.name} ${service.seoTitleSuffix}`;
 const pageHeading = `${location.name} ${service.name}`;
 const faqHeading = `${location.name} ${service.name} hakkında`;
 const path = `/${service.slug}/${location.slug}/`;
-const description =
-  extra?.description ??
-  `${location.name} ${service.name.toLocaleLowerCase('tr')} — ${service.tagline}. ${location.loc} sinema standardında prodüksiyon. Projenizi anlatın, birlikte planlayalım.`;
+// Generated fallback: drop the closing sentences when the long taglines push
+// it past what search results show (~160 chars).
+const descriptionParts = [
+  `${location.name} ${service.name.toLocaleLowerCase('tr')} — ${service.tagline}.`,
+  `${location.loc} sinema standardında prodüksiyon.`,
+  `Projenizi anlatın, birlikte planlayalım.`,
+];
+const fallbackDescription = [3, 2, 1]
+  .map((n) => descriptionParts.slice(0, n).join(" "))
+  .find((d) => d.length <= 160) ?? descriptionParts[0];
+const description = extra?.description ?? fallbackDescription;
 
 // City/service-specific FAQ — distinct text per page (anti-doorway).
 const firstSentence = location.blurb.split(". ")[0] + ".";

@@ -76,6 +76,7 @@ const crumbs = breadcrumb([
       sections.map((s) => (
         <section id={s.slug} class="catsec">
           <h2 class="catsec__title">{s.label}</h2>
+          <a class="catsec__all" href={`/projeler/kategori/${s.slug}/`}>Tüm {s.label.toLocaleLowerCase("tr")} projeleri →</a>
           <div class="folder-grid">
             {s.brands.map((b) => (
               <BrandFolder
@@ -163,5 +164,14 @@ const crumbs = breadcrumb([
       grid-template-columns: repeat(4, 1fr);
       gap: 1.25rem;
     }
+  }
+  .catsec__all {
+    display: inline-block;
+    margin: 0 0 1rem;
+    font-family: var(--font-utility);
+    font-size: 0.9rem;
+    color: var(--amber-text);
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 </style>
