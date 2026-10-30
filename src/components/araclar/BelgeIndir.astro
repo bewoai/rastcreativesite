@@ -1,0 +1,73 @@
+---
+/** Download buttons for BelgeSayfasi (sizes are computed by the parent). */
+interface Props {
+  downloads: { href: string; label: string; format: string; note?: string; primary?: boolean; size: string }[];
+  zip?: string;
+  zipSize?: string;
+}
+const p = Astro.props;
+const downloads = p.downloads;
+const zipSize = p.zipSize;
+---
+
+{
+  downloads.length > 0 && (
+        <div class="dl" id="indir">
+          <ul class="dl__list">
+            {downloads.map((d) => (
+              <li>
+                <a class:list={["ev-btn", { "ev-btn--sun": d.primary }]} href={d.href} download>
+                  {d.label}
+                </a>
+                <span class="small">
+                  {d.format} · {d.size}
+                  {d.note && <> · {d.note}</>}
+                </span>
+              </li>
+            ))}
+          </ul>
+          {p.zip && (
+            <p class="small">
+              Hepsi bir arada: <a href={p.zip} download>tüm dosyalar (ZIP, {zipSize})</a>, içinde OKU-BENI.txt. Lisans{" "}
+              <a href="https://creativecommons.org/licenses/by/4.0/deed.tr" rel="license noopener" target="_blank">CC BY 4.0</a>:
+              ticari işlerde de kullanabilirsiniz, tek şart atıf (“Rast Creative Studio — rastcreative.com”).
+            </p>
+          )}
+        </div>
+      )
+}
+
+<style>
+  .dl {
+    margin-top: 1.6rem;
+    padding: clamp(1rem, 2.5vw, 1.5rem);
+    border: 1px solid var(--line);
+    border-radius: 1.2rem;
+    background: color-mix(in srgb, var(--paper) 82%, transparent);
+  }
+  .dl__list {
+    display: grid;
+    gap: 0.9rem;
+  }
+  @media (min-width: 760px) {
+    .dl__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .dl__list li {
+    display: grid;
+    gap: 0.3rem;
+    justify-items: start;
+  }
+  .small {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .dl > .small {
+    margin-top: 1rem;
+  }
+  .dl .small a {
+    color: var(--amber-text);
+  }
+</style>

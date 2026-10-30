@@ -1,0 +1,191 @@
+{
+  "$kaynak": "Rast Creative Studio · https://rastcreative.com/araclar/cekim-plani/ · CC BY 4.0",
+  "$not": "Örnek veridir. Araçta “JSON yükle” ile açın.",
+  "v": 1,
+  "proje": {
+    "ad": "Örnek Mobilya · Tanıtım filmi",
+    "musteri": "Örnek Mobilya A.Ş.",
+    "tarih": "2026-11-12",
+    "gun": "1 / 1",
+    "cagri": "07:30",
+    "bitis": "17:30",
+    "yapimci": "Ayşe Yılmaz",
+    "yapimciTel": "0 5xx xxx xx xx",
+    "yonetmen": "Mehmet Demir",
+    "yonetmenTel": "0 5xx xxx xx xx",
+    "gunes": "07:18 / 17:01",
+    "hava": "Parçalı bulutlu, 12°C; yağış ihtimali düşük",
+    "acil": "Örnek Devlet Hastanesi, Örnek Cad. No:1",
+    "notlar": "Fabrika girişinde baret ve yelek zorunlu. Öğle yemeği 12:30'da yemekhanede. Logolu ya da yoğun desenli kıyafet giymeyin."
+  },
+  "lokasyonlar": [
+    {
+      "ad": "Fabrika · üretim hattı",
+      "adres": "Örnek OSB, 3. Cadde No:12",
+      "harita": "https://maps.example.com/fabrika",
+      "iletisim": "Vardiya amiri Ali B.",
+      "not": "Yük girişinden girin; park B kapısında"
+    },
+    {
+      "ad": "Showroom",
+      "adres": "Örnek Bulvarı No:45",
+      "harita": "",
+      "iletisim": "Mağaza müdürü Zeynep K.",
+      "not": "Mağaza 10:00'da açılır; çekim 15:00'ten sonra"
+    }
+  ],
+  "ekip": [
+    {
+      "rol": "Yönetmen",
+      "ad": "Mehmet Demir",
+      "tel": "0 5xx xxx xx xx",
+      "cagri": "07:30"
+    },
+    {
+      "rol": "Görüntü yönetmeni",
+      "ad": "Can Arslan",
+      "tel": "0 5xx xxx xx xx",
+      "cagri": "07:30"
+    },
+    {
+      "rol": "Ses kayıt",
+      "ad": "Deniz Şahin",
+      "tel": "0 5xx xxx xx xx",
+      "cagri": "08:00"
+    },
+    {
+      "rol": "Yapım asistanı",
+      "ad": "Ece Kaya",
+      "tel": "0 5xx xxx xx xx",
+      "cagri": "07:15"
+    }
+  ],
+  "oyuncular": [
+    {
+      "ad": "Hasan Öztürk",
+      "rol": "Genel müdür (röportaj)",
+      "hazir": "09:15",
+      "cagri": "09:45",
+      "izin": true
+    },
+    {
+      "ad": "Elif Çelik",
+      "rol": "Usta (üretim hattı)",
+      "hazir": "",
+      "cagri": "08:30",
+      "izin": false
+    }
+  ],
+  "program": [
+    {
+      "bas": "07:30",
+      "bit": "08:30",
+      "sahne": "—",
+      "aciklama": "Kurulum, ışık ve ses testi",
+      "lokasyon": "Fabrika · üretim hattı",
+      "kisiler": "Ekip",
+      "not": ""
+    },
+    {
+      "bas": "08:30",
+      "bit": "09:45",
+      "sahne": "1A–1D",
+      "aciklama": "Üretim hattı detay planları ve usta",
+      "lokasyon": "Fabrika · üretim hattı",
+      "kisiler": "Elif Çelik",
+      "not": "Makro lens, slider"
+    },
+    {
+      "bas": "09:45",
+      "bit": "11:15",
+      "sahne": "2A",
+      "aciklama": "Genel müdür röportajı",
+      "lokasyon": "Fabrika · üretim hattı",
+      "kisiler": "Hasan Öztürk",
+      "not": "2 kamera, yaka + boom"
+    },
+    {
+      "bas": "11:15",
+      "bit": "12:30",
+      "sahne": "3A–3C",
+      "aciklama": "Drone: fabrika dış cephe ve açılış",
+      "lokasyon": "Fabrika · üretim hattı",
+      "kisiler": "Ekip",
+      "not": "Uçuş izni kontrol edildi"
+    },
+    {
+      "bas": "12:30",
+      "bit": "13:30",
+      "sahne": "—",
+      "aciklama": "Öğle yemeği",
+      "lokasyon": "Fabrika · üretim hattı",
+      "kisiler": "Herkes",
+      "not": ""
+    },
+    {
+      "bas": "13:30",
+      "bit": "14:30",
+      "sahne": "—",
+      "aciklama": "Lokasyon geçişi ve showroom kurulumu",
+      "lokasyon": "Showroom",
+      "kisiler": "Ekip",
+      "not": ""
+    },
+    {
+      "bas": "15:00",
+      "bit": "17:00",
+      "sahne": "4A–4F",
+      "aciklama": "Showroom ürün planları (9:16 dahil)",
+      "lokasyon": "Showroom",
+      "kisiler": "Ekip",
+      "not": "Dikey kadrajlar ayrıca"
+    },
+    {
+      "bas": "17:00",
+      "bit": "17:30",
+      "sahne": "—",
+      "aciklama": "Toparlanma, yedekleme, ekipman sayımı",
+      "lokasyon": "Showroom",
+      "kisiler": "Ekip",
+      "not": ""
+    }
+  ],
+  "ekipman": [
+    {
+      "kalem": "Kamera gövdesi",
+      "adet": "2",
+      "sorumlu": "Can Arslan",
+      "ok": true
+    },
+    {
+      "kalem": "Lens seti (24-70, 50, makro)",
+      "adet": "1",
+      "sorumlu": "Can Arslan",
+      "ok": true
+    },
+    {
+      "kalem": "LED ışık + softbox",
+      "adet": "3",
+      "sorumlu": "Can Arslan",
+      "ok": false
+    },
+    {
+      "kalem": "Yaka mikrofonu",
+      "adet": "2",
+      "sorumlu": "Deniz Şahin",
+      "ok": true
+    },
+    {
+      "kalem": "Drone",
+      "adet": "1",
+      "sorumlu": "Mehmet Demir",
+      "ok": true
+    },
+    {
+      "kalem": "Hafıza kartı + harici disk (2 adet)",
+      "adet": "6",
+      "sorumlu": "Ece Kaya",
+      "ok": false
+    }
+  ]
+}

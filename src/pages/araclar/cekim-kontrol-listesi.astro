@@ -1,0 +1,140 @@
+---
+/**
+ * /araclar/cekim-kontrol-listesi/ — free shoot-day checklist (fillable PDF,
+ * XLSX/CSV, DOCX, Notion). Files built by scripts/belgeler/generate.py;
+ * the visible list below comes from the same data (src/data/belgeler/*.json).
+ */
+import BelgeSayfasi from "../../components/araclar/BelgeSayfasi.astro";
+import Section from "../../components/Section.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import DATA from "../../data/belgeler/cekim-kontrol-listesi.json";
+import { docSchema } from "../../data/belgeler/schema";
+
+const PATH = "/araclar/cekim-kontrol-listesi/";
+const D = PATH;
+const total = DATA.sections.reduce((n, s) => n + s.items.length, 0);
+const title = "Çekim Günü Kontrol Listesi (PDF, Excel)";
+const description = `Ücretsiz çekim günü kontrol listesi: kamera, ses, ışık, medya, güç, izinler, yedekleme ve toparlanma için ${total} madde. Doldurulabilir PDF, Excel ve Notion.`;
+
+const previews = DATA.previews.map((v, i) => ({
+  ...v,
+  src: D + v.src,
+  alt: [
+    "Çekim günü kontrol listesi sayfa 1: bir gün önce, kamera, ses ve ışık",
+    "Çekim günü kontrol listesi sayfa 2: medya ve veri, güç, izin ve evrak, set ve güvenlik",
+    "Çekim günü kontrol listesi sayfa 3: yedekleme, toparlanma, notlar ve imza",
+  ][i],
+  caption: `Sayfa ${i + 1} / ${DATA.previews.length}`,
+}));
+
+const downloads = [
+  { href: D + "rast-cekim-gunu-kontrol-listesi.pdf", label: "Kontrol listesi (PDF)", format: "PDF · doldurulabilir · 3 sayfa", primary: true },
+  { href: D + "rast-cekim-gunu-kontrol-listesi.xlsx", label: "Kontrol listesi (Excel)", format: "XLSX · durum açılır listesi", note: "Google E-Tablolar'da açılır" },
+  { href: D + "rast-cekim-gunu-kontrol-listesi.csv", label: "Kontrol listesi (CSV)", format: "CSV · UTF-8" },
+  { href: D + "rast-cekim-gunu-kontrol-listesi.docx", label: "Kontrol listesi (Word)", format: "DOCX · düzenlenebilir" },
+  { href: D + "rast-cekim-gunu-kontrol-listesi-notion.md", label: "Kontrol listesi (Notion)", format: "Markdown · onay kutulu" },
+];
+const zip = D + "rast-cekim-kontrol-listesi-paketi.zip";
+
+const howto = [
+  { name: "Listeyi kendi işinize göre kırpın.", text: "Word ya da Excel sürümünde gereksiz maddeleri silin, kendi ekipmanınızı ekleyin. Drone yoksa drone maddesini çıkarın; röportaj varsa ses bölümünü genişletin." },
+  { name: "Bir gün önce ilk bölümü bitirin.", text: "Çekim planı, plan listesi, hava durumu ve mekân teyidi bir gün önceden kapanmalı; çekim sabahına sürpriz bırakmayın." },
+  { name: "Sette bölüm bölüm işaretleyin.", text: "Kamera, ses ve ışık kurulurken ilgili kişi kendi bölümünü işaretlesin; Excel sürümünde Durum sütunu ✓, —, Yok ya da Sorun alır ve satır renklenir." },
+  { name: "Yedeklemeyi atlamayın.", text: "Kartlar gün içinde en az iki ayrı diske kopyalanmadan ve kopyalama doğrulanmadan hiçbir kart formatlanmaz." },
+  { name: "Toparlanmayı imzayla kapatın.", text: "Ekipman sayımı, mekânın ilk hali, imzalı izin formları ve gün raporu tamamlanınca kontrol eden kişi saat ve imza atar." },
+];
+
+const faqs = [
+  {
+    question: "Çekim günü kontrol listesinde neler olmalı?",
+    answer: `Bu listede ${DATA.sections.length} bölüm ve ${total} madde var: bir gün önce yapılacaklar, kamera, ses, ışık, medya ve veri, güç, izin ve evrak, set ve güvenlik, yedekleme ve toparlanma. Her maddenin altında kısa bir ipucu bulunur.`,
+  },
+  {
+    question: "Küçük bir sosyal medya çekimi için de gerekir mi?",
+    answer: "Telefonla yapılan kısa çekimlerde bile en çok kaybettiren şeyler aynıdır: boş batarya, dolu hafıza, rüzgârlı ses ve alınmamış izin. Listeyi kırparak kullanın; kamera, ses, güç ve yedekleme bölümleri her çekimde işe yarar.",
+  },
+  {
+    question: "3-2-1 yedekleme kuralı nedir?",
+    answer: "Görüntülerin üç kopyası olsun, en az iki farklı ortamda dursun (ör. iki ayrı disk) ve biri başka bir yerde saklansın. Sette en azından iki ayrı diske kopyalayıp dosya sayısı ve boyutunu kontrol edin; kartı ancak bundan sonra formatlayın.",
+  },
+  {
+    question: "Kadrajdaki kişiler için hangi izin gerekir?",
+    answer: "Tanınabilir kişilerden görüntü ve seslerinin nerede, ne kadar süre kullanılacağını açıkça gösteren yazılı izin alın; 18 yaşından küçükler için veli ya da vasi imzası gerekir. Ücretsiz izin formu taslağımızı bir avukata kontrol ettirerek kullanabilirsiniz.",
+  },
+  {
+    question: "Excel dosyasını Google E-Tablolar'da kullanabilir miyim?",
+    answer: "Evet. XLSX dosyasını Google Drive'a yükleyip açın; Durum sütunundaki açılır liste ve renklendirme korunur. Ekiple aynı anda işaretlemek için dosyayı paylaşmanız yeterli.",
+  },
+  {
+    question: "Listeyi kendi ekibim ya da müşterim için uyarlayabilir miyim?",
+    answer: "Evet. Tüm dosyalar CC BY 4.0 lisanslıdır: düzenleyebilir, kendi logonuzla dağıtabilir, ticari işlerde kullanabilirsiniz. Tek şart atıf: “Şablon: Rast Creative Studio — rastcreative.com”.",
+  },
+];
+
+const schema = docSchema({
+  name: "Çekim Günü Kontrol Listesi",
+  description,
+  path: PATH,
+  image: previews[0].src,
+  files: [...downloads, { href: zip, label: "Tüm dosyalar (ZIP)" }],
+  keywords: ["çekim kontrol listesi", "çekim günü checklist", "video çekim hazırlık listesi", "set checklist", "yedekleme 3-2-1"],
+  about: ["Video çekimi", "Prodüksiyon planlama"],
+});
+---
+
+<BelgeSayfasi
+  path={PATH}
+  crumb="Çekim kontrol listesi"
+  title={title}
+  description={description}
+  eyebrow="Kontrol listesi · Ücretsiz · CC BY 4.0"
+  h1="Çekim günü kontrol listesi"
+  docName="Çekim günü kontrol listesi"
+  previews={previews}
+  downloads={downloads}
+  zip={zip}
+  howto={howto}
+  howtoTitle="Kontrol listesi nasıl kullanılır?"
+  faqs={faqs}
+  related={["/araclar/cekim-plani/", "/araclar/storyboard-sablonu/", "/araclar/cekim-izin-formu/", "/araclar/brief-formu/", "/araclar/bitrate-hesaplayici/", "/rehber/video-export-ayarlari/", "/araclar/lut-paketi/", "/araclar/sfx-paketi/"]}
+  schema={schema}
+  citeLabel="Çekim günü kontrol listesi"
+  ctaTitle="Listeyi biz de her çekimde kullanıyoruz"
+  ctaText={'Bu liste Rast Creative Studio ekibinin sette kullandığı listenin sadeleştirilmiş hâli. Çekiminizi hazırlıktan teslime kadar bize bırakmak isterseniz <a href="/video-cekimi/">video çekimi</a> ve <a href="/drone-cekimi/">drone çekimi</a> sayfalarına göz atın ya da doğrudan yazın.'}
+  image={previews[0].src}
+>
+  <Fragment slot="intro">
+    <p>
+      Unutulan bir batarya, formatlanan yanlış kart ya da alınmamış bir izin, bütün bir çekim gününe mal olabilir. Bu liste
+      sete çıkmadan önce ve setten ayrılmadan önce kontrol edilecek <strong>{total} maddeyi</strong> {DATA.sections.length}
+      bölümde toplar. Doldurulabilir PDF, Excel / Google E-Tablolar, Word ve Notion olarak indirin.
+    </p>
+  </Fragment>
+
+  <Section width="default" space="tight" id="liste">
+    <SectionHeading eyebrow="Liste">Kontrol listesindeki maddeler</SectionHeading>
+    <div class="belge-cols">
+      {
+        DATA.sections.map((s) => (
+          <div>
+            <h3>{s.name}</h3>
+            <ul class="belge-prose">
+              {s.items.map((i) => (
+                <li>
+                  <strong>{i.item}.</strong> {i.tip}.
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+    <div class="belge-prose">
+      <p>
+        Çekim saatlerini, ekibi ve lokasyonları tek sayfaya dökmek için <a href="/araclar/cekim-plani/">çekim planı
+        oluşturucuyu</a>, hangi planların çekileceğini sıralamak için <a href="/araclar/storyboard-sablonu/">plan listesi
+        şablonunu</a> kullanabilirsiniz.
+      </p>
+    </div>
+  </Section>
+</BelgeSayfasi>

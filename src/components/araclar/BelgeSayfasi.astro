@@ -1,0 +1,424 @@
+---
+/**
+ * Shared page shell for the free production documents and tools under
+ * /araclar/ (storyboard, brief, checklist, consent form, call sheet).
+ * Renders: breadcrumb, H1 + intro, optional tool slot, document previews,
+ * download buttons (sizes read from /public at build time), how-to (HowTo
+ * JSON-LD from the same steps), page body slot, FAQ (FAQPage = visible text),
+ * "Kaynak göster" citation box, related tools (only routes that exist) and a
+ * soft CTA without prices.
+ */
+import fs from "node:fs";
+import path from "node:path";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Section from "../Section.astro";
+import SectionHeading from "../SectionHeading.astro";
+import Button from "../Button.astro";
+import { PRIMARY_CTA, SITE } from "../../consts";
+import { breadcrumb, faqPage } from "../../lib/schema";
+import { relatedTools } from "../../data/belgeler/kardes-araclar";
+import BelgeIndir from "./BelgeIndir.astro";
+
+export interface Download {
+  href: string;
+  label: string;
+  format: string;
+  note?: string;
+  primary?: boolean;
+}
+export interface Preview {
+  src: string;
+  w: number;
+  h: number;
+  alt: string;
+  caption?: string;
+}
+interface Props {
+  path: string;
+  crumb: string;
+  title: string;
+  description: string;
+  eyebrow: string;
+  h1: string;
+  docName: string;
+  previews?: Preview[];
+  downloads?: Download[];
+  zip?: string;
+  howto: { name: string; text: string }[];
+  howtoTitle: string;
+  faqs: { question: string; answer: string }[];
+  related: string[];
+  /** Main schema node (DigitalDocument / WebApplication); breadcrumb, HowTo, FAQ are added here. */
+  schema: Record<string, unknown>;
+  citeLabel: string;
+  ctaTitle: string;
+  ctaText: string;
+  image?: string;
+  /** Tool pages: render the tool slot right under the intro, downloads after it. */
+  toolFirst?: boolean;
+}
+
+const p = Astro.props;
+const PAGE_URL = new URL(p.path, SITE.url).href;
+const abs = (u: string) => new URL(u, SITE.url).href;
+
+const kb = (href: string) => {
+  try {
+    const s = fs.statSync(path.join(process.cwd(), "public", href)).size;
+    return s > 1024 * 1024 ? `${(s / 1024 / 1024).toFixed(1).replace(".", ",")} MB` : `${Math.max(1, Math.round(s / 1024))} KB`;
+  } catch {
+    throw new Error(`Missing download file: public${href}`);
+  }
+};
+const downloads = (p.downloads ?? []).map((d) => ({ ...d, size: kb(d.href) }));
+const zipSize = p.zip ? kb(p.zip) : "";
+const related = relatedTools(p.related, p.path);
+
+const citeHtml = `${p.citeLabel}: <a href="${PAGE_URL}">Rast Creative Studio</a>`;
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Araçlar", path: "/araclar/" },
+    { name: p.crumb, path: p.path },
+  ]),
+  p.schema,
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: p.howtoTitle,
+    inLanguage: "tr",
+    step: p.howto.map((s, i) => ({ "@type": "HowToStep", position: i + 1, name: s.name, text: s.text })),
+  },
+  faqPage(p.faqs),
+];
+---
+
+<BaseLayout title={p.title} description={p.description} jsonLd={jsonLd} image={p.image}>
+  <Section width="wide" space="tight">
+    <nav class="crumbs" aria-label="Sayfa yolu">
+      <a href="/">Ana sayfa</a> <span aria-hidden="true">/</span> <a href="/araclar/">Araçlar</a>
+      <span aria-hidden="true">/</span> <span aria-current="page">{p.crumb}</span>
+    </nav>
+    <SectionHeading as="h1" eyebrow={p.eyebrow}>
+      {p.h1}
+      <Fragment slot="intro"><slot name="intro" /></Fragment>
+    </SectionHeading>
+    <slot name="top" />
+    {!p.toolFirst && <BelgeIndir downloads={downloads} zip={p.zip} zipSize={zipSize} />}
+  </Section>
+
+  <slot name="tool" />
+
+  {
+    p.toolFirst && downloads.length > 0 && (
+      <Section width="wide" space="tight" id="ornek">
+        <SectionHeading eyebrow="İndir">Örnek dosyalar</SectionHeading>
+        <BelgeIndir downloads={downloads} zip={p.zip} zipSize={zipSize} />
+      </Section>
+    )
+  }
+
+  {
+    p.previews && p.previews.length > 0 && (
+      <Section width="wide" space="tight" id="onizleme">
+        <SectionHeading eyebrow="Önizleme">{p.docName}: sayfalar</SectionHeading>
+        <ul class="pv">
+          {p.previews.map((v) => (
+            <li>
+              <a href={v.src} target="_blank" rel="noopener">
+                <img src={v.src} alt={v.alt} width={v.w} height={v.h} loading="lazy" decoding="async" />
+              </a>
+              {v.caption && <span class="small">{v.caption}</span>}
+            </li>
+          ))}
+        </ul>
+      </Section>
+    )
+  }
+
+  <Section width="default" space="tight" id="nasil-kullanilir">
+    <SectionHeading eyebrow="Nasıl kullanılır">{p.howtoTitle}</SectionHeading>
+    <ol class="steps">
+      {
+        p.howto.map((s) => (
+          <li>
+            <strong>{s.name}</strong> {s.text}
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
+
+  <slot />
+
+  <Section width="default" space="tight" id="sss">
+    <SectionHeading eyebrow="SSS">Sık sorulan sorular</SectionHeading>
+    <dl class="faq">
+      {
+        p.faqs.map((f) => (
+          <div class="faq__item">
+            <dt>{f.question}</dt>
+            <dd>{f.answer}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Section>
+
+  <Section width="default" space="tight" id="kaynak-goster">
+    <div class="box">
+      <h2>Kaynak göster</h2>
+      <p>
+        Bu sayfayı bir yazıda, eğitimde ya da kaynak listesinde paylaşmak isterseniz aşağıdaki bağlantıyı
+        kopyalayabilirsiniz. Dosyaları kullanırken atıf satırı: <em>“Şablon: Rast Creative Studio — rastcreative.com”</em>.
+      </p>
+      <label for="cite-code" class="small">HTML bağlantısı</label>
+      <textarea id="cite-code" readonly rows="2" data-cite>{citeHtml}</textarea>
+      <div>
+        <button type="button" class="ev-btn" data-copy>Kopyala</button>
+        <span class="small" data-copied aria-live="polite"></span>
+      </div>
+    </div>
+  </Section>
+
+  {
+    related.length > 0 && (
+      <Section width="default" space="tight" id="ilgili">
+        <SectionHeading eyebrow="Ücretsiz araçlar">İlgili araç ve şablonlar</SectionHeading>
+        <ul class="rel">
+          {related.map((r) => (
+            <li>
+              <a href={r.href}>{r.name}</a>
+            </li>
+          ))}
+        </ul>
+      </Section>
+    )
+  }
+
+  <Section width="default" space="tight">
+    <div class="box cta">
+      <h2>{p.ctaTitle}</h2>
+      <p set:html={p.ctaText} />
+      <Button href={PRIMARY_CTA.href}>Görüşelim</Button>
+    </div>
+  </Section>
+</BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>("[data-copy]").forEach((btn) =>
+    btn.addEventListener("click", async () => {
+      const box = btn.closest(".box")!;
+      const ta = box.querySelector<HTMLTextAreaElement>("[data-cite]")!;
+      const out = box.querySelector<HTMLElement>("[data-copied]")!;
+      try {
+        await navigator.clipboard.writeText(ta.value);
+      } catch {
+        ta.select();
+        document.execCommand("copy");
+      }
+      out.textContent = "Kopyalandı.";
+    }),
+  );
+</script>
+
+<style>
+  .crumbs {
+    margin-bottom: 1.2rem;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .crumbs a {
+    color: var(--amber-text);
+  }
+  .dl {
+    margin-top: 1.6rem;
+    padding: clamp(1rem, 2.5vw, 1.5rem);
+    border: 1px solid var(--line);
+    border-radius: 1.2rem;
+    background: color-mix(in srgb, var(--paper) 82%, transparent);
+  }
+  .dl__list {
+    display: grid;
+    gap: 0.9rem;
+  }
+  @media (min-width: 760px) {
+    .dl__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .dl__list li {
+    display: grid;
+    gap: 0.3rem;
+    justify-items: start;
+  }
+  .dl .small a,
+  .steps a,
+  .rel a,
+  .box a:not(.ev-btn):not(.btn),
+  :global(.belge-prose a) {
+    color: var(--amber-text);
+  }
+  .small {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .dl > .small {
+    margin-top: 1rem;
+  }
+  .pv {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding: 0.4rem 0 1rem;
+    margin-top: 1rem;
+    scroll-snap-type: x mandatory;
+  }
+  .pv li {
+    flex: 0 0 auto;
+    display: grid;
+    gap: 0.4rem;
+    scroll-snap-align: start;
+  }
+  .pv img {
+    display: block;
+    height: clamp(260px, 52vw, 460px);
+    width: auto;
+    max-width: 88vw;
+    object-fit: contain;
+    border: 1px solid var(--line);
+    border-radius: 0.6rem;
+    background: #fff;
+    box-shadow: 0 18px 36px -26px rgba(0, 0, 0, 0.45);
+  }
+  .steps {
+    display: grid;
+    gap: 0.8rem;
+    margin-top: 1.2rem;
+    padding-left: 1.3rem;
+    list-style: decimal;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .steps strong {
+    color: var(--ink);
+  }
+  .faq {
+    display: grid;
+    gap: 1.2rem;
+    margin-top: 1.2rem;
+  }
+  .faq dt {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .faq dd {
+    margin: 0.3rem 0 0;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .box {
+    display: grid;
+    gap: 0.8rem;
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+    border: 1px solid var(--line);
+    border-radius: 1.2rem;
+    background: color-mix(in srgb, var(--paper) 80%, transparent);
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .box h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.7rem);
+    color: var(--ink);
+  }
+  .box textarea {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 0.6rem;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: ui-monospace, monospace;
+    font-size: 0.85rem;
+    resize: none;
+  }
+  .cta :global(.btn) {
+    justify-self: start;
+  }
+  .rel {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding-left: 1.2rem;
+    list-style: disc;
+    color: var(--ink-soft);
+  }
+  @media (min-width: 760px) {
+    .rel {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 2rem;
+    }
+  }
+  :global(.belge-prose) {
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  :global(.belge-prose p + p),
+  :global(.belge-prose p + ul),
+  :global(.belge-prose ul + p) {
+    margin-top: 0.8rem;
+  }
+  :global(.belge-prose ul) {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding-left: 1.2rem;
+    list-style: disc;
+  }
+  :global(.belge-prose strong) {
+    color: var(--ink);
+  }
+  :global(.belge-cols) {
+    display: grid;
+    gap: 1.4rem;
+    margin-top: 1.2rem;
+  }
+  @media (min-width: 760px) {
+    :global(.belge-cols) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  :global(.belge-cols h3) {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+  :global(.belge-table) {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    color: var(--ink);
+    margin-top: 1rem;
+  }
+  :global(.belge-table th),
+  :global(.belge-table td) {
+    padding: 0.55rem 0.6rem;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+  }
+  :global(.belge-table thead th) {
+    font-family: var(--font-utility);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+  }
+  :global(.belge-tablewrap) {
+    overflow-x: auto;
+  }
+</style>

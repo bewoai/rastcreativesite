@@ -1,0 +1,147 @@
+---
+/**
+ * /araclar/brief-formu/ — free client video brief form (fillable PDF, DOCX,
+ * Notion). Files built by scripts/belgeler/generate.py.
+ */
+import BelgeSayfasi from "../../components/araclar/BelgeSayfasi.astro";
+import Section from "../../components/Section.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import DATA from "../../data/belgeler/brief-formu.json";
+import { docSchema } from "../../data/belgeler/schema";
+
+const PATH = "/araclar/brief-formu/";
+const D = PATH;
+const title = "Video Brief Formu (Ücretsiz PDF, Word)";
+const description =
+  "Ücretsiz video brief formu: amaç, hedef kitle, mesaj, teslimatlar, kanallar, referanslar, çekim ve onay bilgileri. Doldurulabilir PDF, Word ve Notion şablonu.";
+
+const previews = DATA.previews.map((v, i) => ({
+  ...v,
+  src: D + v.src,
+  alt: [
+    "Video brief formu sayfa 1: proje ve iletişim, amaç, hedef kitle ve mesaj",
+    "Video brief formu sayfa 2: teslimatlar, en-boy oranı, kanallar, ton ve referanslar",
+    "Video brief formu sayfa 3: çekim bilgileri, takvim, onay, teslim ve kullanım kapsamı",
+  ][i],
+  caption: `Sayfa ${i + 1} / ${DATA.previews.length}`,
+}));
+
+const downloads = [
+  { href: D + "rast-video-brief-formu.pdf", label: "Brief formu (PDF)", format: "PDF · doldurulabilir · 3 sayfa", primary: true },
+  { href: D + "rast-video-brief-formu.docx", label: "Brief formu (Word)", format: "DOCX · düzenlenebilir", note: "Google Dokümanlar'da açılır" },
+  { href: D + "rast-video-brief-formu-notion.md", label: "Brief formu (Notion)", format: "Markdown · onay kutulu" },
+];
+const zip = D + "rast-brief-formu-paketi.zip";
+
+const howto = [
+  { name: "Formu indirin.", text: "PDF'i bilgisayarda doldurun ya da yazdırın; ekipte birlikte yazacaksanız Word dosyasını Google Dokümanlar'a, Notion kullanıyorsanız Markdown dosyasını Notion'a aktarın." },
+  { name: "Önce amacı ve izleyicinin yapacağı tek eylemi yazın.", text: "“Video izlendikten sonra ne olmalı?” sorusunun cevabı, geri kalan her kararı (süre, ton, kanal) belirler." },
+  { name: "Teslimatları somutlaştırın.", text: "Kaç video, hangi süre, hangi en-boy oranı ve hangi kanallar. Tek çekimden hem yatay hem dikey çıkacaksa ikisini de işaretleyin." },
+  { name: "Referans ekleyin.", text: "Beğendiğiniz iki üç videonun bağlantısını ve neyini beğendiğinizi yazın (renk, ritim, anlatım). Beğenmediklerinizi yazmak da en az o kadar yol gösterir." },
+  { name: "Ajansınızla birlikte gözden geçirin.", text: "Formu çekimden önce bir görüşmede birlikte okuyun; boş kalan sorular, birlikte netleştirilecek konuların listesidir." },
+];
+
+const faqs = [
+  {
+    question: "Video brief formu nedir, neden gerekir?",
+    answer: "Brief, videonun neden çekildiğini, kime ne söyleyeceğini ve nerede yayınlanacağını tek belgede toplar. Ajans ya da ekip aynı hedefe çalışır; çekim günü ve kurguda “bunu kastetmemiştik” düzeltmeleri azalır.",
+  },
+  {
+    question: "Brief formunu kim doldurmalı?",
+    answer: "Videoyu isteyen taraf: marka sahibi, pazarlama sorumlusu ya da projeyi yöneten kişi. Son onayı verecek kişinin formu en azından okuması önerilir; onay süreci sorusu da bu yüzden formda.",
+  },
+  {
+    question: "Formda bütçe alanı neden yok?",
+    answer: "Aynı brief farklı kapsamlarla çekilebilir: tek kamera ya da çok kamera, bir gün ya da iki gün. Kapsam ve bütçeyi formu birlikte gözden geçirirken konuşmak daha sağlıklı sonuç veriyor; form önce neye ihtiyaç olduğunu netleştirir.",
+  },
+  {
+    question: "PDF formu doldurup e-postayla gönderebilir miyim?",
+    answer: "Evet. Alanlar Adobe Acrobat Reader ve tarayıcıların PDF görüntüleyicilerinde doldurulabilir. Doldurduktan sonra kaydedip e-postayla ya da mesajla gönderin; bazı mobil görüntüleyiciler alanları kaydetmeyebilir, bu durumda Word dosyasını kullanın.",
+  },
+  {
+    question: "Kadrajda çalışanlarımız ya da müşterilerimiz olacaksa ne yapmalıyım?",
+    answer: "Tanınabilir kişilerden çekimden önce yazılı görüntü ve ses kullanım izni alın; 18 yaşından küçükler için veli ya da vasi imzası gerekir. Ücretsiz izin formu taslağımız bu sitede, bir avukata kontrol ettirdikten sonra kullanabilirsiniz.",
+  },
+  {
+    question: "Formu kendi ajansımın logosuyla kullanabilir miyim?",
+    answer: "Evet. Form CC BY 4.0 lisanslıdır: Word sürümünü düzenleyip kendi logonuzu ekleyebilir, müşterilerinizle paylaşabilirsiniz. Tek şart atıf: “Şablon: Rast Creative Studio — rastcreative.com”.",
+  },
+];
+
+const schema = docSchema({
+  name: "Video Brief Formu",
+  description,
+  path: PATH,
+  image: previews[0].src,
+  files: [...downloads, { href: zip, label: "Tüm dosyalar (ZIP)" }],
+  keywords: ["video brief formu", "brief şablonu", "reklam filmi brief", "video prodüksiyon brief", "creative brief"],
+  about: ["Creative brief", "Video prodüksiyon"],
+});
+---
+
+<BelgeSayfasi
+  path={PATH}
+  crumb="Video brief formu"
+  title={title}
+  description={description}
+  eyebrow="Form · Ücretsiz · CC BY 4.0"
+  h1="Video brief formu"
+  docName="Video brief formu"
+  previews={previews}
+  downloads={downloads}
+  zip={zip}
+  howto={howto}
+  howtoTitle="Brief formu nasıl doldurulur?"
+  faqs={faqs}
+  related={["/araclar/storyboard-sablonu/", "/araclar/cekim-plani/", "/araclar/cekim-izin-formu/", "/araclar/cekim-kontrol-listesi/", "/araclar/en-boy-orani/", "/araclar/guvenli-alan/", "/cekim-planlayici/"]}
+  schema={schema}
+  citeLabel="Video brief formu"
+  ctaTitle="Brief'i birlikte de doldurabiliriz"
+  ctaText={'Formu doldurmak zor geliyorsa sorun değil: ilk görüşmede bu soruları birlikte konuşuyoruz. Rast Creative Studio <a href="/video-cekimi/">video çekimi</a>, <a href="/reklam-filmi/">reklam filmi</a> ve <a href="/sosyal-medya-icerigi/">sosyal medya içeriği</a> üretir.'}
+  image={previews[0].src}
+>
+  <Fragment slot="intro">
+    <p>
+      İyi bir video, iyi bir sorudan başlar. Bu form; amacı, hedef kitleyi, ana mesajı, teslimatları, referansları ve çekim
+      bilgilerini üç sayfada toplar. <strong>Doldurulabilir PDF</strong>, Word ve Notion olarak indirilir; kayıt ya da e-posta
+      gerekmez.
+    </p>
+  </Fragment>
+
+  <Section width="default" space="tight" id="icerik">
+    <SectionHeading eyebrow="İçindekiler">Formda hangi sorular var?</SectionHeading>
+    <div class="belge-cols">
+      {
+        DATA.outline.map((s) => (
+          <div>
+            <h3>{s.h}</h3>
+            <ul class="belge-prose">
+              {s.items.map((i) => (
+                <li>{i}</li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </Section>
+
+  <Section width="default" space="tight" id="ipuclari">
+    <SectionHeading eyebrow="Pratik">Brief yazarken en sık yapılan üç hata</SectionHeading>
+    <ul class="belge-prose">
+      <li>
+        <strong>Herkese seslenmek:</strong> “Hedef kitle: herkes” yazılan videolar kimseye konuşmaz. Bir kişiyi tarif edin:
+        nerede yaşıyor, neye ihtiyacı var, sizi seçmemek için hangi itirazı var?
+      </li>
+      <li>
+        <strong>Beş mesajı tek videoya sığdırmak:</strong> 30 saniyelik bir video tek bir şeyi iyi anlatır. Diğer mesajlar ayrı
+        videolara ya da bir içerik serisine ayrılabilir.
+      </li>
+      <li>
+        <strong>Kanalı sona bırakmak:</strong> Reels için 9:16 dikey, YouTube için 16:9 yatay çekilir; ikisi de gerekiyorsa
+        kadraj baştan buna göre kurulur. En-boy oranını brief'te işaretleyin, storyboard'u ona göre hazırlayın:
+        <a href="/araclar/storyboard-sablonu/">ücretsiz storyboard şablonu</a>.
+      </li>
+    </ul>
+  </Section>
+</BelgeSayfasi>

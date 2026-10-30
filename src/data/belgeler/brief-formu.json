@@ -1,0 +1,94 @@
+{
+ "previews": [
+  {
+   "src": "rast-video-brief-formu-onizleme-1.webp",
+   "w": 900,
+   "h": 1274
+  },
+  {
+   "src": "rast-video-brief-formu-onizleme-2.webp",
+   "w": 900,
+   "h": 1274
+  },
+  {
+   "src": "rast-video-brief-formu-onizleme-3.webp",
+   "w": 900,
+   "h": 1274
+  }
+ ],
+ "outline": [
+  {
+   "h": "1. Proje ve iletişim",
+   "items": [
+    "Marka / şirket",
+    "Proje adı",
+    "İletişim kişisi",
+    "Görevi",
+    "Telefon / e-posta",
+    "Formun doldurulduğu tarih",
+    "Son onayı verecek kişi"
+   ]
+  },
+  {
+   "h": "2. Amaç",
+   "items": [
+    "Bu video ne için?",
+    "İzleyici videoyu izledikten sonra ne yapmalı? (tek cümle)",
+    "Başarıyı neye bakarak ölçeceksiniz? (izlenme, mesaj, başvuru, satış…)"
+   ]
+  },
+  {
+   "h": "3. Hedef kitle ve mesaj",
+   "items": [
+    "Hedef kitle: kim, nerede, neye ihtiyacı var, hangi itirazı var?",
+    "Tek cümlelik ana mesaj",
+    "Mutlaka söylenmesi ya da gösterilmesi gerekenler",
+    "Kesinlikle olmaması gerekenler (söz, görsel, rakip, iddia)"
+   ]
+  },
+  {
+   "h": "4. Teslimatlar",
+   "items": [
+    "Video türü",
+    "En-boy oranı",
+    "Yayın kanalları",
+    "Video adedi",
+    "Hedef süre(ler)",
+    "Dil(ler)",
+    "Altyazı ve metin"
+   ]
+  },
+  {
+   "h": "5. Ton, tarz ve referanslar",
+   "items": [
+    "Ton",
+    "Beğendiğiniz referans videolar (bağlantı + neyini beğendiğiniz)",
+    "Beğenmediğiniz örnekler ve nedeni",
+    "Elinizdeki marka varlıkları"
+   ]
+  },
+  {
+   "h": "6. Çekim bilgileri",
+   "items": [
+    "Çekim yeri / yerleri (adres, iç-dış mekân, izin gereken alanlar)",
+    "Uygun çekim tarihleri",
+    "Saat kısıtları (mesai, müşteri trafiği…)",
+    "Kadrajda kimler olacak?",
+    "Özel gereksinimler"
+   ]
+  },
+  {
+   "h": "7. Takvim, onay ve teslim",
+   "items": [
+    "İlk taslak için beklenen tarih",
+    "Yayın / son teslim tarihi",
+    "Onay süreci: kimler onaylar, kaç tur düzeltme öngörülüyor?",
+    "Teslim formatı (MP4, ProRes, ham görüntü…)",
+    "Teslim yolu (bağlantı, disk…)",
+    "Kullanım kapsamı",
+    "Eklemek istedikleriniz"
+   ]
+  }
+ ],
+ "pages": 3
+}

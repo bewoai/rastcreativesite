@@ -1,0 +1,308 @@
+{
+ "previews": [
+  {
+   "src": "rast-cekim-gunu-kontrol-listesi-onizleme-1.webp",
+   "w": 900,
+   "h": 1274
+  },
+  {
+   "src": "rast-cekim-gunu-kontrol-listesi-onizleme-2.webp",
+   "w": 900,
+   "h": 1274
+  },
+  {
+   "src": "rast-cekim-gunu-kontrol-listesi-onizleme-3.webp",
+   "w": 900,
+   "h": 1274
+  }
+ ],
+ "outline": [
+  {
+   "h": "Bir gün önce",
+   "items": []
+  },
+  {
+   "h": "Kamera",
+   "items": []
+  },
+  {
+   "h": "Ses",
+   "items": []
+  },
+  {
+   "h": "Işık",
+   "items": []
+  },
+  {
+   "h": "Medya ve veri",
+   "items": []
+  },
+  {
+   "h": "Güç",
+   "items": []
+  },
+  {
+   "h": "İzin ve evrak",
+   "items": []
+  },
+  {
+   "h": "Set ve güvenlik",
+   "items": []
+  },
+  {
+   "h": "Yedekleme",
+   "items": []
+  },
+  {
+   "h": "Toparlanma (wrap)",
+   "items": []
+  },
+  {
+   "h": "Notlar",
+   "items": [
+    "Sorunlar, eksikler, bir sonraki çekim için"
+   ]
+  }
+ ],
+ "pages": 3,
+ "sections": [
+  {
+   "name": "Bir gün önce",
+   "items": [
+    {
+     "item": "Çekim planı (call sheet) ekibe gönderildi",
+     "tip": "Saat, adres, iletişim, park ve giriş bilgisi"
+    },
+    {
+     "item": "Plan listesi ve storyboard son hali elde",
+     "tip": "Basılı ya da telefonda, çevrimdışı açılıyor"
+    },
+    {
+     "item": "Hava durumu ve gün ışığı saatleri kontrol edildi",
+     "tip": "Dış çekimde B planı hazır"
+    },
+    {
+     "item": "Mekân sorumlusuyla giriş saati teyit edildi",
+     "tip": "Elektrik noktaları, asansör, yük girişi"
+    },
+    {
+     "item": "Oyuncu / katılımcılara saat ve kıyafet bilgisi verildi",
+     "tip": "Logo, yoğun desen ve parlak beyazdan kaçının"
+    }
+   ]
+  },
+  {
+   "name": "Kamera",
+   "items": [
+    {
+     "item": "Gövdeler açılıyor, tarih / saat ve timecode ayarlı",
+     "tip": "Çok kamerada timecode ya da klaket senkronu"
+    },
+    {
+     "item": "Çözünürlük, kare hızı, codec, renk profili plana uygun",
+     "tip": "Tüm kameralarda aynı ayar"
+    },
+    {
+     "item": "Beyaz dengesi manuel, enstantane kare hızına uygun",
+     "tip": "Genelde kare hızının iki katı (180° kuralı)"
+    },
+    {
+     "item": "Lensler temiz; kapaklar ve filtreler (ND, polarize) tamam",
+     "tip": "Mikrofiber bez, hava pompası"
+    },
+    {
+     "item": "Tripod, plaka, gimbal dengeli; monitör ve kablolar",
+     "tip": "Gimbal kalibrasyonu yapıldı"
+    },
+    {
+     "item": "Test kaydı alındı ve izlendi",
+     "tip": "Odak, pozlama, ses kanalı kontrolü"
+    }
+   ]
+  },
+  {
+   "name": "Ses",
+   "items": [
+    {
+     "item": "Yaka mikrofonları ve vericiler eşlendi, yedek pil var",
+     "tip": "Kanal ve frekans çakışması yok"
+    },
+    {
+     "item": "Shotgun / boom ve rüzgârlık hazır",
+     "tip": "Dış mekânda tüylü rüzgârlık"
+    },
+    {
+     "item": "Seviyeler ayarlandı, tepe noktaları güvenli",
+     "tip": "Konuşmada yaklaşık −12 / −6 dBFS"
+    },
+    {
+     "item": "Klima, buzdolabı, müzik gibi sesler kapatıldı",
+     "tip": "Bitince geri açmayı unutmayın"
+    },
+    {
+     "item": "30 saniye oda sesi kaydedildi; kulaklıkla dinlendi",
+     "tip": "Kurguda boşlukları doldurmak için"
+    }
+   ]
+  },
+  {
+   "name": "Işık",
+   "items": [
+    {
+     "item": "Işıklar, ayaklar, kum torbaları, softbox ve difüzörler",
+     "tip": "Ayak başına bir kum torbası"
+    },
+    {
+     "item": "Renk sıcaklığı tutarlı",
+     "tip": "Pencere ışığı ile ampul karışımına dikkat"
+    },
+    {
+     "item": "Titreme (flicker) testi yapıldı",
+     "tip": "LED / floresan altında enstantane uyumu"
+    },
+    {
+     "item": "Reflektör, bayrak, siyah bez; güvenli kablo geçişleri",
+     "tip": "Kablolar bantlı, geçiş yolları açık"
+    }
+   ]
+  },
+  {
+   "name": "Medya ve veri",
+   "items": [
+    {
+     "item": "Hafıza kartları kamerada formatlandı, alan yeterli",
+     "tip": "Kartlar numaralı (A001, A002…)"
+    },
+    {
+     "item": "Yedek kartlar ve kart okuyucu çantada",
+     "tip": "Okuyucu kablosu dahil"
+    },
+    {
+     "item": "Dolu / boş kart ayrımı belli",
+     "tip": "Kart kutusu ya da renkli bant"
+    },
+    {
+     "item": "Gün sonunda kart sayısı kayıt sayısıyla eşleşti",
+     "tip": "Kayıp kart = kayıp gün"
+    }
+   ]
+  },
+  {
+   "name": "Güç",
+   "items": [
+    {
+     "item": "Tüm bataryalar dolu ve sayıldı",
+     "tip": "Kamera, ışık, ses, monitör, drone"
+    },
+    {
+     "item": "Şarj cihazları, çoklu priz, uzatma kablosu",
+     "tip": "Kablo makarası tamamen açılarak kullanılır"
+    },
+    {
+     "item": "Mekânın priz yerleri ve sigorta kapasitesi biliniyor",
+     "tip": "Yüksek watt ışıkları aynı hatta toplamayın"
+    },
+    {
+     "item": "Telefon ve gimbal için powerbank",
+     "tip": "Ekip iletişimi kesilmesin"
+    }
+   ]
+  },
+  {
+   "name": "İzin ve evrak",
+   "items": [
+    {
+     "item": "Mekân çekim izni yazılı olarak alındı",
+     "tip": "E-posta da yeterli bir kayıt olur"
+    },
+    {
+     "item": "Kadrajdaki kişilerin görüntü ve ses kullanım izinleri",
+     "tip": "18 yaş altı için veli / vasi imzası"
+    },
+    {
+     "item": "Kamusal alan için gereken izinler soruldu",
+     "tip": "Belediye, AVM, site yönetimi"
+    },
+    {
+     "item": "Drone: kayıt, uçuş izni ve yasak bölge kontrolü",
+     "tip": "SHGM kuralları; uçuş öncesi bölge kontrolü"
+    },
+    {
+     "item": "Kadrajdaki başka marka, logo ve müzik düşünüldü",
+     "tip": "Gerekirse kadraj dışına alın"
+    }
+   ]
+  },
+  {
+   "name": "Set ve güvenlik",
+   "items": [
+    {
+     "item": "Kablolar bantlandı, ayaklar sabitlendi",
+     "tip": "Geçiş yolları boş"
+    },
+    {
+     "item": "İlk yardım çantası var, en yakın sağlık kuruluşu biliniyor",
+     "tip": "Adres çekim planında yazılı"
+    },
+    {
+     "item": "Yemek ve su molası planlandı",
+     "tip": "Uzun günlerde 5–6 saatte bir mola"
+    },
+    {
+     "item": "Mekân çekimden önce fotoğraflandı",
+     "tip": "Eşyaları ilk haline döndürmek için"
+    }
+   ]
+  },
+  {
+   "name": "Yedekleme",
+   "items": [
+    {
+     "item": "Kartlar gün içinde en az iki ayrı diske kopyalandı",
+     "tip": "3-2-1: üç kopya, iki ortam, biri ayrı yerde"
+    },
+    {
+     "item": "Kopyalama doğrulandı",
+     "tip": "Dosya sayısı ve boyutu ya da checksum"
+    },
+    {
+     "item": "Klasörler adlandırıldı",
+     "tip": "TARİH_PROJE_KAMERA_KART"
+    },
+    {
+     "item": "Hiçbir kart, yedeği doğrulanmadan formatlanmadı",
+     "tip": "Altın kural"
+    }
+   ]
+  },
+  {
+   "name": "Toparlanma (wrap)",
+   "items": [
+    {
+     "item": "Ekipman listeyle sayıldı, eksik ve hasar not edildi",
+     "tip": "Kiralık ekipman ayrıca kontrol"
+    },
+    {
+     "item": "Mekân ilk haline getirildi, çöp toplandı",
+     "tip": "Çekim öncesi fotoğraflarla karşılaştırın"
+    },
+    {
+     "item": "İmzalı izin formları toplandı ve sayıldı",
+     "tip": "Kişi sayısıyla eşleşiyor"
+    },
+    {
+     "item": "Çekilemeyen planlar ve ek çekim ihtiyacı not edildi",
+     "tip": "Plan listesinde işaretli"
+    },
+    {
+     "item": "Gün raporu ekiple paylaşıldı",
+     "tip": "Kart sayısı, sorunlar, yarın için notlar"
+    },
+    {
+     "item": "Bataryalar şarja takıldı",
+     "tip": "Bir sonraki çekime hazır"
+    }
+   ]
+  }
+ ]
+}

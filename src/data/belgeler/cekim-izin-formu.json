@@ -1,0 +1,72 @@
+{
+ "previews": [
+  {
+   "src": "rast-goruntu-ve-ses-kullanim-izin-formu-onizleme-1.webp",
+   "w": 900,
+   "h": 1274
+  },
+  {
+   "src": "rast-goruntu-ve-ses-kullanim-izin-formu-onizleme-2.webp",
+   "w": 900,
+   "h": 1274
+  },
+  {
+   "src": "rast-goruntu-ve-ses-kullanim-izin-formu-onizleme-3.webp",
+   "w": 900,
+   "h": 1274
+  }
+ ],
+ "outline": [
+  {
+   "h": "Bölüm A — Aydınlatma metni (KVKK m.10)",
+   "items": [
+    "Veri sorumlusu (şirket / kişi unvanı)",
+    "Adres",
+    "İletişim (e-posta / telefon)",
+    "Proje / çekim adı",
+    "Çekim tarihi",
+    "Çekim yeri",
+    "İşlenen veriler",
+    "Amaç",
+    "Hukuki sebep ve yöntem",
+    "Aktarım",
+    "Saklama süresi",
+    "Haklarınız",
+    "Ham görüntülerin saklama süresi",
+    "Başvuru adresi (yukarıdakinden farklıysa)"
+   ]
+  },
+  {
+   "h": "Bölüm B — Açık rıza ve kullanım izni",
+   "items": [
+    "Katılımcının adı soyadı",
+    "Telefon / e-posta",
+    "Kullanılabilecek kanallar (yalnızca işaretlenenler)",
+    "Kullanım süresi",
+    "Bölge",
+    "Adımın gösterilmesi",
+    "Karşılık",
+    "Kurgu sınırları",
+    "Geri alma",
+    "Özel koşullar / notlar"
+   ]
+  },
+  {
+   "h": "Bölüm C — 18 yaşından küçükler için veli / vasi onayı",
+   "items": [
+    "Çocuğun adı soyadı",
+    "Doğum yılı",
+    "Veli / vasinin adı soyadı",
+    "Yakınlığı",
+    "Telefon / e-posta",
+    "Kapsam",
+    "Kapsam notu"
+   ]
+  },
+  {
+   "h": "Veri sorumlusu için kullanım notları",
+   "items": []
+  }
+ ],
+ "pages": 3
+}

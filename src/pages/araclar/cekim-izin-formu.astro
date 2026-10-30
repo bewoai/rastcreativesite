@@ -1,0 +1,183 @@
+---
+/**
+ * /araclar/cekim-izin-formu/ — Turkish image & voice usage consent form,
+ * KVKK-aware DRAFT (not legal advice). Aydınlatma (Bölüm A) and açık rıza
+ * (Bölüm B) are separate sections with separate signatures, per Kurul
+ * 2026/347. Files built by scripts/belgeler/generate.py. No health/patient use.
+ */
+import BelgeSayfasi from "../../components/araclar/BelgeSayfasi.astro";
+import Section from "../../components/Section.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import DATA from "../../data/belgeler/cekim-izin-formu.json";
+import { docSchema } from "../../data/belgeler/schema";
+
+const PATH = "/araclar/cekim-izin-formu/";
+const D = PATH;
+const title = "Görüntü ve Ses Kullanım İzin Formu (KVKK)";
+const description =
+  "Ücretsiz görüntü ve ses kullanım izin formu taslağı: KVKK aydınlatma metni ve açık rıza ayrı bölümlerde, kanal, süre, geri alma ve 18 yaş altı veli onayı. PDF, Word.";
+
+const previews = DATA.previews.map((v, i) => ({
+  ...v,
+  src: D + v.src,
+  alt: [
+    "İzin formu sayfa 1: Bölüm A, KVKK aydınlatma metni ve okudum imzası",
+    "İzin formu sayfa 2: Bölüm B, açık rıza, kanallar, süre, bölge, kurgu sınırları ve geri alma",
+    "İzin formu sayfa 3: Bölüm C, 18 yaş altı için veli veya vasi onayı ve kullanım notları",
+  ][i],
+  caption: `Sayfa ${i + 1} / ${DATA.previews.length}`,
+}));
+
+const downloads = [
+  { href: D + "rast-goruntu-ve-ses-kullanim-izin-formu.docx", label: "İzin formu (Word)", format: "DOCX · düzenlenebilir", note: "avukatınızla düzenlemek için", primary: true },
+  { href: D + "rast-goruntu-ve-ses-kullanim-izin-formu.pdf", label: "İzin formu (PDF)", format: "PDF · doldurulabilir · 3 sayfa" },
+  { href: D + "rast-goruntu-ve-ses-kullanim-izin-formu-notion.md", label: "İzin formu (Notion)", format: "Markdown" },
+];
+const zip = D + "rast-cekim-izin-formu-paketi.zip";
+
+const howto = [
+  { name: "Taslağı bir avukata kontrol ettirin.", text: "Word dosyasını projenize ve şirketinize göre uyarlayın; veri sorumlusunun unvanı, adresi, başvuru kanalı ve saklama süresi sizin bilgilerinizle dolmalı." },
+  { name: "Kapsamı daraltın.", text: "Yalnızca gerçekten kullanacağınız kanalları ve süreyi bırakın. “Her yerde, süresiz” gibi geniş bir rıza yerine somut kapsam hem katılımcı hem sizin için daha güvenlidir." },
+  { name: "Önce aydınlatma, sonra rıza.", text: "Kişi kayda girmeden önce Bölüm A'yı okutun ve “okudum” imzasını alın; açık rızayı Bölüm B'de ayrı bir imzayla alın. İki metin birbirine karışmamalı." },
+  { name: "18 yaş altı için Bölüm C.", text: "Çocuk katılımcılar için veli veya vasi Bölüm C'yi doldurup imzalar; çocuğun ayırt etme gücü varsa görüşü de alınır." },
+  { name: "Saklayın ve geri alma taleplerine hazır olun.", text: "İmzalı formları erişimi sınırlı bir yerde saklayın, bir kopyasını katılımcıya verin. Rıza geri alınırsa kendi kontrolünüzdeki dijital yayınları makul sürede kaldırın." },
+];
+
+const faqs = [
+  {
+    question: "Bu form hukuken geçerli mi?",
+    answer: "Bu bir taslaktır, hukuki danışmanlık değildir. KVKK'nın temel kurallarına göre hazırlandı ama her proje, şirket ve kullanım farklıdır. Kullanmadan önce bir avukata kontrol ettirin ve kendi bilgilerinizle uyarlayın.",
+  },
+  {
+    question: "Aydınlatma metni ile açık rıza neden ayrı?",
+    answer: "Aydınlatma, kişiye verisinin neden ve nasıl işleneceğini anlatır; açık rıza ise belirli bir konuda özgür iradeyle verilen onaydır. Kişisel Verileri Koruma Kurulu 18.02.2026 tarihli, 2026/347 sayılı ilke kararında bu iki metnin ayrı ayrı düzenlenmesi gerektiğini vurguladı. Formda bu yüzden Bölüm A ve Bölüm B ayrı imzalanır.",
+  },
+  {
+    question: "Çocukların görüntüsü için ne gerekir?",
+    answer: "18 yaşını doldurmamış katılımcılar için veli ya da vasinin açık rızası gerekir; formun Bölüm C'si bunun için. Çocuğun ayırt etme gücü varsa görüşü de alınmalı, okul ya da adres gibi bilgileri yayımlanmamalıdır.",
+  },
+  {
+    question: "Katılımcı izni sonradan geri alabilir mi?",
+    answer: "Evet. Açık rıza her zaman geri alınabilir ve geri alma ileriye dönük sonuç doğurur. Formda, kendi kontrolünüzdeki dijital yayınların makul sürede kaldırılacağı ve önceden basılmış ya da dağıtılmış materyallerin toplanmasının mümkün olmayabileceği açıkça yazılıdır.",
+  },
+  {
+    question: "Kalabalık bir etkinlikte herkesten form almak gerekir mi?",
+    answer: "Öne çıkan, tanınabilir şekilde kadraja giren kişilerden ayrıca izin alınması önerilir. Genel kalabalık için alana görünür bir bilgilendirme yazısı koymak yaygın bir uygulamadır; etkinliğin niteliğine göre ne gerektiğini avukatınızla netleştirin.",
+  },
+  {
+    question: "Hasta ya da klinik çekimlerinde kullanılabilir mi?",
+    answer: "Hayır. Sağlık verisi ve diğer özel nitelikli kişisel veriler içeren çekimler bu taslağın kapsamı dışındadır; sağlık alanında ayrıca reklam ve tanıtım mevzuatı da devreye girer. Bu tür çekimler için mutlaka uzman hukuki destek alın.",
+  },
+];
+
+const sources = [
+  { t: "6698 sayılı Kişisel Verilerin Korunması Kanunu (m.5 işleme şartları, m.9 yurt dışına aktarım, m.10 aydınlatma, m.11 ilgili kişinin hakları)", href: "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.6698.pdf", l: "mevzuat.gov.tr" },
+  { t: "Aydınlatma Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ (Resmî Gazete 10.03.2018, sayı 30356)", href: "https://www.resmigazete.gov.tr/eskiler/2018/03/20180310-5.htm", l: "resmigazete.gov.tr" },
+  { t: "Veri Sorumlusuna Başvuru Usul ve Esasları Hakkında Tebliğ (Resmî Gazete 10.03.2018, sayı 30356): başvurunun en geç otuz gün içinde, kural olarak ücretsiz sonuçlandırılması", href: "https://www.resmigazete.gov.tr/eskiler/2018/03/20180310-6.htm", l: "resmigazete.gov.tr" },
+  { t: "Kişisel Verileri Koruma Kurulu, açık rıza ve aydınlatma metinlerinin ayrı ayrı düzenlenmesi gerektiği hakkında 18.02.2026 tarihli, 2026/347 sayılı ilke kararı ve kamuoyu duyurusu", href: "https://www.kvkk.gov.tr/Icerik/8710/veri-sorumlulari-tarafindan-acik-riza-ve-aydinlatma-metinlerinin-ayri-ayri-duzenlenmesi-gerektigi-hakkinda-kisisel-verileri-koruma-kurulunun-18-02-2026-tarihli-ve-2026-347-sayili-ilke-kararina-iliskin-kamuoyu-duyurusu", l: "kvkk.gov.tr" },
+  { t: "KVKK'da yapılan değişiklikler hakkında kamuoyu duyurusu (7499 sayılı Kanun; yurt dışına aktarım rejimi 1 Haziran 2024'ten itibaren)", href: "https://www.kvkk.gov.tr/Icerik/7834/6698-Sayili-Kisisel-Verilerin-Korunmasi-Kanununda-Yapilan-Degisiklikler-Hakkinda-Kamuoyu-Duyurusu", l: "kvkk.gov.tr" },
+  { t: "Kişisel Verilerin Yurt Dışına Aktarılması Rehberi", href: "https://kvkk.gov.tr/Icerik/8142/Kisisel-Verilerin-Yurt-Disina-Aktarilmasi-Rehberi", l: "kvkk.gov.tr" },
+  { t: "5846 sayılı Fikir ve Sanat Eserleri Kanunu m.86 (resim ve portrelerin rıza olmadan yayımlanamaması); 4721 sayılı Türk Medeni Kanunu m.24 (kişilik hakkının korunması)", href: "https://www.mevzuat.gov.tr/MevzuatMetin/1.3.5846.pdf", l: "mevzuat.gov.tr" },
+];
+
+const schema = docSchema({
+  name: "Görüntü ve Ses Kullanım İzin Formu (KVKK taslağı)",
+  description,
+  path: PATH,
+  image: previews[0].src,
+  files: [...downloads, { href: zip, label: "Tüm dosyalar (ZIP)" }],
+  keywords: ["görüntü kullanım izin formu", "çekim izin formu", "KVKK açık rıza formu", "fotoğraf video kullanım izni", "veli izin formu çekim"],
+  about: ["KVKK", "Açık rıza", "Video çekimi"],
+});
+---
+
+<BelgeSayfasi
+  path={PATH}
+  crumb="Çekim izin formu"
+  title={title}
+  description={description}
+  eyebrow="Form taslağı · Ücretsiz · CC BY 4.0"
+  h1="Görüntü ve ses kullanım izin formu"
+  docName="İzin formu taslağı"
+  previews={previews}
+  downloads={downloads}
+  zip={zip}
+  howto={howto}
+  howtoTitle="İzin formu nasıl kullanılır?"
+  faqs={faqs}
+  related={["/araclar/cekim-kontrol-listesi/", "/araclar/brief-formu/", "/araclar/cekim-plani/", "/araclar/storyboard-sablonu/", "/araclar/guvenli-alan/"]}
+  schema={schema}
+  citeLabel="Görüntü ve ses kullanım izin formu taslağı"
+  ctaTitle="Çekimde izinleri de planlıyoruz"
+  ctaText={'Rast Creative Studio çekimlerinde kadraja girecek kişiler ve mekân izinleri hazırlık aşamasında konuşulur; sette sürpriz olmaz. Bir <a href="/tanitim-filmi/">tanıtım filmi</a> ya da <a href="/sosyal-medya-icerigi/">sosyal medya içeriği</a> planlıyorsanız yazın. Kendi aydınlatma metnimiz için: <a href="/kvkk/">KVKK</a>.'}
+  image={previews[0].src}
+>
+  <Fragment slot="intro">
+    <p>
+      Çalışanlar, müşteriler ya da oyuncular kadraja girecekse görüntü ve seslerinin nerede, ne kadar süreyle kullanılacağını
+      yazılı olarak konuşun. Bu taslak KVKK'nın temel kurallarına göre hazırlandı: <strong>aydınlatma metni ve açık rıza ayrı
+      bölümlerde</strong>, kanal ve süre seçimi, kurgu sınırları, geri alma hakkı ve 18 yaş altı için veli onayı.
+    </p>
+  </Fragment>
+  <Fragment slot="top">
+    <p class="legal" role="note">
+      <strong>Genel bir taslaktır, hukuki danışmanlık değildir; kullanmadan önce bir avukata kontrol ettirin.</strong> Her
+      proje, şirket ve kullanım farklıdır. Hasta, sağlık verisi ya da diğer özel nitelikli veriler içeren çekimler bu taslağın
+      kapsamı dışındadır.
+    </p>
+  </Fragment>
+
+  <Section width="default" space="tight" id="icerik">
+    <SectionHeading eyebrow="İçindekiler">Formda neler var?</SectionHeading>
+    <div class="belge-prose">
+      <ul>
+        <li>
+          <strong>Bölüm A, aydınlatma metni (KVKK m.10):</strong> veri sorumlusu, işlenen veriler (görüntü, ses, ad-soyad, iletişim,
+          imza), amaç, hukuki sebep, toplama yöntemi, aktarım (yurt dışındaki platform sunucuları dahil), saklama süresi ve m.11
+          hakları. Katılımcı yalnızca “okudum” diye imzalar.
+        </li>
+        <li>
+          <strong>Bölüm B, açık rıza ve kullanım izni:</strong> kullanılabilecek kanallar tek tek işaretlenir (web sitesi, organik
+          sosyal medya, ücretli reklam, TV, basılı, etkinlik, şirket içi, prodüksiyon portföyü), süre, bölge, adın gösterilmesi ve
+          karşılık. Kurgu sınırları: sözlerin anlamını değiştiren ya da yüzü veya sesi yapay zekâyla yeniden üreten düzenlemeler
+          ayrıca yazılı izin olmadan yapılamaz. Geri alma hakkı ve sonuçları açıkça yazılı.
+        </li>
+        <li>
+          <strong>Bölüm C, 18 yaş altı:</strong> veli veya vasi bilgileri ve açık rızası, isteğe bağlı olarak çocuğun görüşü, veri
+          sorumlusu için kısa kullanım notları ve dayanak listesi.
+        </li>
+      </ul>
+    </div>
+  </Section>
+
+  <Section width="default" space="tight" id="kaynaklar">
+    <SectionHeading eyebrow="Şeffaflık">Kaynaklar ve dayanak</SectionHeading>
+    <div class="belge-prose">
+      <p>Taslak hazırlanırken aşağıdaki mevzuat ve Kurum yayınları esas alındı. Son kontrol: 30 Ekim 2026.</p>
+      <ul>
+        {
+          sources.map((s) => (
+            <li>
+              {s.t}.{" "}
+              <a href={s.href} rel="noopener" target="_blank">
+                {s.l}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </Section>
+</BelgeSayfasi>
+
+<style>
+  .legal {
+    margin-top: 1.4rem;
+    padding: 0.9rem 1.1rem;
+    border: 1px solid #d9902f;
+    border-radius: 0.9rem;
+    background: color-mix(in srgb, #e0a020 16%, var(--paper));
+    color: var(--ink);
+    line-height: var(--leading-body);
+  }
+</style>

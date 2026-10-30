@@ -1,0 +1,158 @@
+---
+/**
+ * /araclar/storyboard-sablonu/ — free storyboard (16:9 + 9:16) and shot list
+ * templates. Files: public/araclar/storyboard-sablonu/, built by
+ * scripts/belgeler/generate.py (content in scripts/belgeler/content.py).
+ */
+import BelgeSayfasi from "../../components/araclar/BelgeSayfasi.astro";
+import Section from "../../components/Section.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import DATA from "../../data/belgeler/storyboard-sablonu.json";
+import { docSchema } from "../../data/belgeler/schema";
+
+const PATH = "/araclar/storyboard-sablonu/";
+const D = PATH;
+const title = "Storyboard ve Shot List Şablonu (Ücretsiz)";
+const description =
+  "Ücretsiz storyboard şablonu (16:9 ve 9:16) ve plan listesi: doldurulabilir PDF, Excel, Google E-Tablolar ve Notion. Plan ölçekleri ve kamera hareketleri rehberi.";
+
+const pv = DATA.previews;
+const previews = [
+  { ...pv[0], src: D + pv[0].src, alt: "16:9 yatay storyboard şablonu: altı kare, ölçek, hareket, süre, aksiyon ve ses alanları", caption: "Storyboard 16:9 (A4 yatay, 6 kare)" },
+  { ...pv[1], src: D + pv[1].src, alt: "9:16 dikey storyboard şablonu: beş dikey kare ve yaklaşık güvenli alan çizgisi", caption: "Storyboard 9:16 (Reels, TikTok, Shorts)" },
+  { ...pv[2], src: D + pv[2].src, alt: "Plan listesi şablonu: sahne, plan, ölçek, açı, hareket, lens, açıklama, ses, süre, lokasyon sütunları", caption: "Plan listesi (16 satır)" },
+  { ...pv[3], src: D + pv[3].src, alt: "Plan ölçekleri, kamera açıları ve hareketleri hızlı başvuru sayfası", caption: "Hızlı başvuru sayfası" },
+];
+
+const downloads = [
+  { href: D + "rast-storyboard-16x9.pdf", label: "Storyboard 16:9 (PDF)", format: "PDF · doldurulabilir · A4 yatay", primary: true },
+  { href: D + "rast-storyboard-9x16.pdf", label: "Storyboard 9:16 (PDF)", format: "PDF · doldurulabilir · A4 yatay", primary: true },
+  { href: D + "rast-plan-listesi.pdf", label: "Plan listesi (PDF)", format: "PDF · doldurulabilir · 2 sayfa" },
+  { href: D + "rast-plan-listesi.xlsx", label: "Plan listesi (Excel)", format: "XLSX · açılır listeli", note: "Google E-Tablolar'da açılır" },
+  { href: D + "rast-plan-listesi.csv", label: "Plan listesi (CSV)", format: "CSV · UTF-8" },
+  { href: D + "rast-plan-listesi.docx", label: "Plan listesi (Word)", format: "DOCX · düzenlenebilir" },
+  { href: D + "rast-plan-listesi-notion.md", label: "Plan listesi (Notion)", format: "Markdown" },
+];
+const zip = D + "rast-storyboard-sablonu-paketi.zip";
+
+const howto = [
+  { name: "Senaryoyu sahnelere bölün.", text: "Her sahne için hangi bilginin ya da duygunun aktarılacağını tek cümleyle yazın; storyboard bu cümleyi görüntüye çevirir." },
+  { name: "Kareleri kabaca çizin.", text: "Çöp adam yeterli: kim nerede, kamera nereden bakıyor, ok ile hareket. Yatay işler için 16:9, Reels ve TikTok için 9:16 sayfayı kullanın; dikeyde yazıları yeşil kesikli çizginin içinde tutun." },
+  { name: "Her karenin altını doldurun.", text: "Plan ölçeği, kamera hareketi, süre, aksiyon ya da diyalog ve ses notu. Kısaltmalar plan listesinin arka sayfasında." },
+  { name: "Plan listesine dökün.", text: "Her kareyi plan listesinde bir satıra çevirin; satırları hikâye sırasına değil, lokasyon ve ışık sırasına göre dizin. # sütunu çekim sırasıdır." },
+  { name: "Sette işaretleyin.", text: "Tamamlanan planı ✓ ile işaretleyin, iyi çekimin numarasını not edin. Gün sonunda boş kalan satırlar ek çekim listenizdir." },
+];
+
+const faqs = [
+  {
+    question: "Storyboard ile plan listesi (shot list) arasındaki fark ne?",
+    answer: "Storyboard filmin nasıl görüneceğini karelerle çizer; ekip ve müşteri aynı şeyi hayal eder. Plan listesi ise sette çekilecek her planı tablo hâlinde sıralar: ölçek, açı, hareket, lens, ses ve lokasyon. Storyboard fikri, plan listesi çekim gününü yönetir.",
+  },
+  {
+    question: "Çizim bilmeden storyboard hazırlanabilir mi?",
+    answer: "Evet. Çöp adamlar, kutular ve oklar yeterli; önemli olan kadrajın neyi gösterdiği ve kameranın nereden baktığı. İsterseniz kareye referans fotoğraf ya da telefonla çektiğiniz bir deneme karesini de yapıştırabilirsiniz.",
+  },
+  {
+    question: "PDF'i bilgisayarda doldurabilir miyim?",
+    answer: "Evet. PDF'lerdeki metin alanları ve onay kutuları Adobe Acrobat Reader, tarayıcıların PDF görüntüleyicileri ve çoğu tablet uygulamasında doldurulabilir. Kareleri çizmek için sayfayı yazdırın ya da tablette kalemle üzerine çizin.",
+  },
+  {
+    question: "Dikey (9:16) storyboard neden ayrı?",
+    answer: "Reels, TikTok ve Shorts'ta ekranın üstünü ve altını arayüz kapatır. 9:16 sayfadaki yeşil kesikli çizgi yaklaşık güvenli alanı gösterir; kanca metnini, altyazıyı ve ürünü daha çizim aşamasında bu alana yerleştirirsiniz.",
+  },
+  {
+    question: "Plan listesini Google E-Tablolar'da kullanabilir miyim?",
+    answer: "Evet. XLSX dosyasını Google Drive'a yükleyip E-Tablolar'da açın ya da CSV'yi Dosya > İçe aktar ile alın. XLSX'te ölçek, açı ve hareket sütunlarında açılır listeler hazır gelir.",
+  },
+  {
+    question: "Şablonları müşteri işlerinde kullanabilir miyim?",
+    answer: "Evet. Tüm dosyalar CC BY 4.0 lisanslıdır: ticari işlerde kullanabilir, düzenleyip kendi logonuzla uyarlayabilirsiniz. Tek şart atıf: “Şablon: Rast Creative Studio — rastcreative.com”.",
+  },
+];
+
+const schema = docSchema({
+  name: "Storyboard ve Plan Listesi (Shot List) Şablonu",
+  description,
+  path: PATH,
+  image: previews[0].src,
+  files: [...downloads, { href: zip, label: "Tüm dosyalar (ZIP)" }],
+  keywords: ["storyboard şablonu", "shot list şablonu", "plan listesi", "çekim planı", "9:16 storyboard"],
+  about: ["Storyboard", "Shot list", "Video prodüksiyon"],
+});
+---
+
+<BelgeSayfasi
+  path={PATH}
+  crumb="Storyboard şablonu"
+  title={title}
+  description={description}
+  eyebrow="Şablon · Ücretsiz · CC BY 4.0"
+  h1="Storyboard ve plan listesi şablonu"
+  docName="Storyboard ve plan listesi"
+  previews={previews}
+  downloads={downloads}
+  zip={zip}
+  howto={howto}
+  howtoTitle="Storyboard ve plan listesi nasıl kullanılır?"
+  faqs={faqs}
+  related={["/araclar/cekim-plani/", "/araclar/cekim-kontrol-listesi/", "/araclar/brief-formu/", "/araclar/guvenli-alan/", "/araclar/en-boy-orani/", "/araclar/cekim-izin-formu/", "/araclar/kapak-sablonlari/", "/rehber/video-export-ayarlari/"]}
+  schema={schema}
+  citeLabel="Storyboard şablonu"
+  ctaTitle="Storyboard'dan sete, birlikte"
+  ctaText={'Rast Creative Studio, <a href="/reklam-filmi/">reklam filmi</a> ve <a href="/tanitim-filmi/">tanıtım filmi</a> çekimlerinde storyboard ve plan listesini müşteriyle birlikte hazırlar; çekim günü sürpriz kalmaz. Elinizde bir senaryo ya da fikir varsa konuşalım.'}
+  image={previews[0].src}
+>
+  <Fragment slot="intro">
+    <p>
+      Fikri karelere, kareleri çekim gününe çevirin. Yatay (16:9) ve dikey (9:16) storyboard sayfaları ile plan listesi
+      (shot list) <strong>doldurulabilir PDF</strong>, Excel / Google E-Tablolar, Word ve Notion olarak indirilir. Kayıt yok,
+      e-posta istemiyoruz.
+    </p>
+  </Fragment>
+
+  <Section width="default" space="tight" id="kisaltmalar">
+    <SectionHeading eyebrow="Hızlı başvuru">Plan ölçekleri, açılar ve kamera hareketleri</SectionHeading>
+    <div class="belge-prose">
+      <p>
+        Plan listesinin arka sayfasında da bulunan kısaltmalar. Türkçe sette kullanılan adlarla İngilizce kısaltmaları yan yana
+        verdik; ekipte yabancı kaynakla çalışan biri varsa iki dil de aynı satırda.
+      </p>
+    </div>
+    <div class="belge-tablewrap">
+      <table class="belge-table">
+        <thead><tr><th scope="col">Kısaltma</th><th scope="col">Plan ölçeği</th><th scope="col">Ne için</th></tr></thead>
+        <tbody>
+          {DATA.olcekler.map(([k, n, d]) => <tr><th scope="row">{k}</th><td>{n}</td><td>{d}</td></tr>)}
+        </tbody>
+      </table>
+    </div>
+    <div class="belge-cols">
+      <div>
+        <h3>Kamera hareketleri</h3>
+        <ul class="belge-prose">
+          {DATA.hareketler.map(([k, d]) => <li><strong>{k}:</strong> {d}</li>)}
+        </ul>
+      </div>
+      <div>
+        <h3>Kamera açıları</h3>
+        <ul class="belge-prose">
+          {DATA.acilar.map(([k, d]) => <li><strong>{k}:</strong> {d}</li>)}
+        </ul>
+      </div>
+    </div>
+  </Section>
+
+  <Section width="default" space="tight" id="kurallar">
+    <SectionHeading eyebrow="Pratik">İyi bir plan listesi için beş kural</SectionHeading>
+    <ul class="belge-prose">
+      {DATA.kurallar.map((k) => <li>{k}</li>)}
+    </ul>
+    <div class="belge-prose">
+      <p>
+        Çekim gününün saatlerini, ekibi ve lokasyonları tek sayfada toplamak için
+        <a href="/araclar/cekim-plani/">çekim planı oluşturucuyu</a>, sete çıkmadan önce
+        <a href="/araclar/cekim-kontrol-listesi/">çekim günü kontrol listesini</a> kullanabilirsiniz.
+      </p>
+    </div>
+  </Section>
+</BelgeSayfasi>

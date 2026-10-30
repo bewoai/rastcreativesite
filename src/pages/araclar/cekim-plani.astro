@@ -1,0 +1,1017 @@
+---
+/**
+ * /araclar/cekim-plani/ — in-browser shoot plan / call sheet generator.
+ * Enter project, locations, crew, cast, schedule and equipment; print a
+ * branded call sheet (window.print → PDF) and save/load the plan as JSON.
+ * 100% client-side: data stays in the browser (localStorage autosave).
+ * Deliberately NO cost/price calculation.
+ * ?ornek=1 loads the sample plan; &baski=1 pre-renders the print view
+ * (used by scripts to make the sample PDF/preview).
+ */
+import BelgeSayfasi from "../../components/araclar/BelgeSayfasi.astro";
+import Section from "../../components/Section.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import { SITE } from "../../consts";
+
+const PATH = "/araclar/cekim-plani/";
+const D = PATH;
+const PAGE_URL = new URL(PATH, SITE.url).href;
+const title = "Çekim Planı / Call Sheet Oluşturucu";
+const description =
+  "Ücretsiz çekim planı oluşturucu: proje, lokasyon, ekip, oyuncu, saat programı ve ekipmanı girin; markalı call sheet'i PDF yazdırın, planı JSON kaydedin.";
+
+const previews = [
+  { src: D + "rast-ornek-cekim-plani-onizleme-1.webp", w: 900, h: 1274, alt: "Örnek çekim planı (call sheet) çıktısı: çağrı saatleri, lokasyon, acil durum bilgisi ve saat programı", caption: "Örnek çıktı, sayfa 1" },
+  { src: D + "rast-ornek-cekim-plani-onizleme-2.webp", w: 900, h: 1274, alt: "Örnek çekim planı sayfa 2: ekipman listesi, notlar ve Rast Creative Studio alt bilgisi", caption: "Örnek çıktı, sayfa 2" },
+];
+
+const downloads = [
+  { href: D + "rast-ornek-cekim-plani.pdf", label: "Örnek çekim planı (PDF)", format: "PDF · araçla üretilmiş örnek" },
+  { href: D + "rast-ornek-cekim-plani.json", label: "Örnek plan dosyası (JSON)", format: "JSON · araca yüklenebilir" },
+];
+
+const howto = [
+  { name: "Proje bilgilerini girin.", text: "Proje adı, tarih, genel çağrı saati, yapımcı ve yönetmen iletişimi, en yakın sağlık kuruluşu. Gün doğumu ve batımı saatini dış çekimde not edin." },
+  { name: "Lokasyon, ekip ve oyuncuları ekleyin.", text: "Her satır bir kişi ya da yer. Ekipte herkesin kendi çağrı saati olabilir; oyuncular için hazırlık (makyaj, kostüm) saati ve izin formunun alınıp alınmadığını işaretleyin." },
+  { name: "Saat programını yazın.", text: "Başlangıç ve bitiş saatiyle sahneleri, molaları ve kurulumları sıralayın. Araç süreleri hesaplar, çakışan ya da ters girilmiş saatleri uyarır; “Saate göre sırala” ile düzenleyin." },
+  { name: "Ekipmanı listeleyin.", text: "Kalem, adet ve sorumlu. Çıktıda her kalemin yanında işaretlenecek bir kutu olur." },
+  { name: "Yazdırın ya da kaydedin.", text: "“Yazdır / PDF” düğmesi markalı çekim planını açar; yazdırma penceresinde “PDF olarak kaydet” seçin. “JSON indir” ile planı saklayın, sonra “JSON yükle” ile kaldığınız yerden devam edin." },
+];
+
+const faqs = [
+  {
+    question: "Call sheet (çekim planı) nedir?",
+    answer: "Çekim gününün tek sayfalık özetidir: kim, saat kaçta, nerede olacak; hangi sahne ne zaman çekilecek; acil durumda kime ulaşılacak. Çekimden bir gün önce bütün ekibe ve oyunculara gönderilir.",
+  },
+  {
+    question: "Girdiğim bilgiler bir yere gönderiliyor mu?",
+    answer: "Hayır. Araç tamamen tarayıcınızda çalışır; bilgiler hiçbir sunucuya gönderilmez. Kaldığınız yeri kaybetmemeniz için yalnızca bu tarayıcının yerel depolamasına kaydedilir; “Temizle” ile silebilirsiniz.",
+  },
+  {
+    question: "PDF olarak nasıl kaydederim?",
+    answer: "“Yazdır / PDF” düğmesine basın; açılan yazdırma penceresinde yazıcı olarak “PDF olarak kaydet” seçin. Telefonda paylaş menüsündeki yazdır seçeneği de PDF oluşturur. Kâğıt boyutu A4 önerilir.",
+  },
+  {
+    question: "JSON dosyası ne işe yarar?",
+    answer: "Planın tamamını tek dosyada saklar. Başka bir bilgisayarda ya da ekip arkadaşınızda “JSON yükle” ile açıp düzenlemeye devam edebilirsiniz. Benzer çekimler için bir planı şablon olarak saklamak da pratik.",
+  },
+  {
+    question: "Araç maliyet ya da bütçe hesaplıyor mu?",
+    answer: "Hayır, bilerek hesaplamıyor. Çekim planı lojistik bir belgedir: saatler, yerler ve kişiler. Süreleri ve saat çakışmalarını hesaplar, ücret ya da bütçe alanı yoktur.",
+  },
+  {
+    question: "Çekim planına başka neler eklemeliyim?",
+    answer: "Hava durumuna göre B planı, park ve giriş bilgisi, yemek molası, kıyafet notu ve en yakın sağlık kuruluşunun adresi. Sete çıkmadan önceki kontroller için ücretsiz çekim günü kontrol listemizi, kadraja girecek kişiler için izin formu taslağımızı kullanabilirsiniz.",
+  },
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Çekim Planı ve Call Sheet Oluşturucu",
+  alternateName: "Call sheet generator",
+  url: PAGE_URL,
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Web",
+  browserRequirements: "Modern bir web tarayıcısı; JavaScript gerekli",
+  isAccessibleForFree: true,
+  inLanguage: "tr",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "TRY" },
+  description,
+  featureList: [
+    "Proje, lokasyon, ekip, oyuncu, saat programı ve ekipman girişi",
+    "Süre hesabı, saat çakışması ve eksik bilgi uyarıları",
+    "Markalı, yazdırılabilir çekim planı (PDF)",
+    "JSON olarak kaydetme ve geri yükleme",
+    "Tarayıcıda otomatik kayıt; sunucuya veri gönderilmez",
+  ],
+  screenshot: new URL(previews[0].src, SITE.url).href,
+  provider: { "@id": `${SITE.url}#business` },
+  creator: { "@id": `${SITE.url}#business` },
+};
+---
+
+<BelgeSayfasi
+  path={PATH}
+  crumb="Çekim planı oluşturucu"
+  title={title}
+  description={description}
+  eyebrow="Araç · Ücretsiz · Kayıt yok"
+  h1="Çekim planı (call sheet) oluşturucu"
+  docName="Çekim planı"
+  previews={previews}
+  downloads={downloads}
+  howto={howto}
+  howtoTitle="Çekim planı nasıl hazırlanır?"
+  faqs={faqs}
+  related={["/araclar/cekim-kontrol-listesi/", "/araclar/storyboard-sablonu/", "/araclar/cekim-izin-formu/", "/araclar/brief-formu/", "/cekim-planlayici/", "/araclar/bitrate-hesaplayici/", "/araclar/guvenli-alan/"]}
+  schema={schema}
+  citeLabel="Çekim planı oluşturucu"
+  ctaTitle="Çekim gününü birlikte planlayalım"
+  ctaText={'Rast Creative Studio her çekimden önce bu tür bir plan hazırlar ve ekiple paylaşır. <a href="/video-cekimi/">Video çekimi</a>, <a href="/tanitim-filmi/">tanıtım filmi</a> ya da <a href="/reklam-filmi/">reklam filmi</a> için planlamadan teslime kadar destek isterseniz yazın.'}
+  image={previews[0].src}
+  toolFirst
+>
+  <Fragment slot="intro">
+    <p>
+      Projeyi, lokasyonları, ekibi, oyuncuları, saat programını ve ekipmanı girin; araç süreleri hesaplar, çakışan saatleri
+      uyarır ve <strong>markalı bir çekim planı</strong> hazırlar. Yazdırın ya da PDF olarak kaydedin, planı JSON dosyası olarak
+      saklayın. <strong>Bilgileriniz hiçbir sunucuya gönderilmez.</strong>
+    </p>
+  </Fragment>
+
+  <Section width="wide" space="tight" id="arac" slot="tool">
+    <div class="cp" data-cp>
+      <div class="cp__bar" role="toolbar" aria-label="Çekim planı işlemleri">
+        <button type="button" class="ev-btn ev-btn--sun" data-act="print">Yazdır / PDF</button>
+        <button type="button" class="ev-btn" data-act="json">JSON indir</button>
+        <label class="ev-btn cp__file">JSON yükle<input type="file" accept="application/json,.json" data-act="load" class="sr-only" /></label>
+        <button type="button" class="ev-btn" data-act="sample">Örnekle doldur</button>
+        <button type="button" class="ev-btn" data-act="clear">Temizle</button>
+        <span class="small" data-status aria-live="polite"></span>
+      </div>
+      <noscript><p class="warn">Araç için JavaScript gerekli. Örnek PDF'i yukarıdan indirebilirsiniz.</p></noscript>
+
+      <fieldset class="cp__group">
+        <legend>Proje</legend>
+        <div class="cp__grid">
+          <label class="f f--2">Proje adı<input data-p="ad" maxlength="120" placeholder="Ör. Bahar kampanyası tanıtım filmi" /></label>
+          <label class="f">Müşteri / marka<input data-p="musteri" maxlength="120" /></label>
+          <label class="f">Çekim tarihi<input type="date" data-p="tarih" /></label>
+          <label class="f">Çekim günü<input data-p="gun" maxlength="20" placeholder="Ör. 1 / 2" /></label>
+          <label class="f">Genel çağrı saati<input type="time" data-p="cagri" /></label>
+          <label class="f">Tahmini bitiş (wrap)<input type="time" data-p="bitis" /></label>
+          <label class="f">Yapımcı / sorumlu<input data-p="yapimci" maxlength="80" /></label>
+          <label class="f">Yapımcı telefonu<input type="tel" data-p="yapimciTel" maxlength="40" /></label>
+          <label class="f">Yönetmen<input data-p="yonetmen" maxlength="80" /></label>
+          <label class="f">Yönetmen telefonu<input type="tel" data-p="yonetmenTel" maxlength="40" /></label>
+          <label class="f">Gün doğumu / batımı<input data-p="gunes" maxlength="40" placeholder="Ör. 07:12 / 18:04" /></label>
+          <label class="f">Hava durumu notu<input data-p="hava" maxlength="80" placeholder="Ör. Parçalı bulutlu, 14°C" /></label>
+          <label class="f f--2">En yakın sağlık kuruluşu (ad, adres)<input data-p="acil" maxlength="160" /></label>
+          <label class="f f--2">Genel notlar (park, yemek, kıyafet, güvenlik)<textarea data-p="notlar" rows="3" maxlength="1200"></textarea></label>
+        </div>
+      </fieldset>
+
+      <div data-lists></div>
+
+      <div class="cp__warn" data-warnings aria-live="polite"></div>
+
+      <div class="cp__bar">
+        <button type="button" class="ev-btn ev-btn--sun" data-act="print">Yazdır / PDF</button>
+        <button type="button" class="ev-btn" data-act="json">JSON indir</button>
+        <button type="button" class="ev-btn" data-act="preview">Önizlemeyi aç / kapat</button>
+      </div>
+      <div class="cp__preview" data-preview hidden>
+        <div class="cp__sheetwrap"><div data-sheet></div></div>
+      </div>
+      <p class="small">
+        Kayıt: bilgiler yalnızca bu tarayıcıda (yerel depolama) tutulur. Ortak bilgisayarda çalışıyorsanız işiniz bitince
+        “Temizle”ye basın. Maliyet ve ücret alanı bilerek yoktur.
+      </p>
+    </div>
+    <datalist id="dl-rol">
+      {["Yönetmen", "Yapımcı", "Görüntü yönetmeni", "Kamera operatörü", "Kamera asistanı", "Işık şefi", "Işıkçı", "Ses kayıt", "Sanat yönetmeni", "Makyaj / saç", "Kostüm / stil", "Yapım asistanı", "Drone pilotu", "Set fotoğrafçısı", "İçerik / sosyal medya", "Müşteri temsilcisi"].map((r) => <option value={r} />)}
+    </datalist>
+    <datalist id="dl-ekipman">
+      {["Kamera gövdesi", "Lens seti", "Tripod", "Gimbal", "Slider", "Monitör", "LED ışık", "Softbox / difüzör", "Işık ayağı", "Kum torbası", "Yaka mikrofonu", "Shotgun mikrofon", "Boom", "Ses kayıt cihazı", "Hafıza kartı", "Batarya", "Şarj cihazı", "Uzatma kablosu", "Harici disk", "Drone", "Reflektör", "Klaket"].map((r) => <option value={r} />)}
+    </datalist>
+  </Section>
+
+  <Section width="default" space="tight" id="neden">
+    <SectionHeading eyebrow="Pratik">İyi bir çekim planında neler olur?</SectionHeading>
+    <ul class="belge-prose">
+      <li><strong>Tek bir genel çağrı saati</strong> ve gerekiyorsa kişi bazında çağrı saatleri. Işık ve kamera ekibi oyunculardan önce gelir; makyaj ve kostüm için ayrıca hazırlık saati yazın.</li>
+      <li><strong>Tam adres ve harita bağlantısı</strong>, park ve giriş bilgisi, yerinde ulaşılacak kişi. Herkesin “neredesiniz?” diye aradığı on dakika, günün en pahalı on dakikası olabilir.</li>
+      <li><strong>Gerçekçi bir saat programı:</strong> kurulum, ışık değişimi ve lokasyon geçişi de programda bir satırdır. Sahneleri hikâye sırasına değil, lokasyon ve ışığa göre sıralayın; plan listesi için <a href="/araclar/storyboard-sablonu/">ücretsiz şablonumuzu</a> kullanabilirsiniz.</li>
+      <li><strong>Acil durum bilgisi:</strong> en yakın sağlık kuruluşu ve 112. Dış çekimde gün doğumu, batımı ve hava durumu notu.</li>
+      <li><strong>İzinler:</strong> kadraja girecek kişilerin izin formu çekimden önce imzalanmış olmalı. Araç, izni işaretlenmemiş oyuncuları uyarır; taslak form için <a href="/araclar/cekim-izin-formu/">izin formu sayfası</a>.</li>
+    </ul>
+  </Section>
+</BelgeSayfasi>
+
+<script>
+  import SAMPLE_JSON from "../../data/belgeler/ornek-cekim-plani.json";
+
+  type Row = Record<string, string | boolean>;
+  type Plan = {
+    v: 1;
+    proje: Record<string, string>;
+    lokasyonlar: Row[];
+    ekip: Row[];
+    oyuncular: Row[];
+    program: Row[];
+    ekipman: Row[];
+  };
+  type Col = { k: string; l: string; type?: "time" | "tel" | "url" | "number" | "check" | "area"; list?: string; w?: number; ph?: string };
+
+  const KEY = "rast-cekim-plani-v1";
+  const LOGO = "/araclar/cekim-plani/rast-logo-koyu.png";
+  const LISTS: { k: keyof Omit<Plan, "v" | "proje">; title: string; add: string; cols: Col[] }[] = [
+    {
+      k: "lokasyonlar",
+      title: "Lokasyonlar",
+      add: "Lokasyon ekle",
+      cols: [
+        { k: "ad", l: "Lokasyon adı", w: 2 },
+        { k: "adres", l: "Adres", w: 3 },
+        { k: "harita", l: "Harita bağlantısı", type: "url", w: 2 },
+        { k: "iletisim", l: "Yerinde iletişim", w: 2 },
+        { k: "not", l: "Not (park, giriş, priz)", w: 3 },
+      ],
+    },
+    {
+      k: "ekip",
+      title: "Ekip",
+      add: "Ekip üyesi ekle",
+      cols: [
+        { k: "rol", l: "Görev", list: "dl-rol", w: 2 },
+        { k: "ad", l: "Ad soyad", w: 2 },
+        { k: "tel", l: "Telefon", type: "tel", w: 2 },
+        { k: "cagri", l: "Çağrı saati", type: "time", w: 1 },
+      ],
+    },
+    {
+      k: "oyuncular",
+      title: "Oyuncular / katılımcılar",
+      add: "Kişi ekle",
+      cols: [
+        { k: "ad", l: "Ad soyad", w: 2 },
+        { k: "rol", l: "Rol / karakter", w: 2 },
+        { k: "hazir", l: "Hazırlık (makyaj)", type: "time", w: 1 },
+        { k: "cagri", l: "Sette", type: "time", w: 1 },
+        { k: "izin", l: "İzin formu alındı", type: "check", w: 1 },
+      ],
+    },
+    {
+      k: "program",
+      title: "Saat programı",
+      add: "Satır ekle",
+      cols: [
+        { k: "bas", l: "Başlangıç", type: "time", w: 1 },
+        { k: "bit", l: "Bitiş", type: "time", w: 1 },
+        { k: "sahne", l: "Sahne / plan", w: 1, ph: "Ör. 2A" },
+        { k: "aciklama", l: "Açıklama", w: 3, ph: "Ör. Röportaj, genel müdür" },
+        { k: "lokasyon", l: "Lokasyon", list: "dl-lok", w: 2 },
+        { k: "kisiler", l: "Kişiler", w: 2 },
+        { k: "not", l: "Not", w: 2 },
+      ],
+    },
+    {
+      k: "ekipman",
+      title: "Ekipman",
+      add: "Kalem ekle",
+      cols: [
+        { k: "kalem", l: "Kalem", list: "dl-ekipman", w: 3 },
+        { k: "adet", l: "Adet", type: "number", w: 1 },
+        { k: "sorumlu", l: "Sorumlu", w: 2 },
+        { k: "ok", l: "Hazır", type: "check", w: 1 },
+      ],
+    },
+  ];
+
+  const empty = (): Plan => ({
+    v: 1,
+    proje: {},
+    lokasyonlar: [{}],
+    ekip: [{}],
+    oyuncular: [{}],
+    program: [{}, {}],
+    ekipman: [{}],
+  });
+
+  const SAMPLE = SAMPLE_JSON as unknown as Plan;
+
+  const root = document.querySelector<HTMLElement>("[data-cp]");
+  if (root) init(root);
+
+  function init(root: HTMLElement) {
+    const listsEl = root.querySelector<HTMLElement>("[data-lists]")!;
+    const warnEl = root.querySelector<HTMLElement>("[data-warnings]")!;
+    const statusEl = root.querySelector<HTMLElement>("[data-status]")!;
+    const previewEl = root.querySelector<HTMLElement>("[data-preview]")!;
+    const sheetEl = root.querySelector<HTMLElement>("[data-sheet]")!;
+    let plan: Plan = load() ?? empty();
+    const qs = new URLSearchParams(location.search);
+    if (qs.has("ornek")) plan = structuredClone(SAMPLE);
+
+    // ---------- helpers ----------
+    const esc = (s: unknown) =>
+      String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
+    const mins = (t: unknown) => {
+      const m = /^(\d{1,2}):(\d{2})$/.exec(String(t ?? ""));
+      return m ? Number(m[1]) * 60 + Number(m[2]) : null;
+    };
+    const dur = (a: number, b: number) => {
+      const d = b - a;
+      const h = Math.floor(d / 60);
+      const m = d % 60;
+      return h ? (m ? `${h} sa ${m} dk` : `${h} sa`) : `${m} dk`;
+    };
+    const filled = (r: Row) => Object.values(r).some((v) => v !== "" && v !== false && v != null);
+    const longDate = (iso: string) => {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(iso || "")) return "";
+      const d = new Date(iso + "T12:00:00");
+      return new Intl.DateTimeFormat("tr-TR", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(d);
+    };
+    const status = (t: string) => {
+      statusEl.textContent = t;
+      window.setTimeout(() => statusEl.textContent === t && (statusEl.textContent = ""), 3500);
+    };
+
+    function save() {
+      try {
+        localStorage.setItem(KEY, JSON.stringify(plan));
+      } catch {
+        /* storage full or blocked: tool still works */
+      }
+    }
+    function load(): Plan | null {
+      try {
+        const raw = localStorage.getItem(KEY);
+        return raw ? sanitize(JSON.parse(raw)) : null;
+      } catch {
+        return null;
+      }
+    }
+    function sanitize(x: any): Plan {
+      if (!x || typeof x !== "object" || x.v !== 1) throw new Error("Bu dosya bir Rast çekim planı değil (v: 1 bekleniyordu).");
+      const p = empty();
+      const str = (v: unknown, n = 1200) => (typeof v === "string" ? v.slice(0, n) : typeof v === "number" ? String(v) : "");
+      for (const [k, v] of Object.entries(x.proje ?? {})) p.proje[k] = str(v);
+      for (const L of LISTS) {
+        const arr = Array.isArray(x[L.k]) ? x[L.k].slice(0, 200) : [];
+        p[L.k] = arr.map((r: any) => {
+          const o: Row = {};
+          for (const c of L.cols) o[c.k] = c.type === "check" ? Boolean(r?.[c.k]) : str(r?.[c.k], 600);
+          return o;
+        });
+        if (!p[L.k].length) p[L.k] = [{}];
+      }
+      return p;
+    }
+
+    // ---------- form ----------
+    function renderProject() {
+      root.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[data-p]").forEach((el) => {
+        el.value = plan.proje[el.dataset.p!] ?? "";
+      });
+    }
+    root.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[data-p]").forEach((el) =>
+      el.addEventListener("input", () => {
+        plan.proje[el.dataset.p!] = el.value;
+        changed();
+      }),
+    );
+
+    function renderLists() {
+      const lokNames = plan.lokasyonlar.map((l) => String(l.ad || "")).filter(Boolean);
+      let html = `<datalist id="dl-lok">${lokNames.map((n) => `<option value="${esc(n)}">`).join("")}</datalist>`;
+      for (const L of LISTS) {
+        const tmpl = L.cols.map((c) => `${c.w ?? 1}fr`).join(" ");
+        html += `<fieldset class="cp__group"><legend>${esc(L.title)}</legend>`;
+        if (L.k === "program") {
+          html += `<p class="small">Süre ve çakışmalar otomatik hesaplanır. <button type="button" class="linkbtn" data-sort>Saate göre sırala</button></p>`;
+        }
+        html += `<div class="rows">`;
+        plan[L.k].forEach((r, i) => {
+          html += `<div class="rrow" style="--cols:${tmpl}" data-list="${L.k}" data-i="${i}">`;
+          for (const c of L.cols) {
+            const id = `cp-${L.k}-${i}-${c.k}`;
+            const v = r[c.k];
+            if (c.type === "check") {
+              html += `<label class="f f--check" for="${id}"><input id="${id}" type="checkbox" data-k="${c.k}" ${v ? "checked" : ""}/> ${esc(c.l)}</label>`;
+            } else {
+              const t = c.type === "time" || c.type === "tel" || c.type === "url" || c.type === "number" ? c.type : "text";
+              const extra = c.type === "number" ? ' min="0" max="999" inputmode="numeric"' : "";
+              html += `<label class="f${(c.w ?? 1) >= 3 ? " f--wide" : ""}" for="${id}"><span>${esc(c.l)}</span><input id="${id}" type="${t}" data-k="${c.k}" value="${esc(v)}"${c.list ? ` list="${c.list}"` : ""}${c.ph ? ` placeholder="${esc(c.ph)}"` : ""} maxlength="600"${extra}/></label>`;
+            }
+          }
+          if (L.k === "program") html += `<span class="dur" data-dur></span>`;
+          html += `<button type="button" class="rm" data-rm aria-label="${esc(L.title)}: ${i + 1}. satırı sil">✕</button></div>`;
+        });
+        html += `</div><button type="button" class="ev-btn ev-btn--sm add" data-add="${L.k}">+ ${esc(L.add)}</button></fieldset>`;
+      }
+      listsEl.innerHTML = html;
+      updateDurations();
+    }
+
+    listsEl.addEventListener("input", (ev) => {
+      const el = ev.target as HTMLInputElement;
+      const row = el.closest<HTMLElement>(".rrow");
+      if (!row || !el.dataset.k) return;
+      const k = row.dataset.list as keyof Omit<Plan, "v" | "proje">;
+      const i = Number(row.dataset.i);
+      plan[k][i][el.dataset.k] = el.type === "checkbox" ? el.checked : el.value;
+      if (k === "lokasyonlar" && el.dataset.k === "ad") {
+        const dl = listsEl.querySelector("#dl-lok");
+        if (dl) dl.innerHTML = plan.lokasyonlar.map((l) => (l.ad ? `<option value="${esc(l.ad)}">` : "")).join("");
+      }
+      if (k === "program") updateDurations();
+      changed();
+    });
+    listsEl.addEventListener("click", (ev) => {
+      const t = ev.target as HTMLElement;
+      if (t.matches("[data-add]")) {
+        const k = t.dataset.add as keyof Omit<Plan, "v" | "proje">;
+        plan[k].push({});
+        renderLists();
+        const rows = listsEl.querySelectorAll<HTMLElement>(`.rrow[data-list="${k}"]`);
+        rows[rows.length - 1]?.querySelector<HTMLInputElement>("input")?.focus();
+        changed();
+      } else if (t.matches("[data-rm]")) {
+        const row = t.closest<HTMLElement>(".rrow")!;
+        const k = row.dataset.list as keyof Omit<Plan, "v" | "proje">;
+        plan[k].splice(Number(row.dataset.i), 1);
+        if (!plan[k].length) plan[k].push({});
+        renderLists();
+        changed();
+      } else if (t.matches("[data-sort]")) {
+        plan.program.sort((a, b) => (mins(a.bas) ?? 9999) - (mins(b.bas) ?? 9999));
+        renderLists();
+        changed();
+        status("Program saate göre sıralandı.");
+      }
+    });
+
+    function updateDurations() {
+      listsEl.querySelectorAll<HTMLElement>('.rrow[data-list="program"]').forEach((row) => {
+        const r = plan.program[Number(row.dataset.i)];
+        const a = mins(r?.bas);
+        const b = mins(r?.bit);
+        const el = row.querySelector<HTMLElement>("[data-dur]")!;
+        el.textContent = a != null && b != null ? (b > a ? dur(a, b) : "⚠ bitiş başlangıçtan önce") : "";
+        el.classList.toggle("bad", a != null && b != null && b <= a);
+      });
+    }
+
+    // ---------- checks ----------
+    function warnings(): string[] {
+      const w: string[] = [];
+      const P = plan.proje;
+      if (!P.ad) w.push("Proje adı boş.");
+      if (!P.tarih) w.push("Çekim tarihi girilmedi.");
+      if (!P.cagri) w.push("Genel çağrı saati girilmedi.");
+      if (!P.acil) w.push("En yakın sağlık kuruluşu yazılmadı; çekim planında acil durum bilgisi olmalı.");
+      const prog = plan.program
+        .map((r, i) => ({ i: i + 1, a: mins(r.bas), b: mins(r.bit), r }))
+        .filter((x) => filled(x.r));
+      prog.forEach((x) => {
+        if (x.a == null) w.push(`Program ${x.i}. satır: başlangıç saati yok.`);
+        else if (x.b != null && x.b <= x.a) w.push(`Program ${x.i}. satır: bitiş saati başlangıçtan önce ya da aynı.`);
+      });
+      const timed = prog.filter((x) => x.a != null && x.b != null && x.b > x.a).sort((p, q) => p.a! - q.a!);
+      for (let j = 1; j < timed.length; j++) {
+        const p = timed[j - 1];
+        const q = timed[j];
+        if (q.a! < p.b!) w.push(`Program ${p.i}. ve ${q.i}. satırlar çakışıyor: ${p.i}. satırın bitişi ${p.r.bit}, ${q.i}. satırın başlangıcı ${q.r.bas}.`);
+      }
+      const c = mins(P.cagri);
+      if (c != null && timed.length && timed[0].a! < c) w.push("Programdaki ilk iş genel çağrı saatinden önce başlıyor.");
+      const e = mins(P.bitis);
+      if (e != null && timed.length && timed[timed.length - 1].b! > e) w.push("Program tahmini bitiş saatini aşıyor.");
+      plan.oyuncular.forEach((o) => {
+        if (o.ad && !o.izin) w.push(`${o.ad}: görüntü ve ses kullanım izin formu işaretlenmedi.`);
+      });
+      plan.ekip.forEach((x) => {
+        if (x.ad && !x.tel) w.push(`${x.ad}: telefon numarası yok.`);
+      });
+      return w;
+    }
+
+    function renderWarnings() {
+      const w = warnings();
+      warnEl.innerHTML = w.length
+        ? `<p><strong>Kontrol (${w.length})</strong></p><ul>${w.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` +
+          (w.some((x) => x.includes("izin formu"))
+            ? `<p class="small">Taslak form: <a href="/araclar/cekim-izin-formu/">görüntü ve ses kullanım izin formu</a>.</p>`
+            : "")
+        : `<p>✓ Eksik ya da çakışan bilgi görünmüyor.</p>`;
+    }
+
+    // ---------- call sheet ----------
+    function sheetHtml(): string {
+      const P = plan.proje;
+      const rows = <T extends Row>(arr: T[]) => arr.filter(filled);
+      const lok = rows(plan.lokasyonlar);
+      const ekip = rows(plan.ekip);
+      const oy = rows(plan.oyuncular);
+      const prog = rows(plan.program);
+      const ekp = rows(plan.ekipman);
+      const timed = prog.map((r) => ({ a: mins(r.bas), b: mins(r.bit) })).filter((x) => x.a != null && x.b != null && x.b! > x.a!);
+      const span = timed.length ? `${dur(Math.min(...timed.map((x) => x.a!)), Math.max(...timed.map((x) => x.b!)))}` : "";
+      const cell = (v: unknown) => `<td>${esc(v) || "&nbsp;"}</td>`;
+      const tbl = (head: string[], body: string) =>
+        `<table class="cs-t"><thead><tr>${head.map((h) => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${body}</tbody></table>`;
+      const kv = (k: string, v: unknown) => (v ? `<div class="cs-kv"><span>${esc(k)}</span><b>${esc(v)}</b></div>` : "");
+      let h = `<table class="cs-wrap"><tbody><tr><td>`;
+      h += `<header class="cs-h"><img src="${LOGO}" alt="Rast Creative" width="120" height="66" /><div><p class="cs-k">Çekim planı · Call sheet</p><h2>${esc(P.ad) || "Adsız proje"}</h2>${P.musteri ? `<p>${esc(P.musteri)}</p>` : ""}</div><div class="cs-date"><b>${esc(longDate(P.tarih)) || "Tarih girilmedi"}</b>${P.gun ? `<span>Çekim günü ${esc(P.gun)}</span>` : ""}</div></header>`;
+      h += `<div class="cs-big"><div><span>Genel çağrı</span><b>${esc(P.cagri) || "—"}</b></div><div><span>Tahmini bitiş</span><b>${esc(P.bitis) || "—"}</b></div><div><span>Gün doğumu / batımı</span><b>${esc(P.gunes) || "—"}</b></div><div><span>Hava</span><b class="sm">${esc(P.hava) || "—"}</b></div></div>`;
+      h += `<div class="cs-grid">${kv("Yapımcı", [P.yapimci, P.yapimciTel].filter(Boolean).join(" · "))}${kv("Yönetmen", [P.yonetmen, P.yonetmenTel].filter(Boolean).join(" · "))}${kv("Acil durum", [P.acil, "112"].filter(Boolean).join(" · "))}</div>`;
+      if (lok.length)
+        h += `<h3>Lokasyonlar</h3>` + tbl(["#", "Lokasyon", "Adres", "Yerinde iletişim", "Not"], lok.map((r, i) => `<tr><td>${i + 1}</td>${cell(r.ad)}<td>${esc(r.adres)}${r.harita ? `<br><small>${esc(r.harita)}</small>` : ""}</td>${cell(r.iletisim)}${cell(r.not)}</tr>`).join(""));
+      if (prog.length)
+        h += `<h3>Saat programı${span ? ` <small>· toplam ${esc(span)}</small>` : ""}</h3>` +
+          tbl(["Saat", "Süre", "Sahne", "Açıklama", "Lokasyon", "Kişiler", "Not"], prog.map((r) => {
+            const a = mins(r.bas);
+            const b = mins(r.bit);
+            return `<tr><td class="nw">${esc(r.bas)}${r.bit ? `–${esc(r.bit)}` : ""}</td><td class="nw">${a != null && b != null && b > a ? dur(a, b) : ""}</td>${cell(r.sahne)}${cell(r.aciklama)}${cell(r.lokasyon)}${cell(r.kisiler)}${cell(r.not)}</tr>`;
+          }).join(""));
+      if (ekip.length) h += `<h3>Ekip</h3>` + tbl(["Görev", "Ad soyad", "Telefon", "Çağrı"], ekip.map((r) => `<tr>${cell(r.rol)}${cell(r.ad)}${cell(r.tel)}${cell(r.cagri || P.cagri)}</tr>`).join(""));
+      if (oy.length)
+        h += `<h3>Oyuncular / katılımcılar</h3>` + tbl(["Ad soyad", "Rol", "Hazırlık", "Sette", "İzin formu"], oy.map((r) => `<tr>${cell(r.ad)}${cell(r.rol)}${cell(r.hazir)}${cell(r.cagri)}<td>${r.izin ? "✓ alındı" : "☐ alınacak"}</td></tr>`).join(""));
+      if (ekp.length) h += `<h3>Ekipman</h3>` + tbl(["", "Kalem", "Adet", "Sorumlu"], ekp.map((r) => `<tr><td class="cb">${r.ok ? "☑" : "☐"}</td>${cell(r.kalem)}${cell(r.adet)}${cell(r.sorumlu)}</tr>`).join(""));
+      if (P.notlar) h += `<h3>Notlar</h3><p class="cs-notes">${esc(P.notlar).replace(/\n/g, "<br>")}</p>`;
+      h += `</td></tr></tbody><tfoot><tr><td><div class="cs-f"><span><img src="${LOGO}" alt="" width="40" height="22" /><b>Rast Creative Studio · rastcreative.com</b></span><span>Bu plan rastcreative.com/araclar/cekim-plani/ ile hazırlandı · ${esc(new Intl.DateTimeFormat("tr-TR").format(new Date()))}</span></div></td></tr></tfoot></table>`;
+      return h;
+    }
+
+    function preparePrint() {
+      document.getElementById("cs-print")?.remove();
+      const div = document.createElement("div");
+      div.id = "cs-print";
+      div.className = "cs";
+      div.innerHTML = sheetHtml();
+      document.body.appendChild(div);
+      document.title = `Çekim planı · ${plan.proje.ad || "Rast"}`;
+    }
+    const origTitle = document.title;
+    window.addEventListener("beforeprint", preparePrint);
+    window.addEventListener("afterprint", () => {
+      if (!qs.has("baski")) document.getElementById("cs-print")?.remove();
+      document.title = origTitle;
+    });
+
+    function changed() {
+      save();
+      renderWarnings();
+      if (!previewEl.hidden) sheetEl.innerHTML = sheetHtml();
+    }
+
+    // ---------- actions ----------
+    const fname = () => {
+      const s = (plan.proje.ad || "plan")
+        .toLocaleLowerCase("tr")
+        .replace(/[çğıöşü]/g, (c) => ({ ç: "c", ğ: "g", ı: "i", ö: "o", ş: "s", ü: "u" })[c]!)
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "")
+        .slice(0, 40);
+      return `rast-cekim-plani-${s || "plan"}${plan.proje.tarih ? "-" + plan.proje.tarih : ""}.json`;
+    };
+    root.addEventListener("click", (ev) => {
+      const t = (ev.target as HTMLElement).closest<HTMLElement>("[data-act]");
+      if (!t) return;
+      const act = t.dataset.act;
+      if (act === "print") {
+        preparePrint();
+        window.print();
+      } else if (act === "json") {
+        const out = { ...plan, $kaynak: "Rast Creative Studio · https://rastcreative.com/araclar/cekim-plani/", olusturma: new Date().toISOString() };
+        const url = URL.createObjectURL(new Blob([JSON.stringify(out, null, 2)], { type: "application/json" }));
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fname();
+        document.body.append(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 4000);
+        status("JSON indirildi.");
+      } else if (act === "sample") {
+        if (Object.values(plan.proje).some(Boolean) && !confirm("Mevcut bilgiler örnekle değiştirilsin mi?")) return;
+        plan = structuredClone(SAMPLE);
+        renderAll();
+        status("Örnek plan yüklendi.");
+      } else if (act === "clear") {
+        if (!confirm("Tüm bilgiler silinsin mi? (Önce JSON indirmek isteyebilirsiniz.)")) return;
+        plan = empty();
+        try {
+          localStorage.removeItem(KEY);
+        } catch {}
+        renderAll();
+        status("Temizlendi.");
+      } else if (act === "preview") {
+        previewEl.hidden = !previewEl.hidden;
+        if (!previewEl.hidden) sheetEl.innerHTML = sheetHtml();
+      }
+    });
+    root.querySelector<HTMLInputElement>('[data-act="load"]')!.addEventListener("change", async (ev) => {
+      const inp = ev.target as HTMLInputElement;
+      const f = inp.files?.[0];
+      if (!f) return;
+      try {
+        if (f.size > 2_000_000) throw new Error("Dosya çok büyük.");
+        plan = sanitize(JSON.parse(await f.text()));
+        renderAll();
+        status(`“${f.name}” yüklendi.`);
+      } catch (e) {
+        status(`Yüklenemedi: ${(e as Error).message}`);
+      }
+      inp.value = "";
+    });
+
+    function renderAll() {
+      renderProject();
+      renderLists();
+      changed();
+    }
+    renderAll();
+    if (qs.has("baski")) preparePrint();
+  }
+</script>
+
+<style>
+  .cp {
+    display: grid;
+    gap: 1.2rem;
+    padding: clamp(1rem, 2.5vw, 1.6rem);
+    border: 1px solid var(--line);
+    border-radius: 1.2rem;
+    background: color-mix(in srgb, var(--paper) 82%, transparent);
+  }
+  .cp__bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+  }
+  .cp__file {
+    cursor: pointer;
+  }
+  .cp__file:focus-within {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+  }
+  .cp__group {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+  }
+  .cp__group legend {
+    margin-bottom: 0.7rem;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--ink);
+  }
+  .cp__grid {
+    display: grid;
+    gap: 0.8rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
+  }
+  .cp :global(.f) {
+    display: grid;
+    gap: 0.25rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    min-width: 0;
+  }
+  .cp :global(.f--2) {
+    grid-column: span 2;
+  }
+  @media (max-width: 520px) {
+    .cp :global(.f--2) {
+      grid-column: auto;
+    }
+  }
+  .cp :global(.f input),
+  .cp :global(.f textarea) {
+    width: 100%;
+    min-height: 44px;
+    padding: 0.5rem 0.65rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 0.55rem;
+    background: var(--paper);
+    color: var(--ink);
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 400;
+  }
+  .cp :global(.f input:focus-visible),
+  .cp :global(.f textarea:focus-visible) {
+    outline: 2px solid var(--amber);
+    outline-offset: 1px;
+  }
+  .cp :global(.f--check) {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    align-self: end;
+    min-height: 44px;
+    cursor: pointer;
+  }
+  .cp :global(.f--check input) {
+    width: 1.25rem;
+    min-height: 0;
+    height: 1.25rem;
+    accent-color: var(--amber);
+  }
+  .cp :global(.rows) {
+    display: grid;
+    gap: 0.7rem;
+  }
+  .cp :global(.rrow) {
+    position: relative;
+    display: grid;
+    gap: 0.55rem;
+    padding: 0.75rem 2.8rem 0.75rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 0.8rem;
+    background: color-mix(in srgb, var(--paper) 70%, transparent);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (min-width: 900px) {
+    .cp :global(.rrow) {
+      grid-template-columns: var(--cols);
+      align-items: end;
+    }
+  }
+  @media (max-width: 899px) {
+    .cp :global(.rrow .f--wide) {
+      grid-column: 1 / -1;
+    }
+  }
+  .cp :global(.rm) {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    width: 2.2rem;
+    height: 2.2rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .cp :global(.dur) {
+    grid-column: 1 / -1;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+  }
+  .cp :global(.dur:empty) {
+    display: none;
+  }
+  .cp :global(.dur.bad) {
+    color: #a3341b;
+    font-weight: 600;
+  }
+  .cp :global(.add) {
+    margin-top: 0.7rem;
+  }
+  .cp :global(.linkbtn) {
+    border: 0;
+    background: none;
+    padding: 0;
+    color: var(--amber-text);
+    text-decoration: underline;
+    cursor: pointer;
+    font: inherit;
+  }
+  .cp__warn {
+    padding: 0.9rem 1.1rem;
+    border-radius: 0.8rem;
+    background: color-mix(in srgb, #e0a020 14%, var(--paper));
+    color: var(--ink);
+    line-height: 1.5;
+    font-size: 0.95rem;
+  }
+  .cp__warn :global(ul) {
+    margin: 0.4rem 0 0 1.2rem;
+    list-style: disc;
+  }
+  .cp__warn :global(a) {
+    color: var(--amber-text);
+  }
+  .cp__preview {
+    overflow-x: auto;
+    padding: 1rem;
+    border-radius: 0.8rem;
+    background: #d9d4cd;
+  }
+  .cp__sheetwrap {
+    width: 794px;
+    max-width: none;
+    margin-inline: auto;
+    padding: 40px 44px;
+    background: #fff;
+    box-shadow: 0 10px 30px -18px rgba(0, 0, 0, 0.5);
+  }
+  .small {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .warn {
+    padding: 0.7rem 0.9rem;
+    border-radius: 0.7rem;
+    background: color-mix(in srgb, #e0a020 18%, var(--paper));
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+</style>
+
+<style is:global>
+  /* call sheet (preview + print). Light document, Rast branding. */
+  .cs,
+  [data-sheet] {
+    color: #1d1915;
+    font-family: var(--font-body, Inter), "Segoe UI", system-ui, sans-serif;
+    font-size: 10.5px;
+    line-height: 1.4;
+  }
+  .cs-wrap {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .cs-wrap > tbody > tr > td,
+  .cs-wrap > tfoot > tr > td {
+    padding: 0;
+  }
+  .cs-h {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #1d1915;
+  }
+  .cs-h img {
+    width: 74px;
+    height: auto;
+  }
+  .cs-h > div:nth-child(2) {
+    flex: 1;
+  }
+  .cs-h h2 {
+    margin: 0;
+    font-size: 20px;
+    line-height: 1.15;
+    font-weight: 700;
+  }
+  .cs-h p {
+    margin: 2px 0 0;
+    color: #5b524a;
+  }
+  .cs-k {
+    font-size: 9px !important;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #b3501a !important;
+    font-weight: 700;
+  }
+  .cs-date {
+    text-align: right;
+    display: grid;
+    gap: 2px;
+  }
+  .cs-date b {
+    font-size: 12px;
+  }
+  .cs-date span {
+    color: #5b524a;
+  }
+  .cs-big {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin: 12px 0 8px;
+  }
+  .cs-big > div {
+    padding: 8px 10px;
+    border: 1px solid #cfc5b9;
+    border-radius: 6px;
+    background: #faf7f3;
+  }
+  .cs-big span {
+    display: block;
+    font-size: 8.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #6b6158;
+  }
+  .cs-big b {
+    font-size: 17px;
+  }
+  .cs-big b.sm {
+    font-size: 11px;
+  }
+  .cs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 16px;
+    margin-bottom: 4px;
+  }
+  .cs-kv {
+    display: flex;
+    gap: 8px;
+    padding: 3px 0;
+    border-bottom: 1px solid #e3dad0;
+  }
+  .cs-kv span {
+    width: 74px;
+    flex: none;
+    color: #6b6158;
+  }
+  .cs-kv:last-child {
+    grid-column: 1 / -1;
+  }
+  .cs h3,
+  [data-sheet] h3 {
+    margin: 14px 0 5px;
+    padding-left: 7px;
+    border-left: 3px solid #b3501a;
+    font-size: 12.5px;
+    font-weight: 700;
+    break-after: avoid;
+  }
+  .cs h3 small,
+  [data-sheet] h3 small {
+    font-weight: 500;
+    color: #6b6158;
+  }
+  .cs-t {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .cs-t th {
+    background: #1d1915;
+    color: #fff;
+    text-align: left;
+    font-size: 9px;
+    font-weight: 600;
+    padding: 4px 6px;
+  }
+  .cs-t td {
+    border-bottom: 1px solid #ddd3c8;
+    padding: 4px 6px;
+    vertical-align: top;
+  }
+  .cs-t tr {
+    break-inside: avoid;
+  }
+  .cs-t tbody tr:nth-child(even) td {
+    background: #faf7f3;
+  }
+  .cs-t .nw {
+    white-space: nowrap;
+  }
+  .cs-t .cb {
+    width: 18px;
+    font-size: 13px;
+  }
+  .cs-t small {
+    color: #6b6158;
+    word-break: break-all;
+  }
+  .cs-notes {
+    margin: 0;
+    padding: 8px 10px;
+    border: 1px solid #e2d8cc;
+    border-radius: 6px;
+    background: #f4efe8;
+  }
+  .cs-f {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 14px;
+    padding-top: 6px;
+    border-top: 1px solid #cfc5b9;
+    font-size: 8.5px;
+    color: #5b524a;
+  }
+  .cs-f img {
+    width: 28px;
+    height: auto;
+    vertical-align: middle;
+    margin-right: 5px;
+  }
+  .cs-f b {
+    color: #1d1915;
+  }
+  #cs-print {
+    display: none;
+  }
+  @media print {
+    @page {
+      size: A4;
+      margin: 12mm 12mm 10mm;
+    }
+    html,
+    body {
+      background: #fff !important;
+    }
+    body > *:not(#cs-print) {
+      display: none !important;
+    }
+    #cs-print {
+      display: block;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  }
+</style>
