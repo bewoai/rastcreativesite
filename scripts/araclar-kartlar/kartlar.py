@@ -75,6 +75,7 @@ def frame(key, w, h, body="", pos="center", extra=""):
             '.hook{position:absolute;left:50%;transform:translateX(-50%);background:#fff;color:#111;font:700 70px/1.12 SG;padding:20px 34px 24px;border-radius:22px;text-align:center;width:max-content;max-width:880px;box-shadow:0 10px 30px rgba(0,0,0,.35)}'
             '.cap{position:absolute;left:90px;right:170px;text-align:center;color:#fff;font:700 74px/1.12 SG;-webkit-text-stroke:12px #000;paint-order:stroke fill;letter-spacing:-.01em}'
             '.cap em{font-style:normal;color:#FFD23F}'
+            '.sub{position:absolute;left:50%;transform:translateX(-50%);width:max-content;max-width:800px;text-align:center;color:#fff;font:700 76px/1.22 SG;padding:16px 34px 20px;border-radius:18px;background:rgba(0,0,0,.58);text-shadow:0 2px 10px rgba(0,0,0,.55)}'
             '.cov{position:absolute;left:70px;right:70px;text-align:center;color:#fff;font:700 112px/1 SG;letter-spacing:-.02em;text-shadow:0 6px 30px rgba(0,0,0,.6)}'
             '.cov i{display:block;width:120px;height:12px;background:#FF6A1A;margin:0 auto 34px;border-radius:6px}'
             '.shade{position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.55) 80%)}'
@@ -95,7 +96,9 @@ KARE = {
     # 9:16 talking heads with Turkish hook + caption (so UI overlays visibly matter)
     "dikey-reels": (th("th-reels", "Bunu kimse söylemiyor…", "Yazını <em>buraya</em> koy", "50% 30%"), 1080, 1920),
     "dikey-tiktok": (th("th-tiktok", "İlk 3 saniye her şey", "Kanca <em>üstte</em> kalsın", "55% 30%"), 1080, 1920),
-    "dikey-altyazi": (th("th-altyazi", "", "Sessize alanlar da <em>altyazıyı</em> okur", "40% 40%", cap_y=1180), 1080, 1920),
+    # burned-in subtitle the way the tool draws it: white text, soft shadow, translucent box, inside the safe zone
+    "dikey-altyazi": (frame("th-altyazi", 1080, 1920, '<div class="sub" style="bottom:620px">Çekim günü sabah<br>altıda başladı.</div>', "40% 40%"), 1080, 1920),
+    "dikey-altyazi-temiz": (frame("th-altyazi", 1080, 1920, "", "40% 40%"), 1080, 1920),
     "dikey-kapak": (frame("th-kapak", 1080, 1920, "", "50% 30%"), 1080, 1920),
     "yt-kucuk": (frame("th-youtube", 1280, 720,
         '<div style="position:absolute;inset:0;background:linear-gradient(90deg,transparent 35%,rgba(0,0,0,.72) 70%)"></div>'
@@ -119,6 +122,9 @@ if not ONLY or "capture" in ONLY:
     shoot([{"url": f"{BASE}/_ornek/kare/{k}.html", "out": str(WORK / f"{k}.jpg"), "w": w, "h": h, "scale": 1, "wait": 900} for k, (_, w, h) in KARE.items()], "kare")
     # sample frame for the safe-zone tool's "Örnek kareyle dene" button (served from public/)
     Image.open(WORK / "dikey-reels.jpg").convert("RGB").save(ROOT / "public/araclar/guvenli-alan/rast-ornek-kare-1080x1920.jpg", quality=80, optimize=True, progressive=True)
+    # clean background frame for the subtitle tool's burn-in preview canvas
+    (ROOT / "public/araclar/altyazi-kontrolu").mkdir(parents=True, exist_ok=True)
+    Image.open(WORK / "dikey-altyazi-temiz.jpg").convert("RGB").save(ROOT / "public/araclar/altyazi-kontrolu/rast-ornek-kare-9x16.jpg", quality=78, optimize=True, progressive=True)
 
 # LUT before/after: own .cube from the pack on a golden-hour portrait
 lut_src = Image.open(WORK / "src" / "lut.jpg").convert("RGB")
@@ -136,6 +142,16 @@ const sl=(m)=>new Promise(r=>setTimeout(r,m));
 const load=async(sel,urls,type='image/jpeg')=>{const dt=new DataTransfer();for(const u of urls){const b=await (await fetch(u)).blob();dt.items.add(new File([b],u.split('/').pop(),{type}));}const i=document.querySelector(sel);i.files=dt.files;i.dispatchEvent(new Event('change',{bubbles:true}));};
 const rect=(sel)=>{const e=document.querySelector(sel);if(!e)return {missing:sel};e.scrollIntoView({block:'center'});const r=e.getBoundingClientRect();return {clip:{x:r.left+scrollX,y:r.top+scrollY,width:r.width,height:r.height}}};
 """
+# Subtitle checker: run the sample, show all rows, keep 4 representative ones (bozuk karakter, çok hızlı,
+# çakışma, sorunsuz), max 2 badges each, and capture the result panel at a fixed card-friendly width.
+ALTYAZI_JS = """const s2=document.createElement('style');s2.textContent='.ak-res{width:600px;padding:18px 18px 14px;background:#f4efe8;border-radius:0} .ak-res .yt-note,.ak-res [data-resactions],.ak-res .ak-foot{display:none!important} .ak-list{max-height:none!important} .ak-row{grid-template-columns:auto minmax(0,1fr)!important;grid-template-areas:"st time" "text text" "iss iss"!important;padding:12px 14px!important;gap:8px 10px!important} .ak-head,.ak-meta{display:none!important} .ak-st{grid-area:st;flex-direction:row!important;align-items:center;gap:8px!important} .ak-time{grid-area:time;justify-self:end;align-self:center} .ak-text{grid-area:text} .ak-iss{grid-area:iss} .ak-row.is-sel{box-shadow:none!important}';document.head.append(s2);
+document.querySelector('[data-sample]').click();await sl(500);const o=document.querySelector('[data-only]');o.checked=false;o.dispatchEvent(new Event('change'));await sl(300);
+const keep={'3':2,'4':1,'2':2,'6':1};const pref={'3':['Bozuk'],'4':['Okuma hızı','Satır'],'2':['çakışıyor','Okuma hızı'],'6':[]};
+document.querySelectorAll('.ak-row').forEach(li=>{const n=String(+li.dataset.i+1);if(!(n in keep)){li.remove();return;}
+ const bs=[...li.querySelectorAll('.ak-iss .yt-badge')];const want=pref[n];const pick=want.length?want.map(w=>bs.find(b=>b.textContent.includes(w))).filter(Boolean):bs.slice(0,1);
+ bs.forEach(b=>{if(!pick.includes(b))b.remove();});});
+const ol=document.querySelector('.ak-rows');['3','4','2','6'].forEach(n=>{const li=[...ol.children].find(l=>String(+l.dataset.i+1)===n);li&&ol.append(li);});
+await sl(300);return rect('[data-res]');"""
 NINE = "[" + ",".join(f"'/_ornek/g{i}.jpg'" for i in range(1, 10)) + "]"
 CAP = {
     "guvenli-reels": ("araclar/guvenli-alan", "await load('[data-tool] [data-file]',['/_ornek/dikey-reels.jpg']);await sl(800);return rect('.frame');"),
@@ -143,7 +159,7 @@ CAP = {
     "bitrate-result": ("araclar/bitrate-hesaplayici", "return rect('[data-calc] .result');"),
     "enboy-src": ("araclar/en-boy-orani", "await load('[data-tool] [data-file]',['/_ornek/yatay-roportaj.jpg']);await sl(800);return rect('[data-canvas]');"),
     "enboy-out": ("araclar/en-boy-orani", "await load('[data-tool] [data-file]',['/_ornek/yatay-roportaj.jpg']);await sl(800);return rect('[data-out]');"),
-    "altyazi": ("araclar/altyazi-kontrolu", "document.querySelector('[data-sample]').click();await sl(500);document.querySelector('[data-check]')?.click();await sl(800);return rect('[data-results] table') ;"),
+    "altyazi": ("araclar/altyazi-kontrolu", ALTYAZI_JS),
     "kapak-wrap": ("araclar/kapak-sablonlari", "await load('[data-tool] [data-file]',['/_ornek/dikey-kapak.jpg']);await sl(800);const t=document.querySelector('[data-title]');t.value='Çekim günü: 5 hata';t.dispatchEvent(new Event('input',{bubbles:true}));await sl(700);return rect('[data-wrap]');"),
     "ig-grid": ("araclar/instagram-grid-sablonu", f"await load('[data-tool] [data-file]',{NINE});await sl(1500);return rect('[data-grid]');"),
     "planlayici": ("cekim-planlayici", "const gs=[...document.querySelectorAll('[data-planner] .chips')];for(const g of gs){const ls=[...g.querySelectorAll('label')];[0,2,3].forEach(i=>ls[i]&&ls[i].click());}await sl(300);document.querySelector('[data-planner] button[type=submit]')?.click();await sl(800);return rect('[data-planner]');"),
@@ -230,10 +246,12 @@ CARDS = {
       <span class="tag" style="left:90px;top:569px">16:9 kayıt</span>
       <div class="ph" style="left:590px;top:99px;width:300px"><img src="{R}enboy-out.png"></div>
       <span class="tag o" style="left:750px;top:629px">9:16</span>"""),
+    # left: real result panel (fully visible, 4 rows), right: straight phone with the burned-in subtitle;
+    # group centred: 48 px side margins, 32 px gap, both blocks 500 px tall on the same top line.
     "altyazi-kontrolu": card(f"""
-      <div class="win" style="left:38px;top:144px;width:560px;height:430px"><img src="{R}altyazi.png" style="width:1150px;max-width:none;margin-left:-20px"></div>
-      <div class="ph" style="left:608px;top:74px;width:300px;transform:rotate(3deg)"><img src="/_ornek/dikey-altyazi.jpg"></div>
-      <span class="tag o" style="left:38px;top:614px">5 altyazıda hata</span><span class="tag" style="left:300px;top:614px">Düzeltilmiş SRT</span>""", "SRT · VTT"),
+      <div class="win" style="left:48px;top:118px;width:548px;height:500px;background:#f4efe8;display:flex;align-items:center"><img src="{R}altyazi.png" style="width:100%"></div>
+      <div class="ph" style="left:628px;top:118px;width:284px;height:500px"><img src="/_ornek/dikey-altyazi.jpg" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="position:absolute;right:48px;top:52px;display:flex;gap:10px;z-index:5"><span class="tag o" style="position:static">Hataları bulur</span><span class="tag" style="position:static">Düzeltilmiş SRT</span></div>""", "SRT · VTT"),
     "cekim-plani": docs("d-plan", f"{A}/cekim-plani/rast-ornek-cekim-plani-onizleme-2.webp", f"{A}/cekim-plani/rast-ornek-cekim-plani-onizleme-1.webp", "30% 50%"),
     "cekim-planlayici": card(bgp("planlayici", "center", "blur(3px) brightness(.55)") + f"""
       <div class="win" style="left:110px;top:90px;width:740px;height:540px;background:#efe8df"><img src="{R}planlayici.png"></div>""", "Plan"),

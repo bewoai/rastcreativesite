@@ -151,7 +151,7 @@ const plats = ZONES.platforms.filter((p) => p.id !== "instagram-story");
               <legend>Düzeltilmiş SRT'de</legend>
               <div class="yt-checks">
                 <label><input type="checkbox" data-fix="basic" checked disabled /> Numaralandırma, boşluklar, VTT → SRT, UTF-8 (her zaman)</label>
-                <label><input type="checkbox" data-fix="mojibake" checked /> Bozuk Türkçe karakterleri onar (Ã¼ → ü, ÅŸ → ş …)</label>
+                <label><input type="checkbox" data-fix="mojibake" checked /> Bozuk Türkçe karakterleri onar (örneğin “ÅŸ” → ş, “Ä±” → ı)</label>
                 <label><input type="checkbox" data-fix="overlap" checked /> Çakışmaları ve 2 kareden kısa boşlukları düzelt</label>
                 <label><input type="checkbox" data-fix="short" checked /> Çok kısa altyazıları yer varsa uzat</label>
                 <label><input type="checkbox" data-fix="chain" /> Küçük boşlukları (½ saniyeden kısa) 2 kareye kapat</label>
@@ -162,20 +162,21 @@ const plats = ZONES.platforms.filter((p) => p.id !== "instagram-story");
         </div>
 
         <div data-results hidden>
-          <div class="yt-h3">Sonuç</div>
-          <p data-summary class="yt-note" aria-live="polite"></p>
-          <div class="yt-actions">
-            <button type="button" class="ev-btn ev-btn--sun" data-dl>Düzeltilmiş SRT'yi indir</button>
-            <label class="yt-checks"><span style="display:flex;gap:.5rem;align-items:center"><input type="checkbox" data-only checked /> Yalnızca sorunlu altyazıları göster</span></label>
-          </div>
-          <div class="yt-tablewrap" style="max-height:34rem;overflow:auto">
-            <table class="yt-table">
-              <caption>Satıra tıklayınca dikey önizlemede gösterilir. KBS = saniyede karakter (boşluklar dahil).</caption>
-              <thead>
-                <tr><th scope="col">#</th><th scope="col">Zaman</th><th scope="col">Metin</th><th scope="col">Kr/satır</th><th scope="col">KBS</th><th scope="col">Bulgular</th></tr>
-              </thead>
-              <tbody data-rows></tbody>
-            </table>
+          <div class="ak-res" data-res>
+            <div class="ak-top">
+              <div class="yt-h3" style="margin:0">Sonuç</div>
+              <div class="ak-stats" data-stats></div>
+            </div>
+            <p data-summary class="yt-note" aria-live="polite"></p>
+            <div class="yt-actions" data-resactions>
+              <button type="button" class="ev-btn ev-btn--sun" data-dl>Düzeltilmiş SRT'yi indir</button>
+              <label class="ak-only"><input type="checkbox" data-only checked /> Yalnızca sorunlu altyazıları göster</label>
+            </div>
+            <div class="ak-list" data-list>
+              <div class="ak-head" aria-hidden="true"><span>Durum</span><span>Zaman</span><span>Metin</span><span>Ölçü</span><span>Bulgular</span></div>
+              <ol class="ak-rows" data-rows></ol>
+            </div>
+            <p class="ak-foot" data-foot>Satıra tıklayınca aşağıdaki dikey önizlemede gösterilir. KBS = saniyede karakter (boşluklar dahil).</p>
           </div>
         </div>
 
@@ -204,6 +205,9 @@ const plats = ZONES.platforms.filter((p) => p.id !== "instagram-story");
             </div>
             <label class="yt-field" style="margin-top:.8rem">Önizlenen altyazı
               <select data-cue></select>
+            </label>
+            <label class="yt-field" style="margin-top:.8rem">Arka plan karesi (isteğe bağlı, kendi videonuzdan bir kare)
+              <input type="file" accept="image/*" data-bg />
             </label>
             <p class="yt-warn" data-burnwarn aria-live="polite" hidden></p>
             <p class="yt-ok" data-burnok aria-live="polite" hidden></p>
@@ -273,6 +277,55 @@ const plats = ZONES.platforms.filter((p) => p.id !== "instagram-story");
   </div>
 </BaseLayout>
 
+<style is:global>
+  .ak-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.6rem 1rem; }
+  .ak-stats { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .ak-only { display: inline-flex; gap: 0.5rem; align-items: center; font-size: 0.95rem; color: var(--ink); cursor: pointer; }
+  .ak-chip { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.22rem 0.65rem 0.24rem; border-radius: 999px; font: 700 0.78rem/1.2 var(--font-utility); letter-spacing: 0.02em; white-space: nowrap; color: #fff; }
+  .ak-chip::before { content: ""; width: 0.45rem; height: 0.45rem; border-radius: 50%; background: currentColor; opacity: 0.85; }
+  .ak-chip--err { background: #c9302c; }
+  .ak-chip--warn { background: #b7791f; }
+  .ak-chip--ok { background: #23864f; }
+  .ak-chip.is-zero { opacity: 0.45; }
+  .ak-list { margin-top: 1rem; border: 1px solid var(--line); border-radius: 0.9rem; overflow: hidden auto; max-height: 38rem; background: color-mix(in srgb, var(--paper) 70%, #fff); }
+  .ak-head, .ak-row { display: grid; grid-template-columns: 5.6rem 10.4rem minmax(0, 1.5fr) 6.4rem minmax(0, 1.25fr); gap: 0.4rem 1rem; padding: 0.75rem 1rem 0.75rem 0.85rem; }
+  .ak-head { position: sticky; top: 0; z-index: 1; background: var(--paper); border-bottom: 1px solid var(--line); font: 600 0.74rem/1 var(--font-utility); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
+  .ak-rows { list-style: none; margin: 0; padding: 0; }
+  .ak-row { border-bottom: 1px solid var(--line); border-left: 4px solid transparent; cursor: pointer; align-items: start; font-size: 0.95rem; color: var(--ink); }
+  .ak-row:last-child { border-bottom: 0; }
+  .ak-row--err { border-left-color: #c9302c; background: color-mix(in srgb, #e5484d 6%, transparent); }
+  .ak-row--warn { border-left-color: #d69e2e; background: color-mix(in srgb, #e0a020 7%, transparent); }
+  .ak-row--ok { border-left-color: #2f9e5f; }
+  .ak-row:hover, .ak-row:focus-visible { background: color-mix(in srgb, var(--amber) 9%, transparent); outline: none; }
+  .ak-row.is-sel { box-shadow: inset 0 0 0 2px var(--amber); }
+  .ak-st { display: flex; flex-direction: column; align-items: flex-start; gap: 0.3rem; }
+  .ak-n { font: 600 0.8rem/1 var(--font-utility); color: var(--ink-soft); }
+  .ak-time { font: 500 0.85rem/1.45 var(--font-utility); font-variant-numeric: tabular-nums; color: var(--ink-soft); white-space: nowrap; }
+  .ak-text { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.45; display: grid; gap: 0.35rem; }
+  .ak-raw { color: #b3261e; text-decoration-thickness: 1px; opacity: 0.85; }
+  .ak-fixed { display: block; padding: 0.3rem 0.55rem; border-radius: 0.5rem; background: color-mix(in srgb, #3ddc84 16%, var(--paper)); }
+  .ak-fixed b { font: 700 0.74rem/1 var(--font-utility); letter-spacing: 0.04em; text-transform: uppercase; color: #1d6b40; margin-right: 0.25rem; }
+  .ak-meta { display: grid; gap: 0.2rem; font: 500 0.82rem/1.3 var(--font-utility); color: var(--ink-soft); white-space: nowrap; }
+  .ak-meta b { font-size: 0.95rem; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .ak-meta .is-bad b { color: #c9302c; }
+  .ak-meta .is-warn b { color: #a86a12; }
+  .ak-iss { display: flex; flex-wrap: wrap; gap: 0.3rem; align-content: start; }
+  .ak-iss .yt-badge { white-space: normal; line-height: 1.35; }
+  .yt-badge--info { background: color-mix(in srgb, #6b7280 16%, var(--paper)); color: var(--ink); }
+  .ak-empty { padding: 1rem; color: var(--ink-soft); }
+  .ak-foot { margin-top: 0.6rem; font-size: 0.85rem; color: var(--ink-soft); }
+  @media (max-width: 860px) {
+    .ak-head { display: none; }
+    .ak-row { grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "st time" "text text" "meta meta" "iss iss"; padding: 0.85rem 0.9rem; gap: 0.55rem 0.8rem; }
+    .ak-st { grid-area: st; flex-direction: row; align-items: center; gap: 0.5rem; }
+    .ak-time { grid-area: time; justify-self: end; align-self: center; }
+    .ak-text { grid-area: text; }
+    .ak-meta { grid-area: meta; display: flex; gap: 1rem; }
+    .ak-iss { grid-area: iss; }
+    .ak-list { max-height: none; }
+  }
+</style>
+
 <script>
   import DATA from "../../data/safe-zones.json";
   import { exportCanvasPng, drawCredit, loadLogo, wireDrop, downloadBlob } from "./_yaratici/client";
@@ -318,7 +371,7 @@ Detaylar videonun sonunda.
   ];
   // dedupe order: longer first
   MOJI.sort((a, b) => b[0].length - a[0].length);
-  const mojiRe = /Ã.|Ä.|Å.|â€|Â/;
+  const mojiRe = /Ã.|Ä.|Å.|â€|Â(?=[\s\u00a0-\u00bf]|$)/;
   const fixMoji = (s: string) => {
     let o = s;
     for (const [a, b] of MOJI) o = o.split(a).join(b);
@@ -532,6 +585,7 @@ Detaylar videonun sonunda.
       }),
     );
     only.addEventListener("change", render);
+    root.querySelector('[data-fix="mojibake"]')!.addEventListener("change", render);
 
     function run() {
       const { cues, errs, isVtt } = parse(input.value);
@@ -549,69 +603,83 @@ Detaylar videonun sonunda.
       if (total > 5 && !trWords && /[a-z]{3,}/i.test(allText)) s += " Metinde hiç ç, ğ, ı, ö, ş, ü yok: Türkçe karakterler kaybolmuş olabilir.";
       if (!total) s = "Altyazı bulunamadı. Dosyanın SRT ya da VTT olduğundan emin olun.";
       summary.textContent = s;
-      render();
+      const nOk = total - nErr - nWarn;
+      const stats = $<HTMLElement>("[data-stats]");
+      stats.innerHTML = "";
+      if (total)
+        ([["err", nErr, "hata"], ["warn", nWarn, "uyarı"], ["ok", nOk, "sorunsuz"]] as const).forEach(([k, n, t]) => {
+          const c = document.createElement("span");
+          c.className = `ak-chip ak-chip--${k}${n ? "" : " is-zero"}`;
+          c.textContent = `${n} ${t}`;
+          stats.append(c);
+        });
       cueSel.innerHTML = "";
       cues.forEach((c, i) => {
         const o = document.createElement("option");
         o.value = String(i);
-        o.textContent = `#${c.idx} ${short(c.start)} — ${clean(c.lines.join(" ")).slice(0, 50)}`;
+        o.textContent = `#${c.idx} ${short(c.start)} — ${clean(fixMoji(c.lines.join(" "))).slice(0, 50)}`;
         cueSel.append(o);
       });
+      // preview the first broken-character cue (shows the repaired Turkish text), else the first problem
+      const firstMoji = lastReport.findIndex((r) => mojiRe.test(r.cue.lines.join("\n")));
       const firstBad = lastReport.findIndex((r) => r.iss.some((i) => i.level !== "info"));
-      cueSel.value = String(Math.max(0, firstBad));
+      cueSel.value = String(Math.max(0, firstMoji >= 0 ? firstMoji : firstBad));
+      render();
       burn();
     }
 
     function render() {
       rows.innerHTML = "";
+      const mojiOn = root.querySelector<HTMLInputElement>('[data-fix="mojibake"]')!.checked;
+      const sel = Number(cueSel.value || -1);
+      const el = (tag: string, cls: string, txt?: string) => {
+        const e = document.createElement(tag);
+        if (cls) e.className = cls;
+        if (txt != null) e.textContent = txt;
+        return e;
+      };
       lastReport.forEach((r, i) => {
         if (only.checked && !r.iss.length) return;
-        const tr = document.createElement("tr");
-        tr.tabIndex = 0;
-        tr.style.cursor = "pointer";
-        const td = (t: string | Node) => {
-          const c = document.createElement("td");
-          if (typeof t === "string") c.textContent = t;
-          else c.append(t);
-          tr.append(c);
-          return c;
-        };
-        td(String(r.cue.idx));
-        td(`${short(r.cue.start)}\n${short(r.cue.end)}`).style.whiteSpace = "pre";
-        td(r.cue.lines.map(clean).join("\n")).style.whiteSpace = "pre-wrap";
-        td(String(r.maxLine));
-        td(isFinite(r.cps) ? nf(r.cps) : "—");
-        const box = document.createElement("div");
-        box.style.cssText = "display:flex;flex-wrap:wrap;gap:.3rem";
-        if (!r.iss.length) {
-          const b = document.createElement("span");
-          b.className = "yt-badge yt-badge--ok";
-          b.textContent = "Sorun yok";
-          box.append(b);
-        }
-        r.iss.forEach((x) => {
-          const b = document.createElement("span");
-          b.className = `yt-badge yt-badge--${x.level === "err" ? "err" : x.level === "warn" ? "warn" : "ok"}`;
-          b.textContent = x.text;
-          box.append(b);
-        });
-        td(box);
+        const lv = r.iss.some((x) => x.level === "err") ? "err" : r.iss.some((x) => x.level === "warn") ? "warn" : "ok";
+        const li = el("li", `ak-row ak-row--${lv}${i === sel ? " is-sel" : ""}`);
+        li.tabIndex = 0;
+        li.dataset.i = String(i);
+        const st = el("div", "ak-st");
+        st.append(el("span", `ak-chip ak-chip--${lv}`, lv === "err" ? "Hata" : lv === "warn" ? "Uyarı" : "Tamam"), el("span", "ak-n", `#${r.cue.idx}`));
+        const time = el("div", "ak-time", `${short(r.cue.start)} → ${short(r.cue.end)}`);
+        const text = el("div", "ak-text");
+        const raw = r.cue.lines.map(clean).join("\n");
+        if (mojiRe.test(raw)) {
+          text.append(el("s", "ak-raw", raw));
+          const f = el("span", "ak-fixed");
+          f.append(el("b", "", mojiOn ? "SRT'de düzeltilir:" : "Doğrusu:"), document.createTextNode(" " + fixMoji(raw)));
+          text.append(f);
+        } else text.append(el("span", "", raw));
+        const meta = el("div", "ak-meta");
+        const m1 = el("span", r.maxLine > rules().cpl ? "is-bad" : "");
+        m1.append(el("b", "", String(r.maxLine)), document.createTextNode(" kr/satır"));
+        const m2 = el("span", isFinite(r.cps) && r.cps > rules().cpsMax ? "is-bad" : isFinite(r.cps) && r.cps > rules().cps ? "is-warn" : "");
+        m2.append(el("b", "", isFinite(r.cps) ? nf(r.cps) : "—"), document.createTextNode(" KBS"));
+        meta.append(m1, m2);
+        const box = el("div", "ak-iss");
+        if (!r.iss.length) box.append(el("span", "yt-badge yt-badge--ok", "Sorun yok"));
+        [...r.iss].sort((a, b) => ["err", "warn", "info"].indexOf(a.level) - ["err", "warn", "info"].indexOf(b.level)).forEach((x) =>
+          box.append(el("span", `yt-badge yt-badge--${x.level === "err" ? "err" : x.level === "warn" ? "warn" : "info"}`, x.text)),
+        );
+        li.append(st, time, text, meta, box);
         const pick = () => {
           cueSel.value = String(i);
+          rows.querySelectorAll(".is-sel").forEach((e) => e.classList.remove("is-sel"));
+          li.classList.add("is-sel");
           burn();
           document.querySelector("[data-burn]")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
         };
-        tr.addEventListener("click", pick);
-        tr.addEventListener("keydown", (e) => e.key === "Enter" && pick());
-        rows.append(tr);
+        li.addEventListener("click", pick);
+        li.addEventListener("keydown", (e) => e.key === "Enter" && pick());
+        rows.append(li);
       });
       if (!rows.children.length) {
-        const tr = document.createElement("tr");
-        const c = document.createElement("td");
-        c.colSpan = 6;
-        c.textContent = lastReport.length ? "Seçili kurallara göre sorunlu altyazı yok." : "—";
-        tr.append(c);
-        rows.append(tr);
+        rows.append(el("li", "ak-empty", lastReport.length ? "Seçili kurallara göre sorunlu altyazı yok." : "—"));
       }
     }
 
@@ -632,6 +700,16 @@ Detaylar videonun sonunda.
     const bw = $<HTMLElement>("[data-burnwarn]");
     const bok = $<HTMLElement>("[data-burnok]");
     const logo = loadLogo();
+    const UF = `"Space Grotesk Variable", system-ui, -apple-system, "Segoe UI", sans-serif`;
+    const bg = new Image();
+    bg.decoding = "async";
+    bg.onload = () => burn();
+    bg.src = "/araclar/altyazi-kontrolu/rast-ornek-kare-9x16.jpg";
+    $<HTMLInputElement>("[data-bg]").addEventListener("change", (e) => {
+      const f = (e.target as HTMLInputElement).files?.[0];
+      if (f) bg.src = URL.createObjectURL(f);
+    });
+    document.fonts?.ready.then(() => burn());
     let credit = false;
     const fmt = () => (root.querySelector<HTMLInputElement>('input[name="fmt"]:checked')!.value as "v" | "h");
     const plat = () => DATA.platforms.find((p) => p.id === root.querySelector<HTMLInputElement>('input[name="plat"]:checked')!.value)!;
@@ -658,20 +736,26 @@ Detaylar videonun sonunda.
       (canvas.parentElement as HTMLElement).style.maxWidth = v ? "420px" : "100%";
       root.querySelector<HTMLElement>("[data-platwrap]")!.hidden = !v;
       const W = canvas.width, H = canvas.height;
+      rows.querySelectorAll<HTMLElement>(".ak-row").forEach((e) => e.classList.toggle("is-sel", e.dataset.i === cueSel.value));
       const g = ctx.createLinearGradient(0, 0, W, H);
       g.addColorStop(0, "#c98a54");
       g.addColorStop(0.55, "#7b5a8f");
       g.addColorStop(1, "#2c3a5c");
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, W, H);
+      if (bg.complete && bg.naturalWidth) {
+        const s = Math.max(W / bg.naturalWidth, H / bg.naturalHeight);
+        const dw = bg.naturalWidth * s, dh = bg.naturalHeight * s;
+        ctx.drawImage(bg, (W - dw) / 2, (H - dh) / 2, dw, dh);
+      }
       const p = plat();
       if (v) {
-        ctx.fillStyle = "rgba(12,12,16,.55)";
+        ctx.fillStyle = "rgba(12,12,16,.45)";
         ctx.fillRect(0, 0, W, p.top);
         ctx.fillRect(0, H - p.bottom, W, p.bottom);
         if (p.rail) ctx.fillRect(p.rail.x, p.rail.y1, W - p.rail.x, p.rail.y2 - p.rail.y1);
         ctx.fillStyle = "rgba(255,255,255,.85)";
-        ctx.font = "600 28px system-ui, sans-serif";
+        ctx.font = `600 28px ${UF}`;
         ctx.fillText(`${p.label} arayüzü (yaklaşık)`, 40, Math.min(70, p.top - 30));
       } else {
         ctx.strokeStyle = "rgba(255,255,255,.5)";
@@ -680,31 +764,39 @@ Detaylar videonun sonunda.
         ctx.strokeRect(W * 0.05, H * 0.05, W * 0.9, H * 0.9);
         ctx.setLineDash([]);
         ctx.fillStyle = "rgba(255,255,255,.85)";
-        ctx.font = "600 28px system-ui, sans-serif";
+        ctx.font = `600 28px ${UF}`;
         ctx.fillText("%90 başlık güvenli alanı", W * 0.05 + 10, H * 0.05 + 36);
       }
       const i = Number(cueSel.value || 0);
       const cue = lastCues[i];
       const text = cue ? clean(fixMoji(cue.lines.join(" "))).replace(/\s+/g, " ").trim() : "Altyazınız burada görünür; iki satırı geçmesin.";
       const fs = Number(fsIn.value) * (v ? 1 : 0.9);
-      ctx.font = `700 ${fs}px system-ui, sans-serif`;
+      ctx.font = `700 ${fs}px ${UF}`;
       const sideMargin = v ? Math.max(p.left, p.right) + 20 : W * 0.1;
-      const lines = cue && cue.lines.length ? cue.lines.map((l) => clean(fixMoji(l)).trim()).flatMap((l) => wrap(l, W - sideMargin * 2)) : wrap(text, W - sideMargin * 2);
-      const lh = fs * 1.25;
-      const blockH = lines.length * lh + fs * 0.6;
+      const lines = cue && cue.lines.length ? cue.lines.map((l) => tidy(clean(fixMoji(l)))).filter(Boolean).flatMap((l) => wrap(l, W - sideMargin * 2)) : wrap(text, W - sideMargin * 2);
+      const lh = fs * 1.28;
+      const padY = fs * 0.32, padX = fs * 0.45;
+      const blockH = lines.length * lh + padY * 2;
       const bottomY = H - (Number(posIn.value) / 100) * H;
       const topY = bottomY - blockH;
       ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
       let maxW = 0;
       lines.forEach((l) => (maxW = Math.max(maxW, ctx.measureText(l).width)));
-      ctx.fillStyle = "rgba(0,0,0,.62)";
+      ctx.fillStyle = "rgba(0,0,0,.58)";
       ctx.beginPath();
-      ctx.roundRect(W / 2 - maxW / 2 - fs * 0.4, topY, maxW + fs * 0.8, blockH, fs * 0.25);
+      ctx.roundRect(W / 2 - maxW / 2 - padX, topY, maxW + padX * 2, blockH, fs * 0.28);
       ctx.fill();
+      ctx.save();
+      ctx.shadowColor = "rgba(0,0,0,.55)";
+      ctx.shadowBlur = fs * 0.18;
+      ctx.shadowOffsetY = fs * 0.04;
       ctx.fillStyle = "#fff";
-      lines.forEach((l, k) => ctx.fillText(l, W / 2, topY + fs * 0.3 + lh * (k + 0.8)));
+      lines.forEach((l, k) => ctx.fillText(l, W / 2, topY + padY + lh * (k + 0.5)));
+      ctx.restore();
       ctx.textAlign = "left";
-      const x1 = W / 2 - maxW / 2 - fs * 0.4, x2 = W / 2 + maxW / 2 + fs * 0.4;
+      ctx.textBaseline = "alphabetic";
+      const x1 = W / 2 - maxW / 2 - padX, x2 = W / 2 + maxW / 2 + padX;
       const probs: string[] = [];
       if (v) {
         if (bottomY > H - p.bottom) probs.push(`alt arayüz bandına (${p.bottom} px) giriyor`);
@@ -715,7 +807,11 @@ Detaylar videonun sonunda.
       if (lines.length > 2) probs.push(`${lines.length} satıra kırılıyor (yazıyı küçültün ya da altyazıyı bölün)`);
       ctx.strokeStyle = probs.length ? "#ff4d4d" : "#3ddc84";
       ctx.lineWidth = 4;
-      ctx.strokeRect(x1, topY, x2 - x1, blockH);
+      ctx.setLineDash([14, 10]);
+      ctx.beginPath();
+      ctx.roundRect(x1 - 10, topY - 10, x2 - x1 + 20, blockH + 20, fs * 0.34);
+      ctx.stroke();
+      ctx.setLineDash([]);
       bw.hidden = !probs.length;
       bok.hidden = !!probs.length;
       bw.textContent = probs.length ? `Altyazı ${probs.join(", ")}.` : "";
