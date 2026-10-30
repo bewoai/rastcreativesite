@@ -1,0 +1,95 @@
+---
+/**
+ * /araclar/ — index of Rast's free browser tools (linkable assets).
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Section from "../../components/Section.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import { breadcrumb } from "../../lib/schema";
+import { SITE } from "../../consts";
+
+const description =
+  "Rast Creative Studio'nun ücretsiz araçları: Reels, TikTok ve Shorts güvenli alan kontrolü ile çekim günü planlayıcı. Kayıt gerektirmez, tarayıcıda çalışır.";
+
+const tools = [
+  {
+    href: "/araclar/guvenli-alan/",
+    name: "Reels / TikTok / Shorts güvenli alan kontrolü",
+    text: "Görselinizi ya da videonuzu açın; platform arayüzünün kanca metnini, altyazıyı ve logoyu kapatıp kapatmadığını görün. CC BY 4.0 şeffaf PNG şablonlar.",
+  },
+  {
+    href: "/cekim-planlayici/",
+    name: "Çekim günü planlayıcı",
+    text: "Sektörünüzü ve kanallarınızı seçin; tek çekim gününden çıkabilecek içerikleri ve hazırlık listesini görün.",
+  },
+];
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Araçlar", path: "/araclar/" },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Rast Creative ücretsiz araçlar",
+    itemListElement: tools.map((t, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: t.name,
+      url: new URL(t.href, SITE.url).href,
+    })),
+  },
+];
+---
+
+<BaseLayout title="Ücretsiz Video ve İçerik Araçları" description={description} jsonLd={jsonLd}>
+  <Section width="narrow">
+    <SectionHeading as="h1" eyebrow="Araçlar · Ücretsiz">
+      Video ve sosyal medya için ücretsiz araçlar
+      <Fragment slot="intro">
+        <p>
+          Kendi işimizde her gün kullandığımız kontrolleri herkesin kullanabileceği hale getirdik. Kayıt yok, dosyalarınız
+          tarayıcınızdan çıkmaz.
+        </p>
+      </Fragment>
+    </SectionHeading>
+    <ul class="tools">
+      {
+        tools.map((t) => (
+          <li>
+            <h2><a href={t.href}>{t.name}</a></h2>
+            <p>{t.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+</BaseLayout>
+
+<style>
+  .tools {
+    display: grid;
+    gap: 1.2rem;
+    margin-top: 2rem;
+  }
+  .tools li {
+    padding: 1.4rem;
+    border: 1px solid var(--line);
+    border-radius: 1.2rem;
+    background: color-mix(in srgb, var(--paper) 80%, transparent);
+  }
+  .tools h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 1.05rem + 0.6vw, 1.5rem);
+  }
+  .tools a {
+    color: var(--ink);
+    text-decoration-color: var(--amber);
+  }
+  .tools p {
+    margin-top: 0.4rem;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+</style>

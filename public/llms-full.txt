@@ -108,6 +108,7 @@ Sakarya: Serdivan, Adapazarı, Erenler, Arifiye, Hendek, Akyazı, Sapanca, Karas
 ## Rehberler ve araçlar
 
 - Çekim günü planlayıcı (ücretsiz araç): https://rastcreative.com/cekim-planlayici/
+- Reels / TikTok / Shorts güvenli alan kontrolü ve CC BY 4.0 şablonlar (ücretsiz araç): https://rastcreative.com/araclar/guvenli-alan/ — 1080×1920 için yaklaşık arayüz payları: Instagram Reels üst 220 / alt 420 px, TikTok üst 220 / alt 480 px, YouTube Shorts üst 290 / alt 670 px, Instagram Story üst 250 / alt 340 px; Meta reklamları %14 üst / %35 alt / %6 yan.
 - Video prodüksiyon sözlüğü: https://rastcreative.com/sozluk/
 - Blog: https://rastcreative.com/blog/
 - Kısa özet: https://rastcreative.com/llms.txt

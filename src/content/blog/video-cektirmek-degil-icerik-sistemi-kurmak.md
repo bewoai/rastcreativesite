@@ -51,7 +51,7 @@ Benim gözümde [profesyonel prodüksiyonun](/video-cekimi/sakarya/) farkı bira
 
 Birçok marka sosyal medyayı hâlâ ana filmin kırpılmış hali gibi görüyor. Oysa dikey içerik kendi dili olan ayrı bir format. İnsan telefonda izliyor, çoğu zaman sesi kapalı izliyor, çok hızlı karar veriyor. Bu yüzden [sosyal medya videosu](/blog/sosyal-medya-videosu-neden-dikey/) için tempo, kadraj ve ilk saniye baştan düşünülmeli.
 
-Yatay çekilmiş bir tanıtım filminden sonradan dikey Reels çıkarmaya çalışmak bazen olur, bazen de görüntüyü bozar. Başarılı olması için çekim anında buna alan bırakmak gerekir. Oyuncunun ya da ürünün kadrajdaki yeri, boşluklar, hareket yönü, altyazının geleceği alan... Bunlar küçük detay gibi görünür ama sonucu direkt etkiler.
+Yatay çekilmiş bir tanıtım filminden sonradan dikey Reels çıkarmaya çalışmak bazen olur, bazen de görüntüyü bozar. Başarılı olması için çekim anında buna alan bırakmak gerekir. Oyuncunun ya da ürünün kadrajdaki yeri, boşluklar, hareket yönü, altyazının geleceği alan... Bunlar küçük detay gibi görünür ama sonucu direkt etkiler. Altyazının ve yazıların platform arayüzünün altında kalıp kalmadığını [güvenli alan kontrolü](/araclar/guvenli-alan/) ile görebilirsiniz.
 
 ## İçerik sistemi markayı daha düzenli gösterir
 

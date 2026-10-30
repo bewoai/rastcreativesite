@@ -21,7 +21,7 @@ En sık yapılan hata bu: yatay çekip sonra kenarlardan kırpmak. Olmuyor. Dike
 
 ## İlk 2 saniye her şeydir
 
-Sosyal medyada kimse "bakalım bu ne olacak" diye beklemez. Başparmak hazır, kaymak üzere. O yüzden ilk iki saniyede bir merak, bir hareket, bir soru olmalı. Bir de neredeyse herkes sesi kapalı izliyor — bu yüzden altyazı ve görsel anlatım, müzikten daha önemli hâle geliyor.
+Sosyal medyada kimse "bakalım bu ne olacak" diye beklemez. Başparmak hazır, kaymak üzere. O yüzden ilk iki saniyede bir merak, bir hareket, bir soru olmalı. Bir de neredeyse herkes sesi kapalı izliyor — bu yüzden altyazı ve görsel anlatım, müzikten daha önemli hâle geliyor. Altyazının ve kanca metninin kullanıcı adı ya da butonların altında kalıp kalmadığını [güvenli alan kontrolü](/araclar/guvenli-alan/) ile yayından önce görebilirsiniz.
 
 ## Ama her şey dikey olmak zorunda değil
 

@@ -291,6 +291,7 @@ export const SERVICE_HUB: Record<string, ServiceHub> = {
       { href: "/blog/video-cektirmek-degil-icerik-sistemi-kurmak/", label: "Video çektirmek değil, içerik sistemi kurmak" },
       { href: "/blog/sosyal-medya-videosu-neden-izlenmiyor-durust-bir-cevap/", label: "Sosyal medya videosu neden izlenmiyor?" },
       { href: "/blog/sosyal-medya-videosu-neden-dikey/", label: "Sosyal medya videosu neden dikey çekiliyor?" },
+      { href: "/araclar/guvenli-alan/", label: "Ücretsiz araç: Reels, TikTok, Shorts güvenli alan kontrolü" },
     ],
     categories: ["Sosyal Medya"],
     projects: ["aytas-home-sosyal-medya", "duru-optik-tanitim", "candles-and-echoes-golden-swan"],

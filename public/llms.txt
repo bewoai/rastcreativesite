@@ -52,5 +52,6 @@ Odak noktamız tek çekim gününden çok sayıda kullanılabilir içerik çıka
 - [Sık sorulan sorular](https://rastcreative.com/sss/): Fiyat, teslim, revizyon, formatlar, sosyal medya yönetimi ve bölgeler
 - [Video prodüksiyon sözlüğü](https://rastcreative.com/sozluk/): 40 temel terimin kısa tanımları
 - [Sektörler](https://rastcreative.com/sektorler/): Sağlık, sanayi, perakende, mekan/etkinlik ve eğitim için çalışma şekli
+- [Reels / TikTok / Shorts güvenli alan kontrolü](https://rastcreative.com/araclar/guvenli-alan/): 9:16 video ve görselde platform arayüzünün kapattığı alanları gösteren ücretsiz araç (tarayıcıda çalışır) ve CC BY 4.0 şeffaf PNG şablonlar
 - [Çekim günü planlayıcı](https://rastcreative.com/cekim-planlayici/): Tek çekim gününden çıkarılabilecek içerikleri ve hazırlık listesini gösteren ücretsiz araç
 - [Ayrıntılı rehber (llms-full.txt)](https://rastcreative.com/llms-full.txt): Hizmetler, süreç ve SSS'nin uzun metni
