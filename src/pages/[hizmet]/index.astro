@@ -4,8 +4,11 @@ import Section from "../../components/Section.astro";
 import SectionHeading from "../../components/SectionHeading.astro";
 import Button from "../../components/Button.astro";
 import Icon from "../../components/Icon.astro";
-import { PRIMARY_CTA } from "../../consts";
-import { breadcrumb, BUSINESS_ID } from "../../lib/schema";
+import ProjectCard from "../../components/ProjectCard.astro";
+import { PRIMARY_CTA, PROJECT_CATEGORIES, SITE, waCtaHref } from "../../consts";
+import { breadcrumb, faqPage, BUSINESS_ID } from "../../lib/schema";
+import { getServiceHub } from "../../data/service-hub";
+import { getCollection } from "astro:content";
 import { SEO_SERVICES, type SeoService } from "../../data/seo-services";
 import { SEO_LOCATIONS } from "../../data/locations";
 import { getServiceAudience } from "../../data/service-audience";
@@ -23,7 +26,40 @@ interface Props {
 const { service } = Astro.props as Props;
 
 const title = `${service.name} ${service.seoTitleSuffix}`;
-const description = `${service.name} — ${service.tagline}. Sakarya ve çevre illerde Rast Creative Studio ile ${service.name.toLocaleLowerCase('tr')}. Hizmet bölgelerini görün.`;
+const hub = getServiceHub(service.slug);
+const path = `/${service.slug}/`;
+const description =
+  hub?.description ??
+  `${service.name} — ${service.tagline}. Sakarya ve çevre illerde Rast Creative Studio ile ${service.name.toLocaleLowerCase('tr')}. Hizmet bölgelerini görün.`;
+const whatsappHref = waCtaHref(path);
+
+// Proof grid: hand-picked projects first, then one per brand from the
+// service's portfolio categories (same rule as the city pages).
+const allProjects = (await getCollection("projects"))
+  .filter((p) => !p.data.draft && !p.data.hidden)
+  .sort((a, b) => a.data.order - b.data.order);
+const picked = (hub?.projects ?? [])
+  .map((id) => allProjects.find((p) => p.id === id))
+  .filter((p): p is (typeof allProjects)[number] => Boolean(p));
+const seenClients = new Set<string>(picked.map((p) => p.data.client ?? p.id));
+const relatedProjects = [
+  ...picked,
+  ...allProjects
+    .filter((p) => (hub?.categories ?? []).includes(p.data.category) && !picked.includes(p))
+    .filter((p) => {
+      const key = p.data.client ?? p.id;
+      if (seenClients.has(key)) return false;
+      seenClients.add(key);
+      return true;
+    }),
+].slice(0, 6);
+// Category listing pages that exist (only categories holding visible work).
+const categoryLinks = PROJECT_CATEGORIES.filter(
+  (c) =>
+    (hub?.categories ?? []).includes(c.label) &&
+    c.label !== "Medikal" &&
+    allProjects.some((p) => p.data.category === c.label),
+);
 
 const coreLocations = SEO_LOCATIONS.filter((l) => l.core);
 const nearbyLocations = SEO_LOCATIONS.filter((l) => !l.core);
@@ -56,7 +92,24 @@ const jsonLd = [
     description: service.intro,
     areaServed: SEO_LOCATIONS.map((l) => ({ "@type": "City", name: l.name })),
     provider: { "@id": BUSINESS_ID },
+    url: new URL(path, SITE.url).href,
   },
+  ...(hub ? [faqPage(hub.faqs)] : []),
+  ...(relatedProjects.length > 0
+    ? [
+        {
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: `${service.name} — referans projeler`,
+          itemListElement: relatedProjects.map((p, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            url: new URL(p.data.externalUrl ?? `/projeler/${p.id}/`, SITE.url).href,
+            name: p.data.title,
+          })),
+        },
+      ]
+    : []),
 ];
 ---
 
@@ -70,6 +123,7 @@ const jsonLd = [
     </SectionHeading>
 
     <div class="prose">
+      {hub && <p class="geo-summary"><strong>Kısaca:</strong> {hub.summary}</p>}
       <p>{service.intro}</p>
     </div>
 
@@ -94,6 +148,29 @@ const jsonLd = [
       </ul>
     </div>
 
+{
+      hub ? (
+        <>
+          <div class="fit" data-reveal>
+            <h2 class="fit__title">Neler teslim ediliyor?</h2>
+            <ul class="fit__list">
+              {hub.deliverables.map((item) => <li>{item}</li>)}
+            </ul>
+          </div>
+          <div class="deliverables" data-reveal>
+            <h2 class="deliverables__title">Süreç ve süre</h2>
+            <ol class="deliverables__list deliverables__list--steps">
+              {hub.steps.map((item) => (
+                <li>
+                  <span>{item.t}</span>
+                  <p>{item.d}</p>
+                </li>
+              ))}
+            </ol>
+            <p class="timeline">{hub.timeline}</p>
+          </div>
+        </>
+      ) : (
     <div class="deliverables" data-reveal>
       <h2 class="deliverables__title">Süreç ve teslim nasıl netleşir?</h2>
       <ul class="deliverables__list">
@@ -107,11 +184,86 @@ const jsonLd = [
         }
       </ul>
     </div>
+      )
+    }
 
     <div class="cta-inline">
       <Button href={PRIMARY_CTA.href} size="lg" arrow>{PRIMARY_CTA.label}</Button>
+      {
+        whatsappHref && (
+          <a href={whatsappHref} class="wa-link" target="_blank" rel="noopener">
+            WhatsApp'tan yazın <span aria-hidden="true">↗</span>
+          </a>
+        )
+      }
     </div>
+    <p class="price-note">Fiyat için bizimle iletişime geçin: kapsamı ücretsiz ön görüşmede netleştirip yazılı teklif veriyoruz.</p>
   </Section>
+
+  {
+    relatedProjects.length > 0 && (
+      <Section width="narrow" space="tight">
+        <SectionHeading eyebrow="Gerçek işler">
+          Portföyden {service.name.toLocaleLowerCase("tr")} örnekleri
+          <Fragment slot="intro">
+            <p>
+              Farklı sektörlerden bir seçki. 2024–2025 tarihli işler, kurucu ortaklarımızın
+              stüdyoyu kurmadan önceki çalışmaları.
+            </p>
+          </Fragment>
+        </SectionHeading>
+        <div class="projects-grid">
+          {relatedProjects.map((p) => (
+            <ProjectCard
+              href={p.data.externalUrl ?? `/projeler/${p.id}/`}
+              title={p.data.title}
+              category={p.data.category}
+              poster={p.data.poster}
+              posterAlt={p.data.posterAlt}
+              client={p.data.client}
+              year={p.data.year}
+              timecode={p.data.duration}
+              vertical={p.data.vertical}
+              summary={p.data.summary}
+            />
+          ))}
+        </div>
+        {categoryLinks.length > 0 && (
+          <p class="cat-links">
+            Tümünü görün:{" "}
+            {categoryLinks.map((c, i) => (
+              <>
+                {i > 0 && " · "}
+                <a href={`/projeler/kategori/${c.slug}/`}>{c.label} projeleri</a>
+              </>
+            ))}
+          </p>
+        )}
+      </Section>
+    )
+  }
+
+  {
+    hub && (
+      <Section width="narrow" space="tight">
+        <SectionHeading eyebrow="Sık sorulanlar">{service.name} hakkında sorular</SectionHeading>
+        <dl class="faq">
+          {hub.faqs.map((f) => (
+            <div class="faq__item" data-reveal>
+              <dt class="faq__q">{f.question}</dt>
+              <dd class="faq__a">{f.answer}</dd>
+            </div>
+          ))}
+        </dl>
+        <h2 class="region-title">Karar vermeden önce okuyun</h2>
+        <ul class="guide-list">
+          {hub.links.map((l) => (
+            <li><a href={l.href}>{l.label}</a></li>
+          ))}
+        </ul>
+      </Section>
+    )
+  }
 
   <Section width="narrow" space="tight">
     <h2 class="region-title">Sakarya'da {service.name}</h2>
@@ -309,6 +461,108 @@ const jsonLd = [
     .deliverables__list {
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 1.2rem;
+    }
+  }
+  .geo-summary {
+    font-size: 1.05rem;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.5rem;
+    background: color-mix(in srgb, var(--amber) 8%, var(--paper));
+    border-left: 3px solid var(--amber);
+    border-radius: 0 var(--radius-card) var(--radius-card) 0;
+    color: var(--ink);
+  }
+  .geo-summary strong {
+    font-weight: 600;
+  }
+  .prose p + p {
+    margin-top: 1rem;
+  }
+  .cta-inline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+  }
+  .wa-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: var(--tap-min);
+    font-family: var(--font-utility);
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .wa-link:hover {
+    color: var(--amber-text);
+  }
+  .price-note {
+    margin: 1rem 0 0;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+  .timeline {
+    margin: 1.1rem 0 0;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--line);
+    color: var(--ink);
+    line-height: 1.55;
+  }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    margin-top: 2rem;
+  }
+  .cat-links {
+    margin: 1.4rem 0 0;
+    color: var(--ink-soft);
+  }
+  .cat-links a,
+  .guide-list a {
+    color: var(--amber-text);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .guide-list {
+    margin: 0;
+    padding-left: 1.2rem;
+    list-style: disc;
+  }
+  .guide-list li {
+    margin: 0 0 0.5rem;
+  }
+  .guide-list li::marker {
+    color: var(--amber-text);
+  }
+  .faq {
+    margin: 2rem 0 0;
+    display: grid;
+    gap: 1.2rem;
+  }
+  .faq__item {
+    border-top: 1px solid var(--line);
+    padding-top: 1.2rem;
+  }
+  .faq__q {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  .faq__a {
+    margin: 0;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  @media (min-width: 700px) {
+    .projects-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (min-width: 900px) {
+    .deliverables__list--steps {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
 </style>

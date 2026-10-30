@@ -68,6 +68,12 @@ GSC'de en çok gösterim alan dört sayfa elle yazılmış uzun bloklarla güçl
   yönetimi" diye açılır.
 
 
+## Hizmet ana sayfaları (hub) — 2026-10-30
+
+Altı hizmet ana sayfası (`/video-cekimi/`, `/drone-cekimi/`, `/tanitim-filmi/`, `/reklam-filmi/`, `/sosyal-medya-icerigi/`, `/urun-mekan-cekimi/`) artık yalnız şehir listesi değil, alıcı sayfası: "Kısaca" özeti (ilk paragrafta net cevap), teslim edilenler, süreç ve süre (genellikle 2–4 hafta, /sss/ ile aynı), hizmete özel SSS (görünür + FAQPage), portföy ızgarası (+ ItemList) ve kategori sayfalarına link, "Karar vermeden önce okuyun" rehber listesi, WhatsApp CTA ve "fiyat için iletişime geçin" notu. İçerik: `src/data/service-hub.ts`. Kurallar: fiyat rakamı yok, yapay zekâ işlerinde araç/yöntem adı yok, Medikal kategori linki hub'lardan verilmez.
+
+Konum sayfalarında `extra.description` yoksa üretilen açıklama 160 karakteri geçerse son cümleler düşer.
+
 ## Tasarım ve motion
 
 Kâğıt zemin ve bölgesel keşif akışı korunur. Bu URL standardizasyonu görsel, layout veya motion davranışını değiştirmemelidir.
