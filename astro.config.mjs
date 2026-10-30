@@ -50,7 +50,7 @@ export default defineConfig({
       customSitemaps: ['https://rastcreative.com/video-sitemap.xml'],
       // Keep the temporary component gallery and hidden/noindex projects out.
       // All service × location pages are indexable after the content-quality pass.
-      filter: (page) => !page.includes('/dev') && !page.includes('/taslak') && !page.includes('/tesekkurler') && !isHiddenProjectPage(page) && !isNoindexPage(page),
+      filter: (page) => !page.includes('/dev') && !page.includes('/taslak') && !page.includes('/tesekkurler') && !page.includes('/kart/') && !isHiddenProjectPage(page) && !isNoindexPage(page),
     }),
   ]
 });
