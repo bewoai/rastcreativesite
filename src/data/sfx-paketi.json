@@ -1,0 +1,322 @@
+[
+ {
+  "dosya": "whoosh/rast-sfx-whoosh-kisa-hizli.wav",
+  "kategori": "whoosh",
+  "sure": 0.99,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "whoosh/rast-sfx-whoosh-kisa-kirbac.wav",
+  "kategori": "whoosh",
+  "sure": 0.91,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "whoosh/rast-sfx-whoosh-kisa-siki.wav",
+  "kategori": "whoosh",
+  "sure": 0.49,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "whoosh/rast-sfx-whoosh-uzun-derin.wav",
+  "kategori": "whoosh",
+  "sure": 1.97,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "whoosh/rast-sfx-whoosh-uzun-pelerin.wav",
+  "kategori": "whoosh",
+  "sure": 1.23,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "whoosh/rast-sfx-whoosh-ters.wav",
+  "kategori": "whoosh",
+  "sure": 1.47,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "whoosh/rast-sfx-whoosh-hava.wav",
+  "kategori": "whoosh",
+  "sure": 0.49,
+  "kaynak": "CC0",
+  "yazar": "qubodup",
+  "url": "https://freesound.org/people/qubodup/sounds/60026"
+ },
+ {
+  "dosya": "riser/rast-sfx-riser-hizli.wav",
+  "kategori": "riser",
+  "sure": 1.76,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "riser/rast-sfx-riser-gerilim.wav",
+  "kategori": "riser",
+  "sure": 2.8,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "riser/rast-sfx-riser-sonsuz-yukselis.wav",
+  "kategori": "riser",
+  "sure": 3.71,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "riser/rast-sfx-riser-kisa-rulo.wav",
+  "kategori": "riser",
+  "sure": 1.3,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "impact/rast-sfx-impact-klasik.wav",
+  "kategori": "impact",
+  "sure": 3.2,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "impact/rast-sfx-impact-derin.wav",
+  "kategori": "impact",
+  "sure": 1.31,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "impact/rast-sfx-impact-yumruk.wav",
+  "kategori": "impact",
+  "sure": 0.28,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "impact/rast-sfx-impact-sub-drop.wav",
+  "kategori": "impact",
+  "sure": 1.91,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "swell/rast-sfx-swell-ters-zil.wav",
+  "kategori": "swell",
+  "sure": 0.9,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "swell/rast-sfx-swell-halka.wav",
+  "kategori": "swell",
+  "sure": 1.67,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "swell/rast-sfx-swell-logo-parlama.wav",
+  "kategori": "swell",
+  "sure": 1.69,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "glitch/rast-sfx-glitch-kekeme.wav",
+  "kategori": "glitch",
+  "sure": 0.64,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "glitch/rast-sfx-glitch-veri.wav",
+  "kategori": "glitch",
+  "sure": 0.64,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "glitch/rast-sfx-glitch-vhs.wav",
+  "kategori": "glitch",
+  "sure": 1.21,
+  "kaynak": "CC0",
+  "yazar": "Sassaby",
+  "url": "https://freesound.org/people/Sassaby/sounds/264935"
+ },
+ {
+  "dosya": "ui/rast-sfx-ui-tik.wav",
+  "kategori": "ui",
+  "sure": 0.05,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "ui/rast-sfx-ui-pop-yumusak.wav",
+  "kategori": "ui",
+  "sure": 0.18,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "ui/rast-sfx-ui-anahtar.wav",
+  "kategori": "ui",
+  "sure": 0.15,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "ui/rast-sfx-ui-klavye.wav",
+  "kategori": "ui",
+  "sure": 1.44,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "kamera/rast-sfx-kamera-deklansor-dslr.wav",
+  "kategori": "kamera",
+  "sure": 0.24,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "kamera/rast-sfx-kamera-deklansor-film.wav",
+  "kategori": "kamera",
+  "sure": 0.28,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "kamera/rast-sfx-kamera-deklansor-gercek.wav",
+  "kategori": "kamera",
+  "sure": 1.22,
+  "kaynak": "CC0",
+  "yazar": "Kodack",
+  "url": "https://freesound.org/people/Kodack/sounds/271010/"
+ },
+ {
+  "dosya": "kagit/rast-sfx-kagit-kaydirma.wav",
+  "kategori": "kagit",
+  "sure": 0.75,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "kagit/rast-sfx-kagit-burusturma.wav",
+  "kategori": "kagit",
+  "sure": 0.65,
+  "kaynak": "CC0",
+  "yazar": "WasabiWielder",
+  "url": "https://freesound.org/people/WasabiWielder/sounds/334201/"
+ },
+ {
+  "dosya": "kagit/rast-sfx-kagit-sayfa-cevirme.wav",
+  "kategori": "kagit",
+  "sure": 1.73,
+  "kaynak": "CC0",
+  "yazar": "gfrog",
+  "url": "https://freesound.org/people/gfrog/sounds/144110/"
+ },
+ {
+  "dosya": "kagit/rast-sfx-kagit-bant-yirtma.wav",
+  "kategori": "kagit",
+  "sure": 1.02,
+  "kaynak": "CC0",
+  "yazar": "MilkyGacha",
+  "url": "https://freesound.org/people/MilkyGacha/sounds/467721/"
+ },
+ {
+  "dosya": "bildirim/rast-sfx-bildirim-ding.wav",
+  "kategori": "bildirim",
+  "sure": 0.36,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "bildirim/rast-sfx-bildirim-zil.wav",
+  "kategori": "bildirim",
+  "sure": 1.74,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "bildirim/rast-sfx-bildirim-chime.wav",
+  "kategori": "bildirim",
+  "sure": 0.32,
+  "kaynak": "CC0",
+  "yazar": "Jofae",
+  "url": "https://freesound.org/people/Jofae/sounds/380482"
+ },
+ {
+  "dosya": "gecis/rast-sfx-gecis-zip.wav",
+  "kategori": "gecis",
+  "sure": 0.35,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "gecis/rast-sfx-gecis-bant-dususu.wav",
+  "kategori": "gecis",
+  "sure": 1.56,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "gecis/rast-sfx-gecis-plak-cizik.wav",
+  "kategori": "gecis",
+  "sure": 0.67,
+  "kaynak": "CC0",
+  "yazar": "ChuckChuckGoof",
+  "url": "https://freesound.org/people/ChuckChuckGoof/sounds/668909/"
+ },
+ {
+  "dosya": "drone/rast-sfx-drone-karanlik.wav",
+  "kategori": "drone",
+  "sure": 10.0,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ },
+ {
+  "dosya": "drone/rast-sfx-drone-hava.wav",
+  "kategori": "drone",
+  "sure": 10.0,
+  "kaynak": "Rast üretimi",
+  "yazar": null,
+  "url": null
+ }
+]

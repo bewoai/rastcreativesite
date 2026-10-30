@@ -1,0 +1,566 @@
+---
+/**
+ * Free SFX pack for short-form editing (Rast SFX Pack Vol.1).
+ * Files: public/araclar/sfx-paketi/ (zip + MP3 previews), list: src/data/sfx-paketi.json.
+ * Build pipeline + sources: docs/sections/araclar-paketler.md. No prices.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Section from "../../components/Section.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import Button from "../../components/Button.astro";
+import { PRIMARY_CTA, SITE } from "../../consts";
+import { breadcrumb, faqPage } from "../../lib/schema";
+import SOUNDS from "../../data/sfx-paketi.json";
+
+const PATH = "/araclar/sfx-paketi/";
+const PAGE_URL = new URL(PATH, SITE.url).href;
+const DIR = "/araclar/sfx-paketi/";
+const ZIP = DIR + "rast-sfx-pack-vol1.zip";
+const ZIP_MB = "9,5 MB";
+const title = "Ücretsiz SFX Paketi: Whoosh, Riser, Impact";
+const description =
+  "Rast SFX Pack Vol.1: Reels, TikTok ve Shorts kurgusu için 40 ücretsiz ses efekti. Whoosh, riser, impact, glitch, deklanşör, bildirim. WAV, ticari kullanım serbest.";
+
+const CATS: Record<string, { label: string; hint: string }> = {
+  whoosh: { label: "Whoosh", hint: "Kesme, kaydırma ve zoom geçişleri. Sesin en yüksek anını kesmeye denk getirin." },
+  riser: { label: "Riser", hint: "Gerilim kurar. Sonunu kesmeden 1–2 kare önce bitirin, ardından impact ya da sessizlik." },
+  impact: { label: "Impact / vuruş", hint: "Başlık girişleri, logo, ürün reveal. Altına bir sub drop eklemek etkiyi büyütür." },
+  swell: { label: "Swell", hint: "Ters zil ve parlamalar: bir geçişe ya da logoya doğru şişen sesler." },
+  glitch: { label: "Glitch", hint: "Dijital bozulma, ekran geçişi, hata/teknoloji teması." },
+  ui: { label: "Tık ve pop (arayüz)", hint: "Metin, ikon ve kartların ekrana gelişi; ekran kaydı videoları." },
+  kamera: { label: "Deklanşör", hint: "Fotoğraf karesi donması, flaş, “anı yakala” geçişleri." },
+  kagit: { label: "Kağıt ve bant", hint: "Kolaj, scrapbook ve el yapımı tarz kurgular; sticker ve not girişleri." },
+  bildirim: { label: "Bildirim", hint: "Mesaj, yorum ya da sipariş bildirimi kartları." },
+  gecis: { label: "Geçiş efektleri", hint: "Zip, bant düşüşü, plak cızırtısı: ritmi kıran, komik ya da ani geçişler." },
+  drone: { label: "Drone / alt katman", hint: "10 saniyelik alt katman. Müziğin olmadığı anlarda boşluğu doldurur; -20 dB civarında kullanın." },
+};
+
+const NAMES: Record<string, string> = {
+  "kisa-hizli": "Kısa, hızlı",
+  "kisa-kirbac": "Kısa, kırbaç",
+  "kisa-siki": "Kısa, sıkı",
+  "uzun-derin": "Uzun, derin",
+  "uzun-pelerin": "Uzun, pelerin",
+  ters: "Ters (reverse)",
+  hava: "Hava",
+  hizli: "Hızlı",
+  gerilim: "Gerilim",
+  "sonsuz-yukselis": "Sonsuz yükseliş (Shepard)",
+  "kisa-rulo": "Kısa rulo",
+  klasik: "Klasik",
+  derin: "Derin",
+  yumruk: "Yumruk",
+  "sub-drop": "Sub drop",
+  "ters-zil": "Ters zil",
+  halka: "Halka",
+  "logo-parlama": "Logo parlaması",
+  kekeme: "Kekeme (stutter)",
+  veri: "Veri",
+  vhs: "VHS",
+  tik: "Tık",
+  "pop-yumusak": "Yumuşak pop",
+  anahtar: "Anahtar (toggle)",
+  klavye: "Klavye",
+  "deklansor-dslr": "DSLR deklanşör",
+  "deklansor-film": "Film kamera deklanşörü",
+  "deklansor-gercek": "Gerçek deklanşör kaydı",
+  kaydirma: "Kağıt kaydırma",
+  burusturma: "Buruşturma",
+  "sayfa-cevirme": "Sayfa çevirme",
+  "bant-yirtma": "Bant yırtma",
+  ding: "Ding",
+  zil: "Zil",
+  chime: "Chime",
+  zip: "Zip",
+  "bant-dususu": "Bant düşüşü (tape stop)",
+  "plak-cizik": "Plak cızırtısı",
+  karanlik: "Karanlık",
+};
+
+type Snd = { dosya: string; kategori: string; sure: number; kaynak: string; yazar: string | null; url: string | null };
+const items = (SOUNDS as Snd[]).map((s) => {
+  const base = s.dosya.split("/")[1].replace(".wav", "");
+  const key = base.replace(`rast-sfx-${s.kategori}-`, "");
+  return {
+    ...s,
+    base,
+    name: NAMES[key] ?? key,
+    mp3: `${DIR}onizleme/${base}.mp3`,
+    cc0: s.kaynak === "CC0",
+    sec: s.sure.toFixed(1).replace(".", ","),
+  };
+});
+const cats = Object.keys(CATS).map((id) => ({ id, ...CATS[id], items: items.filter((i) => i.kategori === id) }));
+const ownCount = items.filter((i) => !i.cc0).length;
+const cc0Count = items.length - ownCount;
+
+const faqs = [
+  {
+    question: "Bu ses efektlerini ticari videolarda kullanabilir miyim?",
+    answer:
+      "Evet. Müşteri videoları, reklamlar, Reels, TikTok ve YouTube dahil her türlü projede kullanabilirsiniz. Rast üretimi sesler CC BY 4.0 lisanslıdır: video açıklamasına ya da künyeye “Ses efektleri: Rast Creative Studio — rastcreative.com” yazmanız yeterli. CC0 sesler için atıf şartı yok.",
+  },
+  {
+    question: "Hangi sesler CC0, hangileri CC BY 4.0?",
+    answer: `Pakette ${ownCount} ses bizim ürettiğimiz (CC BY 4.0), ${cc0Count} ses Freesound'daki CC0 (kamu malı) kayıtlardan seçilip işlendi. Sayfadaki listede her sesin yanında lisansı yazıyor; zip içindeki OKU-BENI.txt ve credits.json da dosya dosya lisansı, orijinal adresi ve yazarı gösteriyor.`,
+  },
+  {
+    question: "Telif hakkı bildirimi (Content ID) alır mıyım?",
+    answer:
+      "Bu sesleri hiçbir telif tespit sistemine kaydetmedik ve kaydetmeyeceğiz. Yine de CC0 sesler herkese açık olduğu için başka biri aynı sesi kendi işine koyup kaydettirebilir; nadir de olsa haksız bir bildirim alırsanız lisansı (CC0 / CC BY 4.0) ve bu sayfayı göstererek itiraz edebilirsiniz.",
+  },
+  {
+    question: "Dosya formatı ve seviyeleri nasıl?",
+    answer:
+      "WAV, 48 kHz, 16-bit, stereo. Baştaki ve sondaki sessizlik kırpıldı, kenarlar yumuşatıldı. Kısa sesler -1,5 dBTP tepe seviyesine, 2,5 saniyeden uzun sesler yaklaşık -16 LUFS'a ayarlandı. Kurguda çoğu sesi -6 ile -15 dB arasında kısarak kullanmanız gerekir; müziğin ve konuşmanın altında kalmalı.",
+  },
+  {
+    question: "CapCut, Premiere Pro ya da DaVinci Resolve'da nasıl kullanırım?",
+    answer:
+      "Zip'i açın, klasörü bilgisayarınızda kalıcı bir yere koyun. Premiere ve Resolve'da klasörü projeye sürükleyin; CapCut'ta Ses > Yerel/İçe aktar ile ekleyin. Sesi zaman çizelgesinde görsel olayın olduğu kareye hizalayın; whoosh'un en yüksek anı kesmeye, impact'in başı vuruş karesine denk gelmeli.",
+  },
+  {
+    question: "Paketi başka bir sitede ya da ses paketi olarak paylaşabilir miyim?",
+    answer:
+      "Sesleri videolarınızın içinde kullanmanız serbest. Paketi olduğu gibi yeniden satmayın ya da kendi ses paketiniz gibi dağıtmayın; başkalarına önermek isterseniz bu sayfanın bağlantısını paylaşın.",
+  },
+];
+
+const citeHtml = `<a href="${PAGE_URL}">Rast SFX Pack Vol.1 — Rast Creative</a>`;
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Araçlar", path: "/araclar/" },
+    { name: "SFX paketi", path: PATH },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    "@id": `${PAGE_URL}#paket`,
+    name: "Rast SFX Pack Vol.1",
+    alternateName: "Ücretsiz ses efekti paketi (whoosh, riser, impact)",
+    url: PAGE_URL,
+    description,
+    inLanguage: "tr",
+    isAccessibleForFree: true,
+    encodingFormat: "audio/wav",
+    license: "https://creativecommons.org/licenses/by/4.0/deed.tr",
+    creator: { "@id": `${SITE.url}#business` },
+    publisher: { "@id": `${SITE.url}#business` },
+    datePublished: "2026-10-31",
+    keywords: "ses efekti, sfx paketi, whoosh, riser, impact, glitch, deklanşör, reels, tiktok",
+    associatedMedia: {
+      "@type": "MediaObject",
+      name: "rast-sfx-pack-vol1.zip",
+      contentUrl: new URL(ZIP, SITE.url).href,
+      encodingFormat: "application/zip",
+    },
+    hasPart: items.map((i) => ({
+      "@type": "AudioObject",
+      name: `${CATS[i.kategori].label}: ${i.name}`,
+      contentUrl: new URL(i.mp3, SITE.url).href,
+      encodingFormat: "audio/mpeg",
+      duration: `PT${i.sure.toFixed(2)}S`,
+      license: i.cc0
+        ? "https://creativecommons.org/publicdomain/zero/1.0/deed.tr"
+        : "https://creativecommons.org/licenses/by/4.0/deed.tr",
+    })),
+  },
+  faqPage(faqs),
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <Section width="wide" space="tight">
+    <nav class="crumbs" aria-label="Sayfa yolu">
+      <a href="/">Ana sayfa</a> <span aria-hidden="true">/</span> <a href="/araclar/">Araçlar</a>
+      <span aria-hidden="true">/</span> <span aria-current="page">SFX paketi</span>
+    </nav>
+    <SectionHeading as="h1" eyebrow="Ücretsiz · WAV · Ticari kullanım serbest">
+      Rast SFX Pack Vol.1: kısa video kurgusu için 40 ses efekti
+      <Fragment slot="intro">
+        <p>
+          Reels, TikTok ve Shorts kurgusunda her kesmenin, her metin girişinin bir sesi olmalı. Kendi işlerimizde
+          kullandığımız whoosh, riser, impact, glitch, deklanşör, kağıt ve bildirim seslerini tek pakette topladık.
+          Hepsini aşağıda tarayıcıda dinleyebilir, tek tıkla indirebilirsiniz. Kayıt yok, e-posta istemiyoruz.
+        </p>
+      </Fragment>
+    </SectionHeading>
+
+    <div class="facts">
+      <ul>
+        <li><strong>{items.length} ses</strong>, {cats.length} kategori</li>
+        <li><strong>WAV</strong> · 48 kHz · 16-bit · stereo</li>
+        <li><strong>Seviyesi ayarlı</strong> · sessizlik kırpılmış</li>
+        <li><strong>Lisans:</strong> {ownCount} ses CC BY 4.0, {cc0Count} ses CC0</li>
+      </ul>
+      <a class="ev-btn ev-btn--sun" href={ZIP} download>Paketi indir (ZIP, {ZIP_MB})</a>
+    </div>
+  </Section>
+
+  <Section width="wide" space="tight" id="sesler">
+    <SectionHeading eyebrow="Önizleme">Sesleri dinleyin</SectionHeading>
+    <p class="small">Önizlemeler MP3'tür (128 kbps); pakettekiler sıkıştırılmamış WAV. Ses, oynat'a basana kadar yüklenmez.</p>
+    <div class="cats">
+      {
+        cats.map((c) => (
+          <section class="cat" id={`kategori-${c.id}`} aria-labelledby={`h-${c.id}`}>
+            <h3 id={`h-${c.id}`}>
+              {c.label} <span class="count">{c.items.length}</span>
+            </h3>
+            <p class="hint">{c.hint}</p>
+            <ul class="snd">
+              {c.items.map((s) => (
+                <li>
+                  <div class="snd__meta">
+                    <span class="snd__name">{s.name}</span>
+                    <span class="snd__sub">
+                      {s.sec} sn · <span class:list={["lic", s.cc0 && "lic--cc0"]}>{s.cc0 ? "CC0" : "CC BY 4.0"}</span>
+                      {s.cc0 && s.url && (
+                        <>
+                          {" "}· <a href={s.url} rel="noopener" target="_blank">kaynak: {s.yazar}</a>
+                        </>
+                      )}
+                    </span>
+                    <code class="snd__file">{s.base}.wav</code>
+                  </div>
+                  <audio controls preload="none" src={s.mp3} aria-label={`${c.label}: ${s.name} önizleme`} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+    <p class="dl">
+      <a class="ev-btn ev-btn--sun" href={ZIP} download>Tüm sesler (ZIP, {ZIP_MB})</a>
+    </p>
+  </Section>
+
+  <Section width="default" space="tight" id="kullanim">
+    <SectionHeading eyebrow="Pratik">SFX kurguda nasıl oturur?</SectionHeading>
+    <ul class="tips">
+      <li><strong>Her görsel olaya bir ses:</strong> metin girişi, kart, zoom, kesme. Seslerin çoğu tek başına duyulmaz ama yokluğu hissedilir; “sessiz” görünen profesyonel videolarda bile onlarca küçük ses vardır.</li>
+      <li><strong>Hizalama:</strong> whoosh'un en yüksek anını kesmenin olduğu kareye, impact'in başlangıcını vuruş karesine koyun. Riser'ı kesmeden 1–2 kare önce bitirin.</li>
+      <li><strong>Seviye:</strong> konuşma varsa SFX'i onun altında tutun (çoğu ses için -10 ile -18 dB arası). Arayüz tıkları en kısık, impact'ler en güçlü katman olmalı.</li>
+      <li><strong>Tekrar etmeyin:</strong> aynı ses arka arkaya gelecekse perdesini %5–10 oynatın ya da iki farklı whoosh arasında gidip gelin.</li>
+      <li><strong>Katmanlayın:</strong> büyük anlar için impact + sub drop, logo için swell + ding gibi iki sesi üst üste koyun.</li>
+      <li><strong>Son kontrol:</strong> dışa aktarmadan önce telefon hoparlöründen bir kez dinleyin; sosyal medya videoları çoğunlukla oradan izlenir.</li>
+    </ul>
+    <p>
+      Dikey videoda metinlerin nereye konacağını da planlıyorsanız <a href="/araclar/guvenli-alan/">Reels / TikTok güvenli alan kontrolü</a>
+      işinize yarar; renk için de <a href="/araclar/lut-paketi/">ücretsiz LUT paketimize</a> bakabilirsiniz.
+    </p>
+  </Section>
+
+  <Section width="default" space="tight" id="lisans">
+    <SectionHeading eyebrow="Lisans">Ne yapabilirsiniz, ne yapamazsınız?</SectionHeading>
+    <div class="lic-grid">
+      <div>
+        <h3>Rast üretimi sesler · CC BY 4.0</h3>
+        <p>
+          {ownCount} ses bizim tarafımızdan sentezlendi ve işlendi. <a href="https://creativecommons.org/licenses/by/4.0/deed.tr" rel="license noopener" target="_blank">CC BY 4.0</a>
+          ile ticari işlerde de kullanabilir, düzenleyebilirsiniz. Tek şart atıf: video açıklamasına, künyeye ya da proje notuna
+          <em>“Ses efektleri: Rast Creative Studio — rastcreative.com”</em> yazın. Videonun içine yazmanız gerekmez.
+        </p>
+      </div>
+      <div>
+        <h3>CC0 sesler · kamu malı</h3>
+        <p>
+          {cc0Count} ses Freesound'daki <a href="https://creativecommons.org/publicdomain/zero/1.0/deed.tr" rel="license noopener" target="_blank">CC0</a>
+          kayıtlardan seçildi; kırpma, kenar yumuşatma ve seviye ayarı bizden. CC0 olarak kalırlar, atıf gerekmez. Yine de
+          kaydı yapanların adı ve orijinal adresi listede ve credits.json'da yazılı.
+        </p>
+      </div>
+    </div>
+    <p class="small">Paketi olduğu gibi yeniden satmak ya da kendi ses paketiniz gibi dağıtmak serbest değildir; paylaşmak isterseniz bu sayfanın bağlantısını verin.</p>
+  </Section>
+
+  <Section width="default" space="tight" id="sss">
+    <SectionHeading eyebrow="SSS">Sık sorulan sorular</SectionHeading>
+    <dl class="faq">
+      {
+        faqs.map((f) => (
+          <div class="faq__item">
+            <dt>{f.question}</dt>
+            <dd>{f.answer}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Section>
+
+  <Section width="default" space="tight" id="kaynak-goster">
+    <div class="cite">
+      <h2>Kaynak göster</h2>
+      <p>
+        Bir yazıda, eğitimde ya da kaynak listesinde bu pakete yer vermek isterseniz aşağıdaki bağlantıyı kopyalayabilirsiniz.
+        Videolarda atıf satırı: <em>“Ses efektleri: Rast Creative Studio — rastcreative.com”</em>.
+      </p>
+      <label for="cite-code" class="small">HTML bağlantısı</label>
+      <textarea id="cite-code" readonly rows="2" data-cite>{citeHtml}</textarea>
+      <button type="button" class="ev-btn" data-copy>Kopyala</button>
+      <span class="small" data-copied aria-live="polite"></span>
+    </div>
+  </Section>
+
+  <Section width="default" space="tight">
+    <div class="en" lang="en">
+      <h2>In English: free SFX pack for short-form video</h2>
+      <p>
+        Rast SFX Pack Vol.1 is a free pack of {items.length} sound effects for Reels, TikTok and Shorts editing: whooshes, risers,
+        impacts, swells, glitches, UI clicks and pops, camera shutters, paper and tape, notification dings, transitions and two
+        drones. WAV, 48 kHz, 16-bit, trimmed and level-matched. Our own sounds are CC BY 4.0 (credit “Rast Creative Studio —
+        rastcreative.com”), the CC0 sounds stay CC0. Commercial use is allowed; please don't resell the pack as is.
+      </p>
+    </div>
+  </Section>
+
+  <Section width="default" space="tight">
+    <div class="cta">
+      <h2>Ses tasarımı dahil, baştan sona video</h2>
+      <p>
+        Rast Creative Studio, Reels ve reklam videolarını kurgu, ses efekti ve müzikle birlikte teslim eder. Düzenli içerik için
+        <a href="/sosyal-medya-icerigi/">sosyal medya içeriği</a>, tek seferlik işler için <a href="/reklam-filmi/">reklam filmi</a>
+        ve <a href="/video-cekimi/">video çekimi</a> sayfalarına bakabilirsiniz.
+      </p>
+      <Button href={PRIMARY_CTA.href}>Görüşelim</Button>
+    </div>
+  </Section>
+</BaseLayout>
+
+<script>
+  // one preview at a time
+  document.addEventListener(
+    "play",
+    (e) => {
+      document.querySelectorAll<HTMLAudioElement>(".snd audio").forEach((a) => {
+        if (a !== e.target) a.pause();
+      });
+    },
+    true,
+  );
+  const copyBtn = document.querySelector<HTMLButtonElement>("[data-copy]");
+  copyBtn?.addEventListener("click", async () => {
+    const ta = document.querySelector<HTMLTextAreaElement>("[data-cite]")!;
+    const out = document.querySelector<HTMLElement>("[data-copied]")!;
+    try {
+      await navigator.clipboard.writeText(ta.value);
+    } catch {
+      ta.select();
+      document.execCommand("copy");
+    }
+    out.textContent = "Kopyalandı.";
+  });
+</script>
+
+<style>
+  .crumbs {
+    margin-bottom: 1.2rem;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .crumbs a {
+    color: var(--amber-text);
+  }
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 1.6rem;
+    margin-top: 1.6rem;
+    padding: clamp(1rem, 2.5vw, 1.4rem);
+    border: 1px solid var(--line);
+    border-radius: 1.2rem;
+    background: color-mix(in srgb, var(--paper) 82%, transparent);
+  }
+  .facts ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.4rem;
+    color: var(--ink-soft);
+  }
+  .facts strong {
+    color: var(--ink);
+  }
+  .small {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .cats {
+    display: grid;
+    gap: 1.2rem;
+    margin-top: 1.2rem;
+  }
+  @media (min-width: 900px) {
+    .cats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+    }
+  }
+  .cat {
+    padding: clamp(1rem, 2.5vw, 1.3rem);
+    border: 1px solid var(--line);
+    border-radius: 1.1rem;
+    background: color-mix(in srgb, var(--paper) 82%, transparent);
+  }
+  .cat h3 {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--ink);
+  }
+  .count {
+    font-family: var(--font-utility);
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    vertical-align: middle;
+  }
+  .hint {
+    margin: 0.3rem 0 0.8rem;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    line-height: 1.45;
+  }
+  .snd {
+    display: grid;
+    gap: 0.7rem;
+  }
+  .snd li {
+    display: grid;
+    gap: 0.35rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--line);
+  }
+  .snd__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.2rem 0.7rem;
+  }
+  .snd__name {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .snd__sub {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+  }
+  .snd__sub a {
+    color: var(--amber-text);
+  }
+  .snd__file {
+    flex-basis: 100%;
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    overflow-wrap: anywhere;
+  }
+  .lic {
+    padding: 0.05rem 0.45rem;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+  }
+  .lic--cc0 {
+    border-color: #3ddc84;
+  }
+  .snd audio {
+    width: 100%;
+    height: 40px;
+  }
+  .dl {
+    margin-top: 1.4rem;
+  }
+  .tips {
+    display: grid;
+    gap: 0.8rem;
+    margin: 1.2rem 0;
+    padding-left: 1.2rem;
+    list-style: disc;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .tips strong,
+  .lic-grid h3 {
+    color: var(--ink);
+  }
+  #kullanim p a,
+  #lisans a,
+  .cta a:not(.ev-btn) {
+    color: var(--amber-text);
+  }
+  #kullanim p,
+  #lisans p {
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .lic-grid {
+    display: grid;
+    gap: 1.2rem;
+    margin: 1.2rem 0;
+  }
+  @media (min-width: 760px) {
+    .lic-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .lic-grid > div {
+    display: grid;
+    gap: 0.5rem;
+    padding: 1.1rem;
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+  }
+  .lic-grid h3 {
+    font-weight: 600;
+  }
+  .faq {
+    display: grid;
+    gap: 1.2rem;
+    margin-top: 1.2rem;
+  }
+  .faq dt {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .faq dd {
+    margin: 0.3rem 0 0;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .cite,
+  .cta,
+  .en {
+    display: grid;
+    gap: 0.8rem;
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+    border: 1px solid var(--line);
+    border-radius: 1.2rem;
+    background: color-mix(in srgb, var(--paper) 80%, transparent);
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .cite h2,
+  .cta h2,
+  .en h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.7rem);
+    color: var(--ink);
+  }
+  .cite textarea {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 0.6rem;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: ui-monospace, monospace;
+    font-size: 0.85rem;
+    resize: none;
+  }
+  .cite .ev-btn,
+  .cta :global(a) {
+    justify-self: start;
+  }
+</style>
