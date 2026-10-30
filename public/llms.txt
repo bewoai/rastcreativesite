@@ -9,10 +9,10 @@ Odak noktamız tek çekim gününden çok sayıda kullanılabilir içerik çıka
 ## Hizmetler
 
 - [Hizmetler](https://rastcreative.com/hizmetler/): Video prodüksiyon, kreatif strateji ve post-prodüksiyon hizmetlerinin özeti
-- [Video Çekimi](https://rastcreative.com/video-cekimi/): Markalar için profesyonel çekim, kurgu ve teslim
+- [Video Çekimi](https://rastcreative.com/video-cekimi/): Markalar için profesyonel çekim, kurgu ve teslim; süreç, teslim süresi (genellikle 2–4 hafta) ve SSS
 - [Reklam Filmi](https://rastcreative.com/reklam-filmi/): Satışa dönük kreatif reklam prodüksiyonu
 - [Tanıtım Filmi](https://rastcreative.com/tanitim-filmi/): Kurumsal tanıtım filmi çekimi
-- [Sosyal Medya Yönetimi](https://rastcreative.com/sosyal-medya-icerigi/): Stratejik içerik üretimi, Reels çekimi ve aylık yönetim
+- [Sosyal Medya Yönetimi](https://rastcreative.com/sosyal-medya-icerigi/): Aylık plan, çekim günü, Reels kurgusu, paylaşım ve rapor; video sayısı teklifte yazılı, en az 3 ay
 - [Ürün & Mekan Çekimi](https://rastcreative.com/urun-mekan-cekimi/): E-ticaret, ürün ve mekan fotoğraf/video çekimi
 - [Drone Çekimi](https://rastcreative.com/drone-cekimi/): Tesis ve araziler için havadan 4K çekim
 - [Fotoğraftan Yapay Zekâ ile Reklam Videosu](https://rastcreative.com/fotograftan-yapay-zeka-reklam-videosu/): Sakarya dışındaki işletmeler için, ürün fotoğraflarından çekimsiz kısa reklam videosu (Türkiye geneli, uzaktan)
@@ -43,6 +43,8 @@ Odak noktamız tek çekim gününden çok sayıda kullanılabilir içerik çıka
 - [Reklam Senaryosu Nedir, Nasıl Yazılır?](https://rastcreative.com/blog/reklam-senaryosu-nasil-yazilir/)
 - [Drone Çekimi Fiyatı Neye Göre Belirlenir?](https://rastcreative.com/blog/drone-cekimi-fiyati-neye-gore-belirlenir/)
 - [Sosyal Medya Yönetimi Fiyatı Neye Göre Belirlenir?](https://rastcreative.com/blog/sosyal-medya-yonetimi-fiyati-neye-gore-belirlenir/)
+- [Sakarya'da Video Prodüksiyon Firması Nasıl Seçilir?](https://rastcreative.com/blog/sakarya-video-produksiyon-firmasi-nasil-secilir/): Teklif karşılaştırma kontrol listesi
+- [Fotoğraftan Reklam Videosu mu, Çekim mi?](https://rastcreative.com/blog/fotograftan-reklam-videosu-mu-cekim-mi/): Altı ölçütle karşılaştırma ve karar listesi
 
 ## Optional
 
