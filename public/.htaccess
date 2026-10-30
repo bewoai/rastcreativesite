@@ -40,8 +40,11 @@ RewriteRule ^iletisim-1/?$ https://rastcreative.com/iletisim/ [R=301,L]
 RewriteRule ^yorum/?$ https://g.page/r/Cb4qjKXCuFnWEBM/review [R=302,L]
 
 # Deleted/External-only projects redirect to main projects index
-RewriteRule ^projeler/aytas-home-sosyal-medya/?$ https://rastcreative.com/projeler/ [R=301,L]
+RewriteRule ^projeler/aytas-home-sosyal-medya/?$ https://rastcreative.com/projeler/marka/aytas-home/ [R=301,L]
 RewriteRule ^projeler/isitan-edit-1/?$ https://rastcreative.com/projeler/ [R=301,L]
+# Removed 2026-10 (e8c6692): old project/brand URLs still crawled by Google (GSC 404 report 30.10)
+RewriteRule ^projeler/(thermoway-edit-[0-9]+|rosa-coffee-sosyal-icerik|buyapi-sosyal-icerik-[0-9]+)/?$ https://rastcreative.com/projeler/kategori/sosyal-medya/ [R=301,L]
+RewriteRule ^projeler/marka/(buyapi|adatip-hastanesi|thermoway|rosa-coffee|isitan)/?$ https://rastcreative.com/projeler/ [R=301,L]
 
 # Directory URLs with no page of their own answered with the host's bare 403;
 # send them to the page that lists their children. Empty category pages are
