@@ -5,6 +5,7 @@ import EvHeader from "../components/evren/EvHeader.astro";
 import EvFooter from "../components/evren/EvFooter.astro";
 import EntryOverlay from "../components/EntryOverlay.astro";
 import WebMcpTools from "../components/WebMcpTools.astro";
+import CookieConsent from "../components/CookieConsent.astro";
 import { alternatesFor, langOfPath } from "../lib/i18n";
 
 interface Props {
@@ -246,6 +247,19 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
 
+      // Google Consent Mode v2 (advanced): everything denied until the visitor
+      // accepts in the CookieConsent banner (choice kept in localStorage rc_consent).
+      // Ads signals stay denied — the site runs no ad/remarketing tags.
+      let storedConsent = null;
+      try { storedConsent = localStorage.getItem("rc_consent"); } catch (e) {}
+      gtag("consent", "default", {
+        ad_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
+        analytics_storage: storedConsent === "granted" ? "granted" : "denied",
+        wait_for_update: 500,
+      });
+
       window.rcTrack = (eventName, eventParams = {}, callback) => {
         const done = () => {
           if (typeof callback === "function") callback();
@@ -406,6 +420,7 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
       )
     }
     <WebMcpTools />
+    <CookieConsent />
 
     <script>
       const initReveal = () => {

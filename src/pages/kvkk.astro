@@ -6,7 +6,7 @@ import Button from "../components/Button.astro";
 import { SITE, CONTACT } from "../consts";
 import { breadcrumb } from "../lib/schema";
 
-const updated = "13 Haziran 2026";
+const updated = "31 Ekim 2026";
 
 const pageJsonLd = [
   breadcrumb([
@@ -18,7 +18,7 @@ const pageJsonLd = [
 
 <BaseLayout
   title="KVKK Aydınlatma Metni"
-  description="Rast Creative Studio iletişim formu kişisel verilerin korunması ve işlenmesi aydınlatma metni."
+  description="Rast Creative Studio iletişim formu kişisel verilerin korunması ve işlenmesi aydınlatma metni ile çerez (Google Analytics) bilgilendirmesi."
   jsonLd={pageJsonLd}
 >
   <Section width="narrow">
@@ -121,6 +121,45 @@ const pageJsonLd = [
         içinde sonuçlandırılır.
       </p>
 
+      <h2 id="cerezler">10. Çerezler</h2>
+      <p>
+        Sitemizde yalnızca aşağıdaki iki tür çerez ve benzeri teknoloji
+        kullanılır. Reklam veya yeniden pazarlama (remarketing) çerezi şu anda
+        kullanılmamaktadır.
+      </p>
+      <h3>Zorunlu</h3>
+      <p>
+        Çerez tercihinizi hatırlamak için tarayıcınızın yerel depolamasına
+        (localStorage) yalnızca seçiminiz (<code>rc_consent</code>: kabul / ret)
+        yazılır. Bu kayıt sizi izlemek için kullanılmaz, sunucumuza veya üçüncü
+        kişilere gönderilmez ve onay gerektirmez.
+      </p>
+      <h3>Analiz (yalnızca onayınızla)</h3>
+      <p>
+        Siteyi nasıl kullandığınızı anlamak için Google LLC tarafından sunulan
+        <strong>Google Analytics 4</strong> kullanılır. Çerez bildiriminde
+        “Kabul et” derseniz <code>_ga</code> ve <code>_ga_*</code> çerezleri
+        yaklaşık 2 yıl süreyle saklanır; ziyaret edilen sayfalar, tıklamalar,
+        cihaz ve yaklaşık konum gibi bilgiler toplanır. Google’ın sunucuları yurt
+        dışında bulunduğundan bu veriler yurt dışına aktarılır; aktarımın
+        dayanağı verdiğiniz açık rızadır. “Reddet” derseniz analiz çerezleri
+        yazılmaz; Google Analytics yalnızca çerezsiz, kimliksiz sinyaller alır
+        (Google Consent Mode).
+      </p>
+      <h3>Gömülü videolar</h3>
+      <p>
+        Sitedeki YouTube videoları siz oynat düğmesine basana kadar yüklenmez ve
+        youtube-nocookie.com üzerinden açılır. Oynatmayı başlattığınızda YouTube
+        (Google) kendi gizlilik koşullarına göre veri işleyebilir.
+      </p>
+      <h3>Tercihinizi değiştirme</h3>
+      <p>
+        Seçiminizi istediğiniz zaman sayfanın en altındaki
+        <button type="button" class="legal__consent" data-consent-open>Çerez tercihleri</button>
+        bağlantısından değiştirebilirsiniz. Tarayıcı ayarlarınızdan çerezleri
+        silebilir veya engelleyebilirsiniz.
+      </p>
+
       <div class="legal__actions">
         <Button href="/iletisim/" variant="secondary" arrow>İletişim formuna dön</Button>
       </div>
@@ -134,6 +173,28 @@ const pageJsonLd = [
     max-width: 68ch;
     color: var(--ink-soft);
     line-height: var(--leading-body);
+  }
+  .legal h3 {
+    margin: 1.2rem 0 0.4rem;
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    font-weight: 650;
+    color: var(--ink);
+  }
+  .legal h2[id] {
+    scroll-margin-top: 6rem;
+  }
+  .legal__consent {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--amber);
+    text-underline-offset: 3px;
+    cursor: pointer;
   }
   .legal h2 {
     margin: 2rem 0 0.6rem;

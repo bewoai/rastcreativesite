@@ -1,0 +1,187 @@
+---
+/*
+  Cookie consent (KVKK + GDPR) for Google Consent Mode v2 "advanced".
+  BaseLayout sets gtag consent defaults (all denied; analytics granted only if
+  localStorage rc_consent === "granted"). This banner asks once, stores the
+  choice, sends gtag('consent','update') and hides. Footer "Çerez tercihleri"
+  buttons ([data-consent-open]) clear the choice and reopen it.
+  Fixed-position card, revealed after load/idle → no CLS, no LCP impact.
+*/
+import { langOfPath } from "../lib/i18n";
+
+const path = Astro.url.pathname;
+const hide = path.startsWith("/admin");
+const en = langOfPath(path) === "en";
+---
+
+{
+  !hide && (
+    <section class="rc-consent" role="region" aria-label={en ? "Cookie preferences" : "Çerez tercihi"} data-consent hidden>
+      <p class="rc-consent__eyebrow">{en ? "Cookies" : "Çerezler"}</p>
+      {en ? (
+        <p class="rc-consent__text">
+          We use analytics cookies to understand how the site is used. If you accept, Google Analytics cookies are
+          turned on; if you decline, only the essential ones remain.{" "}
+          <a href="/kvkk/#cerezler" lang="tr">Details</a>
+        </p>
+      ) : (
+        <p class="rc-consent__text">
+          Siteyi nasıl kullandığınızı anlamak için analiz çerezleri kullanıyoruz. Kabul ederseniz Google Analytics
+          çerezleri açılır; reddederseniz yalnızca zorunlu olanlar kalır. <a href="/kvkk/#cerezler">Ayrıntılar</a>
+        </p>
+      )}
+      <div class="rc-consent__actions">
+        <button type="button" class="rc-consent__btn" data-consent-choice="denied">{en ? "Decline" : "Reddet"}</button>
+        <button type="button" class="rc-consent__btn" data-consent-choice="granted">{en ? "Accept" : "Kabul et"}</button>
+      </div>
+    </section>
+  )
+}
+
+<script is:inline>
+  (() => {
+    const box = document.querySelector("[data-consent]");
+    const KEY = "rc_consent";
+    const read = () => {
+      try { return localStorage.getItem(KEY); } catch (e) { return null; }
+    };
+    const push = function () {
+      (window.dataLayer = window.dataLayer || []).push(arguments);
+    };
+    const show = (focus) => {
+      if (!box) return;
+      box.hidden = false;
+      if (focus) box.querySelector("button")?.focus();
+    };
+    const choose = (value) => {
+      try { localStorage.setItem(KEY, value); } catch (e) {}
+      push("consent", "update", { analytics_storage: value === "granted" ? "granted" : "denied" });
+      if (box) box.hidden = true;
+    };
+    if (box) {
+      box.addEventListener("click", (e) => {
+        const b = e.target instanceof Element ? e.target.closest("[data-consent-choice]") : null;
+        if (b) choose(b.getAttribute("data-consent-choice"));
+      });
+    }
+    document.addEventListener("click", (e) => {
+      const t = e.target instanceof Element ? e.target.closest("[data-consent-open]") : null;
+      if (!t) return;
+      e.preventDefault();
+      try { localStorage.removeItem(KEY); } catch (err) {}
+      show(true);
+    });
+    // Never sit over a form field while someone types (mobile keyboard open).
+    const isField = (t) =>
+      t instanceof HTMLElement &&
+      t.matches("input:not([type=checkbox]):not([type=radio]):not([type=button]):not([type=submit]), textarea, select, [contenteditable]");
+    document.addEventListener("focusin", (e) => { if (box && isField(e.target)) box.classList.add("is-typing"); });
+    document.addEventListener("focusout", (e) => { if (box && isField(e.target)) box.classList.remove("is-typing"); });
+    const v = read();
+    if (!box || v === "granted" || v === "denied") return;
+    const later = () =>
+      "requestIdleCallback" in window ? requestIdleCallback(() => show(false), { timeout: 2000 }) : setTimeout(() => show(false), 600);
+    if (document.readyState === "complete") later();
+    else window.addEventListener("load", later, { once: true });
+  })();
+</script>
+
+<style>
+  .rc-consent {
+    position: fixed;
+    z-index: 70;
+    left: 1rem;
+    bottom: 1rem;
+    /* Safe area via margin, not inside bottom: calc(env()) in an inset made
+       headless Chromium skip painting the card on later navigations. */
+    margin-bottom: env(safe-area-inset-bottom, 0px);
+    width: min(380px, calc(100vw - 2rem));
+    padding: 1rem 1.1rem 1.05rem;
+    border: 1px solid rgba(114, 103, 92, 0.24);
+    border-radius: var(--radius-card, 1rem);
+    background: rgba(247, 242, 235, 0.97);
+    box-shadow: 0 18px 40px -22px rgba(60, 38, 18, 0.55), 0 2px 8px -4px rgba(60, 38, 18, 0.18);
+    color: var(--ink);
+    font-family: var(--font-body);
+  }
+  .rc-consent[hidden] {
+    display: none;
+  }
+  .rc-consent__eyebrow {
+    margin: 0 0 0.35rem;
+    font-family: var(--font-utility);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--amber-text);
+  }
+  .rc-consent__text {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+  .rc-consent__text a {
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--amber);
+    text-underline-offset: 3px;
+  }
+  .rc-consent__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-top: 0.85rem;
+  }
+  /* Both buttons share one style: equal weight, no nudge toward "accept". */
+  .rc-consent__btn {
+    min-height: 44px;
+    padding: 0 1rem;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 650;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .rc-consent__btn:hover {
+    background: var(--ink);
+    color: #faf9f6;
+  }
+  .rc-consent__btn:focus-visible,
+  .rc-consent__text a:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+  }
+  @media (max-width: 767px) {
+    .rc-consent {
+      left: 0.6rem;
+      right: 0.6rem;
+      width: auto;
+      bottom: 0.6rem;
+      padding: 0.85rem 0.95rem 0.9rem;
+    }
+    /* Sit above the fixed WhatsApp|Ara bar (≈3.9rem + safe area). */
+    :global(body:has(.ev-callbar)) .rc-consent {
+      bottom: 4.5rem;
+    }
+    /* Never cover a form field while typing (keyboard open). */
+    .rc-consent.is-typing {
+      display: none;
+    }
+    .rc-consent__eyebrow {
+      display: none;
+    }
+    .rc-consent__text {
+      font-size: 0.86rem;
+    }
+    .rc-consent__actions {
+      margin-top: 0.7rem;
+    }
+  }
+</style>

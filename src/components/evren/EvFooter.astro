@@ -61,7 +61,11 @@ const en = langOfPath(Astro.url.pathname) === "en";
     </div>
     <div class="ev-foot__bottom">
       <span>© {year} {SITE.name}</span>
-      <span><a href="/kvkk/">KVKK</a> · <a href="/telif/">Telif</a></span>
+      <span>
+        <a href="/kvkk/">{en ? "Privacy (KVKK)" : "KVKK ve Gizlilik"}</a> ·
+        <button type="button" class="ev-foot__consent" data-consent-open>{en ? "Cookie preferences" : "Çerez tercihleri"}</button> ·
+        <a href="/telif/">{en ? "Copyright" : "Telif"}</a>
+      </span>
     </div>
   </div>
 </footer>
