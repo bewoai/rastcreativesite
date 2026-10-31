@@ -22,7 +22,17 @@ export interface Arac {
   /** Optional plain-words "what is it for" line on the card, for items whose
    *  name is jargon (bitrate, SRT, LUT…). Usability test: ~40 y/o visitors. */
   plain?: string;
+  /** English twin (/en/tools/…): same tool component with lang="en". See src/lib/i18n.ts. */
+  en?: Omit<Arac, "slug" | "type" | "en">;
 }
+
+export const TUR_LABEL_EN: Record<AracTur, string> = {
+  arac: "Tool",
+  sablon: "Template",
+  belge: "Document",
+  paket: "Pack",
+  rehber: "Guide",
+};
 
 export const TUR_LABEL: Record<AracTur, string> = {
   arac: "Araç",
@@ -42,6 +52,9 @@ export const TUR_FILTER: { id: AracTur; label: string }[] = [
 ];
 
 export const ctaLabel = (t: AracTur) => (t === "arac" || t === "rehber" ? "Aç" : "İndir");
+export const isDownload = (t: AracTur) => !(t === "arac" || t === "rehber");
+export const ctaLabelFor = (t: AracTur, lang: "tr" | "en") =>
+  lang === "en" ? (isDownload(t) ? "Download" : "Open") : ctaLabel(t);
 
 export const ARACLAR: Arac[] = [
   {
@@ -53,6 +66,14 @@ export const ARACLAR: Arac[] = [
     benefit: "Yazınız arayüzün altında kalmasın",
     purpose: "Görselinizi bırakın; Reels, TikTok ve Shorts arayüzünün neyi kapattığını anında görün.",
     chips: ["Tarayıcıda çalışır", "Reels · TikTok · Shorts", "PNG + ZIP"],
+    en: {
+      href: "/en/tools/reels-safe-zone-checker/",
+      name: "Reels / TikTok / Shorts safe zone checker",
+      title: "Safe zone checker",
+      benefit: "Keep text clear of the app UI",
+      purpose: "Drop an image or video and see exactly what the Reels, TikTok and Shorts interface covers.",
+      chips: ["Runs in your browser", "Reels · TikTok · Shorts", "PNG + ZIP templates"],
+    },
   },
   {
     slug: "bitrate-hesaplayici",
@@ -64,6 +85,15 @@ export const ARACLAR: Arac[] = [
     purpose: "Süre ve bitrate'ten dosya boyutunu, hedef boyuttan bitrate'i saniyeler içinde hesaplayın.",
     chips: ["Tarayıcıda çalışır", "MB · GB · Mbps", "FFmpeg komutu"],
     plain: "Videonuz kaç MB olacak, WhatsApp'a ya da siteye sığar mı, önceden görün.",
+    en: {
+      href: "/en/tools/video-bitrate-calculator/",
+      name: "Video bitrate and file size calculator",
+      title: "Video bitrate calculator",
+      benefit: "Know the file size before you export",
+      purpose: "Get file size from duration and bitrate, or the bitrate you need to hit a target size.",
+      chips: ["Runs in your browser", "MB · GB · Mbps", "FFmpeg command"],
+      plain: "See how big your video will be and whether it fits an upload limit, before you export.",
+    },
   },
   {
     slug: "en-boy-orani",
@@ -75,6 +105,15 @@ export const ARACLAR: Arac[] = [
     purpose: "16:9 kaydınızın 9:16, 4:5, 1:1 ve 3:4'te nasıl kırpılacağını görün, kadrajı ayarlayın.",
     chips: ["Tarayıcıda çalışır", "9:16 · 4:5 · 1:1"],
     plain: "Yatay çektiğiniz videonun telefon ekranına (dikey) nasıl kırpılacağını gösterir.",
+    en: {
+      href: "/en/tools/aspect-ratio-calculator/",
+      name: "Aspect ratio calculator and crop previewer",
+      title: "Aspect ratio & crop",
+      benefit: "Reframe 16:9 for vertical",
+      purpose: "See how a 16:9 shot crops to 9:16, 4:5, 1:1 and 3:4, and move the frame where you want it.",
+      chips: ["Runs in your browser", "9:16 · 4:5 · 1:1"],
+      plain: "Shows how a horizontal video gets cropped for a phone screen.",
+    },
   },
   {
     slug: "altyazi-kontrolu",
@@ -86,6 +125,15 @@ export const ARACLAR: Arac[] = [
     purpose: "Uzun satır, hızlı okuma, çakışma ve bozuk Türkçe karakterleri bulun; temiz SRT indirin.",
     chips: ["Tarayıcıda çalışır", "SRT · VTT"],
     plain: "Altyazı dosyanızdaki bozuk harfleri, çok uzun ve çok hızlı satırları bulup düzeltir.",
+    en: {
+      href: "/en/tools/srt-subtitle-checker/",
+      name: "SRT / VTT subtitle checker",
+      title: "SRT subtitle checker",
+      benefit: "Find subtitle errors in one click",
+      purpose: "Catch long lines, fast reading speed, overlaps and broken characters, then download a clean SRT.",
+      chips: ["Runs in your browser", "SRT · VTT"],
+      plain: "Finds garbled characters and lines that are too long or too fast in a subtitle file.",
+    },
   },
   {
     slug: "cekim-plani",
@@ -190,6 +238,15 @@ export const ARACLAR: Arac[] = [
     purpose: "Whoosh, riser, impact, glitch ve geçiş sesleri; tarayıcıda dinleyin, tek tıkla indirin.",
     chips: ["40 ses · WAV", "Ticari kullanım serbest"],
     plain: "Videolarda geçişlerde ve vurgularda kullanılacak ücretsiz kısa sesler.",
+    en: {
+      href: "/en/tools/free-sound-effects-pack/",
+      name: "Rast SFX Pack Vol.1 (40 free sound effects)",
+      title: "Free SFX pack",
+      benefit: "40 edit-ready sounds",
+      purpose: "Whooshes, risers, impacts, glitches and transitions: preview in the browser, download in one click.",
+      chips: ["40 sounds · WAV", "Commercial use OK"],
+      plain: "Short free sounds for transitions and accents in your edits.",
+    },
   },
   {
     slug: "lut-paketi",
@@ -201,24 +258,40 @@ export const ARACLAR: Arac[] = [
     purpose: "Rec.709 görüntü için ten rengini koruyan 5 hafif renk görünümü; önce/sonra karşılaştırmalı.",
     chips: ["5 LUT · .cube", "Premiere · DaVinci · CapCut"],
     plain: "Videonuzun renk tonunu tek tıkla güzelleştiren hazır renk ayarları.",
+    en: {
+      href: "/en/tools/free-lut-pack/",
+      name: "Rast LUT Pack (5 free .cube LUTs)",
+      title: "Free LUT pack",
+      benefit: "Consistent color in one step",
+      purpose: "Five subtle Rec.709 looks that protect skin tones, with before/after previews.",
+      chips: ["5 LUTs · .cube", "Premiere · DaVinci · CapCut"],
+      plain: "Ready-made color looks that grade your footage in one click.",
+    },
   },
 ];
 
+/** Item with its English fields swapped in (same slug → same card image). */
+export const localize = (a: Arac, lang: "tr" | "en"): Arac => (lang === "en" && a.en ? { ...a, ...a.en } : a);
+
+/** Items that have an English twin, in English. */
+export const ARACLAR_EN: Arac[] = ARACLAR.filter((a) => a.en).map((a) => localize(a, "en"));
+
 export const aracByHref = (href: string) => {
-  const a = ARACLAR.find((t) => t.href === href);
+  const a = ARACLAR.find((t) => t.href === href) ?? ARACLAR_EN.find((t) => t.href === href);
   if (!a) throw new Error(`araclar.ts: no entry for ${href}`);
   return a;
 };
 
 /** 3–4 other items for the bottom strip: same-type siblings first, then a mix. */
 export function otherTools(current: string, count = 4): Arac[] {
-  const self = ARACLAR.find((t) => t.href === current);
-  const rest = ARACLAR.filter((t) => t.href !== current);
+  const LIST = current.startsWith("/en/") ? ARACLAR_EN : ARACLAR;
+  const self = LIST.find((t) => t.href === current);
+  const rest = LIST.filter((t) => t.href !== current);
   if (!self) return rest.slice(0, count);
   const same = rest.filter((t) => t.type === self.type);
   const other = rest.filter((t) => t.type !== self.type);
   // rotate "other" by the item's index so each page shows a different mix
-  const i = ARACLAR.indexOf(self) % Math.max(other.length, 1);
+  const i = LIST.indexOf(self) % Math.max(other.length, 1);
   const mixed = [...other.slice(i), ...other.slice(0, i)];
   const out: Arac[] = [];
   const pick = [...same.slice(0, 2), ...mixed];

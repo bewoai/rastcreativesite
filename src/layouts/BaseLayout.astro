@@ -5,6 +5,7 @@ import EvHeader from "../components/evren/EvHeader.astro";
 import EvFooter from "../components/evren/EvFooter.astro";
 import EntryOverlay from "../components/EntryOverlay.astro";
 import WebMcpTools from "../components/WebMcpTools.astro";
+import { alternatesFor, langOfPath } from "../lib/i18n";
 
 interface Props {
   /** Page title; omit on the home page to use the full default title. */
@@ -77,11 +78,14 @@ const pagePath =
     ? "/"
     : `${Astro.url.pathname.replace(/\/+$/, "")}/`;
 const canonical = new URL(pagePath, SITE.url).href;
+// /en/ pages (free tools) are English; pages with a twin get reciprocal hreflang.
+const lang = langOfPath(pagePath);
+const alternates = alternatesFor(pagePath);
 const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
 ---
 
 <!doctype html>
-<html lang={SITE.lang}>
+<html lang={lang === "en" ? "en" : SITE.lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -160,6 +164,7 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
     <link rel="canonical" href={canonical} />
+    {alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={new URL(a.path, SITE.url).href} />)}
     {(robots ?? (noindex ? "noindex, nofollow" : undefined)) && (
       <meta name="robots" content={robots ?? "noindex, nofollow"} />
     )}
@@ -200,7 +205,8 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
     <!-- Open Graph -->
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={SITE.name} />
-    <meta property="og:locale" content={SITE.locale} />
+    <meta property="og:locale" content={lang === "en" ? "en_US" : SITE.locale} />
+    {alternates.length > 0 && <meta property="og:locale:alternate" content={lang === "en" ? SITE.locale : "en_US"} />}
     <meta property="og:url" content={canonical} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDescription} />
@@ -379,7 +385,7 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
       href={skipTo}
       class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-[var(--radius-sm)] focus:bg-ink focus:px-4 focus:py-2 focus:font-utility focus:text-paper"
     >
-      İçeriğe geç
+      {lang === "en" ? "Skip to content" : "İçeriğe geç"}
     </a>
     {!bare && entryAnimation && <EntryOverlay />}
     {

@@ -5,17 +5,33 @@
  */
 import Logo from "../Logo.astro";
 import { CONTACT, SITE, SOCIAL } from "../../consts";
-import { EV_NAV } from "../../lib/evren";
+import { EV_NAV, EV_NAV_EN } from "../../lib/evren";
+import { langOfPath } from "../../lib/i18n";
 
 const year = new Date().getFullYear();
+const en = langOfPath(Astro.url.pathname) === "en";
 ---
 
 <footer class="ev-foot">
   <div class="ev-foot__inner ev-glass">
     <div class="ev-foot__brand">
       <Logo />
-      <p class="ev-foot__motto">İyi iş kendini <em>izletir.</em></p>
+      {
+        en ? (
+          <p class="ev-foot__motto">Good work gets <em>watched.</em></p>
+        ) : (
+          <p class="ev-foot__motto">İyi iş kendini <em>izletir.</em></p>
+        )
+      }
     </div>
+    {
+      en ? (
+        <nav class="ev-foot__col" aria-label="Footer">
+          {EV_NAV_EN.map((n) => <a href={n.href}>{n.label}</a>)}
+          <a href="/en/tools/">Free tools</a>
+          <a href="/araclar/" hreflang="tr" lang="tr">Ücretsiz araçlar (Türkçe)</a>
+        </nav>
+      ) : (
     <nav class="ev-foot__col" aria-label="Alt gezinme">
       {EV_NAV.map((n) => <a href={n.href}>{n.label}</a>)}
       <a href="/sektorler/">Sektörler</a>
@@ -25,9 +41,12 @@ const year = new Date().getFullYear();
       <a href="/sozluk/">Sözlük</a>
       <a href="/cekim-planlayici/">Çekim planlayıcı</a>
       <a href="/araclar/">Araçlar</a>
+      <a href="/en/tools/" hreflang="en" lang="en">Free tools (English)</a>
     </nav>
+      )
+    }
     <div class="ev-foot__col">
-      <span>{CONTACT.city}</span>
+      <span>{en ? "Serdivan, Sakarya, Turkey" : CONTACT.city}</span>
       <a href={`tel:${CONTACT.phoneIntl}`}>{CONTACT.phone}</a>
       <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
     </div>

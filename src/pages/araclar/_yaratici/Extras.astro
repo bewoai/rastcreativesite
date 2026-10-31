@@ -18,28 +18,41 @@ interface Props {
   current: string;
   ctaTitle: string;
   checked?: string;
+  /** English twin pages (/en/tools/) pass lang="en". */
+  lang?: "tr" | "en";
 }
-const { faqs, pageUrl, linkText, attribution, current, ctaTitle, checked = "30 Ekim 2026" } = Astro.props;
+const { faqs, pageUrl, linkText, attribution, current, ctaTitle, lang = "tr" } = Astro.props;
+const en = lang === "en";
+const checked = Astro.props.checked ?? (en ? "30 October 2026" : "30 Ekim 2026");
 const citeHtml = `<a href="${pageUrl}">${linkText} — Rast Creative Studio</a>`;
 
 ---
 
 <Section width="default" space="tight" id="sss">
-  <SectionHeading eyebrow="SSS">Sık sorulan sorular</SectionHeading>
+  {en ? <SectionHeading eyebrow="FAQ">Frequently asked questions</SectionHeading> : <SectionHeading eyebrow="SSS">Sık sorulan sorular</SectionHeading>}
   <ToolFaq faqs={faqs} />
 </Section>
 
 <Section width="default" space="tight" id="kaynak-goster">
   <details class="at-fold">
-    <summary><h2>Bu aracı sitende kullan / kaynak göster</h2></summary>
+    <summary><h2>{en ? "Cite this tool / link to it" : "Bu aracı sitende kullan / kaynak göster"}</h2></summary>
     <div class="at-fold__body yt-box">
+    {
+      en ? (
+        <p>
+          Writing a tutorial, a course or a resource list? Copy the link below. When you use the downloaded templates, the
+          credit line is: <em>“{attribution}”</em>.
+        </p>
+      ) : (
     <p>
       Bir yazıda, eğitimde ya da kaynak listesinde bu sayfaya yer vermek isterseniz aşağıdaki bağlantıyı kopyalayabilirsiniz.
       İndirilen şablonları kullanırken atıf satırı: <em>“{attribution}”</em>.
     </p>
-    <label for="yt-cite" class="yt-small">HTML bağlantısı</label>
+      )
+    }
+    <label for="yt-cite" class="yt-small">{en ? "HTML link" : "HTML bağlantısı"}</label>
     <textarea id="yt-cite" readonly rows="2" data-cite>{citeHtml}</textarea>
-    <button type="button" class="ev-btn" data-copy-cite>Kopyala</button>
+    <button type="button" class="ev-btn" data-copy-cite data-done={en ? "Copied." : "Kopyalandı."}>{en ? "Copy" : "Kopyala"}</button>
     <span class="yt-small" data-copied aria-live="polite"></span>
   </div>
   </details>
@@ -47,13 +60,22 @@ const citeHtml = `<a href="${pageUrl}">${linkText} — Rast Creative Studio</a>`
 
 <Section width="default" space="tight" id="kaynaklar">
   <details class="at-fold">
-  <summary><h2>Kaynaklar ve notlar</h2></summary>
+  <summary><h2>{en ? "Sources and notes" : "Kaynaklar ve notlar"}</h2></summary>
   <div class="at-fold__body">
   <div class="yt-prose"><slot name="sources" /></div>
+  {
+    en ? (
+      <p class="yt-small">
+        Last checked: {checked}. Platform names are trademarks of their owners; this tool is not affiliated with any platform
+        and doesn't use their logos. UI drawings are illustrative; values can vary by device and app version.
+      </p>
+    ) : (
   <p class="yt-small">
     Son kontrol: {checked}. Platform adları sahiplerinin ticari markalarıdır; bu araç hiçbir platformla bağlantılı değildir ve
     logolarını kullanmaz. Arayüz çizimleri temsilidir, değerler cihaza ve uygulama sürümüne göre değişebilir.
   </p>
+    )
+  }
   </div>
   </details>
 </Section>
@@ -64,12 +86,13 @@ const citeHtml = `<a href="${pageUrl}">${linkText} — Rast Creative Studio</a>`
   <div class="yt-box">
     <h2>{ctaTitle}</h2>
     <p><slot name="cta" /></p>
-    <Button href={PRIMARY_CTA.href}>Görüşelim</Button>
+    {en ? <Button href="mailto:studio@rastcreative.com">Email the studio</Button> : <Button href={PRIMARY_CTA.href}>Görüşelim</Button>}
   </div>
 </Section>
 
 <script>
-  document.querySelector<HTMLButtonElement>("[data-copy-cite]")?.addEventListener("click", async () => {
+  const citeBtn = document.querySelector<HTMLButtonElement>("[data-copy-cite]");
+  citeBtn?.addEventListener("click", async () => {
     const ta = document.querySelector<HTMLTextAreaElement>("[data-cite]")!;
     const out = document.querySelector<HTMLElement>("[data-copied]")!;
     try {
@@ -78,6 +101,6 @@ const citeHtml = `<a href="${pageUrl}">${linkText} — Rast Creative Studio</a>`
       ta.select();
       document.execCommand("copy");
     }
-    out.textContent = "Kopyalandı.";
+    out.textContent = citeBtn.dataset.done ?? "Kopyalandı.";
   });
 </script>

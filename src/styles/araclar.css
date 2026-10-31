@@ -9,6 +9,40 @@
 .th {
   margin-bottom: clamp(1.4rem, 3vw, 2.2rem);
 }
+/* Breadcrumb row + "English / Türkçe" switch (tool pages with a twin, src/lib/i18n.ts). */
+.th__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1rem;
+}
+.th__top .th__crumbs {
+  margin-bottom: 0;
+}
+.th__lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 36px;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--ink);
+  font: 600 0.82rem/1 var(--font-utility);
+  text-decoration: none;
+}
+.th__lang span {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--amber-text);
+}
+.th__lang:hover,
+.th__lang:focus-visible {
+  border-color: var(--amber);
+}
 .th__crumbs {
   margin-bottom: 1rem;
   font-size: 0.88rem;

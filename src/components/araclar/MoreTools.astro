@@ -11,12 +11,13 @@ interface Props {
 }
 const { current, count = 4 } = Astro.props;
 const items = otherTools(current, count);
+const en = current.startsWith("/en/");
 ---
 
 <Section width="wide" space="tight" id="diger-araclar" class="at-more">
   <div class="at-more__head">
-    <h2>Diğer ücretsiz araçlar</h2>
-    <a href="/araclar/">Tümünü gör <span aria-hidden="true">→</span></a>
+    <h2>{en ? "More free tools" : "Diğer ücretsiz araçlar"}</h2>
+    <a href={en ? "/en/tools/" : "/araclar/"}>{en ? "See all" : "Tümünü gör"} <span aria-hidden="true">→</span></a>
   </div>
   <ul class="at-more__grid">
     {

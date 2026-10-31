@@ -5,7 +5,7 @@
  * (public/araclar/kartlar/<slug>.webp, 960×720 + 480w). Used on /araclar/ and in
  * the "Diğer ücretsiz araçlar" strip on every tool page.
  */
-import { TUR_LABEL, ctaLabel, type Arac } from "../../data/araclar";
+import { TUR_LABEL, TUR_LABEL_EN, ctaLabelFor, isDownload, type Arac } from "../../data/araclar";
 
 interface Props {
   item: Arac;
@@ -18,7 +18,10 @@ interface Props {
 }
 const { item, as: Tag = "h2", eager = false, sizes = "(min-width: 1180px) 370px, (min-width: 720px) 46vw, 92vw" } = Astro.props;
 const img = `/araclar/kartlar/${item.slug}`;
-const cta = ctaLabel(item.type);
+// English cards (/en/tools/) are detected from the item's href.
+const en = item.href.startsWith("/en/");
+const cta = ctaLabelFor(item.type, en ? "en" : "tr");
+const dl = isDownload(item.type);
 ---
 
 <a class="tc" href={item.href} data-type={item.type}>
@@ -29,24 +32,24 @@ const cta = ctaLabel(item.type);
       sizes={sizes}
       width="960"
       height="720"
-      alt={`${item.name}: önizleme`}
+      alt={`${item.name}: ${en ? "preview" : "önizleme"}`}
       loading={eager ? "eager" : "lazy"}
       decoding="async"
     />
-    <span class="tc__badge">{TUR_LABEL[item.type]}</span>
+    <span class="tc__badge">{(en ? TUR_LABEL_EN : TUR_LABEL)[item.type]}</span>
   </span>
   <span class="tc__body">
     <Tag class="tc__title">{item.title}</Tag>
     <span class="tc__benefit">{item.benefit}</span>
-    {item.plain && <span class="tc__plain"><b>Ne işe yarar?</b> {item.plain}</span>}
+    {item.plain && <span class="tc__plain"><b>{en ? "What is it for?" : "Ne işe yarar?"}</b> {item.plain}</span>}
     <span class="tc__chips">
       {item.chips.map((c) => <span>{c}</span>)}
     </span>
-    <span class:list={["tc__go", { "is-dl": cta === "İndir" }]} aria-hidden="true">
+    <span class:list={["tc__go", { "is-dl": dl }]} aria-hidden="true">
       {cta}
       <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
         {
-          cta === "İndir" ? (
+          dl ? (
             <path d="M8 2v9m0 0 3.5-3.5M8 11 4.5 7.5M3 14h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
           ) : (
             <path d="M3 8h10m0 0-4-4m4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />

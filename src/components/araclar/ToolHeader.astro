@@ -7,7 +7,8 @@
  * Pack/document pages can show the gallery preview on the right (preview).
  */
 import "../../styles/araclar.css";
-import { aracByHref, TUR_LABEL } from "../../data/araclar";
+import { aracByHref, TUR_LABEL, TUR_LABEL_EN } from "../../data/araclar";
+import { twinOf } from "../../lib/i18n";
 
 interface Props {
   href: string;
@@ -24,8 +25,15 @@ interface Props {
 }
 const p = Astro.props;
 const item = aracByHref(p.href);
-const cta = p.cta ?? { href: "#arac", label: item.type === "arac" ? "Aracı kullan" : "İndir" };
-const badge = `${TUR_LABEL[item.type]} · ${p.badgeExtra ?? "Ücretsiz · Kayıt yok"}`;
+// English twins live under /en/tools/ (src/lib/i18n.ts); same header, English labels.
+const en = p.href.startsWith("/en/");
+const twin = twinOf(p.href);
+const cta = p.cta ?? (en
+  ? { href: "#arac", label: item.type === "arac" ? "Use the tool" : "Download" }
+  : { href: "#arac", label: item.type === "arac" ? "Aracı kullan" : "İndir" });
+const badge = en
+  ? `${TUR_LABEL_EN[item.type]} · ${p.badgeExtra ?? "Free · No sign-up"}`
+  : `${TUR_LABEL[item.type]} · ${p.badgeExtra ?? "Ücretsiz · Kayıt yok"}`;
 const hasMore = Astro.slots.has("default");
 const img = `/araclar/kartlar/${item.slug}`;
 const preview = p.preview ?? true;
@@ -33,16 +41,34 @@ const isAnchor = (h: string) => h.startsWith("#");
 ---
 
 <header class:list={["th", { "th--media": preview, "th--tool": item.type === "arac" }]}>
-  <nav class="th__crumbs" aria-label="Sayfa yolu">
-    <a href="/">Ana sayfa</a> <span aria-hidden="true">/</span> <a href="/araclar/">Araçlar</a>
-    <span aria-hidden="true">/</span> <span aria-current="page">{p.crumb ?? item.title}</span>
-  </nav>
+  <div class="th__top">
+    {
+      en ? (
+        <nav class="th__crumbs" aria-label="Breadcrumb">
+          <a href="/">Rast Creative</a> <span aria-hidden="true">/</span> <a href="/en/tools/">Free tools</a>
+          <span aria-hidden="true">/</span> <span aria-current="page">{p.crumb ?? item.title}</span>
+        </nav>
+      ) : (
+        <nav class="th__crumbs" aria-label="Sayfa yolu">
+          <a href="/">Ana sayfa</a> <span aria-hidden="true">/</span> <a href="/araclar/">Araçlar</a>
+          <span aria-hidden="true">/</span> <span aria-current="page">{p.crumb ?? item.title}</span>
+        </nav>
+      )
+    }
+    {
+      twin && (
+        <a class="th__lang" href={twin} hreflang={en ? "tr" : "en"} lang={en ? "tr" : "en"}>
+          <span aria-hidden="true">{en ? "TR" : "EN"}</span> {en ? "Türkçe" : "English"}
+        </a>
+      )
+    }
+  </div>
   <div class="th__grid">
     <div class="th__text">
       <p class="th__badge"><span aria-hidden="true"></span>{badge}</p>
       <h1 class="th__title">{p.h1}</h1>
       <p class="th__purpose">{item.purpose}</p>
-      <ul class="th__chips" aria-label="Özellikler">
+      <ul class="th__chips" aria-label={en ? "Features" : "Özellikler"}>
         {item.chips.map((c) => <li>{c}</li>)}
       </ul>
       <div class="th__actions">
@@ -69,7 +95,7 @@ const isAnchor = (h: string) => h.startsWith("#");
       {
         hasMore && (
           <details class="th__more">
-            <summary>Ayrıntılar</summary>
+            <summary>{en ? "Details" : "Ayrıntılar"}</summary>
             <div class="th__moretext">
               <slot />
             </div>
@@ -86,7 +112,7 @@ const isAnchor = (h: string) => h.startsWith("#");
             sizes="(min-width: 1000px) 460px, 92vw"
             width="960"
             height="720"
-            alt={`${item.name}: önizleme`}
+            alt={`${item.name}: ${en ? "preview" : "önizleme"}`}
             loading={item.type === "arac" ? "lazy" : "eager"}
             fetchpriority={item.type === "arac" ? undefined : "high"}
             decoding="async"

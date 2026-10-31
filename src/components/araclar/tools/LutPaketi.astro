@@ -1,0 +1,848 @@
+---
+/**
+ * Free creative LUT pack (5 x 33^3 .cube) for Rec.709 footage.
+ * Files: public/araclar/lut-paketi/ (zip + before/after webp from our own BTS photos).
+ * LUTs are generated with numpy; pipeline: docs/sections/araclar-paketler.md. No prices.
+ */
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Section from "../../../components/Section.astro";
+import SectionHeading from "../../../components/SectionHeading.astro";
+import Button from "../../../components/Button.astro";
+import { PRIMARY_CTA, SITE } from "../../../consts";
+import { breadcrumb, faqPage } from "../../../lib/schema";
+import ToolHeader from "../../../components/araclar/ToolHeader.astro";
+import MoreTools from "../../../components/araclar/MoreTools.astro";
+import ToolFaq from "../../../components/araclar/ToolFaq.astro";
+
+const PATH = "/araclar/lut-paketi/";
+const PAGE_URL = new URL(PATH, SITE.url).href;
+const DIR = "/araclar/lut-paketi/";
+const ZIP = DIR + "rast-lut-pack.zip";
+const ZIP_MB = "1,9 MB";
+const title = "Ücretsiz LUT Paketi (.cube): Premiere, DaVinci";
+const description =
+  "Rast LUT Pack: 5 ücretsiz .cube LUT. Sıcak film, soğuk gece, doğal kontrast, soluk matte, altın saat. Rec.709 için, ten rengini korur, ticari kullanım serbest.";
+
+const LUTS = [
+  {
+    slug: "rast-sicak-film",
+    name: "Rast Sıcak Film",
+    frame: "kamera-roportaj",
+    alt: "AVM'de röportaj çekimi, kamera ekranında konuşan kişi",
+    text: "Yumuşak siyahlar, sıcak ışıklar, hafif film kontrastı. Röportaj, vlog ve iç mekân için güvenli bir başlangıç.",
+  },
+  {
+    slug: "rast-soguk-gece",
+    name: "Rast Soğuk Gece",
+    frame: "sokak-kadraj",
+    alt: "Akşamüstü sokakta kamera ekranında kadraj",
+    text: "Serin gölgeler, biraz düşük pozlama, nötre yakın beyazlar. Şehir, gece ve gerilimli sahneler için.",
+  },
+  {
+    slug: "rast-dogal-kontrast",
+    name: "Rast Doğal Kontrast",
+    frame: "etkinlik-sahne",
+    alt: "Açık havada konser sahnesini çeken kameraman",
+    text: "Nötr renk, biraz daha derin kontrast ve canlılık. Kurumsal, etkinlik ve ürün videolarında “düz” görüntüyü toparlar.",
+  },
+  {
+    slug: "rast-soluk-matte",
+    name: "Rast Soluk Matte",
+    frame: "ofis-isik-kurulumu",
+    alt: "Ofiste ışık kurulumu ve çekim hazırlığı",
+    text: "Kaldırılmış siyahlar, yumuşatılmış beyazlar, düşük doygunluk. Moda, lifestyle ve sakin anlatımlar için.",
+  },
+  {
+    slug: "rast-altin-saat-hafif",
+    name: "Rast Altın Saat Hafif",
+    frame: "etkinlik-sahne",
+    alt: "Açık havada konser sahnesini çeken kameraman",
+    text: "Gün batımı sıcaklığını abartmadan ekler; turuncu ve sarılar biraz zenginleşir, ten rengi yerinde kalır.",
+  },
+];
+
+const faqs = [
+  {
+    question: "Bu LUT'lar log (S-Log, V-Log, D-Log) görüntüde çalışır mı?",
+    answer:
+      "Doğrudan değil. Bunlar dönüşüm değil, yaratıcı (look) LUT'lardır ve normal Rec.709 görüntü için hesaplandı. Log çektiyseniz önce kameranızın üreticisinin Rec.709 dönüşüm LUT'unu ya da Resolve'daki renk alanı dönüşümünü uygulayın, Rast LUT'unu ondan sonraki adımda kullanın.",
+  },
+  {
+    question: "Premiere Pro'da LUT nasıl yüklenir?",
+    answer:
+      "Lumetri Renk panelinde Yaratıcı (Creative) bölümünü açın, Görünüm (Look) menüsünden Gözat'ı seçip .cube dosyasını gösterin. Yoğunluk (Intensity) kaydırıcısıyla gücünü ayarlayın; çoğu görüntüde %50–80 en doğal sonucu verir. Kalıcı olması için dosyaları Premiere'in LUTs/Creative klasörüne de kopyalayabilirsiniz.",
+  },
+  {
+    question: "DaVinci Resolve'da LUT nereye konur?",
+    answer:
+      "Proje Ayarları > Renk Yönetimi > LUT Klasörünü Aç ile klasörü açın, Rast klasörünü içine kopyalayın ve “LUT listesini güncelle”ye basın. Color sayfasında bir node'a sağ tıklayıp 3D LUT > Rast altından seçin. Gücünü azaltmak için LUT'u ayrı bir node'a koyup Key Output Gain'i düşürün.",
+  },
+  {
+    question: "CapCut ve Final Cut Pro'da kullanılabilir mi?",
+    answer:
+      "Evet. CapCut masaüstünde Ayarla (Adjust) > LUT bölümünden .cube dosyasını içe aktarın. Final Cut Pro'da Efektler > Renk > Özel LUT (Custom LUT) efektini klibe ekleyin ve LUT menüsünden “Özel LUT Seç” ile dosyayı gösterin.",
+  },
+  {
+    question: "Ten rengini bozar mı?",
+    answer:
+      "LUT'ları hesaplarken cilt tonu aralığındaki renk kaymasını sınırladık: kendi çekimlerimizdeki yüz ve kol bölgelerinde renk tonu 2 dereceden az kaydı. Yine de ışığı çok farklı (yeşil floresan, karışık ışık) görüntülerde önce beyaz dengesini düzeltin, LUT'u sonra uygulayın.",
+  },
+  {
+    question: "Ticari işlerde kullanabilir miyim?",
+    answer:
+      "Evet. LUT'lar CC BY 4.0 lisanslıdır: müşteri işleri, reklam ve sosyal medya videoları dahil kullanabilir, değiştirebilirsiniz. Tek şart atıf: “Renk LUT'u: Rast Creative Studio — rastcreative.com”. LUT dosyalarını olduğu gibi yeniden satmayın.",
+  },
+];
+
+const citeHtml = `<a href="${PAGE_URL}">Rast LUT Pack — Rast Creative</a>`;
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Araçlar", path: "/araclar/" },
+    { name: "LUT paketi", path: PATH },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    "@id": `${PAGE_URL}#paket`,
+    name: "Rast LUT Pack",
+    alternateName: "Ücretsiz .cube LUT paketi (Rec.709)",
+    url: PAGE_URL,
+    description,
+    inLanguage: "tr",
+    isAccessibleForFree: true,
+    encodingFormat: "application/zip",
+    license: "https://creativecommons.org/licenses/by/4.0/deed.tr",
+    creator: { "@id": `${SITE.url}#business` },
+    publisher: { "@id": `${SITE.url}#business` },
+    datePublished: "2026-10-31",
+    keywords: "lut, cube lut, ücretsiz lut, premiere lut, davinci resolve lut, capcut lut, renk düzenleme",
+    associatedMedia: {
+      "@type": "MediaObject",
+      name: "rast-lut-pack.zip",
+      contentUrl: new URL(ZIP, SITE.url).href,
+      encodingFormat: "application/zip",
+    },
+    hasPart: LUTS.map((l) => ({
+      "@type": "CreativeWork",
+      name: l.name,
+      description: l.text,
+      encodingFormat: "text/plain",
+      image: new URL(`${DIR}sonra-${l.slug}.webp`, SITE.url).href,
+    })),
+  },
+  faqPage(faqs),
+];
+
+// ---------- English twin (/en/tools/free-lut-pack/, src/lib/i18n.ts) ----------
+interface Props {
+  lang?: "tr" | "en";
+}
+const { lang = "tr" } = Astro.props;
+const en = lang === "en";
+const EN_PATH = "/en/tools/free-lut-pack/";
+const EN_URL = new URL(EN_PATH, SITE.url).href;
+const ZIP_MB_EN = ZIP_MB.replace(",", ".");
+const LUT_EN: Record<string, { name: string; alt: string; text: string }> = {
+  "rast-sicak-film": { name: "Rast Warm Film", alt: "Interview shoot in a mall, person talking on the camera monitor", text: "Soft blacks, warm highlights, a touch of film contrast. A safe starting point for interviews, vlogs and interiors." },
+  "rast-soguk-gece": { name: "Rast Cool Night", alt: "Framing a street scene at dusk on the camera monitor", text: "Cool shadows, slightly lower exposure, near-neutral whites. For city, night and tense scenes." },
+  "rast-dogal-kontrast": { name: "Rast Natural Contrast", alt: "Camera operator filming an outdoor concert stage", text: "Neutral color with a bit more depth and vibrance. Lifts “flat” footage in corporate, event and product videos." },
+  "rast-soluk-matte": { name: "Rast Faded Matte", alt: "Lighting setup and shoot prep in an office", text: "Lifted blacks, softened whites, lower saturation. For fashion, lifestyle and calm storytelling." },
+  "rast-altin-saat-hafif": { name: "Rast Subtle Golden Hour", alt: "Camera operator filming an outdoor concert stage", text: "Adds sunset warmth without overdoing it; oranges and yellows get richer while skin tones stay put." },
+};
+const LUTS_VIEW = en ? LUTS.map((l) => ({ ...l, ...(LUT_EN[l.slug] ?? {}) })) : LUTS;
+const enTitle = "Free LUT Pack (.cube) for Premiere Pro, DaVinci, CapCut";
+const enDescription =
+  "Rast LUT Pack: 5 free .cube LUTs for Rec.709 footage. Warm film, cool night, natural contrast, faded matte, golden hour. Skin-tone safe, commercial use allowed.";
+const enFaqs = [
+  {
+    question: "Do these LUTs work on log footage (S-Log, V-Log, D-Log)?",
+    answer:
+      "Not directly. These are creative (look) LUTs, not conversion LUTs, built for normal Rec.709 footage. If you shot log, first apply your camera maker's Rec.709 conversion LUT or a color space transform in Resolve, then add the Rast LUT as the next step.",
+  },
+  {
+    question: "How do I load a LUT in Premiere Pro?",
+    answer:
+      "Open the Creative section of the Lumetri Color panel, choose Browse in the Look menu and select the .cube file. Set the strength with the Intensity slider; 50–80% looks most natural on most footage. To keep the LUTs available, you can also copy the files into Premiere's LUTs/Creative folder.",
+  },
+  {
+    question: "Where do LUTs go in DaVinci Resolve?",
+    answer:
+      "Go to Project Settings > Color Management > Open LUT Folder, copy the Rast folder inside and click “Update Lists”. On the Color page, right-click a node and pick 3D LUT > Rast. To reduce the strength, put the LUT on its own node and lower Key Output Gain.",
+  },
+  {
+    question: "Can I use them in CapCut and Final Cut Pro?",
+    answer:
+      "Yes. In CapCut desktop, import the .cube file under Adjust > LUT. In Final Cut Pro, add the Effects > Color > Custom LUT effect to the clip and choose “Choose Custom LUT…” in the LUT menu.",
+  },
+  {
+    question: "Will they ruin skin tones?",
+    answer:
+      "We limited the hue shift in the skin-tone range when building the LUTs: on faces and arms in our own footage the hue moved by less than 2 degrees. With very different light (green fluorescents, mixed light) fix the white balance first, then apply the LUT.",
+  },
+  {
+    question: "Can I use them for commercial work?",
+    answer:
+      "Yes. The LUTs are licensed CC BY 4.0: use and modify them in client work, ads and social media videos. The only condition is credit: “Color LUT: Rast Creative Studio — rastcreative.com”. Don't resell the LUT files as they are.",
+  },
+];
+const enCiteHtml = `<a href="${EN_URL}">Rast LUT Pack (free .cube LUTs) — Rast Creative</a>`;
+const enJsonLd = [
+  breadcrumb([
+    { name: "Rast Creative", path: "/" },
+    { name: "Free tools", path: "/en/tools/" },
+    { name: "Free LUT pack", path: EN_PATH },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    "@id": `${EN_URL}#pack`,
+    name: "Rast LUT Pack",
+    alternateName: "Free .cube LUT pack (Rec.709)",
+    url: EN_URL,
+    description: enDescription,
+    inLanguage: "en",
+    isAccessibleForFree: true,
+    encodingFormat: "application/zip",
+    license: "https://creativecommons.org/licenses/by/4.0/",
+    creator: { "@id": `${SITE.url}#business` },
+    publisher: { "@id": `${SITE.url}#business` },
+    datePublished: "2026-10-31",
+    keywords: "free luts, cube lut, premiere pro lut, davinci resolve lut, capcut lut, color grading",
+    associatedMedia: {
+      "@type": "MediaObject",
+      name: "rast-lut-pack.zip",
+      contentUrl: new URL(ZIP, SITE.url).href,
+      encodingFormat: "application/zip",
+    },
+  },
+  faqPage(enFaqs),
+];
+
+---
+
+<BaseLayout title={en ? enTitle : title} description={en ? enDescription : description} jsonLd={en ? enJsonLd : jsonLd}>
+{
+  en ? (
+    <Fragment>
+  <Section width="wide" space="tight">
+    <ToolHeader
+      href={EN_PATH}
+      h1="Free LUT pack: 5 .cube LUTs for Rec.709 footage"
+      cta={{ href: ZIP, label: `Download the pack (ZIP, ${ZIP_MB_EN})`, download: true }}
+      cta2={{ href: "#onizleme", label: "Before / after" }}
+      preview
+      badgeExtra="Free · CC BY 4.0"
+    >
+      <p>
+        Five creative LUTs that give normal (Rec.709) phone or camera footage a consistent look in one step. Not heavy filters:
+        all of them are subtle and built to protect skin tones. The comparisons below are from our own shoots; drag the slider
+        to see before and after.
+      </p>
+    </ToolHeader>
+
+    <div class="facts">
+      <ul>
+        <li><strong>5 LUTs</strong> · .cube · 33×33×33</li>
+        <li>For <strong>Rec.709</strong> footage (not a log conversion)</li>
+        <li><strong>Premiere, DaVinci, Final Cut, CapCut</strong></li>
+        <li><strong>License:</strong> CC BY 4.0</li>
+      </ul>
+    </div>
+  </Section>
+    </Fragment>
+  ) : (
+    <Fragment>
+  <Section width="wide" space="tight">
+    <ToolHeader
+      href="/araclar/lut-paketi/"
+      h1="Rast LUT Pack: Rec.709 görüntü için 5 ücretsiz LUT"
+      cta={{ href: ZIP, label: `Paketi indir (ZIP, ${ZIP_MB})`, download: true }}
+      cta2={{ href: "#onizleme", label: "Önce / sonra" }}
+      preview
+      badgeExtra="Ücretsiz · CC BY 4.0"
+    >
+        <p>
+          Telefon ya da kamerayla normal (Rec.709) çektiğiniz görüntüye tek adımda tutarlı bir görünüm veren beş yaratıcı LUT.
+          Sert filtreler değil: hepsi abartısız, ten rengini koruyacak şekilde hesaplandı. Aşağıdaki karşılaştırmalar kendi
+          çekimlerimizden; kaydırıcıyı sürükleyip önce/sonra farkını görebilirsiniz.
+        </p>
+      
+    </ToolHeader>
+
+    <div class="facts">
+      <ul>
+        <li><strong>5 LUT</strong> · .cube · 33×33×33</li>
+        <li><strong>Rec.709</strong> görüntü için (log dönüşümü değil)</li>
+        <li><strong>Premiere, DaVinci, Final Cut, CapCut</strong></li>
+        <li><strong>Lisans:</strong> CC BY 4.0</li>
+      </ul>
+    </div>
+  </Section>
+    </Fragment>
+  )
+}
+
+  {
+  en ? (
+    <Fragment>
+  <Section width="wide" space="tight" id="onizleme">
+    <SectionHeading eyebrow="Before / after">See the LUTs on our own footage</SectionHeading>
+    <div class="luts">
+      {
+        LUTS_VIEW.map((l, i) => (
+          <article class="lut" id={l.slug}>
+            <figure class="ba" style="--pos: 50%">
+              <img
+                src={`${DIR}once-${l.frame}.webp`}
+                alt={`${l.alt}, before the LUT`}
+                width="1200"
+                height="676"
+                loading={i === 0 ? "eager" : "lazy"}
+                decoding="async"
+              />
+              <img
+                class="ba__after"
+                src={`${DIR}sonra-${l.slug}.webp`}
+                alt={`${l.alt}, after the ${l.name} LUT`}
+                width="1200"
+                height="676"
+                loading={i === 0 ? "eager" : "lazy"}
+                decoding="async"
+              />
+              <span class="ba__tag ba__tag--l" aria-hidden="true">Before</span>
+              <span class="ba__tag ba__tag--r" aria-hidden="true">After</span>
+              <span class="ba__line" aria-hidden="true" />
+              <input type="range" min="0" max="100" value="50" aria-label={`${l.name}: before/after comparison slider`} />
+            </figure>
+            <div class="lut__txt">
+              <h3>{l.name}</h3>
+              <p>{l.text}</p>
+              <code>{l.slug}.cube</code>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+    <p class="dl">
+      <a class="ev-btn ev-btn--sun" href={ZIP} download>All 5 LUTs (ZIP, {ZIP_MB_EN})</a>
+    </p>
+  </Section>
+    </Fragment>
+  ) : (
+    <Fragment>
+<Section width="wide" space="tight" id="onizleme">
+    <SectionHeading eyebrow="Önce / sonra">LUT'ları kendi çekimlerimizde görün</SectionHeading>
+    <div class="luts">
+      {
+        LUTS.map((l, i) => (
+          <article class="lut" id={l.slug}>
+            <figure class="ba" style="--pos: 50%">
+              <img
+                src={`${DIR}once-${l.frame}.webp`}
+                alt={`${l.alt}, LUT uygulanmadan önce`}
+                width="1200"
+                height="676"
+                loading={i === 0 ? "eager" : "lazy"}
+                decoding="async"
+              />
+              <img
+                class="ba__after"
+                src={`${DIR}sonra-${l.slug}.webp`}
+                alt={`${l.alt}, ${l.name} LUT uygulandıktan sonra`}
+                width="1200"
+                height="676"
+                loading={i === 0 ? "eager" : "lazy"}
+                decoding="async"
+              />
+              <span class="ba__tag ba__tag--l" aria-hidden="true">Önce</span>
+              <span class="ba__tag ba__tag--r" aria-hidden="true">Sonra</span>
+              <span class="ba__line" aria-hidden="true" />
+              <input type="range" min="0" max="100" value="50" aria-label={`${l.name}: önce/sonra karşılaştırma kaydırıcısı`} />
+            </figure>
+            <div class="lut__txt">
+              <h3>{l.name}</h3>
+              <p>{l.text}</p>
+              <code>{l.slug}.cube</code>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+    <p class="dl">
+      <a class="ev-btn ev-btn--sun" href={ZIP} download>5 LUT'un hepsi (ZIP, {ZIP_MB})</a>
+    </p>
+  </Section>
+    </Fragment>
+  )
+}
+
+  {
+  en ? (
+    <Fragment>
+  <Section width="default" space="tight" id="kurulum">
+    <SectionHeading eyebrow="Install">How to add the LUTs to your editor</SectionHeading>
+    <div class="howto">
+      <div>
+        <h3>Premiere Pro</h3>
+        <p>Lumetri Color &gt; <strong>Creative</strong> &gt; <strong>Look</strong> &gt; Browse… &gt; the .cube file. Try 50–80% on the Intensity slider. Set exposure and white balance in Basic Correction first.</p>
+      </div>
+      <div>
+        <h3>DaVinci Resolve</h3>
+        <p>Project Settings &gt; Color Management &gt; <strong>Open LUT Folder</strong>; copy the folder in and click “Update Lists”. On the Color page, right-click a node &gt; 3D LUT &gt; Rast. Put the LUT on the node after your correction node.</p>
+      </div>
+      <div>
+        <h3>Final Cut Pro</h3>
+        <p>Drag the Effects &gt; Color &gt; <strong>Custom LUT</strong> effect onto the clip, then in the Inspector choose LUT &gt; “Choose Custom LUT…” and select the .cube file. Lower the strength with Mix.</p>
+      </div>
+      <div>
+        <h3>CapCut (desktop)</h3>
+        <p>Select the clip, go to <strong>Adjust</strong> &gt; LUT &gt; Import and add the .cube file; set the intensity with the slider. .cube support in the mobile app depends on the version.</p>
+      </div>
+    </div>
+    <ul class="tips">
+      <li><strong>Order matters:</strong> exposure and white balance first, then the LUT. A LUT won't fix bad footage; it gives good footage character.</li>
+      <li><strong>Shot in log?</strong> Apply your camera's Rec.709 conversion first, then the Rast LUT.</li>
+      <li><strong>Consistency:</strong> pick one LUT per video and use the same intensity on every clip; even out scenes with small exposure tweaks.</li>
+      <li><strong>Export:</strong> export in Rec.709 / sRGB so the grade looks the same on phones.</li>
+    </ul>
+    <p>
+      Want to polish the sound too? Try the <a href="/en/tools/free-sound-effects-pack/">free SFX pack</a>; for text placement on
+      vertical video, the <a href="/en/tools/reels-safe-zone-checker/">safe zone checker</a>. To export without wrecking the
+      grade, check the <a href="/en/tools/video-bitrate-calculator/">video bitrate calculator</a>.
+    </p>
+    <p class="small">The .cube files keep their original Turkish file names: rast-sicak-film = Warm Film, rast-soguk-gece = Cool Night, rast-dogal-kontrast = Natural Contrast, rast-soluk-matte = Faded Matte, rast-altin-saat-hafif = Subtle Golden Hour.</p>
+  </Section>
+    </Fragment>
+  ) : (
+    <Fragment>
+<Section width="default" space="tight" id="kurulum">
+    <SectionHeading eyebrow="Kurulum">Programınıza nasıl eklenir?</SectionHeading>
+    <div class="howto">
+      <div>
+        <h3>Premiere Pro</h3>
+        <p>Lumetri Renk &gt; <strong>Yaratıcı (Creative)</strong> &gt; <strong>Görünüm (Look)</strong> &gt; Gözat… &gt; .cube dosyası. Yoğunluk kaydırıcısıyla %50–80 arası deneyin. Önce Temel Düzeltme'de pozlama ve beyaz dengesini oturtun.</p>
+      </div>
+      <div>
+        <h3>DaVinci Resolve</h3>
+        <p>Proje Ayarları &gt; Renk Yönetimi &gt; <strong>LUT Klasörünü Aç</strong>; klasörü kopyalayın, “LUT listesini güncelle”. Color sayfasında node'a sağ tık &gt; 3D LUT &gt; Rast. LUT'u düzeltme node'undan sonraki node'a koyun.</p>
+      </div>
+      <div>
+        <h3>Final Cut Pro</h3>
+        <p>Efektler &gt; Renk &gt; <strong>Özel LUT (Custom LUT)</strong> efektini klibe sürükleyin, Denetçi'de LUT &gt; “Özel LUT Seç…” ile .cube dosyasını gösterin. Mix ile gücünü azaltın.</p>
+      </div>
+      <div>
+        <h3>CapCut (masaüstü)</h3>
+        <p>Klibi seçin, <strong>Ayarla (Adjust)</strong> &gt; LUT &gt; İçe aktar ile .cube dosyasını ekleyin; yoğunluğu kaydırıcıyla ayarlayın. Mobil uygulamada .cube desteği sürüme göre değişebilir.</p>
+      </div>
+    </div>
+    <ul class="tips">
+      <li><strong>Sıra önemli:</strong> önce pozlama ve beyaz dengesi, sonra LUT. LUT bozuk bir görüntüyü düzeltmez, iyi bir görüntüye karakter verir.</li>
+      <li><strong>Log çektiyseniz:</strong> önce kameranızın Rec.709 dönüşümü, sonra Rast LUT'u.</li>
+      <li><strong>Tutarlılık:</strong> bir videoda tek LUT seçin ve tüm kliplere aynı yoğunlukta uygulayın; farkı sahneler arası küçük pozlama ayarlarıyla kapatın.</li>
+      <li><strong>Dışa aktarma:</strong> renk farkının telefonda da aynı görünmesi için Rec.709 / sRGB ile dışa aktarın.</li>
+    </ul>
+    <p>
+      Videonun sesini de toparlamak isterseniz <a href="/araclar/sfx-paketi/">ücretsiz SFX paketimiz</a>, dikey videoda metin yerleşimi için
+      <a href="/araclar/guvenli-alan/">güvenli alan kontrolü</a> işinize yarar. Rengi bozmadan dışa aktarmak için
+      <a href="/rehber/video-export-ayarlari/">video export ayarları rehberine</a> ve
+      <a href="/araclar/bitrate-hesaplayici/">bitrate hesaplayıcıya</a>, kapak için
+      <a href="/araclar/kapak-sablonlari/">kapak şablonlarına</a> bakabilirsiniz.
+    </p>
+  </Section>
+    </Fragment>
+  )
+}
+
+  {
+  en ? (
+    <Fragment>
+  <Section width="default" space="tight" id="sss">
+    <SectionHeading eyebrow="FAQ">Frequently asked questions</SectionHeading>
+    <ToolFaq faqs={enFaqs} />
+  </Section>
+    </Fragment>
+  ) : (
+    <Fragment>
+<Section width="default" space="tight" id="sss">
+    <SectionHeading eyebrow="SSS">Sık sorulan sorular</SectionHeading>
+    <ToolFaq faqs={faqs} />
+  </Section>
+    </Fragment>
+  )
+}
+
+  {
+  en ? (
+    <Fragment>
+  <Section width="default" space="tight" id="lisans">
+    <SectionHeading eyebrow="License">CC BY 4.0</SectionHeading>
+    <p>
+      Rast LUT Pack is licensed <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener" target="_blank">CC BY 4.0</a>.
+      Use it in client work and ads, and modify the LUTs to build your own look. The only condition is credit:
+      <em>“Color LUT: Rast Creative Studio — rastcreative.com”</em> (in the video description or credits). The LUTs were generated
+      mathematically by Rast Creative; the preview frames are our own behind-the-scenes footage.
+    </p>
+  </Section>
+    </Fragment>
+  ) : (
+    <Fragment>
+<Section width="default" space="tight" id="lisans">
+    <SectionHeading eyebrow="Lisans">CC BY 4.0</SectionHeading>
+    <p>
+      Rast LUT Pack <a href="https://creativecommons.org/licenses/by/4.0/deed.tr" rel="license noopener" target="_blank">CC BY 4.0</a>
+      lisanslıdır. Müşteri işleri ve reklamlar dahil kullanabilir, LUT'ları değiştirip kendi görünümünüzü türetebilirsiniz. Tek şart
+      atıf: <em>“Renk LUT'u: Rast Creative Studio — rastcreative.com”</em> (video açıklamasında ya da künyede). LUT'lar Rast Creative
+      tarafından matematiksel olarak üretildi; önizleme kareleri kendi kamera arkası çekimlerimizdir.
+    </p>
+  </Section>
+    </Fragment>
+  )
+}
+
+  {
+  en ? (
+    <Fragment>
+  <Section width="default" space="tight" id="kaynak-goster">
+    <details class="at-fold">
+      <summary><h2>Cite this pack / link to it</h2></summary>
+      <div class="at-fold__body cite">
+      <p>Writing a tutorial, a course or a resource list? Copy the link below.</p>
+      <label for="cite-code" class="small">HTML link</label>
+      <textarea id="cite-code" readonly rows="2" data-cite>{enCiteHtml}</textarea>
+      <button type="button" class="ev-btn" data-copy data-done="Copied.">Copy</button>
+      <span class="small" data-copied aria-live="polite"></span>
+    </div>
+    </details>
+  </Section>
+    </Fragment>
+  ) : (
+    <Fragment>
+<Section width="default" space="tight" id="kaynak-goster">
+    <details class="at-fold">
+      <summary><h2>Kaynak göster</h2></summary>
+      <div class="at-fold__body cite">
+      <p>
+        Bir yazıda, eğitimde ya da kaynak listesinde bu pakete yer vermek isterseniz aşağıdaki bağlantıyı kopyalayabilirsiniz.
+      </p>
+      <label for="cite-code" class="small">HTML bağlantısı</label>
+      <textarea id="cite-code" readonly rows="2" data-cite>{citeHtml}</textarea>
+      <button type="button" class="ev-btn" data-copy>Kopyala</button>
+      <span class="small" data-copied aria-live="polite"></span>
+    </div>
+    </details>
+  </Section>
+    </Fragment>
+  )
+}
+
+{
+  !en && (
+  <Section width="default" space="tight">
+    <details class="at-fold" lang="en">
+      <summary><h2>In English: free creative LUT pack</h2></summary>
+      <div class="at-fold__body en">
+      <p>
+        Rast LUT Pack is a free set of five 33³ .cube creative LUTs for Rec.709 footage (not a log conversion): Warm Film, Cool Night,
+        Natural Contrast, Faded Matte and Subtle Golden Hour. Subtle and skin-safe, tested on our own footage. Works in Premiere Pro
+        (Lumetri › Creative › Look), DaVinci Resolve, Final Cut Pro and CapCut. CC BY 4.0 — credit “Rast Creative Studio —
+        rastcreative.com”. Commercial use allowed; please don't resell the files.
+        <a href={EN_PATH} hreflang="en">Open the English page</a>.
+      </p>
+    </div>
+    </details>
+  </Section>
+  )
+}
+
+  <MoreTools current={en ? EN_PATH : "/araclar/lut-paketi/"} />
+
+{
+  en ? (
+    <Fragment>
+  <Section width="default" space="tight">
+    <div class="cta">
+      <h2>Color, edit and shoot from one studio</h2>
+      <p>
+        Rast Creative Studio is a video production studio in Sakarya, Turkey. We produce videos end to end, from the shoot to
+        the color grade. Tell us about your brand film, ad or social content, in English or Turkish.
+      </p>
+      <Button href="mailto:studio@rastcreative.com">Email the studio</Button>
+    </div>
+  </Section>
+    </Fragment>
+  ) : (
+    <Fragment>
+  <Section width="default" space="tight">
+    <div class="cta">
+      <h2>Renk, kurgu ve çekim tek elden</h2>
+      <p>
+        Rast Creative Studio, videolarını çekimden renk düzenlemeye kadar baştan sona üretir. Markanız için
+        <a href="/tanitim-filmi/">tanıtım filmi</a>, <a href="/reklam-filmi/">reklam filmi</a> ya da düzenli
+        <a href="/sosyal-medya-icerigi/">sosyal medya içeriği</a> sayfalarına bakabilirsiniz.
+      </p>
+      <Button href={PRIMARY_CTA.href}>Görüşelim</Button>
+    </div>
+  </Section>
+    </Fragment>
+  )
+}
+</BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLElement>(".ba").forEach((fig) => {
+    const r = fig.querySelector<HTMLInputElement>("input[type=range]")!;
+    const set = () => fig.style.setProperty("--pos", `${r.value}%`);
+    r.addEventListener("input", set);
+    set();
+  });
+  const copyBtn = document.querySelector<HTMLButtonElement>("[data-copy]");
+  copyBtn?.addEventListener("click", async () => {
+    const ta = document.querySelector<HTMLTextAreaElement>("[data-cite]")!;
+    const out = document.querySelector<HTMLElement>("[data-copied]")!;
+    try {
+      await navigator.clipboard.writeText(ta.value);
+    } catch {
+      ta.select();
+      document.execCommand("copy");
+    }
+    out.textContent = copyBtn.dataset.done ?? "Kopyalandı.";
+  });
+</script>
+
+<style>
+  .crumbs {
+    margin-bottom: 1.2rem;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .crumbs a {
+    color: var(--amber-text);
+  }
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 1.6rem;
+    margin-top: 1.6rem;
+    padding: clamp(1rem, 2.5vw, 1.4rem);
+    border: 1px solid var(--line);
+    border-radius: 1.2rem;
+    background: color-mix(in srgb, var(--paper) 82%, transparent);
+  }
+  .facts ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.4rem;
+    color: var(--ink-soft);
+  }
+  .facts strong {
+    color: var(--ink);
+  }
+  .small {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .luts {
+    display: grid;
+    gap: 1.6rem;
+    margin-top: 1.2rem;
+  }
+  .lut {
+    display: grid;
+    gap: 1rem;
+    padding: clamp(0.8rem, 2vw, 1.2rem);
+    border: 1px solid var(--line);
+    border-radius: 1.2rem;
+    background: color-mix(in srgb, var(--paper) 82%, transparent);
+  }
+  @media (min-width: 900px) {
+    .lut {
+      grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
+      align-items: center;
+    }
+  }
+  .ba {
+    position: relative;
+    margin: 0;
+    aspect-ratio: 1200 / 676;
+    overflow: hidden;
+    border-radius: 0.9rem;
+    background: #111;
+    user-select: none;
+  }
+  .ba img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .ba__after {
+    clip-path: inset(0 0 0 var(--pos));
+  }
+  .ba__line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--pos);
+    width: 2px;
+    margin-left: -1px;
+    background: #fff;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+  }
+  .ba__line::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    margin: -15px 0 0 -15px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    background: rgba(0, 0, 0, 0.35);
+  }
+  .ba__tag {
+    position: absolute;
+    top: 0.6rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 600;
+    pointer-events: none;
+  }
+  .ba__tag--l {
+    left: 0.6rem;
+  }
+  .ba__tag--r {
+    right: 0.6rem;
+  }
+  .ba input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: ew-resize;
+  }
+  .ba input:focus-visible ~ .ba__line,
+  .ba:has(input:focus-visible) .ba__line {
+    background: var(--amber);
+  }
+  .lut__txt {
+    display: grid;
+    gap: 0.5rem;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .lut__txt h3,
+  .howto h3 {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    color: var(--ink);
+  }
+  .lut__txt code {
+    font-size: 0.8rem;
+  }
+  .dl {
+    margin-top: 1.4rem;
+  }
+  .howto {
+    display: grid;
+    gap: 1rem;
+    margin: 1.2rem 0;
+  }
+  @media (min-width: 760px) {
+    .howto {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .howto > div {
+    display: grid;
+    gap: 0.4rem;
+    padding: 1.1rem;
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .howto strong,
+  .tips strong {
+    color: var(--ink);
+  }
+  .tips {
+    display: grid;
+    gap: 0.8rem;
+    margin: 1.2rem 0;
+    padding-left: 1.2rem;
+    list-style: disc;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  #kurulum > p,
+  #lisans p {
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  #kurulum a,
+  #lisans a,
+  .cta a:not(.ev-btn, .btn) {
+    color: var(--amber-text);
+  }
+  .faq {
+    display: grid;
+    gap: 1.2rem;
+    margin-top: 1.2rem;
+  }
+  .faq dt {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .faq dd {
+    margin: 0.3rem 0 0;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .cite,
+  .cta,
+  .en {
+    display: grid;
+    gap: 0.8rem;
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+    border: 1px solid var(--line);
+    border-radius: 1.2rem;
+    background: color-mix(in srgb, var(--paper) 80%, transparent);
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .cite h2,
+  .cta h2,
+  .en h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.7rem);
+    color: var(--ink);
+  }
+  .cite textarea {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 0.6rem;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: ui-monospace, monospace;
+    font-size: 0.85rem;
+    resize: none;
+  }
+  .cite .ev-btn,
+  .cta :global(a) {
+    justify-self: start;
+  }
+</style>

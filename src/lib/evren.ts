@@ -35,6 +35,16 @@ export const EV_NAV_EXTRA = [
   { label: "Ücretsiz araçlar", href: "/araclar/" },
 ] as const;
 
+/** English labels for the /en/tools/ pages (links stay on the Turkish pages). */
+export const EV_NAV_EN = [
+  { label: "Home", href: "/" },
+  { label: "Work", href: "/projeler/" },
+  { label: "Services", href: "/hizmetler/" },
+  { label: "About", href: "/hakkimizda/" },
+  { label: "Contact", href: "/iletisim/" },
+] as const;
+export const EV_NAV_EXTRA_EN = [{ label: "Free tools", href: "/en/tools/" }] as const;
+
 /** The one lead CTA: short, confident, the same wording everywhere. */
 export const EV_CTA = "Görüşelim";
 

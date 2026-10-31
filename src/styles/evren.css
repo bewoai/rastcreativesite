@@ -623,6 +623,10 @@ body:has(.ev) {
     padding-inline: 0.85rem;
   }
 }
+/* Two-word labels ("Let's talk" on /en/ pages) must not wrap in the bar. */
+.ev-head__cta {
+  white-space: nowrap;
+}
 
 /* Phone bottom contact bar (WhatsApp | Ara). */
 .ev-callbar {
