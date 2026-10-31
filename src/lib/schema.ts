@@ -3,7 +3,7 @@
  * Target: "Sakarya video prodüksiyon ajansı" and related local queries.
  * Only facts we actually have are emitted — no invented address/hours/geo.
  */
-import { SITE, CONTACT, SOCIAL } from "../consts";
+import { SITE, CONTACT, SOCIAL, SAME_AS_EXTRA } from "../consts";
 import { TEAM, getTeamMember } from "../data/team";
 
 const abs = (path: string) => new URL(path, SITE.url).href;
@@ -106,7 +106,7 @@ export const localBusiness = {
     })),
   },
   hasMap: CONTACT.googleProfile,
-  sameAs: [...SOCIAL.map((s) => s.href), CONTACT.googleProfile],
+  sameAs: [...SOCIAL.map((s) => s.href), CONTACT.googleProfile, ...SAME_AS_EXTRA],
 };
 
 /** Organization identity node for GEO / entity recognition. */
@@ -129,7 +129,7 @@ export const organization = {
     addressRegion: CONTACT.addressRegion,
     addressCountry: CONTACT.addressCountry,
   },
-  sameAs: [...SOCIAL.map((s) => s.href), CONTACT.googleProfile],
+  sameAs: [...SOCIAL.map((s) => s.href), CONTACT.googleProfile, ...SAME_AS_EXTRA],
   foundingDate: SITE.foundingDate,
   founder: TEAM.map((m) => ({
     "@type": "Person",

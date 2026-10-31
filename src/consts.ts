@@ -80,6 +80,14 @@ export const SOCIAL: readonly NavItem[] = [
 ];
 
 /**
+ * Extra entity profiles for schema `sameAs` only (no footer icon), e.g. directory
+ * profiles. Social accounts with an icon go in SOCIAL above.
+ */
+export const SAME_AS_EXTRA: readonly string[] = [
+  "https://www.crunchbase.com/organization/rast-creative-studio",
+];
+
+/**
  * Contact details (provided by the client, 2026-06-13; company phone changed 2026-10-19).
  * `whatsapp` is digits only, international format (TR +90, no leading 0).
  */
