@@ -14,6 +14,10 @@ Bağlantı kazandırmak için ücretsiz indirilebilir paketler. Fiyat yok, kayı
 - LUT'lar numpy ile hesaplandı (`~/.hermes/cache/scratch/lutpack/make_luts.py`): Rec.709 yaratıcı görünüm, log dönüşümü değil; cilt tonu maskesiyle renk kayması sınırlı (ölçüm: cilt tonu kayması < 2°). Önizleme kareleri yalnızca kendi kamera arkası fotoğraflarımız (`src/assets/photos/bts/`); müşteri görüntüsü kullanılmaz.
 - Doğrulama: ffmpeg `lut3d=…:interp=tetrahedral` ile uygulanıyor; başlık `LUT_3D_SIZE 33`, değerler 0–1.
 
+## İngilizce README (2026-10-31)
+- İki zip'te de `README.txt` (İngilizce, /en/tools/ sayfası için) var; OKU-BENI.txt Türkçe kopya olarak kalır. Kaynak metinler repo'da: `scripts/paketler/README-sfx-en.txt`, `README-lut-en.txt` (CRLF).
+- Üretim scriptleri scratch'ten silindiği için zip yeniden kurulmaz, dosya eklenir: geçici klasörde `<Kök-Klasör>/README.txt` (SFX: `Rast-SFX-Pack-Vol1/`, LUT: `Rast-LUT-Pack/`) oluştur, `zip -9 -X public/araclar/<paket>/<zip> <Kök-Klasör>/README.txt`, sonra `unzip -tq` + `unzip -l`. Boyut ≤25 MB (SFX ~9,5 MB, LUT ~1,9 MB); sayfadaki `ZIP_MB` değişmezse dokunma.
+
 ## İç linkler
 - İki sayfa birbirine ve `/araclar/guvenli-alan/`a link verir; CTA'lar hizmet sayfalarına (/sosyal-medya-icerigi/, /reklam-filmi/, /video-cekimi/, /tanitim-filmi/).
 - `/araclar/` dizinine, footer'a ve llms.txt'ye kart/link eklemek ayrı iş (paylaşılan dosyalar; bu commit'te dokunulmadı).

@@ -246,6 +246,8 @@ const STR = en
       codec: "The video couldn't be opened. Your browser may not support this codec (e.g. some HEVC .mov files); try an MP4 (H.264).",
       combinedNote: "Combined: the largest top, bottom and side margins of all four platforms. If one video goes everywhere, put your text here.",
       combinedLabel: "All platforms (combined safe zone)",
+      // English sample frame (English hook + caption); TR keeps rast-ornek-kare-1080x1920.jpg
+      sampleFrame: "/araclar/guvenli-alan/rast-sample-frame-1080x1920.jpg",
       notes: EN_NOTE,
       hook: "Your hook here",
       caption: "Is your caption readable here?",
@@ -1233,11 +1235,12 @@ const STR = en
       clearMedia();
     });
     root.querySelector<HTMLButtonElement>("[data-sample-frame]")?.addEventListener("click", async () => {
-      // stock talking-head frame (Pexels) with a Turkish hook + caption, so the overlays visibly matter
-      const res = await fetch("/araclar/guvenli-alan/rast-ornek-kare-1080x1920.jpg", { cache: "no-store" });
+      // stock talking-head frame (Pexels) with a hook + caption in the page language, so the overlays visibly matter
+      const src: string = T.sampleFrame ?? "/araclar/guvenli-alan/rast-ornek-kare-1080x1920.jpg";
+      const res = await fetch(src, { cache: "no-store" });
       if (!res.ok) return;
       sampleLoading = true;
-      load(new File([await res.blob()], "rast-ornek-kare-1080x1920.jpg", { type: "image/jpeg" }));
+      load(new File([await res.blob()], src.split("/").pop()!, { type: "image/jpeg" }));
     });
 
     playBtn.addEventListener("click", () => {

@@ -35,7 +35,7 @@ const badge = en
   ? `${TUR_LABEL_EN[item.type]} · ${p.badgeExtra ?? "Free · No sign-up"}`
   : `${TUR_LABEL[item.type]} · ${p.badgeExtra ?? "Ücretsiz · Kayıt yok"}`;
 const hasMore = Astro.slots.has("default");
-const img = `/araclar/kartlar/${item.slug}`;
+const img = item.card ?? `/araclar/kartlar/${item.slug}`;
 const preview = p.preview ?? true;
 const isAnchor = (h: string) => h.startsWith("#");
 ---

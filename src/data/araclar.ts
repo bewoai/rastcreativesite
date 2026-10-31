@@ -22,6 +22,9 @@ export interface Arac {
   /** Optional plain-words "what is it for" line on the card, for items whose
    *  name is jargon (bitrate, SRT, LUT…). Usability test: ~40 y/o visitors. */
   plain?: string;
+  /** Card image base path without extension (default `/araclar/kartlar/<slug>`); English twins set
+   *  their own capture with English sample text (`/araclar/kartlar/en/<slug>`, kartlar.py with KART_LANG=en). */
+  card?: string;
   /** English twin (/en/tools/…): same tool component with lang="en". See src/lib/i18n.ts. */
   en?: Omit<Arac, "slug" | "type" | "en">;
 }
@@ -68,6 +71,7 @@ export const ARACLAR: Arac[] = [
     chips: ["Tarayıcıda çalışır", "Reels · TikTok · Shorts", "PNG + ZIP"],
     en: {
       href: "/en/tools/reels-safe-zone-checker/",
+      card: "/araclar/kartlar/en/guvenli-alan",
       name: "Reels / TikTok / Shorts safe zone checker",
       title: "Safe zone checker",
       benefit: "Keep text clear of the app UI",
@@ -87,6 +91,7 @@ export const ARACLAR: Arac[] = [
     plain: "Videonuz kaç MB olacak, WhatsApp'a ya da siteye sığar mı, önceden görün.",
     en: {
       href: "/en/tools/video-bitrate-calculator/",
+      card: "/araclar/kartlar/en/bitrate-hesaplayici",
       name: "Video bitrate and file size calculator",
       title: "Video bitrate calculator",
       benefit: "Know the file size before you export",
@@ -107,6 +112,7 @@ export const ARACLAR: Arac[] = [
     plain: "Yatay çektiğiniz videonun telefon ekranına (dikey) nasıl kırpılacağını gösterir.",
     en: {
       href: "/en/tools/aspect-ratio-calculator/",
+      card: "/araclar/kartlar/en/en-boy-orani",
       name: "Aspect ratio calculator and crop previewer",
       title: "Aspect ratio & crop",
       benefit: "Reframe 16:9 for vertical",
@@ -127,6 +133,7 @@ export const ARACLAR: Arac[] = [
     plain: "Altyazı dosyanızdaki bozuk harfleri, çok uzun ve çok hızlı satırları bulup düzeltir.",
     en: {
       href: "/en/tools/srt-subtitle-checker/",
+      card: "/araclar/kartlar/en/altyazi-kontrolu",
       name: "SRT / VTT subtitle checker",
       title: "SRT subtitle checker",
       benefit: "Find subtitle errors in one click",
@@ -260,6 +267,7 @@ export const ARACLAR: Arac[] = [
     plain: "Videonuzun renk tonunu tek tıkla güzelleştiren hazır renk ayarları.",
     en: {
       href: "/en/tools/free-lut-pack/",
+      card: "/araclar/kartlar/en/lut-paketi",
       name: "Rast LUT Pack (5 free .cube LUTs)",
       title: "Free LUT pack",
       benefit: "Consistent color in one step",

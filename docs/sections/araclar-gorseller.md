@@ -8,6 +8,7 @@ Bewo geri bildirimi (30.10.2026): kartlar hep aynı etkinlik/BTS fotoğrafını 
 - Lisans: Pexels License — ticari kullanım serbest, atıf gerekmez; tanınmış kişi/marka/logo içeren kareler seçilmedi. Kontrol tarihi 2026-10-30.
 - Ekrandaki Türkçe kanca/altyazı metinleri `kartlar.py` içinde HTML ile basılır (Space Grotesk, latin-ext), kapak başlığı araç içinde `toLocaleUpperCase('tr')` ile.
 - Güvenli alan aracındaki **Örnek kareyle dene** düğmesi `public/araclar/guvenli-alan/rast-ornek-kare-1080x1920.jpg` dosyasını yükler (script üretir).
+- İngilizce kartlar (/en/tools/, 2026-10-31): `KART_LANG=en python3 scripts/araclar-kartlar/kartlar.py <url>` aynı fotoğraflarla İngilizce kanca/altyazı/etiketli kartları /en/tools/ sayfalarından yakalayıp `public/araclar/kartlar/en/` içine yazar (güvenli alan, bitrate, en-boy, altyazı, LUT; SFX kartında Türkçe metin yok, ortak). EN güvenli alan örnek karesi: `public/araclar/guvenli-alan/rast-sample-frame-1080x1920.jpg` (yalnızca EN sayfa `sampleFrame` ile yükler). Bağlantı: `src/data/araclar.ts` → `en.card`. TR dosyalarına dokunmaz. Yakalamada çerez bandı (`.rc-consent`) gizlenir.
 - Belge kartları: iki sayfa flex ile ortalanır, sayfa tam görünür, hafif simetrik perspektif, gerçek masa fotoğrafı arka planda. Hizalama sayısal kontrol edilir (getBoundingClientRect; sol/sağ boşluk farkı ≤4 px).
 
 ## Üretim

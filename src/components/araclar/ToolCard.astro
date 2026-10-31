@@ -17,7 +17,7 @@ interface Props {
   sizes?: string;
 }
 const { item, as: Tag = "h2", eager = false, sizes = "(min-width: 1180px) 370px, (min-width: 720px) 46vw, 92vw" } = Astro.props;
-const img = `/araclar/kartlar/${item.slug}`;
+const img = item.card ?? `/araclar/kartlar/${item.slug}`;
 // English cards (/en/tools/) are detected from the item's href.
 const en = item.href.startsWith("/en/");
 const cta = ctaLabelFor(item.type, en ? "en" : "tr");

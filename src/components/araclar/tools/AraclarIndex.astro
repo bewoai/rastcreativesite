@@ -78,6 +78,9 @@ const enFilters = TUR_FILTER.filter((f) => ARACLAR_EN.some((t) => t.type === f.i
 }));
 const filters = en ? enFilters : TUR_FILTER;
 const countsView = Object.fromEntries(filters.map((f) => [f.id, LIST.filter((t) => t.type === f.id).length]));
+// EN hero visual (the TR promo video has a Turkish voice-over): three English card previews as a collage.
+const COLLAGE_ORDER = ["/en/tools/srt-subtitle-checker/", "/en/tools/free-lut-pack/", "/en/tools/reels-safe-zone-checker/"];
+const collage = COLLAGE_ORDER.map((h) => ARACLAR_EN.find((t) => t.href === h)).filter((t): t is (typeof ARACLAR_EN)[number] => !!t);
 
 ---
 
@@ -100,6 +103,19 @@ const countsView = Object.fromEntries(filters.map((f) => [f.id, LIST.filter((t) 
         <h1>Video ve sosyal medya için <em>ücretsiz araçlar</em></h1>
         <p class="ah__sub">Tarayıcıda çalışır, dosyanız cihazınızdan çıkmaz.</p>
         <p class="ah__sub"><a href="/en/tools/" hreflang="en" lang="en">English: free creator tools →</a></p>
+      </div>
+      )}
+      {en && (
+      <div class="ah__collage">
+        {collage.map((t, i) => {
+          const img = t.card ?? `/araclar/kartlar/${t.slug}`;
+          return (
+            <a class:list={["ah__shot", `ah__shot--${i + 1}`]} href={t.href}>
+              <img src={`${img}.webp`} srcset={`${img}-480.webp 480w, ${img}.webp 960w`} sizes={i === 2 ? "(min-width: 1200px) 400px, 34vw" : "(min-width: 1200px) 320px, 27vw"} width="960" height="720" alt={`${t.name}: preview`} loading="eager" decoding="async" />
+              <span>{t.title}</span>
+            </a>
+          );
+        })}
       </div>
       )}
       {!en && (
@@ -252,6 +268,90 @@ const countsView = Object.fromEntries(filters.map((f) => [f.id, LIST.filter((t) 
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--ink-soft);
+  }
+
+  /* EN hero collage (desktop only; phones go straight to the gallery) */
+  .ah__collage {
+    display: none;
+  }
+  @media (min-width: 900px) {
+    .ah__collage {
+      position: relative;
+      display: block;
+      aspect-ratio: 16 / 11.5;
+    }
+  }
+  .ah__shot {
+    position: absolute;
+    display: block;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #15120f;
+    box-shadow:
+      0 34px 60px -30px rgba(60, 36, 16, 0.6),
+      0 0 0 1px rgba(60, 36, 16, 0.1);
+    transition: transform var(--dur, 280ms) var(--ease-out, ease);
+  }
+  .ah__shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .ah__shot span {
+    position: absolute;
+    left: 0.7rem;
+    bottom: 0.7rem;
+    padding: 0.36rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(17, 15, 13, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #f4efe8;
+    font: 700 0.72rem/1 var(--font-utility);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .ah__shot--1 {
+    left: 0;
+    top: 0;
+    width: 52%;
+    transform: rotate(-3deg);
+  }
+  .ah__shot--2 {
+    right: 0;
+    top: 0;
+    width: 52%;
+    transform: rotate(3deg);
+  }
+  /* back cards: labels on top, away from the front card */
+  .ah__shot--1 span,
+  .ah__shot--2 span {
+    top: 0.7rem;
+    bottom: auto;
+  }
+  .ah__shot--2 span {
+    left: auto;
+    right: 0.7rem;
+  }
+  .ah__shot--3 {
+    left: 50%;
+    bottom: 0;
+    width: 56%;
+    translate: -50% 0;
+    z-index: 1;
+  }
+  .ah__shot:hover,
+  .ah__shot:focus-visible {
+    z-index: 2;
+    transform: translateY(-4px) rotate(0deg);
+  }
+  .ah__shot:focus-visible {
+    outline: 3px solid var(--amber);
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ah__shot {
+      transition: none;
+    }
   }
 
   /* ───── Gallery ───── */

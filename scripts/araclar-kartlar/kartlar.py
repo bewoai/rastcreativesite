@@ -13,7 +13,11 @@ Run after `npx astro build`, with dist/ served on a free port:
   python3 scripts/araclar-kartlar/kartlar.py http://127.0.0.1:48613
 Needs: node 22+, Chromium (see shoot.mjs env CHROME / CHROME_LIBS), ffmpeg, Pillow.
 Sample frames are Pexels stock (kaynaklar.json, one photo per card) composed with Turkish
-hook/caption text; sources documented in docs/sections/araclar-gorseller.md. Everything it
+hook/caption text;
+English twins (/en/tools/): KART_LANG=en python3 kartlar.py <url> writes the same cards with
+English hooks/captions/tags, captured from the /en/tools/ pages, into public/araclar/kartlar/en/
+(only tools with an EN page and Turkish text on the card; the SFX card is language-neutral), plus the
+safe-zone EN sample frame public/araclar/guvenli-alan/rast-sample-frame-1080x1920.jpg. TR files stay untouched. sources documented in docs/sections/araclar-gorseller.md. Everything it
 writes into dist/_ornek is throwaway (the next build replaces dist/).
 """
 import json
@@ -30,7 +34,18 @@ HERE = Path(__file__).resolve().parent
 BASE = (sys.argv[1] if len(sys.argv) > 1 else "http://127.0.0.1:48613").rstrip("/")
 DIST = ROOT / "dist"
 WORK = DIST / "_ornek"
-OUT = ROOT / "public" / "araclar" / "kartlar"
+EN = os.environ.get("KART_LANG") == "en"
+OUT = ROOT / "public" / "araclar" / "kartlar" / ("en" if EN else "")
+EN_CARDS = {"guvenli-alan", "bitrate-hesaplayici", "en-boy-orani", "altyazi-kontrolu", "lut-paketi"}
+EN_PAGE = {"araclar/guvenli-alan": "en/tools/reels-safe-zone-checker", "araclar/bitrate-hesaplayici": "en/tools/video-bitrate-calculator",
+           "araclar/en-boy-orani": "en/tools/aspect-ratio-calculator", "araclar/altyazi-kontrolu": "en/tools/srt-subtitle-checker"}
+
+
+def T(tr, en):
+    return en if EN else tr
+
+
+HL = T("tr", "en")
 FFMPEG = os.environ.get("FFMPEG") or shutil.which("ffmpeg") or str(Path.home() / ".hermes/tools/ffmpeg-9.0.1-linux-x64/bin/ffmpeg")
 NODE = shutil.which("node") or str(Path.home() / ".hermes/tools/node-26.12.1-linux-x64/bin/node")
 ONLY = set(sys.argv[2].split(",")) if len(sys.argv) > 2 else None
@@ -69,7 +84,7 @@ S = "/_ornek/src/"
 
 
 def frame(key, w, h, body="", pos="center", extra=""):
-    return (f'<!doctype html><html lang="tr"><meta charset="utf-8"><style>{FONT}*{{margin:0;box-sizing:border-box}}'
+    return (f'<!doctype html><html lang="{HL}"><meta charset="utf-8"><style>{FONT}*{{margin:0;box-sizing:border-box}}'
             f'html,body{{width:{w}px;height:{h}px;overflow:hidden;background:#000;font-family:SG,sans-serif}}'
             f'.bg{{position:absolute;inset:0;background:url({S}{key}.jpg) {pos}/cover}}'
             '.hook{position:absolute;left:50%;transform:translateX(-50%);background:#fff;color:#111;font:700 70px/1.12 SG;padding:20px 34px 24px;border-radius:22px;text-align:center;width:max-content;max-width:880px;box-shadow:0 10px 30px rgba(0,0,0,.35)}'
@@ -94,12 +109,12 @@ def cover(key, title, pos="center"):
 
 KARE = {
     # 9:16 talking heads with Turkish hook + caption (so UI overlays visibly matter)
-    "dikey-reels": (th("th-reels", "Bunu kimse söylemiyor…", "Yazını <em>buraya</em> koy", "50% 30%",
+    "dikey-reels": (th("th-reels", T("Bunu kimse söylemiyor…", "Nobody says this…"), T("Yazını <em>buraya</em> koy", "Put your text <em>here</em>"), "50% 30%",
         # centred on the Reels safe area (x 60–930), so the tool's own sample passes its check
         hook_style="left:495px;max-width:760px"), 1080, 1920),
-    "dikey-tiktok": (th("th-tiktok", "İlk 3 saniye her şey", "Kanca <em>üstte</em> kalsın", "55% 30%"), 1080, 1920),
+    "dikey-tiktok": (th("th-tiktok", T("İlk 3 saniye her şey", "First 3 seconds matter"), T("Kanca <em>üstte</em> kalsın", "Keep the hook <em>up top</em>"), "55% 30%"), 1080, 1920),
     # burned-in subtitle the way the tool draws it: white text, soft shadow, translucent box, inside the safe zone
-    "dikey-altyazi": (frame("th-altyazi", 1080, 1920, '<div class="sub" style="bottom:620px">Çekim günü sabah<br>altıda başladı.</div>', "40% 40%"), 1080, 1920),
+    "dikey-altyazi": (frame("th-altyazi", 1080, 1920, '<div class="sub" style="bottom:620px">' + T("Çekim günü sabah<br>altıda başladı.", "The shoot started<br>at six in the morning.") + '</div>', "40% 40%"), 1080, 1920),
     "dikey-altyazi-temiz": (frame("th-altyazi", 1080, 1920, "", "40% 40%"), 1080, 1920),
     "dikey-kapak": (frame("th-kapak", 1080, 1920, "", "50% 30%"), 1080, 1920),
     "yt-kucuk": (frame("th-youtube", 1280, 720,
@@ -118,15 +133,19 @@ KARE = {
     "g8": (cover("g-th3", "Ofiste bir gün", "50% 30%"), 1080, 1920),
     "g9": (cover("g-cilt", "Akşam rutini"), 1080, 1920),
 }
+if EN:  # only frames the English cards use (IG grid / cover / thumbnail have no EN page)
+    KARE = {k: v for k, v in KARE.items() if k in ("dikey-reels", "dikey-tiktok", "dikey-altyazi", "yatay-roportaj")}
 for k, (html, w, h) in KARE.items():
     (WORK / "kare" / f"{k}.html").write_text(html)
 if not ONLY or "capture" in ONLY:
     shoot([{"url": f"{BASE}/_ornek/kare/{k}.html", "out": str(WORK / f"{k}.jpg"), "w": w, "h": h, "scale": 1, "wait": 900} for k, (_, w, h) in KARE.items()], "kare")
-    # sample frame for the safe-zone tool's "Örnek kareyle dene" button (served from public/)
-    Image.open(WORK / "dikey-reels.jpg").convert("RGB").save(ROOT / "public/araclar/guvenli-alan/rast-ornek-kare-1080x1920.jpg", quality=80, optimize=True, progressive=True)
-    # clean background frame for the subtitle tool's burn-in preview canvas
-    (ROOT / "public/araclar/altyazi-kontrolu").mkdir(parents=True, exist_ok=True)
-    Image.open(WORK / "dikey-altyazi-temiz.jpg").convert("RGB").save(ROOT / "public/araclar/altyazi-kontrolu/rast-ornek-kare-9x16.jpg", quality=78, optimize=True, progressive=True)
+    # sample frame for the safe-zone tool's "Örnek kareyle dene" button (served from public/; rast- prefix = CDN no-transform)
+    smp = T("rast-ornek-kare-1080x1920.jpg", "rast-sample-frame-1080x1920.jpg")
+    Image.open(WORK / "dikey-reels.jpg").convert("RGB").save(ROOT / "public/araclar/guvenli-alan" / smp, quality=80, optimize=True, progressive=True)
+    # clean background frame for the subtitle tool's burn-in preview canvas (no text, shared by TR and EN)
+    if not EN:
+        (ROOT / "public/araclar/altyazi-kontrolu").mkdir(parents=True, exist_ok=True)
+        Image.open(WORK / "dikey-altyazi-temiz.jpg").convert("RGB").save(ROOT / "public/araclar/altyazi-kontrolu/rast-ornek-kare-9x16.jpg", quality=78, optimize=True, progressive=True)
 
 # LUT before/after: own .cube from the pack on a golden-hour portrait
 lut_src = Image.open(WORK / "src" / "lut.jpg").convert("RGB")
@@ -139,21 +158,23 @@ subprocess.run(["unzip", "-o", "-j", "-q", str(ROOT / "public/araclar/lut-paketi
 subprocess.run([FFMPEG, "-y", "-loglevel", "error", "-i", str(WORK / "lut-once.jpg"), "-vf", f"lut3d={cube}", "-q:v", "2", str(WORK / "lut-sonra.jpg")], check=True)
 
 # ── 2. live tool captures ───────────────────────────────────────────────────
-H = """const st=document.createElement('style');st.textContent='.ev-head,.ev-grain,.ev-wa{display:none!important}';document.head.append(st);
+H = """const st=document.createElement('style');st.textContent='.ev-head,.ev-grain,.ev-wa,.rc-consent{display:none!important}';document.head.append(st);
 const sl=(m)=>new Promise(r=>setTimeout(r,m));
 const load=async(sel,urls,type='image/jpeg')=>{const dt=new DataTransfer();for(const u of urls){const b=await (await fetch(u)).blob();dt.items.add(new File([b],u.split('/').pop(),{type}));}const i=document.querySelector(sel);i.files=dt.files;i.dispatchEvent(new Event('change',{bubbles:true}));};
 const rect=(sel)=>{const e=document.querySelector(sel);if(!e)return {missing:sel};e.scrollIntoView({block:'center'});const r=e.getBoundingClientRect();return {clip:{x:r.left+scrollX,y:r.top+scrollY,width:r.width,height:r.height}}};
 """
 # Subtitle checker: run the sample, show all rows, keep 4 representative ones (bozuk karakter, çok hızlı,
 # çakışma, sorunsuz), max 2 badges each, and capture the result panel at a fixed card-friendly width.
-ALTYAZI_JS = """const s2=document.createElement('style');s2.textContent='.ak-res{width:600px;padding:18px 18px 14px;background:#f4efe8;border-radius:0} .ak-res .yt-note,.ak-res [data-resactions],.ak-res .ak-foot{display:none!important} .ak-list{max-height:none!important} .ak-row{grid-template-columns:auto minmax(0,1fr)!important;grid-template-areas:"st time" "text text" "iss iss"!important;padding:12px 14px!important;gap:8px 10px!important} .ak-head,.ak-meta{display:none!important} .ak-st{grid-area:st;flex-direction:row!important;align-items:center;gap:8px!important} .ak-time{grid-area:time;justify-self:end;align-self:center} .ak-text{grid-area:text} .ak-iss{grid-area:iss} .ak-row.is-sel{box-shadow:none!important}';document.head.append(s2);
+ALTYAZI_JS = """const s2=document.createElement('style');s2.textContent='.ak-res{width:AKW;padding:18px 18px 14px;background:#f4efe8;border-radius:0} .ak-res .yt-note,.ak-res [data-resactions],.ak-res .ak-foot{display:none!important} .ak-list{max-height:none!important} .ak-row{grid-template-columns:auto minmax(0,1fr)!important;grid-template-areas:"st time" "text text" "iss iss"!important;padding:12px 14px!important;gap:8px 10px!important} .ak-head,.ak-meta{display:none!important} .ak-st{grid-area:st;flex-direction:row!important;align-items:center;gap:8px!important} .ak-time{grid-area:time;justify-self:end;align-self:center} .ak-text{grid-area:text} .ak-iss{grid-area:iss} .ak-row.is-sel{box-shadow:none!important}';document.head.append(s2);
 document.querySelector('[data-sample]').click();await sl(500);const o=document.querySelector('[data-only]');o.checked=false;o.dispatchEvent(new Event('change'));await sl(300);
-const keep={'3':2,'4':1,'2':2,'6':1};const pref={'3':['Bozuk'],'4':['Okuma hızı','Satır'],'2':['çakışıyor','Okuma hızı'],'6':[]};
+const keep={'3':2,'4':1,'2':2,'6':1};const pref=PREF;
 document.querySelectorAll('.ak-row').forEach(li=>{const n=String(+li.dataset.i+1);if(!(n in keep)){li.remove();return;}
  const bs=[...li.querySelectorAll('.ak-iss .yt-badge')];const want=pref[n];const pick=want.length?want.map(w=>bs.find(b=>b.textContent.includes(w))).filter(Boolean):bs.slice(0,1);
  bs.forEach(b=>{if(!pick.includes(b))b.remove();});});
 const ol=document.querySelector('.ak-rows');['3','4','2','6'].forEach(n=>{const li=[...ol.children].find(l=>String(+l.dataset.i+1)===n);li&&ol.append(li);});
 await sl(300);return rect('[data-res]');"""
+ALTYAZI_JS = ALTYAZI_JS.replace("AKW", T("600px", "700px")).replace("PREF", T("{'3':['Bozuk'],'4':['Okuma hızı','Satır'],'2':['çakışıyor','Okuma hızı'],'6':[]}",
+                                         "{'3':['Broken'],'4':['Reading speed','Line'],'2':['Overlaps','Reading speed'],'6':[]}"))
 NINE = "[" + ",".join(f"'/_ornek/g{i}.jpg'" for i in range(1, 10)) + "]"
 CAP = {
     "guvenli-reels": ("araclar/guvenli-alan", "await load('[data-tool] [data-file]',['/_ornek/dikey-reels.jpg']);await sl(800);return rect('.frame');"),
@@ -167,6 +188,8 @@ CAP = {
     "planlayici": ("cekim-planlayici", "const gs=[...document.querySelectorAll('[data-planner] .chips')];for(const g of gs){const ls=[...g.querySelectorAll('label')];[0,2,3].forEach(i=>ls[i]&&ls[i].click());}await sl(300);document.querySelector('[data-planner] button[type=submit]')?.click();await sl(800);return rect('[data-planner]');"),
     "export": ("rehber/video-export-ayarlari", "return rect('.quick');"),
 }
+if EN:
+    CAP = {k: (EN_PAGE[p], js) for k, (p, js) in CAP.items() if p in EN_PAGE}
 if not ONLY or "capture" in ONLY:
     shoot([{"url": f"{BASE}/{p}/", "out": str(WORK / "raw" / f"{k}.png"), "w": 1440, "h": 1000, "scale": 2, "wait": 700, "js": H + js, "after": 500} for k, (p, js) in CAP.items()], "capture")
 
@@ -209,7 +232,7 @@ VF = '<div class="vf"><i></i><i></i><i></i><i></i></div>'
 
 def card(body, label=""):
     rec = f'<div class="rec"><b></b>{label}</div>' if label else ""
-    return f'<!doctype html><html lang="tr"><meta charset="utf-8"><style>{CSS}</style><div class="c">{body}{VF}{rec}</div></html>'
+    return f'<!doctype html><html lang="{HL}"><meta charset="utf-8"><style>{CSS}</style><div class="c">{body}{VF}{rec}</div></html>'
 
 
 def bgp(key, pos="center", f="", dim=True):
@@ -242,10 +265,10 @@ CARDS = {
       <div class="hud" style="right:60px;top:52px">UHD 3840×2160 · 25P</div>
       <div style="position:absolute;left:300px;top:150px;width:360px;height:250px;border:2px solid rgba(255,255,255,.55)"></div>
       <div class="hud" style="left:304px;top:410px;font-size:14px;opacity:.8">4K · H.264 / H.265</div>
-      <div class="win" style="left:80px;top:470px;width:800px;height:170px;outline:3px solid #FF6A1A"><img src="{R}bitrate-result.png" style="width:1250px;max-width:none"></div>""", "Hesap"),
+      <div class="win" style="left:80px;top:470px;width:800px;height:170px;outline:3px solid #FF6A1A"><img src="{R}bitrate-result.png" style="width:1250px;max-width:none"></div>""", T("Hesap", "Calc")),
     "en-boy-orani": card(f"""
       <div class="win" style="left:70px;top:179px;width:640px;background:#000"><img src="{R}enboy-src.png"></div>
-      <span class="tag" style="left:90px;top:569px">16:9 kayıt</span>
+      <span class="tag" style="left:90px;top:569px">{T("16:9 kayıt", "16:9 footage")}</span>
       <div class="ph" style="left:590px;top:99px;width:300px"><img src="{R}enboy-out.png"></div>
       <span class="tag o" style="left:750px;top:629px">9:16</span>"""),
     # left: real result panel (fully visible, 4 rows), right: straight phone with the burned-in subtitle;
@@ -253,7 +276,7 @@ CARDS = {
     "altyazi-kontrolu": card(f"""
       <div class="win" style="left:48px;top:118px;width:548px;height:500px;background:#f4efe8;display:flex;align-items:center"><img src="{R}altyazi.png" style="width:100%"></div>
       <div class="ph" style="left:628px;top:118px;width:284px;height:500px"><img src="/_ornek/dikey-altyazi.jpg" style="width:100%;height:100%;object-fit:cover"></div>
-      <div style="position:absolute;right:48px;top:52px;display:flex;gap:10px;z-index:5"><span class="tag o" style="position:static">Hataları bulur</span><span class="tag" style="position:static">Düzeltilmiş SRT</span></div>""", "SRT · VTT"),
+      <div style="position:absolute;right:48px;top:52px;display:flex;gap:10px;z-index:5"><span class="tag o" style="position:static">{T("Hataları bulur", "Finds errors")}</span><span class="tag" style="position:static">{T("Düzeltilmiş SRT", "Fixed SRT")}</span></div>""", "SRT · VTT"),
     "cekim-plani": docs("d-plan", f"{A}/cekim-plani/rast-ornek-cekim-plani-onizleme-2.webp", f"{A}/cekim-plani/rast-ornek-cekim-plani-onizleme-1.webp", "30% 50%"),
     "cekim-planlayici": card(bgp("planlayici", "center", "blur(3px) brightness(.55)") + f"""
       <div class="win" style="left:110px;top:90px;width:740px;height:540px;background:#efe8df"><img src="{R}planlayici.png"></div>""", "Plan"),
@@ -280,16 +303,18 @@ CARDS = {
             f'<span class="tag" style="left:160px;top:{150 + i * 104}px;font-size:15px;padding:7px 12px">{lab}</span>'
             for i, (n, lab) in enumerate(zip(WAVES, ["Whoosh", "Riser", "Impact", "Glitch", "Swell"]))
         ), "WAV · 48 kHz"),
-    "lut-paketi": card("""
+    "lut-paketi": card(f"""
       <div style="position:absolute;inset:0;background:url(/_ornek/lut-once.jpg) center/cover"></div>
       <div style="position:absolute;inset:0;clip-path:inset(0 0 0 50%);background:url(/_ornek/lut-sonra.jpg) center/cover"></div>
       <div style="position:absolute;left:479px;top:0;bottom:0;width:3px;background:#fff;box-shadow:0 0 18px rgba(0,0,0,.6)"></div>
       <div style="position:absolute;left:456px;top:336px;width:48px;height:48px;border-radius:50%;background:#fff;box-shadow:0 6px 18px rgba(0,0,0,.5)"></div>
-      <span class="tag" style="left:40px;top:640px">Önce</span><span class="tag o" style="right:40px;top:640px">Sonra · Soğuk Gece</span>"""),
+      <span class="tag" style="left:40px;top:640px">{T("Önce", "Before")}</span><span class="tag o" style="right:40px;top:640px">{T("Sonra · Soğuk Gece", "After · Cool Night")}</span>"""),
 }
 (WORK / "kart").mkdir(exist_ok=True)
 jobs = []
 for slug, html in CARDS.items():
+    if EN and slug not in EN_CARDS:
+        continue
     if ONLY and slug not in ONLY and "all" not in ONLY and "capture" not in ONLY:
         continue
     (WORK / "kart" / f"{slug}.html").write_text(html)
