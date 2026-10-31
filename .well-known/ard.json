@@ -1,0 +1,47 @@
+{
+  "specVersion": "0.91",
+  "host": {
+    "displayName": "Rast Creative Studio",
+    "identifier": "rastcreative.com",
+    "url": "https://rastcreative.com/",
+    "description": "Video production studio in Serdivan, Sakarya, Turkey: corporate and promotional films, commercials, drone filming, social media content, product and venue shoots, code-based motion and AI video."
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:rastcreative.com:skill:discovery",
+      "displayName": "Rast Creative discovery skill",
+      "type": "application/agent-skills+md",
+      "url": "https://rastcreative.com/.well-known/agent-skills/rastcreative-discovery/SKILL.md",
+      "description": "Find Rast Creative Studio services, portfolio projects, service areas and public contact channels.",
+      "representativeQueries": [
+        "find a video production company in Sakarya",
+        "who can shoot a corporate promotional film in Serdivan",
+        "drone filming service near Adapazarı",
+        "show Rast Creative portfolio projects"
+      ]
+    },
+    {
+      "identifier": "urn:air:rastcreative.com:api:site",
+      "displayName": "Rast Creative public site API",
+      "type": "application/vnd.oai.openapi+json",
+      "url": "https://rastcreative.com/openapi.json",
+      "description": "Read-only JSON endpoints for services, projects, locations and FAQ. No authentication.",
+      "representativeQueries": [
+        "list Rast Creative video services",
+        "get Rast Creative projects as JSON",
+        "which cities does Rast Creative serve"
+      ]
+    },
+    {
+      "identifier": "urn:air:rastcreative.com:docs:llms",
+      "displayName": "Rast Creative llms.txt",
+      "type": "text/markdown",
+      "url": "https://rastcreative.com/llms.txt",
+      "description": "Markdown index of the site's key pages for language models.",
+      "representativeQueries": [
+        "summarize what Rast Creative Studio offers",
+        "how to contact Rast Creative Studio"
+      ]
+    }
+  ]
+}
