@@ -101,11 +101,18 @@ const pageJsonLd = [
   ]),
   ...(videoObject ? [videoObject] : []),
 ];
+
+/* Meta description 70–165: short summaries get the studio line appended
+   (meta only; the visible summary stays as written). */
+const baseDesc = d.summary ?? `${d.title} — Rast Creative Studio ${d.category} projesi.`;
+const metaDesc = baseDesc.length < 70
+  ? `${baseDesc.replace(/\.?$/, ".")} Rast Creative Studio'nun Sakarya merkezli video prodüksiyon işi.`
+  : baseDesc;
 ---
 
 <BaseLayout
   title={d.title}
-  description={d.summary ?? `${d.title} — Rast Creative Studio ${d.category} projesi.`}
+  description={metaDesc}
   image={d.poster}
   ogType="article"
   jsonLd={pageJsonLd}

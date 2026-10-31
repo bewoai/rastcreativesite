@@ -1,7 +1,7 @@
 ---
 title: "Hekimler için reklam yasağı: 2025 yönetmeliği sosyal medyada neye izin veriyor?"
 seoTitle: "Hekim Reklam Yasağı: 2025 Yönetmeliği"
-description: "12 Kasım 2025'te yürürlüğe giren yönetmeliğe göre hekimler sosyal medyada neyi paylaşabilir, neyi paylaşamaz? Açılış ayı istisnası, öncesi/sonrası görseli ve ajansın sorumluluğu."
+description: "2025 yönetmeliğine göre hekimler sosyal medyada neyi paylaşabilir? Fiyat ve yorum yasağı, açılış ayı istisnası, öncesi/sonrası görseli."
 author: Berat Değirmenci
 pubDate: 2026-10-31
 tags:
