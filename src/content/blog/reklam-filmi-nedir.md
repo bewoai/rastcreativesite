@@ -1,7 +1,7 @@
 ---
 title: "Reklam Filmi Nedir? Markanız İçin Sinematik ve Stratejik Çözümler"
-seoTitle: "Reklam Filmi Nedir, Nasıl Yapılır?"
-description: "Reklam filmi nedir ve neden stratejik bir yatırım? Türleri, prodüksiyon süreci ve maliyet/ROI'yi Sakarya merkezli deneyimimizle anlattık."
+seoTitle: "Reklam Filmi Nedir, Nasıl Yapılır? Türleri ve Süreç"
+description: "Reklam filmi nedir, bir reklam nasıl yapılır? Üç ana türü, fikirden ekrana prodüksiyon süreci ve maliyeti belirleyen kalemler; Sakarya'daki çekimlerden."
 pubDate: 2026-06-21
 cover: ../../assets/photos/director-clapper.jpg
 coverAlt: "Yönetmen klaketi ve sinema kamerası — profesyonel reklam filmi çekimi"

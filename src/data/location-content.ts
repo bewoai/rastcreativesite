@@ -8,6 +8,9 @@
  */
 
 export interface LocationContent {
+  /** <title> override, keyword first (from Search Console queries). With the
+   *  brand suffix BaseLayout adds, the final title must stay ≤ 65 chars. */
+  title?: string;
   /** Meta description override (≤ 155 chars) for pages with low CTR. */
   description?: string;
   /** H2 for the extra block. */
@@ -21,10 +24,15 @@ export interface LocationContent {
   projects?: string[];
   /** Internal links shown under the block (paragraphs are plain text). */
   links?: { href: string; label: string }[];
+  /** Ordered process with typical durations (no prices), shown as a list. */
+  steps?: { title: string; time?: string; text: string }[];
+  /** H2 above `steps` (default "Süreç ve teslim süresi"). */
+  stepsHeading?: string;
 }
 
 export const LOCATION_CONTENT: Record<string, LocationContent> = {
   "sosyal-medya-icerigi/hendek": {
+    title: "Hendek Sosyal Medya Ajansı ve Yönetimi",
     description:
       "Hendek sosyal medya yönetimi: aylık içerik planı, tek çekim gününden Reels ve gönderiler, paylaşım takvimi ve rapor. Ücretsiz ön görüşme.",
     heading: "Hendek'te sosyal medya yönetimi nasıl işliyor?",
@@ -47,8 +55,9 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
   },
 
   "sosyal-medya-icerigi/sakarya": {
+    title: "Sakarya Sosyal Medya Ajansı ve Yönetimi",
     description:
-      "Sakarya sosyal medya yönetimi: video sayısı ve çekim günü teklifte yazılı. Plan, çekim, kurgu, paylaşım, rapor. Aytaş Home'da 4 ayda etkileşim +%311.",
+      "Sakarya sosyal medya yönetimi: ayda kaç video, kaç çekim günü teklifte yazılı. Plan, çekim, kurgu, paylaşım, rapor. Aytaş Home'da 4 ayda etkileşim +%311.",
     heading: "Sakarya'da sosyal medya ajansı seçerken: ayda kaç video, çekim dahil mi?",
     paragraphs: [
       "Sakarya'da sosyal medya yönetimi için teklif topladığınızda birçok paketin gönderi ve hikâye sayısıyla satıldığını görürsünüz. Bu paketlerin bir kısmında ayda kaç video çekileceği yazmaz. Bizim paketlerimiz video üzerine kurulu: ayda kaç video çıkacağı ve kaç çekim günü yapılacağı teklifte yazılı olur. Böylece neye para verdiğinizi baştan bilir, ay sonunda yayına çıkanla karşılaştırabilirsiniz.",
@@ -95,6 +104,36 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
       { href: "/projeler/vaka/aytas-home/", label: "Aytaş Home vaka çalışması: 4 ayda etkileşim +%311" },
       { href: "/blog/sosyal-medya-yonetimi-fiyati-neye-gore-belirlenir/", label: "Sosyal medya yönetimi fiyatı neye göre belirlenir?" },
       { href: "/blog/sakarya-video-produksiyon-firmasi-nasil-secilir/", label: "Sakarya'da video prodüksiyon firması nasıl seçilir?" },
+      { href: "/blog/tek-cekim-gununden-kac-icerik-cikar/", label: "Bir çekim gününden kaç farklı içerik çıkar?" },
+      { href: "/video-cekimi/sakarya/", label: "Sadece çekim mi lazım? Sakarya video çekimi" },
+    ],
+    stepsHeading: "İlk ay nasıl başlar, ne zaman yayına çıkar?",
+    steps: [
+      {
+        title: "Ön görüşme ve hesap analizi",
+        time: "1. hafta",
+        text: "Mevcut hesabınıza birlikte bakıyor, hedefi (mesaj, rezervasyon, mağaza ziyareti) ve öne çıkacak ürün ya da hizmetleri konuşuyoruz. Ayda kaç video ve kaç çekim günü olacağı yazılı teklife giriyor.",
+      },
+      {
+        title: "İçerik planı ve onay",
+        time: "1–2. hafta",
+        text: "Ayın video konuları, açılış cümleleri ve paylaşım takvimi tek bir listede onayınıza geliyor. Klinik hesaplarında her senaryo hekim onayından geçiyor.",
+      },
+      {
+        title: "Çekim günü",
+        time: "yarım ya da tam gün",
+        text: "Ayın videolarını işletmenizin sakin saatlerinde, bir ya da iki çekim gününde topluca çekiyoruz. Sette kurucu ortaklar bizzat çalışıyor.",
+      },
+      {
+        title: "Kurgu, kapak ve metin",
+        time: "çekimden sonra yaklaşık 1 hafta",
+        text: "Dikey kurgu, altyazı, kapak ve açıklama metinleri hazırlanıyor; her video yayından önce onayınıza gidiyor. İlk videolar genellikle ilk ayın ikinci yarısında yayında.",
+      },
+      {
+        title: "Yayın ve aylık rapor",
+        time: "ay boyunca + ay sonu",
+        text: "Videolar takvime göre yayına çıkıyor. Ay sonunda erişim, etkileşim, profil ziyareti ve gelen mesajları özetleyen kısa rapor geliyor; sonraki ayın planı bu verilerle kuruluyor.",
+      },
     ],
   },
 
@@ -103,7 +142,8 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
       "Sakarya video çekimi: tanıtım, Reels, etkinlik. Kurucu ortaklar çekip kurguluyor; her ilçeye aynı gün, teslim genelde 2–4 hafta. Ön görüşme ücretsiz.",
     heading: "Sakarya'da video çekimi nasıl ilerler, fiyatı ne belirler?",
     paragraphs: [
-      "Hangi videoya ihtiyacınız olduğu, onu nerede kullanacağınıza bağlı. Tanıtım filmi web sitesinde, YouTube'da ve firmayı iş ortaklarına anlatırken kullanılır; tekstil üreticisi Altoteks'in 4K tanıtım filmi fabrikayı havadan, dokuma makinelerini ve laboratuvar testlerini gösteriyor. Mağaza videosu Instagram'da ve Google İşletme profilinde yeri tanıtır; Duru Optik için çektiğimiz dikey videoda mağazanın konumu havadan, gözlük koleksiyonu ve göz ölçümü yakından görünüyor. Serdivan'da medikal estetik hizmeti veren Dr. Erdem Çalışkan'ın Instagram hesabı için tanıtım ve bilgilendirme videoları hazırlıyoruz. Candles and Echoes'un Sapanca Kırkpınar Amfi Tiyatro'daki mum ışığında bale gösterimini de dikey formatta çektik. Erenler, Akyazı ve Karasu'daki çekimlere de Serdivan'dan aynı gün gidiyoruz.",
+      "Hangi videoya ihtiyacınız olduğu, onu nerede kullanacağınıza bağlı. Mağaza videosu Instagram'da ve Google İşletme profilinde yeri tanıtır; Duru Optik için çektiğimiz dikey videoda mağazanın konumu havadan, gözlük koleksiyonu ve göz ölçümü yakından görünüyor. Klinik ve muayenehaneler için bilgilendirme videosu hazırlıyoruz: Serdivan'da medikal estetik hizmeti veren Dr. Erdem Çalışkan'ın Instagram hesabındaki “Fraksiyonel Lazer Nedir?” ve “Dr. Erdem Çalışkan Kimdir?” videoları bu düzenle çıktı. Etkinlik tarafında Candles and Echoes'un Sapanca Kırkpınar Amfi Tiyatro'daki mum ışığında bale gösterimini, davet tarafında Newlife Davet Salonu'nun tanıtım videosunu dikey formatta çektik. Kurumsal tanıtım filmi ise web sitesinde, YouTube'da ve firmayı iş ortaklarına anlatırken kullanılır; tesisi havadan, üretimi ve kalite kontrolü yakından gösterir. Erenler, Akyazı, Hendek ve Karasu'daki çekimlere de Serdivan'dan aynı gün gidiyoruz.",
+      "Kendi markamız için ürettiğimiz işler de aynı masadan çıkıyor: motion graphic Reels “7 Saniye (Mermi)” Instagram'da 84 binin üzerinde görüntüleme ve 1.184 paylaşım aldı (28 Ekim 2026). Bir videoyu izleten şey çoğu zaman bütçe değil; ilk saniyedeki fikir, kurgu ritmi ve platforma uygun teslim. Bu yüzden çekimden önce videonun ilk üç saniyesini ve kapanışını birlikte yazıyoruz.",
       "Bir çekim gününden ne çıkacağı, çekim listesiyle baştan belli olur. Yarım günlük bir mağaza ya da kafe çekimini genellikle bir yatay tanıtım videosu ve üç Reels olarak planlıyoruz; kurumsal tanıtım filminde tam gün çekimden 2–3 dakikalık film, dikey kesitler ve drone planları çıkar. Düzenli içerikte ayın videolarını bir ya da iki çekim gününe topluyoruz. Mobilya perakendecisi Aytaş Home'un Instagram hesabını Mayıs 2026'dan beri yönetiyoruz: Meta Business Suite verisine göre içerik etkileşimi Ocak–Nisan 2026'daki 18,6 binden Mayıs–Ağustos'ta 76,5 bine çıktı (+%311), yeni mesajlaşan kişi 257'den 730'a yükseldi.",
       "Süreç ücretsiz ön görüşmeyle başlar: videonun amacını, kime gösterileceğini ve nerede yayınlanacağını konuşuruz. Ardından konu ve çekim listesini çıkarıp çekim gününü belirleriz. Projeyi kurucu ortaklar Berat Değirmenci ve Muhammed Ekrem Adnan ile konuşursunuz; sette ve kurguda da onlar bizzat çalışır, muhatabınız proje boyunca değişmez. Sony FX30 kamera, Sigma 18-50 lens ve DJI RS4 gimbal ile çekiyor, gerektiğinde 4K drone ekliyoruz. Revizyonlarla birlikte teslim, kapsama göre genellikle 2–4 hafta sürer.",
       "Fiyatı belirleyen başlıca kalemler şunlar: yarım ya da tam gün çekim, çıkacak video sayısı, drone, senaryo ve kurgu kapsamı (grafik, altyazı), ham görüntü isteği ve acil teslim. Net rakamı ön görüşmeden sonra yazılı teklifle veriyoruz. Başka tekliflerle karşılaştırırken toplam tutardan önce kapsama bakın: çekim kaç saat sürüyor, kaç video teslim ediliyor, çekimi kim yapıyor, kaç revizyon turu var ve hangi formatlar dahil.",
@@ -137,17 +177,46 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
     ],
     projects: [
       "aytas-home-sosyal-medya",
-      "altoteks-tanitim-filmi",
-      "dr-erdem-caliskan-kimdir",
       "duru-optik-tanitim",
+      "dr-erdem-caliskan-fraksiyonel-lazer",
+      "rast-mermi-7-saniye",
       "candles-and-echoes-golden-swan",
-      "hornhauss-tanitim",
+      "newlife-davet-salonu",
     ],
     links: [
       { href: "/blog/sakarya-video-produksiyon-firmasi-nasil-secilir/", label: "Sakarya'da video prodüksiyon firması nasıl seçilir?" },
       { href: "/blog/video-cekimi-fiyati-neye-gore-belirlenir/", label: "Video çekimi fiyatı neye göre belirlenir?" },
       { href: "/blog/tek-cekim-gununden-kac-icerik-cikar/", label: "Bir çekim gününden kaç farklı içerik çıkar?" },
       { href: "/projeler/vaka/aytas-home/", label: "Aytaş Home vaka çalışması: 4 ayda etkileşim +%311" },
+      { href: "/blog/restoran-kafe-tanitim-videosu/", label: "Restoran ve kafe tanıtım filmi çekimi nasıl planlanır?" },
+      { href: "/sosyal-medya-icerigi/sakarya/", label: "Her ay video gerekiyorsa: Sakarya sosyal medya yönetimi" },
+    ],
+    steps: [
+      {
+        title: "Ücretsiz ön görüşme",
+        time: "30–45 dakika, telefonda ya da yerinizde",
+        text: "Videonun amacını, kime gösterileceğini ve nerede yayınlanacağını konuşuyoruz. Kapsam netleşince yazılı teklif geliyor.",
+      },
+      {
+        title: "Konu ve çekim listesi",
+        time: "çekimden yaklaşık 1 hafta önce",
+        text: "Sahne listesi, konuşma metni ya da soru listesi, çekim saati ve çekilecek alanlar onayınıza geliyor; çekim günü sürpriz kalmıyor.",
+      },
+      {
+        title: "Çekim günü",
+        time: "yarım ya da tam gün",
+        text: "Sakarya'nın her ilçesine aynı gün geliyoruz. İşletmeniz kendi akışında devam ediyor; gerekiyorsa 4K drone planları da aynı gün çekiliyor.",
+      },
+      {
+        title: "İlk kurgu",
+        time: "çekimden sonra 1–2 hafta",
+        text: "Ana video ve dikey kesitlerin ilk kurgusu size gönderiliyor. Geri bildiriminizi tek listede toplayıp revizyonu yapıyoruz.",
+      },
+      {
+        title: "Teslim",
+        time: "toplamda genellikle 2–4 hafta",
+        text: "Web sitesi, YouTube, Instagram ve reklam için doğru oran ve sürelerde dosyalar teslim ediliyor. Acil teslim gerekiyorsa takvimi ön görüşmede birlikte kuruyoruz.",
+      },
     ],
   },
 
@@ -224,8 +293,37 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
     ],
     links: [
       { href: "/blog/fabrika-tanitim-filmi-sanayi/", label: "Fabrikanızı en iyi anlatan film nasıl çekilir?" },
+      { href: "/sektorler/fabrika-tanitim-filmi/", label: "Fabrika tanıtım filmi: sanayi tesisleri için çekim" },
       { href: "/blog/video-cekimi-fiyati-neye-gore-belirlenir/", label: "Video çekimi fiyatı neye göre belirlenir?" },
       { href: "/projeler/vaka/aytas-home/", label: "Aytaş Home vaka çalışması: 4 ayda etkileşim +%311" },
+    ],
+    stepsHeading: "Kocaeli'nde bir fabrika filmi nasıl ilerler, ne kadar sürer?",
+    steps: [
+      {
+        title: "Ön görüşme ve saha bilgisi",
+        time: "1. hafta",
+        text: "Filmin kime gösterileceğini (alıcı, fuar, işe alım) ve çekilebilecek alanları konuşuyoruz. Gerekirse tesisi çekimden önce görmeye geliyoruz.",
+      },
+      {
+        title: "Çekim planı ve izinler",
+        time: "çekimden yaklaşık 1 hafta önce",
+        text: "Sahne listesi, vardiya ve operasyon saatleri, iş güvenliği kuralları ve drone uçuş kontrolü netleşiyor; plan yetkilinizin onayına gidiyor.",
+      },
+      {
+        title: "Çekim",
+        time: "1 tam gün ya da iki yarım gün",
+        text: "Üretim hattı çalışırken, röportajlar sessiz bir odada, dış cephe ve havadan planlar ışığın uygun olduğu saatte çekiliyor.",
+      },
+      {
+        title: "Kurgu, renk ve ses",
+        time: "çekimden sonra 1–2 hafta",
+        text: "2–3 dakikalık ana film ile LinkedIn ve Instagram için kısa kesitler hazırlanıyor; ilk kurgu revizyon için size geliyor.",
+      },
+      {
+        title: "Teslim ve versiyonlar",
+        time: "toplamda genellikle 3–4 hafta",
+        text: "Web, YouTube ve fuar ekranı için dosyalar teslim ediliyor; istenirse İngilizce altyazılı ihracat versiyonu aynı kurgudan çıkıyor.",
+      },
     ],
   },
   // ── Round 2 (Search Console impressions, Oct 2026) ──
@@ -248,6 +346,7 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
   },
 
   "sosyal-medya-icerigi/darica": {
+    title: "Darıca Sosyal Medya Ajansı ve Reklam Yönetimi",
     description:
       "Darıca sosyal medya ve reklam yönetimi: Reels çekimi, içerik planı, Instagram/Meta reklamları ve aylık rapor. Yerel işletmeler için görüşelim.",
     heading: "Darıca'da sosyal medya ve reklam yönetimi",
@@ -360,6 +459,9 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
   },
 
   "drone-cekimi/sapanca": {
+    title: "Sapanca Drone Çekimi: Otel, Villa ve Göl Manzarası",
+    description:
+      "Sapanca drone çekimi: otel, bungalov, villa ve etkinlik mekânları için 4K havadan video. Uçuşu gölün en sakin olduğu sabah ve gün batımına planlıyoruz.",
     heading: "Sapanca'da drone çekimi",
     paragraphs: [
       "Sapanca Gölü çevresindeki oteller, bungalovlar, villa projeleri ve etkinlik mekanları havadan çekildiğinde konumun ve manzaranın değeri tek planda anlaşılıyor. Drone planlarını yer çekimleriyle birleştirerek tanıtım videosu ve sosyal medya içeriği olarak teslim ediyoruz.",

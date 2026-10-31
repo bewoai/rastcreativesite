@@ -4179,7 +4179,7 @@ const year = new Date().getFullYear();
           say("Teşekkürler, mesajınız bize ulaştı.");
           call?.classList.add("is-sent");
           track(
-            "lead_form_submit_success",
+            "generate_lead",
             { event_category: "lead", event_label: "evren_call_sheet", form_id: "evren_call_sheet" },
             () => window.setTimeout(() => (window.location.href = "/tesekkurler/"), reduce ? 0 : 1400),
           );

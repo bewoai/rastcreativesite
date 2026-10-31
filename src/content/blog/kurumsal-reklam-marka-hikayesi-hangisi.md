@@ -25,7 +25,7 @@ Neden var olduğunuzu anlatır. Ürünü değil, arkasındaki değerleri ve insa
 
 ## Hangisi size göre?
 
-Basit bir filtre: İnsanlar sizi henüz tanımıyorsa ve güven kurmak istiyorsanız **kurumsal**. Belirli bir ürünü/kampanyayı satmak istiyorsanız **reklam**. Markanızla duygusal bir bağ kurmak istiyorsanız **marka hikâyesi**. Çoğu zaman da doğru cevap ikisinin karışımıdır — örneğin bir marka hikâyesi tadında çekilmiş [kurumsal film](/tanitim-filmi/sakarya/).
+Basit bir filtre: İnsanlar sizi henüz tanımıyorsa ve güven kurmak istiyorsanız **kurumsal**. Belirli bir ürünü/kampanyayı satmak istiyorsanız **reklam**. Markanızla duygusal bir bağ kurmak istiyorsanız **marka hikâyesi**. Çoğu zaman da doğru cevap ikisinin karışımıdır — örneğin bir marka hikâyesi tadında çekilmiş [kurumsal film](/tanitim-filmi/sakarya/). Kocaeli'deki fabrika ve liman filmlerinde bu karışımı nasıl kurduğumuzu [Kocaeli video çekimi](/video-cekimi/kocaeli/) sayfasında örnekleriyle anlattık.
 
 ## Özet
 

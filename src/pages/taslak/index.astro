@@ -1990,7 +1990,7 @@ const whatsappHref = WHATSAPP_CTA_HREF ?? "/iletisim/";
           const go = () => (window.location.href = "/tesekkurler/");
           const track = (window as any).rcTrack;
           if (typeof track === "function") {
-            track("lead_form_submit_success", { event_category: "lead", event_label: "taslak_call_sheet", form_id: "taslak_call_sheet" }, go);
+            track("generate_lead", { event_category: "lead", event_label: "taslak_call_sheet", form_id: "taslak_call_sheet" }, go);
           } else go();
         } else if (status) {
           status.textContent = json.message ?? "Gönderilemedi. Lütfen tekrar deneyin.";

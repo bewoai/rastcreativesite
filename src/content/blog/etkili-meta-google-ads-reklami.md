@@ -88,6 +88,6 @@ Bizim için etkili dijital reklam, sadece yayına alınmış reklam değildir. D
 
 Google’da öne çıkmak istiyorsanız sıcak aramaları yakalamanız gerekir. Meta’da müşteri kazanmak istiyorsanız insanın ihtiyacını doğru kreatifle görünür hale getirmeniz gerekir. İkisinin ortak noktası ise güven vermek ve kullanıcıyı net bir sonraki adıma taşımaktır.
 
-Kısacası reklam bütçesi tek başına müşteri getirmez. Doğru kurgu, doğru mesaj, doğru görsel ve doğru takip sistemi müşteri getirir.
+Kısacası reklam bütçesi tek başına müşteri getirmez. Doğru kurgu, doğru mesaj, doğru görsel ve doğru takip sistemi müşteri getirir. Reklamı ve kullanılacak videoları birlikte yönettiğimiz düzeni [Sakarya sosyal medya yönetimi](/sosyal-medya-icerigi/sakarya/) sayfasında anlattık.
 
 Aklınızda Google Ads ya da Meta reklamı varsa, bence konuşmaya “kaç lira bütçe ayıralım?” diye değil, “hangi müşteriyi yakalamak istiyoruz?” diye başlamak daha doğru. O cevap netleşince bütçenin nereye gideceği de, reklamın ne söyleyeceği de çok daha netleşiyor.

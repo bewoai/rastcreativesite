@@ -55,7 +55,7 @@ Kurgu aşamasında da aynı düzen korunur. [Post-prodüksiyon ve kurgu](/hizmet
 
 Çekim gününden önce marka mesajını, öncelikli ürün veya hizmetleri, kullanılacak mekânları ve karar verecek kişiyi netleştirmek gerekir. Ürünler temiz ve hazır olmalı; mekânda çekilecek alanlar düzenlenmeli; çekime girecek kişiler hangi cümleyi veya hangi hareketi anlatacağını bilmelidir.
 
-Bu hazırlıklar basit görünür ama bir çekim gününde en çok zaman kazandıran adımlar genellikle bunlardır.
+Bu hazırlıklar basit görünür ama bir çekim gününde en çok zaman kazandıran adımlar genellikle bunlardır. Bir restoran ya da kafe için bu listenin nasıl kurulduğunu [restoran tanıtım filmi çekimi](/blog/restoran-kafe-tanitim-videosu/) yazısında adım adım anlattık.
 
 ## Kısacası
 

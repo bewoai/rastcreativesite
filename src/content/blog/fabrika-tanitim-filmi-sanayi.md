@@ -29,4 +29,4 @@ Sanayi müşterilerimize hep şunu öneriyoruz: aynı çekimden birden çok şey
 
 ## Nereden başlamalı?
 
-İster [Kocaeli](/tanitim-filmi/kocaeli/), ister [Gebze](/tanitim-filmi/gebze/), ister [Sakarya'daki tesisiniz](/video-cekimi/sakarya/) olsun — yaptığımız ilk şey tesise gelip birlikte bir tur atmak oluyor. Çoğu zaman siz farkında bile olmadan, en etkileyici karenin nerede olduğunu o turda buluyoruz. Tesisinizi anlatmaya hazırsanız, bir [ön görüşmede](/iletisim/) kahvenizi içip planı birlikte çıkaralım.
+İster [Kocaeli](/video-cekimi/kocaeli/), ister [Gebze](/tanitim-filmi/gebze/), ister [Sakarya'daki tesisiniz](/video-cekimi/sakarya/) olsun — yaptığımız ilk şey tesise gelip birlikte bir tur atmak oluyor. Çoğu zaman siz farkında bile olmadan, en etkileyici karenin nerede olduğunu o turda buluyoruz. Tesisinizi anlatmaya hazırsanız, bir [ön görüşmede](/iletisim/) kahvenizi içip planı birlikte çıkaralım.

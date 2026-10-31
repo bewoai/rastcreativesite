@@ -2,16 +2,42 @@
 
 Google Ads acilmadan once ana donusum olarak yalnizca gercek basarili form
 gonderimi kullanilmalidir. Bu projede form, Web3Forms API'den basarili cevap
-aldiktan sonra GA4'e `lead_form_submit_success` event'i yollar ve ziyaretciyi
+aldiktan sonra GA4'e `generate_lead` event'i yollar (31.10.2026'ya kadar adi
+`lead_form_submit_success` idi) ve ziyaretciyi
 `/tesekkurler` sayfasina yonlendirir.
 
 ## GA4 key event
 
-GA4 tarafinda key event icin onerilen hedef:
+GA4 -> Admin -> Data display -> Events (veya Key events) altinda su event'ler
+**Key event** olarak isaretlenmeli (event ilk kez geldikten sonra listede
+gorunur; gelmediyse "New key event" ile adini elle yazin):
 
 ```text
-event_name = lead_form_submit_success
+generate_lead     ana donusum: iletisim formu (ContactForm, ana sayfa formu)
+                  Web3Forms'tan basarili cevap geldikten sonra
+whatsapp_click    wa.me / api.whatsapp.com linki
+phone_click       tel: linki
 ```
+
+`email_click` (mailto:) key event yapilmaz; olculur ama hacmi dusuk ve
+cogu zaman dogrudan donusum degil.
+
+Tum event'lerde `page_path` (tiklanan/gonderilen sayfa) vardir. Tiklama
+event'lerinde ayrica:
+
+```text
+link_location  header | callbar (mobil alt cubuk) | footer | body
+link_url       tiklanan href
+cta_location   linkte data-cta-location varsa (orn. alt_cubuk_whatsapp)
+```
+
+Tekillestirme: iletisim linkleri (tel/mailto/WhatsApp) yalnizca kendi
+event'ini atar; `data-cta-location` tasisalar bile ayrica `cta_click`
+gitmez. `cta_click` artik yalniz form/sayfa CTA'lari icindir. Eski
+`contact_whatsapp_click`, `contact_phone_click`, `contact_email_click` ve
+`lead_form_submit_success` 31.10.2026'dan sonra gelmez; eski raporlarda
+iki ismi birlikte filtreleyin. GA4'te `link_location` icin Event scope
+custom dimension ekleyin.
 
 Alternatif kontrol hedefi:
 
@@ -23,9 +49,9 @@ WhatsApp, telefon ve e-posta tiklamalari ana form donusumu degildir. Ayrica
 olculen destek event'leri:
 
 ```text
-contact_whatsapp_click
-contact_phone_click
-contact_email_click
+whatsapp_click
+phone_click
+email_click
 ```
 
 ## Ekip trafigini ayirma
@@ -53,7 +79,7 @@ yapilamaz.
 GA4 ile Google Ads baglandiktan sonra Google Ads'e aktarilacak ana donusum:
 
 ```text
-lead_form_submit_success
+generate_lead
 ```
 
 WhatsApp, telefon ve e-posta tiklamalari baslangicta sadece gozlem olarak
@@ -83,8 +109,8 @@ hekim_cta_click       paket = baslangic|standart|klinik|genel
                       konum = hero|paketler|final|vaka_duygu|vaka_erdem
                       (event_category=hekim, link_url)
 hekim_whatsapp_click  hekim sayfalarinda herhangi bir WhatsApp linki tiklandiginda
-                      (contact_whatsapp_click ile birlikte gider)
-lead_form_submit_success
+                      (whatsapp_click ile birlikte gider)
+generate_lead
                       mevcut event; hekim linkinden gelindiyse ek olarak
                       kaynak=hekim ve paket=<...> parametreleri tasir
 ```
@@ -101,7 +127,7 @@ Mevcut `rc_analytics=off` ve localhost/admin dislamasi bunlar icin de gecerlidir
 2. Explore -> Free form: Dimension `Event name`, `paket`, `konum`; Metric
    `Event count`. Filtre: `Event name` hekim_cta_click ile baslar.
 3. Hekim kaynakli lead sayisi: ayni raporda filtre `Event name` =
-   `lead_form_submit_success` ve `kaynak` = `hekim`; kirilim `paket`.
+   `generate_lead` ve `kaynak` = `hekim`; kirilim `paket`.
 4. Anlik dogrulama: Admin -> DebugView (tarayicida GA debug eklentisi ile)
    veya Reports -> Realtime.
 
