@@ -37,22 +37,22 @@ import svcCrane from "../assets/photos/camera-crane.jpg";
 import svcSlate from "../assets/photos/director-clapper.jpg";
 import svcSuite from "../assets/photos/hero-cinema.jpg";
 import lgFederal from "../assets/logos/federal.svg";
-import lgAllufem from "../assets/logos/allufem-aluminium.webp";
-import lgSerdivan from "../assets/logos/levha/serdivan.png";
-import lgAytas from "../assets/logos/aytashome.png";
-import lgMeteors from "../assets/logos/meteors.png";
-import lgOyka from "../assets/logos/oyka.png";
-import lgEstada from "../assets/logos/estada.png";
-import lgZemin from "../assets/logos/levha/zeminkoleji.png";
-import lgBasak from "../assets/logos/basak.png";
-import lgCanex from "../assets/logos/levha/canex.png";
-import lgChint from "../assets/logos/levha/chint.png";
-import lgNewlife from "../assets/logos/newlife.png";
-import lgAltoteks from "../assets/logos/altoteks.png";
-import lgCandles from "../assets/logos/candlesandechoes.png";
-import lgMar from "../assets/logos/marstudyo.png";
-import lgParhad from "../assets/logos/parhad.png";
-import lgErdem from "../assets/logos/erdem-caliskan.png";
+import lgAllufem from "../assets/logos/plate/allufem-aluminium.png";
+import lgSerdivan from "../assets/logos/plate/serdivan.png";
+import lgAytas from "../assets/logos/plate/aytashome.png";
+import lgMeteors from "../assets/logos/plate/meteors.png";
+import lgOyka from "../assets/logos/plate/oyka.png";
+import lgEstada from "../assets/logos/plate/estada.png";
+import lgZemin from "../assets/logos/plate/zeminkoleji.png";
+import lgBasak from "../assets/logos/plate/basak.png";
+import lgCanex from "../assets/logos/plate/canex.png";
+import lgChint from "../assets/logos/plate/chint.png";
+import lgNewlife from "../assets/logos/plate/newlife.png";
+import lgAltoteks from "../assets/logos/plate/altoteks.png";
+import lgCandles from "../assets/logos/plate/candlesandechoes.png";
+import lgMar from "../assets/logos/plate/marstudyo.png";
+import lgParhad from "../assets/logos/plate/parhad.png";
+import lgErdem from "../assets/logos/plate/erdem-caliskan.png";
 import {
   CONTACT,
   NAV,
@@ -203,6 +203,18 @@ const pageJsonLd = [
    their own solid ground (Canex, Altoteks, Chint, Serdivan, Zemin) use the
    knocked-out copies in assets/logos/levha/ — blend modes can't see through
    the plate's backdrop-filter, real transparency can. */
+/* Optical sizing: every logo gets about the same ink area instead of the
+   same height, so wide wordmarks don't tower and square marks don't shrink.
+   Files in assets/logos/plate/ are trimmed to their visible edges
+   (scripts: ~/.hermes/cache/scratch/logo_trim.py), so padding baked into a
+   source file no longer makes a logo look small. */
+const logoH = (img: { width: number; height: number }) => {
+  const r = img.width / img.height;
+  let h = 2.75 * Math.sqrt(3 / r); // rem; a 3:1 mark is 2.75rem tall
+  h = Math.min(3.6, Math.max(1.9, h));
+  if (h * r > 10.5) h = 10.5 / r; // stay inside the cell
+  return h;
+};
 const brands = [
   { src: lgFederal, name: "Federal", mode: "ink" },
   { src: lgMeteors, name: "Meteors Shipping", mode: "ink" },
@@ -664,11 +676,13 @@ const year = new Date().getFullYear();
           brands.map((b, i) => (
             <li class:list={["ev-plate__cell", `is-${b.mode}`]} data-rise style={`--d:${i % 6}`}>
               <span class="ev-plate__no" aria-hidden="true">{roman(i + 1)}</span>
+              <span class="ev-plate__mark">
               {b.src ? (
                 <Image
                   src={b.src}
                   alt={`${b.name} logosu`}
-                  height={56}
+                  height={Math.round(logoH(b.src) * 16)}
+                  style={`--lh:${logoH(b.src).toFixed(2)}rem`}
                   densities={[1.5, 2]}
                   quality={75}
                   loading="lazy"
@@ -678,6 +692,7 @@ const year = new Date().getFullYear();
               ) : (
                 <span class="ev-plate__word" aria-hidden="true">{"word" in b ? b.word : b.name}</span>
               )}
+              </span>
               <span class="ev-plate__name">{b.name}</span>
             </li>
           ))
@@ -3037,11 +3052,20 @@ const year = new Date().getFullYear();
     font-size: 0.85rem;
     color: var(--mute);
   }
+  /* One fixed slot per logo, so every name line sits on the same baseline
+     whatever height the optical sizing gives the mark. */
+  .ev-plate__mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 3.7rem;
+  }
   .ev-plate__logo {
     position: relative;
     width: auto;
-    max-width: 82%;
-    height: 2.6rem;
+    max-width: 88%;
+    height: var(--lh, 2.6rem);
     object-fit: contain;
     transition:
       opacity var(--dur) var(--ease-out),
@@ -3119,7 +3143,10 @@ const year = new Date().getFullYear();
       padding: 1.1rem 0.6rem 0.8rem;
     }
     .ev-plate__logo {
-      height: 2.2rem;
+      height: calc(var(--lh, 2.6rem) * 0.82);
+    }
+    .ev-plate__mark {
+      height: 3.05rem;
     }
     .ev-plate__name {
       position: absolute;
