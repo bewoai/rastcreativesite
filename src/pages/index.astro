@@ -95,6 +95,13 @@ const A = {
   setWebm: slot("set.webm"),
   setMp4: slot("set.mp4"),
   setPoster: slot("set.webp"),
+  // Showreel (31.10): small loop in the hero monitor, full film in a dialog.
+  reelMonitor: slot("showreel/rast-showreel-monitor.mp4"),
+  reelMonitorPoster: slot("showreel/rast-showreel-monitor.webp"),
+  reelWide: slot("showreel/rast-showreel-16x9.mp4"),
+  reelWidePoster: slot("showreel/rast-showreel-16x9-poster.webp"),
+  reelTall: slot("showreel/rast-showreel-9x16.mp4"),
+  reelTallPoster: slot("showreel/rast-showreel-9x16-poster.webp"),
   stops: {
     fikir: [slot("durak-fikir.webp"), slot("durak-fikir-genis.webp")],
     set: [slot("durak-set.webp"), slot("durak-set-genis.webp")],
@@ -407,6 +414,20 @@ const year = new Date().getFullYear();
           the job itself. */}
       <div class="ev-hero__aside">
       <p class="ev-whisper ev-hero__whisper" aria-hidden="true">iyi ışık, iyi iş</p>
+      {A.reelMonitor && A.reelWide ? (
+        <a class="ev-onair ev-glass" href={A.reelWide} data-onair data-reel-open data-cta-location="evren_hero_showreel">
+          <span class="ev-onair__screen">
+            <video class="ev-onair__video" data-ambient data-light muted loop playsinline preload="none" poster={A.reelMonitorPoster ?? undefined} aria-hidden="true">
+              <source src={A.reelMonitor} type="video/mp4" />
+            </video>
+            <span class="ev-onair__play" aria-hidden="true">▶</span>
+          </span>
+          <span class="ev-onair__meta">
+            <span>Showreel · <b>28 saniyede Rast</b></span>
+            <span class="ev-onair__go">İzle <span aria-hidden="true">→</span></span>
+          </span>
+        </a>
+      ) : (
       <a class="ev-onair ev-glass" href="#isler" data-onair data-cta-location="evren_hero_monitor">
         <span class="ev-onair__screen">
           {A.setPoster && (
@@ -421,9 +442,19 @@ const year = new Date().getFullYear();
           <span class="ev-onair__go">İşler <span aria-hidden="true">→</span></span>
         </span>
       </a>
+      )}
       </div>
       </div>
     </section>
+    {A.reelWide && (
+      <dialog class="ev-reel" data-reel aria-label="Rast Creative showreel">
+        <button class="ev-reel__close" type="button" data-reel-close aria-label="Kapat">×</button>
+        <video class="ev-reel__video" data-reel-video controls playsinline muted loop preload="none" poster={A.reelWidePoster ?? undefined}>
+          {A.reelTall && <source src={A.reelTall} type="video/mp4" media="(max-width: 700px)" />}
+          <source src={A.reelWide} type="video/mp4" />
+        </video>
+      </dialog>
+    )}
       <div class="ev-dolly__clouds" aria-hidden="true">
         {A.cloudPoster && (
           <>
@@ -1268,6 +1299,61 @@ const year = new Date().getFullYear();
   }
 
 
+
+  /* Showreel play badge + dialog */
+  .ev-onair__play {
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0.5rem;
+    display: grid;
+    place-items: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    background: rgba(255, 106, 26, 0.92);
+    color: #fff;
+    font-size: 0.95rem;
+    padding-left: 0.15rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+  }
+  .ev-reel {
+    width: min(92vw, 1100px);
+    max-height: 92vh;
+    padding: 0;
+    border: 0;
+    border-radius: 1rem;
+    background: #0d0b09;
+    overflow: hidden;
+  }
+  .ev-reel::backdrop {
+    background: rgba(10, 8, 6, 0.82);
+  }
+  .ev-reel__video {
+    display: block;
+    width: 100%;
+    max-height: 92vh;
+    background: #000;
+  }
+  @media (max-width: 700px) {
+    .ev-reel {
+      width: min(92vw, calc(88vh * 9 / 16));
+    }
+  }
+  .ev-reel__close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 2;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+  }
 
   /* On air */
   .ev-onair {
@@ -3818,7 +3904,35 @@ const year = new Date().getFullYear();
           else v.pause();
         }),
       );
-      root.querySelectorAll<HTMLVideoElement>("video[data-ambient]").forEach((v) => io.observe(v));
+      const conn = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+      const slowNet = !!conn && (conn.saveData === true || /(^|-)2g|3g/.test(conn.effectiveType ?? ""));
+      root.querySelectorAll<HTMLVideoElement>("video[data-ambient]").forEach((v) => {
+        if (slowNet && v.hasAttribute("data-light")) return; // poster only on slow connections
+        io.observe(v);
+      });
+    }
+
+    /* ── Showreel dialog ── */
+    const reel = root.querySelector<HTMLDialogElement>("[data-reel]");
+    const reelVideo = root.querySelector<HTMLVideoElement>("[data-reel-video]");
+    if (reel && reelVideo && typeof reel.showModal === "function") {
+      root.querySelectorAll<HTMLAnchorElement>("[data-reel-open]").forEach((a) =>
+        a.addEventListener("click", (e) => {
+          e.preventDefault();
+          reel.showModal();
+          reelVideo.currentTime = 0;
+          reelVideo.play().catch(() => {});
+        }),
+      );
+      const close = () => {
+        reelVideo.pause();
+        reel.close();
+      };
+      root.querySelector("[data-reel-close]")?.addEventListener("click", close);
+      reel.addEventListener("click", (e) => {
+        if (e.target === reel) close();
+      });
+      reel.addEventListener("close", () => reelVideo.pause());
     }
     root.querySelector<HTMLVideoElement>(".ev-hero__motion")?.addEventListener(
       "playing",
