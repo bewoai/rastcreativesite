@@ -3552,16 +3552,20 @@ const year = new Date().getFullYear();
     }
     /* Sections surface as they arrive. Content is only hidden once JS is
        known to run; without it everything is simply there. */
-    html.js .ev [data-rise]:not(.is-in) {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    html.js .ev [data-rise] {
-      transition:
-        opacity 650ms var(--ease-out),
-        transform 650ms var(--ease-out),
-        box-shadow 700ms var(--ease-out);
-      transition-delay: calc(var(--d, 0) * 80ms);
+    /* Desktop only: on phones (slow CPUs) hidden blocks read as a broken,
+       empty page while scrolling (usability test 31.10), so they just show. */
+    @media (min-width: 768px) {
+      html.js .ev [data-rise]:not(.is-in) {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      html.js .ev [data-rise] {
+        transition:
+          opacity 300ms var(--ease-out),
+          transform 300ms var(--ease-out),
+          box-shadow 700ms var(--ease-out);
+        transition-delay: calc(min(var(--d, 0), 2) * 50ms);
+      }
     }
     /* Threads of light (whisper + label rules) draw in after their block. */
     .ev-whisper::before,
@@ -3955,7 +3959,7 @@ const year = new Date().getFullYear();
               rio.unobserve(e.target);
             }
           }),
-        { rootMargin: "0px 0px -4% 0px", threshold: 0.05 },
+        { rootMargin: "0px 0px 15% 0px", threshold: 0.01 },
       );
       risers.forEach((el) => rio.observe(el));
     }
