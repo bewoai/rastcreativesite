@@ -22,7 +22,6 @@ import {
   HEKIM_ADDONS,
   PRICE_NOTE,
   ADDON_PRICE_NOTE,
-  formatTl,
 } from "../data/hekim-paketleri";
 
 const ROBOTS: string | undefined = "noindex, follow"; // → undefined when the owner approves
@@ -116,9 +115,9 @@ const faqs = [
       "Muayenehane ya da kliniğinizin açılış tarihini izleyen ilk bir ay içinde, yönetmeliğe uygun sponsorlu açılış duyurusudur. Fiyat, kampanya ve hasta görseli içermez; aylık paketlerin parçası değildir; kapsamı ve fiyatı görüşmede belirlenir.",
   },
   {
-    question: "Fiyatlara neler dahil?",
+    question: "Paketlerin fiyatı nasıl belirleniyor?",
     answer:
-      "Paket fiyatları aylıktır, KDV hariçtir ve paket kartında yazan kapsamı içerir. Kesin teklifi ön görüşmeden sonra yazılı olarak sunuyoruz.",
+      "Fiyatı video sayısı ve kapsanan kanallar belirler; paket kartında yazan her şey dahildir. Ücretsiz ön görüşmeden sonra net teklifi yazılı olarak sunuyoruz.",
   },
   {
     question: "Sözleşme süresi ne kadar?",
@@ -228,10 +227,6 @@ const jsonLd = [
               {p.recommended && <span class="hk__badge">Önerilen</span>}
             </div>
             <p class="hk__fit">{p.fit}</p>
-            <p class="hk__price">
-              <span class="hk__amount">{formatTl(p.priceTl)}</span>
-              <span class="hk__per">/ ay</span>
-            </p>
             <p class="hk__note">{PRICE_NOTE}</p>
             {p.includesPrevious && <p class="hk__prev">{p.includesPrevious}</p>}
             <ul class="hk__feat">
