@@ -354,6 +354,27 @@ body:has(.ev) {
   background: #19934a;
   transform: translateY(-1px);
 }
+/* Phone call: same round shape as WhatsApp, in the warm ink of the bar. */
+.ev-tel {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--ink);
+  color: #fff;
+  transition: transform var(--dur-fast) var(--ease-out), background var(--dur) var(--ease-out);
+}
+.ev-tel:hover {
+  background: var(--sun-text);
+  transform: translateY(-1px);
+}
+.ev-tel:focus-visible,
+.ev-wa:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
 .ev-wa__mark {
   flex: none;
   color: #1a8f48;
@@ -405,7 +426,7 @@ body:has(.ev) {
 /* ───── Header ───── */
 /* Anchored sections land just under the floating header. */
 .ev .ev-sec[id] {
-  scroll-margin-top: 4.5rem;
+  scroll-margin-top: 5.5rem;
 }
 .ev-head {
   position: sticky;
@@ -557,6 +578,12 @@ body:has(.ev) {
     display: none !important;
   }
 }
+/* The two extra links only join the bar when there is room for them. */
+@media (max-width: 1279px) {
+  .ev-head__extra {
+    display: none !important;
+  }
+}
 @media (max-width: 1000px) {
   .ev-head__menu {
     display: grid;
@@ -566,6 +593,84 @@ body:has(.ev) {
   }
   .ev-head__act {
     margin-left: auto;
+  }
+}
+
+/* Phones: every header control is a 48px tap target. */
+@media (max-width: 767px) {
+  .ev-head__bar {
+    gap: 0.6rem;
+    padding-left: 0.85rem;
+  }
+  .ev-head__act {
+    gap: 0.35rem;
+  }
+  .ev-wa,
+  .ev-tel,
+  .ev-head__menu {
+    width: 3rem;
+    height: 3rem;
+  }
+  .ev-head__cta {
+    min-height: 3rem;
+  }
+}
+@media (max-width: 400px) {
+  .ev-head__logo .logo__svg {
+    height: 1.5rem;
+  }
+  .ev-head__cta {
+    padding-inline: 0.85rem;
+  }
+}
+
+/* Phone bottom contact bar (WhatsApp | Ara). */
+.ev-callbar {
+  display: none;
+}
+@media (max-width: 767px) {
+  .ev-callbar {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 60;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    padding: 0.4rem 0.6rem calc(0.4rem + env(safe-area-inset-bottom, 0px));
+    background: rgba(247, 242, 235, 0.96);
+    border-top: 1px solid rgba(114, 103, 92, 0.2);
+    box-shadow: 0 -8px 24px -16px rgba(96, 62, 30, 0.45);
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .ev-callbar.is-hidden {
+    transform: translateY(110%);
+  }
+  .ev-callbar__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3rem;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-weight: 650;
+    font-size: 1rem;
+    color: #fff;
+    text-decoration: none;
+  }
+  .ev-callbar__btn--wa {
+    background: #1fa855;
+  }
+  .ev-callbar__btn--tel {
+    background: var(--ink);
+  }
+  .ev-callbar__btn:focus-visible {
+    outline: 2px solid var(--sun-text);
+    outline-offset: 2px;
+  }
+  /* Keep the page end (footer links) clear of the bar. */
+  body:has(.ev-callbar) {
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px)) !important;
   }
 }
 

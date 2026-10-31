@@ -361,3 +361,10 @@
     display: none;
   }
 }
+
+/* Perf: skip layout/paint of below-the-fold blocks until they near the screen. */
+.at-more,
+.at-fold {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}

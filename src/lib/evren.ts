@@ -26,6 +26,15 @@ export const EV_NAV = [
   { label: "İletişim", href: "/iletisim/" },
 ] as const;
 
+/**
+ * Extra destinations shown after EV_NAV in the header (phone menu always,
+ * desktop bar only on wide screens so it never crowds).
+ */
+export const EV_NAV_EXTRA = [
+  { label: "Hekimler için", href: "/hekim-icerik-sistemi/" },
+  { label: "Ücretsiz araçlar", href: "/araclar/" },
+] as const;
+
 /** The one lead CTA: short, confident, the same wording everywhere. */
 export const EV_CTA = "Görüşelim";
 

@@ -117,17 +117,25 @@
   }
 }
 
+/* Anchor jumps land below the sticky header (≈4.1rem bar + offset), not under it. */
+[id] {
+  scroll-margin-top: 5.5rem;
+}
+
 /* Scroll-reveal: fade + 8px up as elements enter view (roadmap §1.4). Gated to
    no-preference so reduced-motion users always see content (no opacity:0 trap). */
-@media (prefers-reduced-motion: no-preference) {
-  html.js [data-reveal] {
+@media (prefers-reduced-motion: no-preference) and (min-width: 768px) {
+  /* "reveal-on" is set by the reveal script itself (BaseLayout), after it has
+     marked everything already near the viewport as revealed — so content is
+     visible without JS, before the script runs, and on phones (<768px). */
+  html.reveal-on [data-reveal] {
     opacity: 0;
     transform: translateY(8px);
     transition:
-      opacity 0.6s var(--ease-out),
-      transform 0.6s var(--ease-out);
+      opacity 0.28s var(--ease-out),
+      transform 0.28s var(--ease-out);
   }
-  html.js [data-reveal].is-revealed {
+  html.reveal-on [data-reveal].is-revealed {
     opacity: 1;
     transform: none;
   }
@@ -135,22 +143,22 @@
   .grid-cards > [data-reveal]:nth-child(2),
   .grid-services > [data-reveal]:nth-child(2),
   .folder-grid > [data-reveal]:nth-child(2) {
-    transition-delay: 0.06s;
+    transition-delay: 0.03s;
   }
   .grid-cards > [data-reveal]:nth-child(3),
   .grid-services > [data-reveal]:nth-child(3),
   .folder-grid > [data-reveal]:nth-child(3) {
-    transition-delay: 0.12s;
+    transition-delay: 0.06s;
   }
   .grid-cards > [data-reveal]:nth-child(4),
   .grid-services > [data-reveal]:nth-child(4),
   .folder-grid > [data-reveal]:nth-child(4) {
-    transition-delay: 0.18s;
+    transition-delay: 0.08s;
   }
   .grid-cards > [data-reveal]:nth-child(5),
   .grid-services > [data-reveal]:nth-child(5),
   .folder-grid > [data-reveal]:nth-child(5) {
-    transition-delay: 0.24s;
+    transition-delay: 0.1s;
   }
 }
 

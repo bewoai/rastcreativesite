@@ -444,10 +444,26 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
           if (el.dataset.reveal === "odometer") animateOdometer(el);
         };
 
-        if (!("IntersectionObserver" in window)) {
+        // Phones, reduced motion and old browsers: show everything at once.
+        // Testers on slow phones saw blank sections for seconds while the
+        // observer caught up, so the animation is a desktop-only nicety.
+        const animate =
+          "IntersectionObserver" in window &&
+          matchMedia("(min-width: 768px) and (prefers-reduced-motion: no-preference)").matches;
+        if (!animate) {
           revealEls.forEach(reveal);
           return;
         }
+
+        // Anything already on (or just below) screen is shown before the
+        // hiding CSS switches on, so nothing in view ever flashes or waits.
+        const nearLimit = window.innerHeight * 1.15;
+        const pending: HTMLElement[] = [];
+        revealEls.forEach((el) => {
+          if (el.getBoundingClientRect().top < nearLimit) reveal(el);
+          else pending.push(el);
+        });
+        document.documentElement.classList.add("reveal-on");
 
         const io = new IntersectionObserver(
           (entries) => {
@@ -458,9 +474,9 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
               }
             }
           },
-          { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
+          { rootMargin: "0px 0px 12% 0px", threshold: 0 },
         );
-        revealEls.forEach((el) => io.observe(el));
+        pending.forEach((el) => io.observe(el));
       };
 
       initReveal();

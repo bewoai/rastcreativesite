@@ -913,33 +913,33 @@ const pageJsonLd = [
     color: color-mix(in srgb, var(--on-ink) 72%, transparent);
     line-height: var(--leading-body);
   }
-  @media (prefers-reduced-motion: no-preference) {
-    html.js .team-hero__intro[data-reveal],
-    html.js .team-stats [data-reveal],
-    html.js .team-grid [data-reveal],
-    html.js .vision-mission [data-reveal],
-    html.js .why [data-reveal],
-    html.js .proof [data-reveal],
-    html.js .workflow-head[data-reveal],
-    html.js .workflow [data-reveal],
-    html.js .approach [data-reveal],
-    html.js .trust [data-reveal],
-    html.js .equip[data-reveal],
-    html.js .cta[data-reveal] {
+  @media (prefers-reduced-motion: no-preference) and (min-width: 768px) {
+    html.reveal-on .team-hero__intro[data-reveal],
+    html.reveal-on .team-stats [data-reveal],
+    html.reveal-on .team-grid [data-reveal],
+    html.reveal-on .vision-mission [data-reveal],
+    html.reveal-on .why [data-reveal],
+    html.reveal-on .proof [data-reveal],
+    html.reveal-on .workflow-head[data-reveal],
+    html.reveal-on .workflow [data-reveal],
+    html.reveal-on .approach [data-reveal],
+    html.reveal-on .trust [data-reveal],
+    html.reveal-on .equip[data-reveal],
+    html.reveal-on .cta[data-reveal] {
       transform: translateY(14px);
     }
-    html.js .team-hero__intro[data-reveal].is-revealed,
-    html.js .team-stats [data-reveal].is-revealed,
-    html.js .team-grid [data-reveal].is-revealed,
-    html.js .vision-mission [data-reveal].is-revealed,
-    html.js .why [data-reveal].is-revealed,
-    html.js .proof [data-reveal].is-revealed,
-    html.js .workflow-head[data-reveal].is-revealed,
-    html.js .workflow [data-reveal].is-revealed,
-    html.js .approach [data-reveal].is-revealed,
-    html.js .trust [data-reveal].is-revealed,
-    html.js .equip[data-reveal].is-revealed,
-    html.js .cta[data-reveal].is-revealed {
+    html.reveal-on .team-hero__intro[data-reveal].is-revealed,
+    html.reveal-on .team-stats [data-reveal].is-revealed,
+    html.reveal-on .team-grid [data-reveal].is-revealed,
+    html.reveal-on .vision-mission [data-reveal].is-revealed,
+    html.reveal-on .why [data-reveal].is-revealed,
+    html.reveal-on .proof [data-reveal].is-revealed,
+    html.reveal-on .workflow-head[data-reveal].is-revealed,
+    html.reveal-on .workflow [data-reveal].is-revealed,
+    html.reveal-on .approach [data-reveal].is-revealed,
+    html.reveal-on .trust [data-reveal].is-revealed,
+    html.reveal-on .equip[data-reveal].is-revealed,
+    html.reveal-on .cta[data-reveal].is-revealed {
       transform: none;
     }
     .team-stats [data-reveal]:nth-child(2),
@@ -963,14 +963,14 @@ const pageJsonLd = [
     .trust__list [data-reveal]:nth-child(4) {
       transition-delay: 0.21s;
     }
-    html.js .workflow__item[data-reveal].is-revealed::before {
+    html.reveal-on .workflow__item[data-reveal].is-revealed::before {
       width: 100%;
     }
-    html.js .trust__list li[data-reveal]::before {
+    html.reveal-on .trust__list li[data-reveal]::before {
       opacity: 0;
       transform: scale(0.65);
     }
-    html.js .trust__list li[data-reveal].is-revealed::before {
+    html.reveal-on .trust__list li[data-reveal].is-revealed::before {
       opacity: 1;
       transform: scale(1);
     }

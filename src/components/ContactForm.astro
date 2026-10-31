@@ -70,6 +70,22 @@ import { WEB3FORMS_ACCESS_KEY, SITE } from "../consts";
     </select>
   </div>
 
+  <div class="cform__row">
+    <div class="field">
+      <label for="cf-contact-pref">Size nasıl ulaşalım? <span class="optional">(isteğe bağlı)</span></label>
+      <select id="cf-contact-pref" name="iletisim_tercihi">
+        <option value="" selected>Fark etmez</option>
+        <option value="Telefonla arayın">Telefonla arayın</option>
+        <option value="WhatsApp'tan yazın">WhatsApp'tan yazın</option>
+        <option value="E-posta">E-posta</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="cf-call-time">Uygun arama saati <span class="optional">(isteğe bağlı)</span></label>
+      <input id="cf-call-time" name="arama_saati" type="text" maxlength="60" placeholder="Örn. hafta içi 14:00 sonrası" />
+    </div>
+  </div>
+
   <div class="field">
     <label for="cf-message">Mesajınız <span class="optional">(isteğe bağlı)</span></label>
     <textarea

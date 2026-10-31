@@ -255,7 +255,13 @@ import { publicFileSize, fileExt } from "../../lib/filesize";
   type Mode = keyof typeof MODES;
 
   const root = document.querySelector<HTMLElement>("[data-tool]");
-  if (root) init(root);
+  // Perf: let the page paint first; the canvas setup (several 1080×1920
+  // drawings) blocked first render for seconds on slow phones.
+  if (root) {
+    const run = () => init(root);
+    if ("requestIdleCallback" in window) requestIdleCallback(run, { timeout: 800 });
+    else setTimeout(run, 1);
+  }
 
   function init(root: HTMLElement) {
     const $ = <T extends Element>(s: string) => root.querySelector<T>(s)!;

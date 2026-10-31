@@ -86,7 +86,7 @@
 
   /* Live Set: logo entry, slate header and cinematic reveals. */
   --ls-ease-reveal: cubic-bezier(0.22, 1, 0.36, 1);
-  --ls-dur-reveal: 0.7s;
+  --ls-dur-reveal: 0.3s;
   --ls-dur-entry-draw: 2200ms;
   --ls-dur-entry-iris: 620ms;
   --ls-dur-entry-mobile: 2350ms;
