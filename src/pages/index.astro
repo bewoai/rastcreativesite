@@ -384,7 +384,7 @@ const year = new Date().getFullYear();
         }
         {
           heroVideo && (
-            <video class="ev-hero__video ev-hero__motion" data-ambient muted loop playsinline preload="metadata">
+            <video class="ev-hero__video ev-hero__motion" data-ambient muted loop playsinline preload="none">
               {A.heroMWebm && <source src={A.heroMWebm} type="video/webm" media="(max-width: 700px)" />}
               {A.heroMMp4 && <source src={A.heroMMp4} type="video/mp4" media="(max-width: 700px)" />}
               {A.heroWebm && <source src={A.heroWebm} type="video/webm" />}
@@ -461,7 +461,7 @@ const year = new Date().getFullYear();
     {A.reelWide && (
       <dialog class="ev-reel" data-reel aria-label="Rast Creative showreel">
         <button class="ev-reel__close" type="button" data-reel-close aria-label="Kapat">×</button>
-        <video class="ev-reel__video" data-reel-video controls playsinline muted loop preload="none" poster={A.reelWidePoster ?? undefined}>
+        <video class="ev-reel__video" data-reel-video controls playsinline muted loop preload="none" data-poster={A.reelWidePoster ?? undefined}>
           {A.reelTall && <source src={A.reelTall} type="video/mp4" media="(max-width: 700px)" />}
           <source src={A.reelWide} type="video/mp4" />
         </video>
@@ -511,7 +511,7 @@ const year = new Date().getFullYear();
                       sizes="(max-width: 760px) 92vw, 44rem"
                       format="webp"
                       quality={62}
-                      loading={i === 0 ? "eager" : "lazy"}
+                      loading="lazy"
                       decoding="async"
                     />
                   ) : (
@@ -1102,7 +1102,7 @@ const year = new Date().getFullYear();
       <div class="ev-call__dawn" aria-hidden="true">
         {
           dawnVideo ? (
-            <video class="ev-call__video" data-ambient muted loop playsinline preload="none" poster={A.dawnPoster ?? undefined}>
+            <video class="ev-call__video" data-ambient muted loop playsinline preload="none" data-poster={A.dawnPoster ?? undefined}>
               {A.dawnWebm && <source src={A.dawnWebm} type="video/webm" />}
               {A.dawnMp4 && <source src={A.dawnMp4} type="video/mp4" />}
             </video>
@@ -3939,8 +3939,33 @@ const year = new Date().getFullYear();
       onScroll();
     }
 
-    /* ── Ambient videos play only on screen ── */
-    if (!reduce) {
+    /* ── Posters far below the fold (call-scene dawn, showreel dialog) ──
+       A <video poster> downloads at parse time wherever it sits; on a slow
+       phone these competed with the hero still (the LCP). They carry
+       data-poster and get it once near the viewport (or on open). */
+    const setPoster = (v: HTMLVideoElement) => {
+      if (v.dataset.poster && !v.poster) v.poster = v.dataset.poster;
+    };
+    const posterIo = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          setPoster(e.target as HTMLVideoElement);
+          posterIo.unobserve(e.target);
+        }),
+      { rootMargin: "1500px 0px" },
+    );
+    root.querySelectorAll<HTMLVideoElement>("video[data-poster]:not([data-reel-video])").forEach((v) => posterIo.observe(v));
+
+    /* ── Ambient videos play only on screen ──
+       Started after the load event (+ idle), so the hero loop and the
+       monitor clip don't take bandwidth/main thread from the LCP still. */
+    const afterLoad = (fn: () => void) => {
+      const idle = () => ("requestIdleCallback" in window ? requestIdleCallback(fn, { timeout: 1500 }) : setTimeout(fn, 200));
+      if (document.readyState === "complete") idle();
+      else addEventListener("load", idle, { once: true });
+    };
+    if (!reduce) afterLoad(() => {
       const io = new IntersectionObserver((entries) =>
         entries.forEach((e) => {
           const v = e.target as HTMLVideoElement;
@@ -3954,7 +3979,7 @@ const year = new Date().getFullYear();
         if (slowNet && v.hasAttribute("data-light")) return; // poster only on slow connections
         io.observe(v);
       });
-    }
+    });
 
     /* ── Showreel dialog ── */
     const reel = root.querySelector<HTMLDialogElement>("[data-reel]");
@@ -3963,6 +3988,7 @@ const year = new Date().getFullYear();
       root.querySelectorAll<HTMLAnchorElement>("[data-reel-open]").forEach((a) =>
         a.addEventListener("click", (e) => {
           e.preventDefault();
+          setPoster(reelVideo);
           reel.showModal();
           reelVideo.currentTime = 0;
           reelVideo.play().catch(() => {});
