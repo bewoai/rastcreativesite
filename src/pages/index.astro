@@ -1317,7 +1317,14 @@ const year = new Date().getFullYear();
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
   }
   .ev-reel {
-    width: min(92vw, 1100px);
+    /* The global reset zeroes margins, which drops <dialog>'s default
+       centring (margin:auto) and pinned it to the top-left corner. */
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    width: min(92vw, 1100px, calc(88vh * 16 / 9));
+    max-width: none;
+    height: fit-content;
     max-height: 92vh;
     padding: 0;
     border: 0;
