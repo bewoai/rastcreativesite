@@ -3169,8 +3169,18 @@ const year = new Date().getFullYear();
     mix-blend-mode: screen;
     filter: contrast(1.08) saturate(1.1);
     opacity: 0.95;
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    /* Feather all four edges. The box is wider than the clip's 3.2:1 on large
+       screens, so object-fit:cover crops away the clip's own black top/bottom
+       fade and the band ended in a hard line (seen at 1920px in Brave). The
+       mask lives on the video, not the container, so the screen blend stays. */
+    -webkit-mask-image:
+      linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent),
+      linear-gradient(180deg, transparent, #000 22%, #000 78%, transparent);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent),
+      linear-gradient(180deg, transparent, #000 22%, #000 78%, transparent);
+    mask-composite: intersect;
   }
   /* Every other passage is mirrored so neighbours don't repeat. Set by hand
      (ev-cloud--flip), not by :nth-of-type: the optional reviews cloud would
