@@ -33,6 +33,17 @@ const jsonLd = [
       url: new URL(t.href, SITE.url).href,
     })),
   },
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: "Rast Creative ücretsiz video araçları tanıtımı",
+    description: "Güvenli alan kontrolü, bitrate hesaplayıcı, altyazı kontrolü, şablonlar, belgeler, SFX ve LUT paketleri: Rast Creative'in ücretsiz araçları 38 saniyede.",
+    thumbnailUrl: new URL("/araclar/tanitim/rast-araclar-tanitim-poster.webp", SITE.url).href,
+    contentUrl: new URL("/araclar/tanitim/rast-araclar-tanitim.mp4", SITE.url).href,
+    uploadDate: "2026-10-31",
+    duration: "PT38S",
+    publisher: { "@type": "Organization", name: "Rast Creative Studio", url: SITE.url },
+  },
 ];
 ---
 
@@ -44,15 +55,20 @@ const jsonLd = [
         <h1>Video ve sosyal medya için <em>ücretsiz araçlar</em></h1>
         <p class="ah__sub">Tarayıcıda çalışır, dosyanız bilgisayarınızdan çıkmaz.</p>
       </div>
-      <div class="ah__frame" aria-hidden="true">
-        <div class="ah__phone">
-          <span class="ah__thirds"></span>
-          <span class="ah__safe"></span>
-          <span class="ah__scan"></span>
-          <span class="ah__rec"><b></b>REC</span>
-          <span class="ah__ratio">9:16</span>
-        </div>
-      </div>
+      <figure class="ah__video">
+        <video
+          controls
+          playsinline
+          preload="none"
+          width="1280"
+          height="720"
+          poster="/araclar/tanitim/rast-araclar-tanitim-poster.webp"
+          aria-label="Rast Creative ücretsiz araçlar tanıtım videosu (38 sn, seslendirmeli)"
+        >
+          <source src="/araclar/tanitim/rast-araclar-tanitim.mp4" type="video/mp4" />
+        </video>
+        <figcaption>38 saniyede tüm araçlar</figcaption>
+      </figure>
     </div>
 
     <div class="gal">
@@ -106,7 +122,7 @@ const jsonLd = [
   }
   @media (min-width: 900px) {
     .ah__grid {
-      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
       gap: 3rem;
     }
   }
@@ -146,98 +162,27 @@ const jsonLd = [
     color: var(--ink-soft);
   }
 
-  /* 9:16 viewfinder motif */
-  .ah__frame {
-    display: none;
+  /* Promo video */
+  .ah__video {
+    margin: 0;
   }
-  @media (min-width: 900px) {
-    .ah__frame {
-      display: block;
-      padding-right: 2rem;
-    }
-  }
-  .ah__phone {
-    position: relative;
-    width: 150px;
-    aspect-ratio: 9 / 16;
-    border-radius: 22px;
-    overflow: hidden;
-    background:
-      radial-gradient(80% 60% at 70% 10%, rgba(255, 106, 26, 0.55), transparent 70%),
-      linear-gradient(180deg, #2a221c, #100d0b);
+  .ah__video video {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    border-radius: 18px;
+    background: #f3e9df;
     box-shadow:
-      0 40px 70px -30px rgba(60, 36, 16, 0.7),
-      0 0 0 6px #1e1915,
-      0 0 0 7px rgba(255, 255, 255, 0.35);
-    rotate: 4deg;
+      0 40px 70px -34px rgba(60, 36, 16, 0.55),
+      0 0 0 1px rgba(60, 36, 16, 0.08);
   }
-  .ah__safe {
-    position: absolute;
-    inset: 12% 13% 22% 6%;
-    border: 1.5px dashed rgba(120, 230, 160, 0.85);
-    border-radius: 6px;
-  }
-  .ah__thirds {
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(90deg, transparent 33.1%, rgba(255, 255, 255, 0.14) 33.3%, transparent 33.6%, transparent 66.4%, rgba(255, 255, 255, 0.14) 66.6%, transparent 66.9%),
-      linear-gradient(180deg, transparent 33.1%, rgba(255, 255, 255, 0.14) 33.3%, transparent 33.6%, transparent 66.4%, rgba(255, 255, 255, 0.14) 66.6%, transparent 66.9%);
-  }
-  .ah__scan {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    height: 30%;
-    background: linear-gradient(180deg, transparent, rgba(255, 140, 70, 0.2), transparent);
-    animation: ah-scan 5.5s ease-in-out infinite;
-  }
-  .ah__rec {
-    position: absolute;
-    left: 12px;
-    top: 12px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font: 700 0.62rem/1 var(--font-utility);
-    letter-spacing: 0.14em;
-    color: rgba(255, 255, 255, 0.8);
-  }
-  .ah__rec b {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #ff3b1f;
-    animation: ah-blink 1.4s steps(2, jump-none) infinite;
-  }
-  .ah__ratio {
-    position: absolute;
-    right: 12px;
-    bottom: 12px;
-    font: 700 0.7rem/1 var(--font-utility);
-    letter-spacing: 0.1em;
-    color: rgba(255, 255, 255, 0.7);
-  }
-  @keyframes ah-scan {
-    0%,
-    100% {
-      translate: 0 -40%;
-    }
-    50% {
-      translate: 0 280%;
-    }
-  }
-  @keyframes ah-blink {
-    50% {
-      opacity: 0.15;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .ah__scan,
-    .ah__rec b {
-      animation: none;
-    }
+  .ah__video figcaption {
+    margin-top: 0.7rem;
+    font: 700 0.72rem/1 var(--font-utility);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
   }
 
   /* ───── Gallery ───── */
