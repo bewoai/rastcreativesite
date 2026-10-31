@@ -85,6 +85,9 @@ export const SOCIAL: readonly NavItem[] = [
  */
 export const SAME_AS_EXTRA: readonly string[] = [
   "https://www.crunchbase.com/organization/rast-creative-studio",
+  "https://www.behance.net/rastcreative",
+  "https://vimeo.com/rastcreative",
+  "https://medium.com/@rastcreative",
 ];
 
 /**
