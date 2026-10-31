@@ -552,7 +552,7 @@ const year = new Date().getFullYear();
                       </button>
                     )}
                     <a class="ev-link" href={`/projeler/${p.id}/`}>
-                      Proje sayfası <span aria-hidden="true">→</span>
+                      Proje sayfası<span class="sr-only">: {p.data.title}</span> <span aria-hidden="true">→</span>
                     </a>
                   </div>
                 </div>
@@ -743,7 +743,7 @@ const year = new Date().getFullYear();
               <p class="ev-person__role">{f.role}</p>
               <p class="ev-person__links">
                 {f.links.map((l) => (
-                  <a href={l.href} target="_blank" rel="noreferrer" aria-label={`${f.name} — ${l.label}`}>{l.label} <span aria-hidden="true">↗</span></a>
+                  <a href={l.href} target="_blank" rel="noopener noreferrer" aria-label={`${f.name} — ${l.label}`}>{l.label} <span aria-hidden="true">↗</span></a>
                 ))}
               </p>
             </li>

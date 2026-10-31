@@ -19,12 +19,14 @@ const en = langOfPath(path) === "en";
     <section class="rc-consent" role="region" aria-label={en ? "Cookie preferences" : "Çerez tercihi"} data-consent hidden>
       <p class="rc-consent__eyebrow">{en ? "Cookies" : "Çerezler"}</p>
       {en ? (
+        <p class="rc-consent__short">Analytics cookies? <a href="/kvkk/#cerezler" lang="tr">Details</a></p>
         <p class="rc-consent__text">
           We use analytics cookies to understand how the site is used. If you accept, Google Analytics cookies are
           turned on; if you decline, only the essential ones remain.{" "}
           <a href="/kvkk/#cerezler" lang="tr">Details</a>
         </p>
       ) : (
+        <p class="rc-consent__short">Analiz çerezlerine izin veriyor musunuz? <a href="/kvkk/#cerezler">Ayrıntı</a></p>
         <p class="rc-consent__text">
           Siteyi nasıl kullandığınızı anlamak için analiz çerezleri kullanıyoruz. Kabul ederseniz Google Analytics
           çerezleri açılır; reddederseniz yalnızca zorunlu olanlar kalır. <a href="/kvkk/#cerezler">Ayrıntılar</a>
@@ -122,7 +124,11 @@ const en = langOfPath(path) === "en";
     line-height: 1.5;
     color: var(--ink-soft);
   }
-  .rc-consent__text a {
+  .rc-consent__short {
+    display: none;
+  }
+  .rc-consent__text a,
+  .rc-consent__short a {
     color: var(--ink);
     font-weight: 600;
     text-decoration: underline;
@@ -158,30 +164,53 @@ const en = langOfPath(path) === "en";
     outline: 2px solid var(--amber);
     outline-offset: 2px;
   }
+  /* Phones: one slim strip (text left, two buttons right) so the first
+     screen's CTAs stay visible; the long copy lives on /kvkk/#cerezler. */
   @media (max-width: 767px) {
     .rc-consent {
-      left: 0.6rem;
-      right: 0.6rem;
+      left: 0.5rem;
+      right: 0.5rem;
       width: auto;
-      bottom: 0.6rem;
-      padding: 0.85rem 0.95rem 0.9rem;
+      bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.45rem 0.4rem 0.8rem;
+      border-radius: 999px;
+    }
+    .rc-consent[hidden] {
+      display: none;
     }
     /* Sit above the fixed WhatsApp|Ara bar (≈3.9rem + safe area). */
     :global(body:has(.ev-callbar)) .rc-consent {
-      bottom: 4.5rem;
+      bottom: 4.4rem;
     }
     /* Never cover a form field while typing (keyboard open). */
     .rc-consent.is-typing {
       display: none;
     }
-    .rc-consent__eyebrow {
+    .rc-consent__eyebrow,
+    .rc-consent__text {
       display: none;
     }
-    .rc-consent__text {
-      font-size: 0.86rem;
+    .rc-consent__short {
+      display: block;
+      flex: 1;
+      margin: 0;
+      font-size: 0.8rem;
+      line-height: 1.3;
+      color: var(--ink-soft);
     }
     .rc-consent__actions {
-      margin-top: 0.7rem;
+      display: flex;
+      flex: none;
+      gap: 0.35rem;
+      margin-top: 0;
+    }
+    .rc-consent__btn {
+      min-height: 44px;
+      padding: 0 0.8rem;
+      font-size: 0.85rem;
     }
   }
 </style>
