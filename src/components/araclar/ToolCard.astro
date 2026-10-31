@@ -38,6 +38,7 @@ const cta = ctaLabel(item.type);
   <span class="tc__body">
     <Tag class="tc__title">{item.title}</Tag>
     <span class="tc__benefit">{item.benefit}</span>
+    {item.plain && <span class="tc__plain"><b>Ne işe yarar?</b> {item.plain}</span>}
     <span class="tc__chips">
       {item.chips.map((c) => <span>{c}</span>)}
     </span>
@@ -135,6 +136,15 @@ const cta = ctaLabel(item.type);
     color: var(--ink-soft);
     font-size: 0.98rem;
     line-height: 1.4;
+  }
+  .tc__plain {
+    font-size: 0.86rem;
+    line-height: 1.4;
+    color: var(--ink-soft);
+  }
+  .tc__plain b {
+    color: var(--ink);
+    font-weight: 700;
   }
   .tc__chips {
     display: flex;

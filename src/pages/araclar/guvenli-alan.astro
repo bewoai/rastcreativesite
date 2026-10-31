@@ -117,6 +117,7 @@ const jsonLd = [
   },
   faqPage(faqs),
 ];
+import { publicFileSize, fileExt } from "../../lib/filesize";
 ---
 
 <BaseLayout title={title} description={description} jsonLd={jsonLd}>
@@ -226,20 +227,23 @@ const jsonLd = [
         </p>
       </Fragment>
     </SectionHeading>
-    <ul class="tpls">
+    <p class="yt-small dl-hint">Dosyaya dokunun, cihazınıza iner. Dosyalar PNG: Canva, CapCut ve Photoshop’ta doğrudan açılır.</p>
+      <ul class="tpls">
       {
         templates.map((t) => (
           <li>
             <a href={TPL + t.file} download>
               <img src={TPL + t.file} alt={`${t.label} güvenli alan şablonu önizlemesi`} width="108" height="192" loading="lazy" decoding="async" />
               <span>{t.label}</span>
+              <small class="tpls__meta">{fileExt(t.file)}, {publicFileSize(TPL + t.file)}</small>
+              <span class="dl-go" aria-hidden="true">↓ İndir</span>
             </a>
           </li>
         ))
       }
     </ul>
     <p>
-      <a class="ev-btn ev-btn--sun" href={TPL + "rast-guvenli-alan-sablonlari.zip"} download>Tüm şablonlar (ZIP)</a>
+      <a class="ev-btn ev-btn--sun" href={TPL + "rast-guvenli-alan-sablonlari.zip"} download>↓ Tüm şablonlar (ZIP, {publicFileSize(TPL + "rast-guvenli-alan-sablonlari.zip")})</a>
     </p>
   </Section>
 
@@ -722,7 +726,15 @@ const jsonLd = [
     }
     const fmt = (t: number) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, "0")}`;
 
+    // The built-in sample is 1080×1920, but the CDN may hand phones a smaller
+    // copy; never warn about our own sample.
+    let sampleLoading = false;
     function ratioWarn(w: number, h: number) {
+      if (sampleLoading) {
+        sampleLoading = false;
+        warn.hidden = true;
+        return;
+      }
       const r = w / h;
       if (Math.abs(r - 9 / 16) > 0.01) {
         warn.textContent = `Dosyanız 9:16 değil (${w}×${h}). Platformlar kenarları kırpabilir ya da boşluk ekleyebilir; önizlemede dosya kırpılmadan sığdırıldı. En doğru sonuç için 1080×1920 kullanın.`;
@@ -814,8 +826,9 @@ const jsonLd = [
     });
     root.querySelector<HTMLButtonElement>("[data-sample-frame]")?.addEventListener("click", async () => {
       // stock talking-head frame (Pexels) with a Turkish hook + caption, so the overlays visibly matter
-      const res = await fetch("/araclar/guvenli-alan/rast-ornek-kare-1080x1920.jpg");
+      const res = await fetch("/araclar/guvenli-alan/rast-ornek-kare-1080x1920.jpg", { cache: "no-store" });
       if (!res.ok) return;
+      sampleLoading = true;
       load(new File([await res.blob()], "rast-ornek-kare-1080x1920.jpg", { type: "image/jpeg" }));
     });
 
@@ -1235,6 +1248,25 @@ const jsonLd = [
   .tpls a:hover,
   .tpls a:focus-visible {
     border-color: var(--amber);
+  }
+  .tpls__meta {
+    color: var(--ink-soft);
+    font-size: 0.8rem;
+  }
+  .dl-go {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 1rem;
+    border-radius: 999px;
+    background: var(--amber, #e07a2e);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+  .dl-hint {
+    margin: 1rem 0 0;
   }
   .tpls img {
     width: 108px;

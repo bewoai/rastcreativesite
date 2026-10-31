@@ -75,6 +75,8 @@
 .yt-tpls a:hover, .yt-tpls a:focus-visible { border-color: var(--amber); }
 .yt-tpls img { max-width: 100%; height: auto; border-radius: 0.5rem; background: linear-gradient(160deg, #c98a54, #7b5a8f 55%, #2c3a5c); }
 .yt-tpls small { color: var(--ink-soft); }
+.dl-go { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 1rem; border-radius: 999px; background: var(--amber, #e07a2e); color: #fff; font-weight: 700; font-size: 0.9rem; }
+.dl-hint { margin: 1rem 0 0; }
 .yt-tablewrap { overflow-x: auto; margin-top: 1.2rem; }
 .yt-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; color: var(--ink); }
 .yt-table caption { caption-side: bottom; padding-top: 0.6rem; text-align: left; font-size: 0.85rem; color: var(--ink-soft); }

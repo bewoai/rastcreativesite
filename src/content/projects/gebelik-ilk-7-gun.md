@@ -13,7 +13,7 @@ posterAlt: Op. Dr. Duygu Cebecik Özmüş ile hamileliğin ilk 7 günü bilgilen
 youtubeId: BRwrTj7VuAY
 duration: 04:12
 featured: true
-order: 6
+order: 1.2
 ---
 
 Op. Dr. Duygu Cebecik Özmüş ile hazırlanan medikal bilgilendirme serisinin ilk bölümü. Hekim otoritesini koruyan, anlaşılır ve güven veren bir anlatım.

@@ -53,7 +53,7 @@ const jsonLd = [
       <div class="ah__text">
         <p class="ah__eyebrow"><span aria-hidden="true"></span>{ARACLAR.length} ücretsiz araç · Kayıt yok</p>
         <h1>Video ve sosyal medya için <em>ücretsiz araçlar</em></h1>
-        <p class="ah__sub">Tarayıcıda çalışır, dosyanız bilgisayarınızdan çıkmaz.</p>
+        <p class="ah__sub">Tarayıcıda çalışır, dosyanız cihazınızdan çıkmaz.</p>
       </div>
       <figure class="ah__video">
         <video
@@ -205,6 +205,16 @@ const jsonLd = [
   }
   .gal__filter::-webkit-scrollbar {
     display: none;
+  }
+  /* Phones: tabs wrap onto two lines instead of a hidden sideways scroll
+     (usability test: nobody found the tabs past the screen edge). */
+  @media (max-width: 720px) {
+    .gal__filter {
+      flex-wrap: wrap;
+      width: auto;
+      overflow: visible;
+      border-radius: 1.4rem;
+    }
   }
   .gal__filter label {
     position: relative;

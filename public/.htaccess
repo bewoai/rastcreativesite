@@ -126,7 +126,7 @@ ErrorDocument 403 /404.html
   </Files>
   # Safe-zone templates carry license metadata (PNG tEXt); ask the CDN not to
   # re-optimise them (Hostinger CDN image optimisation strips text chunks).
-  <FilesMatch "^rast-.*\.(png|svg)$">
+  <FilesMatch "^rast-.*\.(png|svg|jpg)$">
     Header set Cache-Control "public, max-age=2592000, no-transform"
   </FilesMatch>
   <FilesMatch "^(ard|ai-catalog|poppy)\.json$">

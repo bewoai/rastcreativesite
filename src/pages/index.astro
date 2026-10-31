@@ -169,7 +169,7 @@ const fmtDate = (d: Date) => d.toLocaleDateString("tr-TR", { day: "numeric", mon
 // posts) never leaves a gap. The section condition below uses hasReviews too.
 const hasReviews = openReviews.length > 0;
 const scenes = [
-  "isler", "cekim", "markalar", "ekip",
+  "isler", "kimler", "cekim", "markalar", "ekip",
   ...(hasReviews ? ["yorumlar"] : []),
   "surec", "hizmetler", "sss", "bolge",
   ...(blogPosts.length > 0 ? ["gunluk"] : []),
@@ -222,7 +222,7 @@ const brands = [
 const founders = [
   {
     name: "Muhammed Ekrem Adnan",
-    role: "Kurucu ortak · Video director",
+    role: "Kurucu ortak · Video yönetmeni",
     photo: muhammedPhoto,
     links: [
       { label: "LinkedIn", href: "https://www.linkedin.com/in/muhammed-al-sheikhly-2a6b01209/" },
@@ -231,7 +231,7 @@ const founders = [
   },
   {
     name: "Berat Değirmenci",
-    role: "Kurucu ortak · Video director",
+    role: "Kurucu ortak · Video yönetmeni",
     photo: beratPhoto,
     links: [
       { label: "LinkedIn", href: "https://www.linkedin.com/in/beratdegirmenci/" },
@@ -257,11 +257,11 @@ const stops = [
   },
   {
     key: "set",
-    label: "Set",
+    label: "Çekim",
     photo: stopSet,
     alt: "Sokak çekiminde kamera ekranında kadraj ve pozlama ayarları",
     when: "1–2. hafta",
-    phase: "Set",
+    phase: "Çekim",
     title: "Çekim günü",
     text: "Yerinde, tek ekip. Ana film, dikey kesitler ve drone planı aynı sette çekilir; tek günden birden çok içerik çıkar.",
     whisper: "tek gün, çok içerik",
@@ -273,7 +273,7 @@ const stops = [
     photo: stopGrade,
     alt: "Kurgu odasında renk düzenleme ekranı başında çalışan editör",
     when: "2–4. hafta",
-    phase: "Post",
+    phase: "Kurgu",
     title: "Kurgu, renk, ses",
     text: "Kurgu, renk düzenleme ve ses tasarımı aynı masada. Revizyonları doğrudan projeyi çeken ekiple konuşursunuz.",
     whisper: "muhatabınız değişmez",
@@ -291,6 +291,18 @@ const stops = [
     whisper: "yayına hazır",
     angle: 180,
   },
+];
+
+
+// "Kimlerle çalışıyoruz": a visitor should spot their own kind of business
+// in seconds (usability test: cafe and wedding-hall owners found no sign we
+// serve them). Every link points at an existing page with real work.
+const sectorCards = [
+  { t: "Fabrika ve sanayi", d: "Tesisinizi, üretiminizi ve ekibinizi anlatan tanıtım filmi ve drone çekimi.", href: "/sektorler/fabrika-tanitim-filmi/", ex: "Altoteks, Canex, Meteors Shipping" },
+  { t: "Hekim ve klinikler", d: "Hastalarınızın sorduğu soruları sizin anlatımınızla düzenli videoya çeviriyoruz.", href: "/hekim-icerik-sistemi/", ex: "Dr. Erdem Çalışkan, Op. Dr. Duygu Cebecik Özmüş" },
+  { t: "Mağaza ve markalar", d: "Ürünlerinizi her hafta Instagram'da gösteren kısa videolar ve sosyal medya yönetimi.", href: "/projeler/vaka/aytas-home/", ex: "Aytaş Home: 4 aylık sosyal medya çalışması" },
+  { t: "Kafe, restoran ve mekanlar", d: "Mekânınızın havasını, yemeğinizi ve ekibinizi gösteren kısa tanıtım videoları.", href: "/blog/restoran-kafe-tanitim-videosu/", ex: "Ne çekilir, nasıl planlanır" },
+  { t: "Düğün, davet ve etkinlik", d: "Salonunuzu ve organizasyonlarınızı tanıtan video; etkinlik günü çekimi.", href: "/sektorler/davet-salonu-etkinlik-videosu/", ex: "Newlife Davet Salonu" },
 ];
 
 const projectTypes = [
@@ -508,7 +520,7 @@ const year = new Date().getFullYear();
         <button type="button" class="ev-cases__arrow ev-cases__arrow--next" data-cases-next aria-label="Sonraki iş">
           <span aria-hidden="true">→</span>
         </button>
-        <p class="ev-cases__count" aria-hidden="true"><span data-case-count>I</span> / {roman(cases.length)}</p>
+        <p class="ev-cases__count" aria-hidden="true"><span data-case-count>1</span> / {roman(cases.length)}</p>
         <div class="ev-cases__dots" role="group" aria-label="İş seç">
           {
             cases.map((p, i) => (
@@ -529,6 +541,27 @@ const year = new Date().getFullYear();
       </p>
     </section>
 
+
+
+    {/* ───────── 02b · Who we work with ───────── */}
+    <section id="kimler" class="ev-sec ev-who" aria-labelledby="ev-who-title">
+      <header class="ev-head2 ev-head2--center" data-rise>
+        <p class="ev-label"><span class="ev-label__n">{sceneNo("kimler")}</span>Kimlerle çalışıyoruz</p>
+        <h2 id="ev-who-title" class="ev-h2">Sizin işiniz de <em>burada.</em></h2>
+      </header>
+      <ul class="ev-who__list">
+        {sectorCards.map((c, i) => (
+          <li class="ev-who__card ev-glass" data-rise style={`--d:${i}`}>
+            <a href={c.href} class="ev-who__link">
+              <h3 class="ev-who__t">{c.t}</h3>
+              <p class="ev-who__d">{c.d}</p>
+              <p class="ev-who__ex">{c.ex}</p>
+              <span class="ev-who__go" aria-hidden="true">İncele →</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
 
     <div class:list={["ev-cloud", { "has-video": cloudVideo }]} aria-hidden="true">
       {cloudVideo && (
@@ -638,6 +671,12 @@ const year = new Date().getFullYear();
         <p class="ev-team__lede">
           Projenizi bir satış ekibiyle değil, doğrudan şirketin kurucu ortaklarıyla
           konuşursunuz. Planlayan, sette yöneten ve kurguyu teslim eden aynı iki kişi.
+        </p>
+        <p class="ev-team__call">
+          <a class="ev-btn ev-btn--sun ev-btn--sm" href={`tel:${CONTACT.phoneIntl}`} data-cta-location="evren_team_tel">Hemen arayın: {CONTACT.phone}</a>
+          <a class="ev-btn ev-btn--glass ev-btn--sm" href={whatsappHref} target="_blank" rel="noopener" data-cta-location="evren_team_wa">
+            <svg class="ev-wa__mark" viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path fill="currentColor" d={WA_PATH} /></svg> WhatsApp
+          </a>
         </p>
         <a class="ev-link" href="/hakkimizda/">Ekibi tanıyın <span aria-hidden="true">→</span></a>
       </div>
@@ -823,6 +862,10 @@ const year = new Date().getFullYear();
           ))
         }
       </ul>
+      <p class="ev-gear ev-glass" data-rise>
+        <b>Ekipman ve izinler:</b> Profesyonel sinema kameraları, gimbal ve set ışığıyla çekiyoruz.
+        Drone çekimlerini SHGM kurallarına uygun yapıyoruz; ekibimizde İHA-1 ticari pilot lisansı var.
+      </p>
     </section>
 
 
@@ -921,6 +964,8 @@ const year = new Date().getFullYear();
         </details>
       </div>
 
+      <details class="ev-area__all ev-glass" data-area-all>
+      <summary>Hizmet verdiğimiz bölgeler<span class="ev-qa__ic" aria-hidden="true"></span></summary>
       <div class="ev-area__links" aria-label="Bölgesel hizmet sayfaları">
         {
           areaServices.map((svc, i) => (
@@ -946,6 +991,7 @@ const year = new Date().getFullYear();
           ))
         }
       </div>
+      </details>
     </section>
 
 
@@ -1029,9 +1075,9 @@ const year = new Date().getFullYear();
           </p>
 
           <ol class="ev-call__next" aria-label="Sonra ne olur?">
-            <li><span class="ev-call__n">I</span><b>Formu gönderin</b><span>Adınız ve telefonunuz yeter, bir dakika sürer.</span></li>
-            <li><span class="ev-call__n">II</span><b>Sizi arıyoruz</b><span>Kısa bir tanışma: ne anlatmak istiyorsunuz, nerede, ne zaman.</span></li>
-            <li><span class="ev-call__n">III</span><b>Kapsam ve teklif</b><span>Net bir plan ve fiyat. Görüşme ücretsiz, bağlayıcı değil.</span></li>
+            <li><span class="ev-call__n">1</span><b>Formu gönderin</b><span>Adınız ve telefonunuz yeter, bir dakika sürer.</span></li>
+            <li><span class="ev-call__n">2</span><b>Sizi arıyoruz</b><span>Kısa bir tanışma: ne anlatmak istiyorsunuz, nerede, ne zaman.</span></li>
+            <li><span class="ev-call__n">3</span><b>Kapsam ve teklif</b><span>Net bir plan ve fiyat. Görüşme ücretsiz, bağlayıcı değil.</span></li>
           </ol>
 
           <div class="ev-call__direct">
@@ -3419,6 +3465,69 @@ const year = new Date().getFullYear();
     color: var(--sun-text);
   }
 
+
+  /* ───── Who we work with ───── */
+  .ev-who__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13.5rem), 1fr));
+    gap: 0.9rem;
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+  }
+  .ev-who__card { border-radius: 1.1rem; }
+  .ev-who__link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1.15rem 1.15rem 1rem;
+    color: inherit;
+    text-decoration: none;
+  }
+  .ev-who__t {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 560;
+    font-size: 1.25rem;
+    line-height: 1.15;
+  }
+  .ev-who__d { margin: 0.5rem 0 0; font-size: 0.95rem; color: var(--ink-2); }
+  .ev-who__ex { margin: 0.6rem 0 0; font-size: 0.8rem; color: var(--mute); }
+  .ev-who__go { margin-top: auto; padding-top: 0.8rem; font-weight: 700; font-size: 0.9rem; color: var(--sun-text); }
+  .ev-who__link:hover .ev-who__t, .ev-who__link:focus-visible .ev-who__t { color: var(--sun-text); }
+  .ev-team__call { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1.2rem 0 1rem; }
+  .ev-gear {
+    max-width: 72rem;
+    margin: 1.4rem auto 0;
+    padding: 1rem 1.2rem;
+    border-radius: 1rem;
+    font-size: 0.95rem;
+    color: var(--ink-2);
+  }
+  .ev-gear b { color: var(--ink); }
+  .ev-area__all > summary {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    min-height: 3rem; padding: 0.6rem 1rem; cursor: pointer; list-style: none;
+    font-weight: 700; border-radius: 1rem;
+  }
+  .ev-area__all > summary::-webkit-details-marker { display: none; }
+  @media (min-width: 761px) {
+    .ev-area__all > summary { display: none; }
+  }
+  @media (max-width: 760px) {
+    .ev-cases { padding-bottom: 0.2rem; }
+    .ev-cases .ev-cases__arrow {
+      display: grid;
+      top: auto;
+      bottom: 0;
+      width: 2.9rem;
+      height: 2.9rem;
+    }
+    .ev-cases .ev-cases__arrow--prev { left: 0.2rem; }
+    .ev-cases .ev-cases__arrow--next { right: 0.2rem; }
+  }
+
   /* ───── Motion ───── */
   @media (prefers-reduced-motion: no-preference) {
     /* Hero: words rise out of the fog once, on load. */
@@ -3712,6 +3821,10 @@ const year = new Date().getFullYear();
       (e) => (e.target as HTMLElement).classList.add("is-playing"),
       { once: true },
     );
+
+    /* Region links: collapsed on phones (looked like a spam list), open on desktop. */
+    const areaAll = root.querySelector<HTMLDetailsElement>("[data-area-all]");
+    if (areaAll && window.matchMedia("(min-width: 761px)").matches) areaAll.open = true;
 
     /* ── Case carousel ── */
     const trackEl = root.querySelector<HTMLElement>("[data-cases-track]");

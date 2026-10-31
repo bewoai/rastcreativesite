@@ -82,8 +82,8 @@ def frame(key, w, h, body="", pos="center", extra=""):
             f'{extra}</style><div class="bg"></div>{body}</html>')
 
 
-def th(key, hook, cap, pos="center", hook_y=330, cap_y=1230):
-    hk = f'<div class="hook" style="top:{hook_y}px">{hook}</div>' if hook else ""
+def th(key, hook, cap, pos="center", hook_y=330, cap_y=1230, hook_style=""):
+    hk = f'<div class="hook" style="top:{hook_y}px;{hook_style}">{hook}</div>' if hook else ""
     cp = f'<div class="cap" style="top:{cap_y}px">{cap}</div>' if cap else ""
     return frame(key, 1080, 1920, hk + cp, pos)
 
@@ -94,7 +94,9 @@ def cover(key, title, pos="center"):
 
 KARE = {
     # 9:16 talking heads with Turkish hook + caption (so UI overlays visibly matter)
-    "dikey-reels": (th("th-reels", "Bunu kimse söylemiyor…", "Yazını <em>buraya</em> koy", "50% 30%"), 1080, 1920),
+    "dikey-reels": (th("th-reels", "Bunu kimse söylemiyor…", "Yazını <em>buraya</em> koy", "50% 30%",
+        # centred on the Reels safe area (x 60–930), so the tool's own sample passes its check
+        hook_style="left:495px;max-width:760px"), 1080, 1920),
     "dikey-tiktok": (th("th-tiktok", "İlk 3 saniye her şey", "Kanca <em>üstte</em> kalsın", "55% 30%"), 1080, 1920),
     # burned-in subtitle the way the tool draws it: white text, soft shadow, translucent box, inside the safe zone
     "dikey-altyazi": (frame("th-altyazi", 1080, 1920, '<div class="sub" style="bottom:620px">Çekim günü sabah<br>altıda başladı.</div>', "40% 40%"), 1080, 1920),

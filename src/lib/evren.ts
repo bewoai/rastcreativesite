@@ -2,9 +2,12 @@
  * Shared bits of the Evren language used by the header, footer and pages.
  */
 
-const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX"];
-/** Roman numerals for section and list numbering (1 → "I"). */
-export const roman = (n: number) => ROMAN[n - 1] ?? String(n);
+/**
+ * Section and list numbering. Was Roman numerals (I, II…); usability tests
+ * showed visitors couldn't read them, so it now returns plain digits. The
+ * name stays so every caller keeps working.
+ */
+export const roman = (n: number) => String(n);
 
 /**
  * The real (filled) WhatsApp mark — simple-icons, CC0. The site's Icon set

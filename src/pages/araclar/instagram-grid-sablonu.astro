@@ -116,6 +116,7 @@ const jsonLd = [
   },
   faqPage(faqs),
 ];
+import { publicFileSize, fileExt } from "../../lib/filesize";
 ---
 
 <BaseLayout title={title} description={description} jsonLd={jsonLd}>
@@ -144,7 +145,7 @@ const jsonLd = [
           <div class="yt-canvaswrap" style="max-width:520px;width:100%;margin-inline:auto;background:#fff">
             <canvas width="1080" height="1900" data-grid tabindex="0" role="img" aria-label="Instagram profil ızgarası önizlemesi; kutuya tıklayarak seçin"></canvas>
           </div>
-          <p class="yt-small">Profil başlığı ve simgeler temsilidir. Seçili kutu turuncu çerçeveyle gösterilir; ok tuşlarıyla kutular arasında gezebilirsiniz.</p>
+          <p class="yt-small">Profil başlığı ve simgeler temsilidir. Seçili kutu turuncu çerçeveyle gösterilir; bilgisayarda ok tuşlarıyla da kutular arasında gezebilirsiniz.</p>
         </div>
         <div>
           <div class="yt-h3">Seçili görsel: tam kare ve kırpmalar</div>
@@ -169,7 +170,7 @@ const jsonLd = [
       </div>
       <ol class="at-steps" aria-label="Nasıl kullanılır">
         <li><strong>Görselleri seçin.</strong> En fazla 9 kapak ya da gönderi (JPG, PNG, WebP). İlk seçtiğiniz, profilde en yeni (sol üst) olur.</li>
-        <li><strong>Kırpmayı ayarlayın.</strong> Bir kutuya tıklayın; sağdaki 9:16 görünümde turuncu 3:4 çerçeveyi sürükleyerek ızgarada görünecek bölümü seçin.</li>
+        <li><strong>Kırpmayı ayarlayın.</strong> Bir kutuya dokunun; büyük 9:16 görünümde (bilgisayarda sağda, telefonda altta) turuncu 3:4 çerçeveyi parmağınızla ya da fareyle kaydırarak ızgarada görünecek bölümü seçin.</li>
         <li><strong>Kontrol edin, indirin.</strong> Başlık yeşil alanda mı? Izgara önizlemesini PNG olarak indirin; uygulamada aynı konumu “profil kırpması” ile seçin.</li>
       </ol>
     </Section>
@@ -207,13 +208,15 @@ const jsonLd = [
           </p>
         </Fragment>
       </SectionHeading>
+      <p class="yt-small dl-hint">Dosyaya dokunun, cihazınıza iner. Dosyalar PNG: Canva, CapCut ve Photoshop’ta doğrudan açılır.</p>
       <ul class="yt-tpls">
         {files.map((t) => (
           <li>
             <a href={T + t.file} download>
               <img src={T + t.file} alt={`${t.label} şablonu önizlemesi`} width={t.w} height={t.h} loading="lazy" decoding="async" />
               <span>{t.label}</span>
-              <small>{t.size}</small>
+              <small>{t.size} · {fileExt(t.file)}, {publicFileSize(T + t.file)}</small>
+              <span class="dl-go" aria-hidden="true">↓ İndir</span>
             </a>
           </li>
         ))}
@@ -224,7 +227,7 @@ const jsonLd = [
           {layers.map((l) => <li><a href={`${T}katmanlar/${l}`} download>{l}</a></li>)}
         </ul>
       </details>
-      <p><a class="ev-btn ev-btn--sun" href={T + "rast-instagram-grid-sablonlari.zip"} download>Tüm şablonlar + katmanlar (ZIP)</a></p>
+      <p><a class="ev-btn ev-btn--sun" href={T + "rast-instagram-grid-sablonlari.zip"} download>↓ Tüm şablonlar + katmanlar (ZIP, {publicFileSize(T + "rast-instagram-grid-sablonlari.zip")})</a></p>
     </Section>
 
     <Extras

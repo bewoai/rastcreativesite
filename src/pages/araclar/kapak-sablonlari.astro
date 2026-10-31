@@ -98,6 +98,7 @@ const jsonLd = [
   },
   faqPage(faqs),
 ];
+import { publicFileSize, fileExt } from "../../lib/filesize";
 ---
 
 <BaseLayout title={title} description={description} jsonLd={jsonLd}>
@@ -116,18 +117,20 @@ const jsonLd = [
         
       </ToolHeader>
 
+      <p class="yt-small dl-hint">Dosyaya dokunun, cihazınıza iner. <strong>Canva için PNG önerilir</strong>; SVG, Figma ve Illustrator içindir.</p>
       <ul class="yt-tpls" id="sablonlar" style="grid-template-columns:repeat(auto-fill,minmax(170px,1fr))">
         {files.map((t) => (
           <li>
             <a href={T + t.file} download>
               <img src={T + t.file} alt={`${t.label} şablon önizlemesi`} width={t.w} height={t.h} loading="lazy" decoding="async" />
               <span>{t.label}</span>
-              <small>{t.size}</small>
+              <small>{t.size} · {fileExt(t.file)}, {publicFileSize(T + t.file)}</small>
+              <span class="dl-go" aria-hidden="true">↓ İndir</span>
             </a>
           </li>
         ))}
       </ul>
-      <p><a class="ev-btn ev-btn--sun" href={T + "rast-kapak-sablonlari.zip"} download>Tüm şablonlar (ZIP)</a></p>
+      <p><a class="ev-btn ev-btn--sun" href={T + "rast-kapak-sablonlari.zip"} download>↓ Tüm şablonlar (ZIP, {publicFileSize(T + "rast-kapak-sablonlari.zip")})</a></p>
       <p class="yt-small">
         Renkler: <strong>turuncu</strong> Instagram profil ızgarası 3:4 · <strong>mavi kesikli</strong> akış 4:5 ·
         <strong>yeşil kesikli</strong> başlık ve yüz güvenli alanı · <strong>kırmızı</strong> süre etiketi ve ilerleme çubuğu ·
@@ -164,7 +167,7 @@ const jsonLd = [
               <label class="yt-field">Yakınlaştırma <input type="range" min="100" max="300" value="100" data-zoom /></label>
               <label class="yt-field">Deneme başlığı <input type="text" maxlength="40" placeholder="ör. 3 hata" data-title /></label>
             </div>
-            <p class="yt-small">Görsel sürükleyerek kaydırılır. Deneme başlığı, kendi kapağınızda yazı yoksa okunurluğu test etmek içindir.</p>
+            <p class="yt-small">Görseli parmağınızla ya da fareyle kaydırabilirsiniz. Deneme başlığı, kendi kapağınızda yazı yoksa okunurluğu test etmek içindir.</p>
           </fieldset>
           <div class="yt-h3">Telefonda göründüğü boyutlar</div>
           <div data-previews style="display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-end"></div>

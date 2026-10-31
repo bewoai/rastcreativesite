@@ -19,6 +19,9 @@ export interface Arac {
   /** One-line purpose under the H1 on the tool page. */
   purpose: string;
   chips: string[];
+  /** Optional plain-words "what is it for" line on the card, for items whose
+   *  name is jargon (bitrate, SRT, LUT…). Usability test: ~40 y/o visitors. */
+  plain?: string;
 }
 
 export const TUR_LABEL: Record<AracTur, string> = {
@@ -60,6 +63,7 @@ export const ARACLAR: Arac[] = [
     benefit: "Dosya boyutunu önceden bilin",
     purpose: "Süre ve bitrate'ten dosya boyutunu, hedef boyuttan bitrate'i saniyeler içinde hesaplayın.",
     chips: ["Tarayıcıda çalışır", "MB · GB · Mbps", "FFmpeg komutu"],
+    plain: "Videonuz kaç MB olacak, WhatsApp'a ya da siteye sığar mı, önceden görün.",
   },
   {
     slug: "en-boy-orani",
@@ -70,6 +74,7 @@ export const ARACLAR: Arac[] = [
     benefit: "Yatay kaydı dikeye taşıyın",
     purpose: "16:9 kaydınızın 9:16, 4:5, 1:1 ve 3:4'te nasıl kırpılacağını görün, kadrajı ayarlayın.",
     chips: ["Tarayıcıda çalışır", "9:16 · 4:5 · 1:1"],
+    plain: "Yatay çektiğiniz videonun telefon ekranına (dikey) nasıl kırpılacağını gösterir.",
   },
   {
     slug: "altyazi-kontrolu",
@@ -80,6 +85,7 @@ export const ARACLAR: Arac[] = [
     benefit: "SRT hatalarını tek tıkta bulun",
     purpose: "Uzun satır, hızlı okuma, çakışma ve bozuk Türkçe karakterleri bulun; temiz SRT indirin.",
     chips: ["Tarayıcıda çalışır", "SRT · VTT"],
+    plain: "Altyazı dosyanızdaki bozuk harfleri, çok uzun ve çok hızlı satırları bulup düzeltir.",
   },
   {
     slug: "cekim-plani",
@@ -90,6 +96,7 @@ export const ARACLAR: Arac[] = [
     benefit: "Ekibe tek sayfada plan",
     purpose: "Lokasyon, ekip ve saat programını girin; yazdırılabilir, markalı bir çekim planı alın.",
     chips: ["Tarayıcıda çalışır", "Yazdır · PDF · JSON"],
+    plain: "Çekim günü kim, nerede, saat kaçta: ekibe gönderilecek tek sayfalık plan.",
   },
   {
     slug: "cekim-planlayici",
@@ -110,6 +117,7 @@ export const ARACLAR: Arac[] = [
     benefit: "Platforma göre doğru ayar",
     purpose: "YouTube, Vimeo, Reels ve TikTok için 1080p ve 4K export ayarları tek sayfada.",
     chips: ["1080p · 4K", "PDF kopya kâğıdı"],
+    plain: "Videoyu Instagram, YouTube veya TikTok için hangi ayarla kaydedeceğinizi gösterir.",
   },
   {
     slug: "instagram-grid-sablonu",
@@ -140,6 +148,7 @@ export const ARACLAR: Arac[] = [
     benefit: "Çekimi kare kare planlayın",
     purpose: "16:9 ve 9:16 storyboard ile plan listesi; doldurulabilir PDF, Excel, Word ve Notion.",
     chips: ["PDF · Word · Excel", "16:9 · 9:16"],
+    plain: "Videoyu çekmeden önce sahne sahne kâğıda dökmek için boş şablon.",
   },
   {
     slug: "brief-formu",
@@ -180,6 +189,7 @@ export const ARACLAR: Arac[] = [
     benefit: "Kurguya hazır 40 ses",
     purpose: "Whoosh, riser, impact, glitch ve geçiş sesleri; tarayıcıda dinleyin, tek tıkla indirin.",
     chips: ["40 ses · WAV", "Ticari kullanım serbest"],
+    plain: "Videolarda geçişlerde ve vurgularda kullanılacak ücretsiz kısa sesler.",
   },
   {
     slug: "lut-paketi",
@@ -190,6 +200,7 @@ export const ARACLAR: Arac[] = [
     benefit: "Tek adımda tutarlı renk",
     purpose: "Rec.709 görüntü için ten rengini koruyan 5 hafif renk görünümü; önce/sonra karşılaştırmalı.",
     chips: ["5 LUT · .cube", "Premiere · DaVinci · CapCut"],
+    plain: "Videonuzun renk tonunu tek tıkla güzelleştiren hazır renk ayarları.",
   },
 ];
 
