@@ -15,7 +15,7 @@ export const FAQ_GROUPS: readonly FaqGroup[] = [
     id: "baslangic",
     title: "Başlangıç ve süreç",
     items: [
-      { q: "Rast Creative Studio ne yapar?", a: "Serdivan/Sakarya merkezli bir video prodüksiyon ve kreatif içerik ajansıyız. Reklam filmi, tanıtım filmi, sosyal medya videoları, ürün ve mekan çekimi, drone çekimi ve sosyal medya yönetimini tek ekip olarak planlayıp çekiyor, kurguluyor ve teslim ediyoruz." },
+      { q: "Rast Creative Studio ne yapar?", a: "Rast Creative Studio, Serdivan/Sakarya merkezli video prodüksiyon ve sosyal medya stüdyosudur. Tanıtım filmi, reklam filmi, Reels/Shorts, ürün ve drone çekimi, yapay zekâ destekli video ve sosyal medya yönetimi yapar. Sakarya, Kocaeli ve Düzce'de aynı gün çekim yapar; diğer şehirlerde proje bazında çalışır." },
       { q: "Süreç nasıl başlıyor?", a: "Ücretsiz bir ön görüşmeyle. Amacınızı, hedef kitlenizi, videoların nerede kullanılacağını ve takvimi dinliyor; kapsamı ve size uygun formatları birlikte netleştiriyoruz.", link: { label: "Ön görüşme talep edin", href: "/iletisim/" } },
       { q: "Ön görüşme ücretli mi?", a: "Hayır, ön görüşme ücretsizdir ve bir taahhüt gerektirmez." },
       { q: "Çekim ve kurguyu kim yapıyor?", a: "Ön görüşmeden teslime kadar süreci Rast Creative ekibi birebir yürütür; kurucu ortaklar projelerde bizzat yer alır. Projenin ölçeğine göre ekip genişletilir." },

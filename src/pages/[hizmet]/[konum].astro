@@ -5,7 +5,7 @@ import SectionHeading from "../../components/SectionHeading.astro";
 import Button from "../../components/Button.astro";
 import Icon from "../../components/Icon.astro";
 import ProjectCard from "../../components/ProjectCard.astro";
-import { PRIMARY_CTA, CONTACT, SITE } from "../../consts";
+import { PRIMARY_CTA, CONTACT, SITE, BRAND } from "../../consts";
 import { breadcrumb, faqPage, BUSINESS_ID } from "../../lib/schema";
 import { SEO_SERVICES, getService, type SeoService } from "../../data/seo-services";
 import { SEO_LOCATIONS, getLocation, type SeoLocation } from "../../data/locations";
@@ -171,7 +171,7 @@ if (projectsItemList) jsonLd.push(projectsItemList);
 
     <div class="prose">
       <div class="geo-summary">
-        <strong>Özet:</strong> Rast Creative Studio, {location.name} ve çevre illerde {service.name.toLocaleLowerCase('tr')} projelerinize (senaryo, çekim, kurgu) ücretsiz ön görüşme ve net fiyatlandırmayla anahtar teslim çözüm sunan profesyonel bir ajanstır. Aşağıda inceleyeceğiniz projeler, yetkinliğimizin gerçek referanslarıdır.
+        <strong>Özet:</strong> {BRAND.entity} {location.name} ve çevresindeki {service.name.toLocaleLowerCase('tr')} projelerini (senaryo, çekim, kurgu) ücretsiz ön görüşmeyle anahtar teslim üretir. Aşağıda inceleyeceğiniz projeler, yetkinliğimizin gerçek referanslarıdır.
       </div>
       <p>{service.intro}</p>
       <p>{location.blurb}</p>

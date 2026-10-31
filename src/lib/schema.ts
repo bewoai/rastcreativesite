@@ -3,7 +3,7 @@
  * Target: "Sakarya video prodüksiyon ajansı" and related local queries.
  * Only facts we actually have are emitted — no invented address/hours/geo.
  */
-import { SITE, CONTACT, SOCIAL, SAME_AS_EXTRA } from "../consts";
+import { SITE, CONTACT, SOCIAL, SAME_AS_EXTRA, BRAND_FULL } from "../consts";
 import { TEAM, getTeamMember } from "../data/team";
 
 const abs = (path: string) => new URL(path, SITE.url).href;
@@ -58,7 +58,7 @@ export const localBusiness = {
   "@id": BUSINESS_ID,
   name: SITE.name,
   alternateName: SITE.shortName,
-  description: SITE.description,
+  description: BRAND_FULL,
   slogan: "Doğru kareyi yakalayan stüdyo",
   url: SITE.url,
   image: abs(SITE.ogImage),
@@ -116,8 +116,7 @@ export const organization = {
   "@id": `${SITE.url}#organization`,
   name: SITE.name,
   alternateName: SITE.shortName,
-  description:
-    "Rast Creative Studio, Serdivan/Sakarya merkezli video prodüksiyon ve kreatif içerik ajansıdır.",
+  description: BRAND_FULL,
   url: SITE.url,
   logo: abs("/logo-black.svg"),
   image: abs(SITE.ogImage),

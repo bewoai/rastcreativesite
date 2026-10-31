@@ -42,7 +42,7 @@ export const SERVICE_HUB: Record<string, ServiceHub> = {
     description:
       "Video çekimi: tanıtım, Reels, etkinlik ve ürün videosu. Senaryo, çekim, kurgu tek ekipte; teslim genellikle 2–4 hafta. Sakarya merkezli, ön görüşme ücretsiz.",
     summary:
-      "Rast Creative Studio, Serdivan / Sakarya merkezli bir video prodüksiyon stüdyosudur. Tanıtım filmi, sosyal medya videosu, etkinlik ve ürün videolarını fikirden teslime kadar aynı ekip üretir. Yerinde çekimi Sakarya, Kocaeli, Düzce ve çevresinde yapıyoruz; teslim, kapsama göre genellikle 2–4 hafta sürer.",
+      "Rast Creative Studio, Serdivan/Sakarya merkezli video prodüksiyon ve sosyal medya stüdyosudur. Tanıtım filmi, sosyal medya videosu, etkinlik ve ürün videolarını fikirden teslime kadar aynı ekip üretir. Yerinde çekimi Sakarya, Kocaeli, Düzce ve çevresinde yapıyoruz; teslim, kapsama göre genellikle 2–4 hafta sürer.",
     deliverables: [
       "Web sitesi ve YouTube için yatay ana video",
       "Instagram, TikTok ve Shorts için dikey kesitler",

@@ -4,7 +4,7 @@
  * Styles: src/styles/evren.css (.ev-foot).
  */
 import Logo from "../Logo.astro";
-import { CONTACT, SITE, SOCIAL } from "../../consts";
+import { BRAND, CONTACT, SITE, SOCIAL } from "../../consts";
 import { EV_NAV, EV_NAV_EN } from "../../lib/evren";
 import { langOfPath } from "../../lib/i18n";
 
@@ -23,6 +23,7 @@ const en = langOfPath(Astro.url.pathname) === "en";
           <p class="ev-foot__motto">İyi iş kendini <em>izletir.</em></p>
         )
       }
+      <p class="ev-foot__about">{en ? BRAND.entityEn : BRAND.entity}</p>
     </div>
     {
       en ? (

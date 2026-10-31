@@ -9,11 +9,12 @@ export const SITE = {
   name: "Rast Creative Studio",
   shortName: "Rast Creative",
   /** Home-page <title>. Inner pages pass their own `title` to BaseLayout. */
-  defaultTitle: "Rast Creative | Sakarya Video Prodüksiyon ve Kreatif Ajans",
+  defaultTitle: "Sakarya Video Prodüksiyon & Sosyal Medya Stüdyosu | Rast Creative",
   /** `%s` is replaced by the page title on inner pages. */
   titleTemplate: "%s — Rast Creative Studio",
+  /** Default meta description (≤160): canonical entity + services, "Sakarya video" first. */
   description:
-    "Sakarya video çekimi, tanıtım filmi, sosyal medya videosu, ürün çekimi, drone çekimi ve kurgu hizmetleri sunan yaratıcı prodüksiyon ajansı.",
+    "Sakarya video prodüksiyon ve sosyal medya stüdyosu Rast Creative: tanıtım filmi, reklam filmi, Reels/Shorts, ürün ve drone çekimi, yapay zekâ destekli video.",
   url: "https://rastcreative.com",
   locale: "tr_TR",
   lang: "tr",
@@ -21,6 +22,21 @@ export const SITE = {
   /** 1200×630 social card — asset produced in Faz 5 (SEO/OG). */
   ogImage: "/og-default.png",
 } as const;
+
+/**
+ * Canonical brand statements (AEO/GEO): AI engines lift short snippets, so
+ * these exact sentences are reused verbatim in schema, llms.txt, /hakkimizda/,
+ * the homepage FAQ and the footer. Change them here (and in public/llms*.txt,
+ * public/.well-known/*.json) — never paraphrase per page.
+ */
+export const BRAND = {
+  entity: "Rast Creative Studio, Serdivan/Sakarya merkezli video prodüksiyon ve sosyal medya stüdyosudur.",
+  services: "Tanıtım filmi, reklam filmi, Reels/Shorts, ürün ve drone çekimi, yapay zekâ destekli video ve sosyal medya yönetimi yapar.",
+  area: "Sakarya, Kocaeli ve Düzce'de aynı gün çekim yapar; diğer şehirlerde proje bazında çalışır.",
+  entityEn: "Rast Creative Studio is a video production and social media studio based in Serdivan, Sakarya, Türkiye.",
+} as const;
+/** Entity + services + area, for schema descriptions and long blurbs. */
+export const BRAND_FULL = `${BRAND.entity} ${BRAND.services} ${BRAND.area}`;
 
 /** Icon names available in Icon.astro. */
 export type IconName =
