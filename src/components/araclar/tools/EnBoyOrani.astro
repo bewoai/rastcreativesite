@@ -6,6 +6,8 @@
  * Static overlays: scripts/generate-creator-templates.py.
  */
 import BaseLayout from "../../../layouts/BaseLayout.astro";
+import EmbedLayout from "../../../layouts/EmbedLayout.astro";
+import EmbedBox from "../EmbedBox.astro";
 import Section from "../../../components/Section.astro";
 import SectionHeading from "../../../components/SectionHeading.astro";
 import Extras from "../../../pages/araclar/_yaratici/Extras.astro";
@@ -120,8 +122,11 @@ const jsonLd = [
 // ---------- English twin (/en/tools/aspect-ratio-calculator/, src/lib/i18n.ts) ----------
 interface Props {
   lang?: "tr" | "en";
+  /** /embed/ widget (src/pages/embed/): tool only, minimal chrome, see src/layouts/EmbedLayout.astro. */
+  embed?: boolean;
 }
-const { lang = "tr" } = Astro.props;
+const { lang = "tr", embed = false } = Astro.props;
+const Layout = embed ? EmbedLayout : BaseLayout;
 const en = lang === "en";
 const t = (tr: string, eng: string) => (en ? eng : tr);
 const EN_PATH = "/en/tools/aspect-ratio-calculator/";
@@ -221,9 +226,10 @@ const enJsonLd = [
 
 ---
 
-<BaseLayout title={en ? enTitle : title} description={en ? enDescription : description} jsonLd={en ? enJsonLd : jsonLd}>
+<Layout title={en ? enTitle : title} description={en ? enDescription : description} jsonLd={embed ? undefined : en ? enJsonLd : jsonLd} full={en ? EN_PATH : PATH}>
   <div class="yt-page">
     <Section width="wide" space="tight">
+{!embed && (
       <ToolHeader
         href={en ? EN_PATH : "/araclar/en-boy-orani/"}
         h1={en ? "Aspect ratio calculator and crop preview" : "En-boy oranı ve kırpma önizleme"}
@@ -243,6 +249,7 @@ const enJsonLd = [
         )}
         
       </ToolHeader>
+)}
 
       <div id="arac" class="yt-tool yt-tool--split" data-tool>
         <div class="yt-stage">
@@ -317,7 +324,7 @@ const enJsonLd = [
         <p class="yt-small">{t("Küçük önizlemeler seçtiğiniz kadrajın merkezini korur. Tıklayınca o orana geçersiniz.", "The thumbnails keep the centre of your framing. Click one to switch to that ratio.")}</p>
       </div>
       {
-  en ? (
+  embed ? null : en ? (
     <Fragment>
       <ol class="at-steps" aria-label="How to use">
         <li><strong>Open your file.</strong> A JPG, PNG or WebP image, or an MP4, MOV or WebM video. Without a file you'll see a sample 16:9 frame.</li>
@@ -336,6 +343,11 @@ const enJsonLd = [
   )
 }
     </Section>
+
+  {!embed && (
+  <Fragment>
+  <EmbedBox href={en ? EN_PATH : PATH} />
+
 
     {
   en ? (
@@ -472,6 +484,7 @@ const enJsonLd = [
     <Fragment>
     <Extras
       lang="en"
+      ccby="Crop mask template"
       faqs={enFaqs}
       pageUrl={EN_URL}
       linkText="Aspect ratio calculator and crop preview"
@@ -499,6 +512,7 @@ const enJsonLd = [
   ) : (
     <Fragment>
     <Extras
+      ccby="Kırpma maskesi şablonu"
       faqs={faqs}
       pageUrl={PAGE_URL}
       linkText="En-boy oranı ve kırpma önizleme"
@@ -525,8 +539,11 @@ const enJsonLd = [
     </Fragment>
   )
 }
+  </Fragment>
+  )}
+
   </div>
-</BaseLayout>
+</Layout>
 
 <script>
   import { exportCanvasPng, drawCredit, loadLogo, wireDrop, isVideoFile, isImageFile, fmtTime, canvasPoint, pngWithMeta, downloadBlob } from "../../../pages/araclar/_yaratici/client";

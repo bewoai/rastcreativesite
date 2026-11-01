@@ -7,6 +7,9 @@
  * Linkable asset for earned backlinks — keep it useful, no prices.
  */
 import BaseLayout from "../../../layouts/BaseLayout.astro";
+import CcByAttribution from "../CcByAttribution.astro";
+import EmbedLayout from "../../../layouts/EmbedLayout.astro";
+import EmbedBox from "../EmbedBox.astro";
 import Section from "../../../components/Section.astro";
 import SectionHeading from "../../../components/SectionHeading.astro";
 import Button from "../../../components/Button.astro";
@@ -122,8 +125,11 @@ import { publicFileSize, fileExt } from "../../../lib/filesize";
 // ---------- English twin (/en/tools/reels-safe-zone-checker/, src/lib/i18n.ts) ----------
 interface Props {
   lang?: "tr" | "en";
+  /** /embed/ widget (src/pages/embed/): tool only, minimal chrome, see src/layouts/EmbedLayout.astro. */
+  embed?: boolean;
 }
-const { lang = "tr" } = Astro.props;
+const { lang = "tr", embed = false } = Astro.props;
+const Layout = embed ? EmbedLayout : BaseLayout;
 const en = lang === "en";
 /** Inline label in the page language (TR text stays the SEO-tuned original). */
 const t = (tr: string, eng: string) => (en ? eng : tr);
@@ -278,8 +284,9 @@ const STR = en
     };
 ---
 
-<BaseLayout title={en ? enTitle : title} description={en ? enDescription : description} jsonLd={en ? enJsonLd : jsonLd}>
+<Layout title={en ? enTitle : title} description={en ? enDescription : description} jsonLd={embed ? undefined : en ? enJsonLd : jsonLd} full={en ? EN_PATH : PATH}>
   <Section width="wide" space="tight">
+{!embed && (
     <ToolHeader
       href={en ? EN_PATH : "/araclar/guvenli-alan/"}
       h1={en ? "Instagram Reels, TikTok & YouTube Shorts safe zone checker" : "Reels, TikTok ve Shorts güvenli alan kontrolü"}
@@ -300,6 +307,7 @@ const STR = en
       )}
       
     </ToolHeader>
+)}
 
     <div id="arac" class="tool" data-tool data-i18n={JSON.stringify(STR)}>
       <div class="tool__stage">
@@ -375,7 +383,7 @@ const STR = en
       </div>
     </div>
     {
-  en ? (
+  embed ? null : en ? (
     <Fragment>
     <ol class="at-steps" aria-label="How to use">
       <li><strong>Choose your file.</strong> A JPG, PNG or WebP image, or an MP4, MOV or WebM video. A 1080×1920 (9:16) file gives the most accurate result.</li>
@@ -394,6 +402,11 @@ const STR = en
   )
 }
   </Section>
+
+  {!embed && (
+  <Fragment>
+  <EmbedBox href={en ? EN_PATH : PATH} />
+
 
   {
   en ? (
@@ -617,6 +630,7 @@ const STR = en
       <textarea id="cite-code" readonly rows="2" data-cite>{enCiteHtml}</textarea>
       <button type="button" class="ev-btn" data-copy data-done="Copied.">Copy</button>
       <span class="small" data-copied aria-live="polite"></span>
+      <CcByAttribution href={EN_PATH} label="Safe zone template" lang="en" />
     </div>
     </details>
   </Section>
@@ -635,6 +649,7 @@ const STR = en
       <textarea id="cite-code" readonly rows="2" data-cite>{citeHtml}</textarea>
       <button type="button" class="ev-btn" data-copy data-done="Kopyalandı.">{t("Kopyala", "Copy")}</button>
       <span class="small" data-copied aria-live="polite"></span>
+      <CcByAttribution href={PATH} label="Güvenli alan şablonu" />
     </div>
     </details>
   </Section>
@@ -789,7 +804,10 @@ const STR = en
     </Fragment>
   )
 }
-</BaseLayout>
+
+  </Fragment>
+  )}
+</Layout>
 
 <script>
   import DATA from "../../../data/safe-zones.json";

@@ -9,6 +9,7 @@ import Button from "../../../components/Button.astro";
 import { PRIMARY_CTA } from "../../../consts";
 import ToolFaq from "../../../components/araclar/ToolFaq.astro";
 import MoreTools from "../../../components/araclar/MoreTools.astro";
+import CcByAttribution from "../../../components/araclar/CcByAttribution.astro";
 
 interface Props {
   faqs: { question: string; answer: string }[];
@@ -20,8 +21,10 @@ interface Props {
   checked?: string;
   /** English twin pages (/en/tools/) pass lang="en". */
   lang?: "tr" | "en";
+  /** Download pages: credit prefix for the copy-paste CC BY 4.0 attribution HTML (e.g. "Şablon"). */
+  ccby?: string;
 }
-const { faqs, pageUrl, linkText, attribution, current, ctaTitle, lang = "tr" } = Astro.props;
+const { faqs, pageUrl, linkText, attribution, current, ctaTitle, lang = "tr", ccby } = Astro.props;
 const en = lang === "en";
 const checked = Astro.props.checked ?? (en ? "30 October 2026" : "30 Ekim 2026");
 const citeHtml = `<a href="${pageUrl}">${linkText} — Rast Creative Studio</a>`;
@@ -54,6 +57,7 @@ const citeHtml = `<a href="${pageUrl}">${linkText} — Rast Creative Studio</a>`
     <textarea id="yt-cite" readonly rows="2" data-cite>{citeHtml}</textarea>
     <button type="button" class="ev-btn" data-copy-cite data-done={en ? "Copied." : "Kopyalandı."}>{en ? "Copy" : "Kopyala"}</button>
     <span class="yt-small" data-copied aria-live="polite"></span>
+    {ccby && <CcByAttribution href={pageUrl} label={ccby} lang={lang} />}
   </div>
   </details>
 </Section>

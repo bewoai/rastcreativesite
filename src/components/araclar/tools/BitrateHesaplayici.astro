@@ -6,6 +6,8 @@
  * a calculation can be shared. Linkable asset — keep it useful, no prices.
  */
 import BaseLayout from "../../../layouts/BaseLayout.astro";
+import EmbedLayout from "../../../layouts/EmbedLayout.astro";
+import EmbedBox from "../EmbedBox.astro";
 import Section from "../../../components/Section.astro";
 import SectionHeading from "../../../components/SectionHeading.astro";
 import Button from "../../../components/Button.astro";
@@ -102,8 +104,11 @@ const ytRows = (["2160", "1440", "1080", "720"] as const).map((r) => ({
 // ---------- English twin (/en/tools/video-bitrate-calculator/, src/lib/i18n.ts) ----------
 interface Props {
   lang?: "tr" | "en";
+  /** /embed/ widget (src/pages/embed/): tool only, minimal chrome, see src/layouts/EmbedLayout.astro. */
+  embed?: boolean;
 }
-const { lang = "tr" } = Astro.props;
+const { lang = "tr", embed = false } = Astro.props;
+const Layout = embed ? EmbedLayout : BaseLayout;
 const en = lang === "en";
 const t = (tr: string, eng: string) => (en ? eng : tr);
 const EN_PATH = "/en/tools/video-bitrate-calculator/";
@@ -193,8 +198,9 @@ const EN_SOURCES = [
 ];
 ---
 
-<BaseLayout title={en ? enTitle : title} description={en ? enDescription : description} jsonLd={en ? enJsonLd : jsonLd}>
+<Layout title={en ? enTitle : title} description={en ? enDescription : description} jsonLd={embed ? undefined : en ? enJsonLd : jsonLd} full={en ? EN_PATH : PATH}>
   <Section width="wide" space="tight">
+{!embed && (
     <ToolHeader
       href={en ? EN_PATH : "/araclar/bitrate-hesaplayici/"}
       h1={en ? "Video bitrate calculator and file size calculator" : "Video bitrate ve dosya boyutu hesaplayıcı"}
@@ -214,6 +220,7 @@ const EN_SOURCES = [
       )}
       
     </ToolHeader>
+)}
 
     <form id="arac" class="tool" data-calc onsubmit="return false" novalidate>
       <fieldset class="modes">
@@ -362,7 +369,7 @@ const EN_SOURCES = [
       <noscript><p class="warn">{t("Hesaplayıcı için JavaScript gerekli. Aşağıdaki tablolar ve formül JavaScript olmadan da kullanılabilir.", "The calculator needs JavaScript. The tables and formula below work without it.")}</p></noscript>
     </form>
     {
-  en ? (
+  embed ? null : en ? (
     <Fragment>
     <ol class="at-steps" aria-label="How to use">
       <li><strong>Pick what to calculate.</strong> File size, the bitrate for a target size, or card recording time.</li>
@@ -381,6 +388,11 @@ const EN_SOURCES = [
   )
 }
   </Section>
+
+  {!embed && (
+  <Fragment>
+  <EmbedBox href={en ? EN_PATH : PATH} />
+
 
   {
   en ? (
@@ -669,7 +681,10 @@ const EN_SOURCES = [
     </Fragment>
   )
 }
-</BaseLayout>
+
+  </Fragment>
+  )}
+</Layout>
 
 <script>
   import { YOUTUBE, VIMEO, PRORES, PRORES_CODECS, LIMITS } from "../../../data/export-specs";

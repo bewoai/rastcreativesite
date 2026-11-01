@@ -20,6 +20,7 @@ import BelgeIndir from "./BelgeIndir.astro";
 import ToolHeader from "./ToolHeader.astro";
 import ToolFaq from "./ToolFaq.astro";
 import MoreTools from "./MoreTools.astro";
+import CcByAttribution from "./CcByAttribution.astro";
 
 export interface Download {
   href: string;
@@ -175,6 +176,7 @@ const jsonLd = [
         <button type="button" class="ev-btn" data-copy>Kopyala</button>
         <span class="small" data-copied aria-live="polite"></span>
       </div>
+      {!p.toolFirst && <CcByAttribution href={p.path} label={p.citeLabel} />}
     </div>
     </details>
   </Section>

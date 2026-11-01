@@ -5,6 +5,7 @@
  * Build pipeline + sources: docs/sections/araclar-paketler.md. No prices.
  */
 import BaseLayout from "../../../layouts/BaseLayout.astro";
+import CcByAttribution from "../CcByAttribution.astro";
 import Section from "../../../components/Section.astro";
 import SectionHeading from "../../../components/SectionHeading.astro";
 import Button from "../../../components/Button.astro";
@@ -559,6 +560,7 @@ const enJsonLd = [
       <textarea id="cite-code" readonly rows="2" data-cite>{enCiteHtml}</textarea>
       <button type="button" class="ev-btn" data-copy data-done="Copied.">Copy</button>
       <span class="small" data-copied aria-live="polite"></span>
+      <CcByAttribution href={EN_PATH} label="Sound effects" lang="en" />
     </div>
     </details>
   </Section>
@@ -577,6 +579,7 @@ const enJsonLd = [
       <textarea id="cite-code" readonly rows="2" data-cite>{citeHtml}</textarea>
       <button type="button" class="ev-btn" data-copy>Kopyala</button>
       <span class="small" data-copied aria-live="polite"></span>
+      <CcByAttribution href={PATH} label="Ses efektleri" />
     </div>
     </details>
   </Section>

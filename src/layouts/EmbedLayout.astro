@@ -1,0 +1,158 @@
+---
+/**
+ * Minimal shell for the embeddable tool widgets (/embed/<slug>/, /en/embed/<slug>/).
+ * Rendered inside other sites' iframes, so: no header/footer, no cookie banner,
+ * no GA / tracking of any kind, noindex, canonical → the full tool page.
+ * A small fixed "Powered by Rast Creative Studio" bar links (new tab, followed)
+ * to the full tool. The page posts its height to the parent
+ * ({ type: "rast-embed-height", height, path }) so the optional snippet script
+ * can auto-resize the iframe. Framing is allowed for these paths only:
+ * public/embed/.htaccess + public/en/embed/.htaccess unset X-Frame-Options.
+ */
+import "../styles/global.css";
+import "../styles/araclar.css";
+import { SITE } from "../consts";
+import { embedForFull } from "../data/embeds";
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Full tool page path (canonical + credit link), e.g. /araclar/guvenli-alan/. */
+  full: string;
+  /** Unused here (full pages pass JSON-LD to BaseLayout); embeds emit none. */
+  jsonLd?: unknown;
+}
+const { title, description, full } = Astro.props;
+const hit = embedForFull(full);
+const heading = hit ? hit.tool[hit.lang].title : title;
+const en = full.startsWith("/en/");
+const fullUrl = new URL(full, SITE.url).href;
+---
+
+<!doctype html>
+<html lang={en ? "en" : "tr"}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="only light" />
+    <script is:inline>
+      document.documentElement.classList.add("js", "is-embed");
+      document.documentElement.dataset.theme = "light";
+      // Tool scripts may call rcTrack; inside iframes nothing is tracked.
+      window.rcTrack = function (_n, _p, cb) { if (typeof cb === "function") cb(); };
+    </script>
+    <title>{`${title} (embed) — Rast Creative Studio`}</title>
+    {description && <meta name="description" content={description} />}
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href={fullUrl} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin-wght-normal.woff2" crossorigin />
+  </head>
+  <body>
+    <div class="ev emb" data-emb>
+      <header class="emb__head">
+        <p class="emb__h">{heading}</p>
+        <a class="emb__full" href={fullUrl} target="_blank" rel="noopener">{en ? "Full version ↗" : "Tam sürüm ↗"}</a>
+      </header>
+      <main id="main" class="emb__main">
+        <slot />
+      </main>
+      <footer class="emb__foot">
+        {en ? "Powered by" : "Ücretsiz araç:"} <a href={fullUrl} target="_blank" rel="noopener">Rast Creative Studio</a>
+      </footer>
+    </div>
+
+    <script is:inline>
+      (function () {
+        // Links inside the widget open in a new tab (never navigate the host page's frame away).
+        document.querySelectorAll("a[href]").forEach(function (a) {
+          var h = a.getAttribute("href") || "";
+          if (h.charAt(0) === "#" || h.indexOf("blob:") === 0 || h.indexOf("data:") === 0 || a.hasAttribute("download")) return;
+          a.target = "_blank";
+          a.rel = "noopener";
+        });
+        // Show everything at once (no scroll-reveal inside iframes).
+        document.querySelectorAll("[data-reveal]").forEach(function (el) { el.classList.add("is-revealed"); });
+        if (window.parent === window) return;
+        var root = document.querySelector("[data-emb]");
+        var last = 0;
+        var send = function () {
+          var h = Math.ceil(root.getBoundingClientRect().height);
+          if (!h || Math.abs(h - last) < 2) return;
+          last = h;
+          window.parent.postMessage({ type: "rast-embed-height", height: h, path: location.pathname }, "*");
+        };
+        if ("ResizeObserver" in window) new ResizeObserver(send).observe(root);
+        window.addEventListener("load", send);
+        send();
+      })();
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  html.is-embed,
+  html.is-embed body {
+    background: var(--fog, #e6dfd6);
+    min-height: 0;
+    height: auto;
+  }
+  .emb {
+    min-height: 0;
+    padding: 0.75rem clamp(0.6rem, 2.5vw, 1.2rem) 3.1rem;
+  }
+  .emb__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.3rem 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .emb__h {
+    margin: 0;
+    font: 650 clamp(1.02rem, 2.6vw, 1.25rem) / 1.25 var(--font-display, var(--font-body));
+    color: var(--ink);
+  }
+  .emb__full {
+    font: 600 0.82rem/1 var(--font-utility, var(--font-body));
+    color: var(--amber-text);
+    text-decoration: none;
+  }
+  .emb__full:hover {
+    text-decoration: underline;
+  }
+  /* The tool's own <Section> padding is sized for full pages. */
+  .emb__main .section,
+  .emb__main .section--tight {
+    padding-block: 0;
+  }
+  .emb__main .section__inner {
+    width: 100%;
+    max-width: none;
+    padding-inline: 0;
+    margin: 0;
+  }
+  .emb__foot {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 70;
+    padding: 0.5rem 0.9rem;
+    border-top: 1px solid var(--line);
+    background: color-mix(in srgb, var(--paper, #f4efe8) 94%, transparent);
+    font: 500 0.8rem/1.3 var(--font-utility, var(--font-body));
+    color: var(--ink-soft);
+    text-align: center;
+  }
+  .emb__foot a {
+    color: var(--amber-text);
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .emb__foot a:hover {
+    text-decoration: underline;
+  }
+</style>

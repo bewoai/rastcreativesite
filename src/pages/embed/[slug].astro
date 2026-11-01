@@ -1,0 +1,30 @@
+---
+/**
+ * Embeddable widget (TR, /embed/<slug>/): the tool component with `embed` set
+ * (src/layouts/EmbedLayout.astro — noindex, canonical → full page, no tracking).
+ * List + snippet data: src/data/embeds.ts. Framing allowed by public/embed/.htaccess.
+ */
+import GuvenliAlan from "../../components/araclar/tools/GuvenliAlan.astro";
+import BitrateHesaplayici from "../../components/araclar/tools/BitrateHesaplayici.astro";
+import EnBoyOrani from "../../components/araclar/tools/EnBoyOrani.astro";
+import AltyaziKontrolu from "../../components/araclar/tools/AltyaziKontrolu.astro";
+import { EMBEDS } from "../../data/embeds";
+
+const TOOLS = {
+  "guvenli-alan": GuvenliAlan,
+  "bitrate-hesaplayici": BitrateHesaplayici,
+  "en-boy-orani": EnBoyOrani,
+  "altyazi-kontrolu": AltyaziKontrolu,
+} as const;
+
+export function getStaticPaths() {
+  return EMBEDS.map((t) => ({
+    params: { slug: t.tr.embed.split("/").filter(Boolean).pop()! },
+    props: { key: t.slug },
+  }));
+}
+const { key } = Astro.props as { key: keyof typeof TOOLS };
+const Tool = TOOLS[key];
+---
+
+<Tool lang="tr" embed />

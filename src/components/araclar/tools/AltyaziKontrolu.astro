@@ -6,6 +6,8 @@
  * SRT for the trivial fixes; burn-in preview against Reels/TikTok/Shorts UI zones.
  */
 import BaseLayout from "../../../layouts/BaseLayout.astro";
+import EmbedLayout from "../../../layouts/EmbedLayout.astro";
+import EmbedBox from "../EmbedBox.astro";
 import Section from "../../../components/Section.astro";
 import SectionHeading from "../../../components/SectionHeading.astro";
 import Extras from "../../../pages/araclar/_yaratici/Extras.astro";
@@ -92,8 +94,11 @@ const plats = ZONES.platforms.filter((p) => p.id !== "instagram-story");
 // ---------- English twin (/en/tools/srt-subtitle-checker/, src/lib/i18n.ts) ----------
 interface Props {
   lang?: "tr" | "en";
+  /** /embed/ widget (src/pages/embed/): tool only, minimal chrome, see src/layouts/EmbedLayout.astro. */
+  embed?: boolean;
 }
-const { lang = "tr" } = Astro.props;
+const { lang = "tr", embed = false } = Astro.props;
+const Layout = embed ? EmbedLayout : BaseLayout;
 const en = lang === "en";
 const t = (tr: string, eng: string) => (en ? eng : tr);
 const EN_PATH = "/en/tools/srt-subtitle-checker/";
@@ -170,9 +175,10 @@ const enJsonLd = [
 
 ---
 
-<BaseLayout title={en ? enTitle : title} description={en ? enDescription : description} jsonLd={en ? enJsonLd : jsonLd}>
+<Layout title={en ? enTitle : title} description={en ? enDescription : description} jsonLd={embed ? undefined : en ? enJsonLd : jsonLd} full={en ? EN_PATH : PATH}>
   <div class="yt-page">
     <Section width="wide" space="tight">
+{!embed && (
       <ToolHeader
         href={en ? EN_PATH : "/araclar/altyazi-kontrolu/"}
         h1={en ? "SRT subtitle checker: test your SRT or VTT file before you publish" : "Altyazı kontrolü: SRT ve VTT dosyanızı yayından önce test edin"}
@@ -192,6 +198,7 @@ const enJsonLd = [
         )}
         
       </ToolHeader>
+)}
 
       <div id="arac" class="yt-tool" data-tool>
         <div class="yt-tool yt-tool--split" style="padding:0;border:0;background:none">
@@ -304,7 +311,7 @@ const enJsonLd = [
         </div>
       </div>
       {
-  en ? (
+  embed ? null : en ? (
     <Fragment>
       <ol class="at-steps" aria-label="How to use">
         <li><strong>Open or paste your file.</strong> .srt or .vtt. UTF-8 and Windows-1252 encodings are detected automatically. Load the sample file to try it.</li>
@@ -323,6 +330,11 @@ const enJsonLd = [
   )
 }
     </Section>
+
+  {!embed && (
+  <Fragment>
+  <EmbedBox href={en ? EN_PATH : PATH} />
+
 
     {
   en ? (
@@ -445,8 +457,11 @@ const enJsonLd = [
     </Fragment>
   )
 }
+  </Fragment>
+  )}
+
   </div>
-</BaseLayout>
+</Layout>
 
 <style is:global>
   .ak-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.6rem 1rem; }

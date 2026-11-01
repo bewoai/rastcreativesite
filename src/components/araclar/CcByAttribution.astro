@@ -1,0 +1,109 @@
+---
+/**
+ * Copy-paste CC BY 4.0 attribution HTML for downloadable templates/packs
+ * (brand-name anchor → the download page + license link). Placed inside the
+ * existing "Kaynak göster / Cite" folds (BelgeSayfasi, Extras, safe-zone,
+ * LUT, SFX). Self-contained script ([data-ccby]) so it doesn't collide with
+ * the page's own [data-cite] copy box.
+ */
+import { SITE } from "../../consts";
+
+interface Props {
+  /** Download page path (TR or EN). */
+  href: string;
+  /** Credit prefix, e.g. "Şablon", "Ses efektleri", "Template". */
+  label: string;
+  lang?: "tr" | "en";
+}
+const { href, label, lang = "tr" } = Astro.props;
+const en = lang === "en";
+const url = new URL(href, SITE.url).href;
+const lic = en ? "https://creativecommons.org/licenses/by/4.0/" : "https://creativecommons.org/licenses/by/4.0/deed.tr";
+const html = en
+  ? `<p>${label}: <a href="${url}">Rast Creative Studio</a>, licensed under <a href="${lic}" rel="license">CC BY 4.0</a></p>`
+  : `<p>${label}: <a href="${url}">Rast Creative Studio</a>, <a href="${lic}" rel="license">CC BY 4.0</a> lisansıyla</p>`;
+const id = `ccby-${Math.abs([...href].reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 7))}`;
+---
+
+<div class="ccby" data-ccby>
+  <label for={id} class="ccby__lbl">
+    {en ? "Attribution HTML (CC BY 4.0) — paste where you use the files" : "Atıf HTML'i (CC BY 4.0) — dosyaları kullandığınız sayfaya yapıştırın"}
+  </label>
+  <textarea id={id} class="ccby__code" readonly rows="2" spellcheck="false" data-ccby-code>{html}</textarea>
+  <div class="ccby__row">
+    <button type="button" class="ev-btn ev-btn--sm" data-ccby-copy data-done={en ? "Copied." : "Kopyalandı."}>{en ? "Copy attribution" : "Atıfı kopyala"}</button>
+    <span class="ccby__ok" data-ccby-ok aria-live="polite"></span>
+  </div>
+  <p class="ccby__pv">
+    {en ? "Looks like:" : "Görünümü:"}
+    <span>
+      {label}: <a href={url}>Rast Creative Studio</a>{en ? ", licensed under " : ", "}<a href={lic} rel="license noopener" target="_blank">CC BY 4.0</a>{en ? "" : " lisansıyla"}
+    </span>
+  </p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-ccby]").forEach((box) => {
+    const ta = box.querySelector<HTMLTextAreaElement>("[data-ccby-code]");
+    const btn = box.querySelector<HTMLButtonElement>("[data-ccby-copy]");
+    const ok = box.querySelector<HTMLElement>("[data-ccby-ok]");
+    if (!ta || !btn) return;
+    btn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(ta.value);
+      } catch {
+        ta.select();
+        document.execCommand("copy");
+      }
+      if (ok) ok.textContent = btn.dataset.done ?? "";
+    });
+  });
+</script>
+
+<style>
+  .ccby {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 1.1rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--line);
+  }
+  .ccby__lbl {
+    font: 600 0.8rem/1.3 var(--font-utility);
+    letter-spacing: 0.02em;
+    color: var(--ink-soft);
+  }
+  .ccby__code {
+    width: 100%;
+    resize: vertical;
+    padding: 0.6rem 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: 0.7rem;
+    background: color-mix(in srgb, var(--paper) 60%, #fff);
+    color: var(--ink);
+    font: 0.8rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    overflow-wrap: anywhere;
+  }
+  .ccby__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 1rem;
+  }
+  .ccby__ok {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .ccby__pv {
+    margin: 0;
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+  }
+  .ccby__pv span {
+    margin-left: 0.3rem;
+    color: var(--ink);
+  }
+  .ccby__pv a {
+    color: var(--amber-text);
+  }
+</style>

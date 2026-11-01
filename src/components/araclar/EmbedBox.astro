@@ -1,0 +1,161 @@
+---
+/**
+ * "Bu aracı sitene göm / Embed this tool" box on full tool pages (TR + EN).
+ * Copyable one-line iframe + a credit line with a brand-name anchor (never
+ * keyword anchors) pointing at the full tool page; optional auto-height script.
+ * Data: src/data/embeds.ts. Self-contained script ([data-embbox]) so it never
+ * collides with the page's own "Kaynak göster" copy box.
+ */
+import Section from "../Section.astro";
+import { SITE } from "../../consts";
+import { embedForFull } from "../../data/embeds";
+
+interface Props {
+  /** Full tool page path, TR or EN. */
+  href: string;
+}
+const hit = embedForFull(Astro.props.href);
+if (!hit) throw new Error(`EmbedBox: no embed entry for ${Astro.props.href}`);
+const { tool, lang } = hit;
+const en = lang === "en";
+const L = tool[lang];
+const abs = (p: string) => new URL(p, SITE.url).href;
+const iframe = `<iframe src="${abs(L.embed)}" title="${L.title} — Rast Creative Studio" width="100%" height="${tool.height}" style="border:0;max-width:800px" loading="lazy"></iframe>`;
+const credit = `<p>${en ? "Tool" : "Araç"}: <a href="${abs(L.full)}">Rast Creative Studio</a></p>`;
+const snippet = `${iframe}\n${credit}`;
+const resize = `<script>addEventListener("message",function(e){var d=e.data;if(e.origin!=="https://rastcreative.com"||!d||d.type!=="rast-embed-height")return;document.querySelectorAll("iframe").forEach(function(f){if(f.contentWindow===e.source)f.style.height=d.height+"px"})})</script>`;
+---
+
+<Section width="default" space="tight" id={en ? "embed" : "gom"}>
+  <div class="embbox" data-embbox data-base={snippet} data-resize={resize}>
+    <div class="embbox__top">
+      <h2 class="embbox__h">{en ? "Embed this tool on your site" : "Bu aracı sitene göm"}</h2>
+      <a class="embbox__pv" href={L.embed} target="_blank" rel="noopener">{en ? "Preview ↗" : "Önizle ↗"}</a>
+    </div>
+    <p class="embbox__p">
+      {
+        en
+          ? "Free for blogs, course pages and resource lists. Paste the code; the tool runs in your visitors' browser, with no tracking inside the frame."
+          : "Blog, ders sayfası ya da kaynak listeniz için ücretsiz. Kodu yapıştırın; araç ziyaretçinizin tarayıcısında çalışır, çerçevede takip kodu yoktur."
+      }
+    </p>
+    <label class="embbox__lbl" for={`embcode-${lang}`}>{en ? "Embed code (iframe + credit line)" : "Gömme kodu (iframe + atıf satırı)"}</label>
+    <textarea id={`embcode-${lang}`} class="embbox__code" readonly rows="3" spellcheck="false" data-embcode>{snippet}</textarea>
+    <div class="embbox__row">
+      <button type="button" class="ev-btn ev-btn--sm" data-embcopy data-done={en ? "Copied." : "Kopyalandı."}>{en ? "Copy code" : "Kodu kopyala"}</button>
+      <label class="embbox__opt"><input type="checkbox" data-embauto /> {en ? "Auto height (adds a small script)" : "Otomatik yükseklik (küçük bir betik ekler)"}</label>
+      <span class="embbox__ok" data-embok aria-live="polite"></span>
+    </div>
+    <p class="embbox__credit">
+      {en ? "The credit line under the frame reads:" : "Çerçevenin altındaki atıf satırı:"}
+      <span class="embbox__cr">{en ? "Tool" : "Araç"}: <a href={abs(L.full)}>Rast Creative Studio</a></span>
+    </p>
+  </div>
+</Section>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-embbox]").forEach((box) => {
+    const ta = box.querySelector<HTMLTextAreaElement>("[data-embcode]");
+    const btn = box.querySelector<HTMLButtonElement>("[data-embcopy]");
+    const auto = box.querySelector<HTMLInputElement>("[data-embauto]");
+    const ok = box.querySelector<HTMLElement>("[data-embok]");
+    if (!ta || !btn) return;
+    const base = box.dataset.base ?? ta.value;
+    const resize = box.dataset.resize ?? "";
+    auto?.addEventListener("change", () => {
+      ta.value = auto.checked ? `${base}\n${resize}` : base;
+      ta.rows = auto.checked ? 4 : 3;
+      if (ok) ok.textContent = "";
+    });
+    btn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(ta.value);
+      } catch {
+        ta.select();
+        document.execCommand("copy");
+      }
+      if (ok) ok.textContent = btn.dataset.done ?? "";
+    });
+  });
+</script>
+
+<style>
+  .embbox {
+    display: grid;
+    gap: 0.7rem;
+    padding: clamp(1rem, 2.5vw, 1.4rem);
+    border: 1px solid var(--line);
+    border-radius: 1.2rem;
+    background: color-mix(in srgb, var(--paper) 72%, transparent);
+    color: var(--ink);
+  }
+  .embbox__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.4rem 1rem;
+  }
+  .embbox__h {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 2.4vw, 1.4rem);
+    line-height: 1.25;
+  }
+  .embbox__pv {
+    font: 600 0.85rem/1 var(--font-utility);
+    color: var(--amber-text);
+  }
+  .embbox__p {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .embbox__lbl {
+    font: 600 0.8rem/1 var(--font-utility);
+    letter-spacing: 0.03em;
+    color: var(--ink-soft);
+  }
+  .embbox__code {
+    width: 100%;
+    resize: vertical;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 0.7rem;
+    background: color-mix(in srgb, var(--paper) 60%, #fff);
+    color: var(--ink);
+    font: 0.8rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    overflow-wrap: anywhere;
+  }
+  .embbox__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 1rem;
+  }
+  .embbox__opt {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .embbox__ok {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .embbox__credit {
+    margin: 0;
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+  }
+  .embbox__cr {
+    margin-left: 0.3rem;
+    color: var(--ink);
+  }
+  .embbox__cr a {
+    color: var(--amber-text);
+  }
+</style>
