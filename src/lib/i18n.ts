@@ -15,6 +15,7 @@ export const TR_TO_EN: Record<string, string> = {
   "/araclar/bitrate-hesaplayici/": "/en/tools/video-bitrate-calculator/",
   "/araclar/en-boy-orani/": "/en/tools/aspect-ratio-calculator/",
   "/araclar/altyazi-kontrolu/": "/en/tools/srt-subtitle-checker/",
+  "/araclar/webp-jpg-cevirici/": "/en/tools/webp-to-jpg/",
   "/araclar/sfx-paketi/": "/en/tools/free-sound-effects-pack/",
   "/araclar/lut-paketi/": "/en/tools/free-lut-pack/",
 };

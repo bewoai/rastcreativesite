@@ -1,0 +1,139 @@
+---
+/**
+ * Privacy policy for the free Chrome extension "PixSwap – Save Image as PNG, JPG & WebP".
+ * Linked from the Chrome Web Store listing (privacy policy URL) and from /araclar/webp-jpg-cevirici/ +
+ * /en/tools/webp-to-jpg/. Same text as PRIVACY.md in github.com/bewoai/pixswap-extension — keep both in sync.
+ */
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Section from "../../../components/Section.astro";
+import SectionHeading from "../../../components/SectionHeading.astro";
+import { CONTACT } from "../../../consts";
+import { breadcrumb } from "../../../lib/schema";
+
+const updated = "1 November 2026";
+const pageJsonLd = [
+  breadcrumb([
+    { name: "Free tools", path: "/en/tools/" },
+    { name: "PixSwap privacy policy", path: "/en/tools/pixswap-privacy/" },
+  ]),
+];
+---
+
+<BaseLayout
+  title="PixSwap (Chrome extension) privacy policy"
+  description="Privacy policy of PixSwap, the free Chrome extension by Rast Creative Studio that saves images as PNG, JPG or WebP: no data collected, conversion on your device."
+  jsonLd={pageJsonLd}
+>
+  <Section width="narrow">
+    <SectionHeading eyebrow="Legal" as="h1">
+      PixSwap privacy policy
+      <Fragment slot="intro">
+        <p>Chrome extension “PixSwap – Save Image as PNG, JPG &amp; WebP” · Last updated: {updated}</p>
+      </Fragment>
+    </SectionHeading>
+
+    <div class="legal">
+      <p>
+        <strong>Short version: PixSwap collects no data.</strong> The images you convert are processed on your device and saved to
+        your own Downloads folder or clipboard. Nothing is sent to us or to anyone else.
+      </p>
+
+      <h2>What the extension does</h2>
+      <p>
+        When you right-click an image and choose a PixSwap menu item, the extension downloads that one image from the address your
+        browser already shows it from, converts it to PNG, JPG or WebP inside your browser (canvas), and saves it with Chrome's
+        downloads API or puts it on your clipboard (“Copy image as PNG”). To find the full-size version, it reads the image's
+        <code>srcset</code> in the page. Nothing is recorded or sent.
+      </p>
+
+      <h2>Data we collect</h2>
+      <ul>
+        <li>None. No personal data, no images, no page content, no browsing history, no usage statistics.</li>
+        <li>No analytics, no tracking, no advertising, no cookies of our own, no remote code.</li>
+        <li>No account or sign-up.</li>
+      </ul>
+
+      <h2>Network requests</h2>
+      <p>
+        The only network request PixSwap makes is fetching the image you right-clicked, from the site that hosts it, the same way
+        your browser loads it. When a site normally needs your login cookies to show you that image, the request includes them,
+        exactly like the page does. No other server is contacted.
+      </p>
+
+      <h2>Settings stored on your device</h2>
+      <p>
+        PixSwap remembers five settings (last format, JPG quality, WebP quality, max width, ask where to save) with Chrome's
+        <code>chrome.storage.sync</code>. If Chrome sync is on, Google syncs them between your own browsers as part of your Chrome
+        profile; we never receive them. The result of your last action and a pending request are kept in
+        <code>chrome.storage.session</code>, which Chrome clears when the browser closes. Removing the extension deletes everything.
+      </p>
+
+      <h2>Permissions</h2>
+      <ul>
+        <li><strong>contextMenus</strong>: the PixSwap entries in the image right-click menu.</li>
+        <li><strong>downloads</strong>: to save the converted file.</li>
+        <li><strong>storage</strong>: to remember the settings above.</li>
+        <li><strong>offscreen</strong>: a hidden extension page that converts the image with canvas.</li>
+        <li>
+          <strong>activeTab</strong> and <strong>scripting</strong>: after you pick a PixSwap menu item, temporary access to that tab
+          to read the clicked image (its largest size, page-only images) and to copy the PNG to your clipboard.
+        </li>
+        <li>
+          <strong>Access to other websites (optional)</strong>: not granted at install. If an image is hosted on another domain that
+          blocks extensions, PixSwap asks you once in a small window, and you choose “only this site” or “all sites”. It is used only to
+          download the image you right-clicked. You can remove it at any time in the popup (“Remove access”) or in Chrome's extension
+          details.
+        </li>
+      </ul>
+
+      <h2>Links</h2>
+      <p>
+        The popup links to free tools on rastcreative.com, such as the <a href="/en/tools/webp-to-jpg/">bulk WebP to JPG converter</a>
+        (<a href="/araclar/webp-jpg-cevirici/" hreflang="tr" lang="tr">Türkçe</a>). If you open them, that website's own
+        <a href="/kvkk/">privacy notice</a> applies (it is in Turkish and covers cookies and analytics on rastcreative.com).
+      </p>
+
+      <h2>Sharing and selling</h2>
+      <p>We don't sell, share or transfer any user data, because we don't have any.</p>
+
+      <h2>Changes and contact</h2>
+      <p>
+        If this policy changes, we'll update this page and the date above. Questions:
+        <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a> — Rast Creative Studio, Sakarya, Türkiye.
+      </p>
+      <p><a href="/en/tools/">← More free creator tools</a></p>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .legal {
+    margin-top: 2.5rem;
+    max-width: 68ch;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .legal h2 {
+    margin: 2rem 0 0.6rem;
+    font-family: var(--font-body);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .legal p {
+    margin: 0 0 1rem;
+  }
+  .legal ul {
+    margin: 0 0 1rem;
+    padding-left: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .legal a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--amber);
+    text-underline-offset: 3px;
+  }
+</style>

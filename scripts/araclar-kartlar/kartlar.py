@@ -36,9 +36,10 @@ DIST = ROOT / "dist"
 WORK = DIST / "_ornek"
 EN = os.environ.get("KART_LANG") == "en"
 OUT = ROOT / "public" / "araclar" / "kartlar" / ("en" if EN else "")
-EN_CARDS = {"guvenli-alan", "bitrate-hesaplayici", "en-boy-orani", "altyazi-kontrolu", "lut-paketi"}
+EN_CARDS = {"guvenli-alan", "bitrate-hesaplayici", "en-boy-orani", "altyazi-kontrolu", "lut-paketi", "webp-jpg-cevirici"}
 EN_PAGE = {"araclar/guvenli-alan": "en/tools/reels-safe-zone-checker", "araclar/bitrate-hesaplayici": "en/tools/video-bitrate-calculator",
-           "araclar/en-boy-orani": "en/tools/aspect-ratio-calculator", "araclar/altyazi-kontrolu": "en/tools/srt-subtitle-checker"}
+           "araclar/en-boy-orani": "en/tools/aspect-ratio-calculator", "araclar/altyazi-kontrolu": "en/tools/srt-subtitle-checker",
+           "araclar/webp-jpg-cevirici": "en/tools/webp-to-jpg"}
 
 
 def T(tr, en):
@@ -175,6 +176,14 @@ const ol=document.querySelector('.ak-rows');['3','4','2','6'].forEach(n=>{const 
 await sl(300);return rect('[data-res]');"""
 ALTYAZI_JS = ALTYAZI_JS.replace("AKW", T("600px", "700px")).replace("PREF", T("{'3':['Bozuk'],'4':['Okuma hızı','Satır'],'2':['çakışıyor','Okuma hızı'],'6':[]}",
                                          "{'3':['Broken'],'4':['Reading speed','Line'],'2':['Overlaps','Reading speed'],'6':[]}"))
+# WebP converter: three stock photos re-encoded to .webp in the page, loaded into the tool, list panel at a fixed width.
+CEVIRICI_JS = """const s2=document.createElement('style');s2.textContent='.cv .yt-stage{width:640px;padding:16px;background:#f4efe8;border-radius:0} .cv-list{max-height:none!important}';document.head.append(s2);
+const mk=async(u,n)=>{const b=await (await fetch(u)).blob();const bm=await createImageBitmap(b);const c=new OffscreenCanvas(bm.width,bm.height);c.getContext('2d').drawImage(bm,0,0);return new File([await c.convertToBlob({type:'image/webp',quality:.8})],n,{type:'image/webp'});};
+const dt=new DataTransfer();for(const [u,n] of NAMES){dt.items.add(await mk(u,n));}
+const i=document.querySelector('[data-tool] [data-file]');i.files=dt.files;i.dispatchEvent(new Event('change',{bubbles:true}));
+for(let k=0;k<80&&document.querySelectorAll('.cv-item a.yt-btn').length<3;k++)await sl(200);await sl(300);return rect('.cv .yt-stage');""".replace("NAMES", T(
+    "[['/_ornek/src/cv-meyve.jpg','meyve-pazari.webp'],['/_ornek/src/cv-sneaker.jpg','kot-sneaker.webp'],['/_ornek/src/cv-sepet.jpg','sepette-meyve.webp']]",
+    "[['/_ornek/src/cv-meyve.jpg','fruit-market.webp'],['/_ornek/src/cv-sneaker.jpg','denim-sneakers.webp'],['/_ornek/src/cv-sepet.jpg','fruit-baskets.webp']]"))
 NINE = "[" + ",".join(f"'/_ornek/g{i}.jpg'" for i in range(1, 10)) + "]"
 CAP = {
     "guvenli-reels": ("araclar/guvenli-alan", "await load('[data-tool] [data-file]',['/_ornek/dikey-reels.jpg']);await sl(800);return rect('.frame');"),
@@ -183,6 +192,7 @@ CAP = {
     "enboy-src": ("araclar/en-boy-orani", "await load('[data-tool] [data-file]',['/_ornek/yatay-roportaj.jpg']);await sl(800);return rect('[data-canvas]');"),
     "enboy-out": ("araclar/en-boy-orani", "await load('[data-tool] [data-file]',['/_ornek/yatay-roportaj.jpg']);await sl(800);return rect('[data-out]');"),
     "altyazi": ("araclar/altyazi-kontrolu", ALTYAZI_JS),
+    "cevirici": ("araclar/webp-jpg-cevirici", CEVIRICI_JS),
     "kapak-wrap": ("araclar/kapak-sablonlari", "await load('[data-tool] [data-file]',['/_ornek/dikey-kapak.jpg']);await sl(800);const t=document.querySelector('[data-title]');t.value='Çekim günü: 5 hata';t.dispatchEvent(new Event('input',{bubbles:true}));await sl(700);return rect('[data-wrap]');"),
     "ig-grid": ("araclar/instagram-grid-sablonu", f"await load('[data-tool] [data-file]',{NINE});await sl(1500);return rect('[data-grid]');"),
     "planlayici": ("cekim-planlayici", "const gs=[...document.querySelectorAll('[data-planner] .chips')];for(const g of gs){const ls=[...g.querySelectorAll('label')];[0,2,3].forEach(i=>ls[i]&&ls[i].click());}await sl(300);document.querySelector('[data-planner] button[type=submit]')?.click();await sl(800);return rect('[data-planner]');"),
@@ -277,6 +287,11 @@ CARDS = {
       <div class="win" style="left:48px;top:118px;width:548px;height:500px;background:#f4efe8;display:flex;align-items:center"><img src="{R}altyazi.png" style="width:100%"></div>
       <div class="ph" style="left:628px;top:118px;width:284px;height:500px"><img src="/_ornek/dikey-altyazi.jpg" style="width:100%;height:100%;object-fit:cover"></div>
       <div style="position:absolute;right:48px;top:52px;display:flex;gap:10px;z-index:5"><span class="tag o" style="position:static">{T("Hataları bulur", "Finds errors")}</span><span class="tag" style="position:static">{T("Düzeltilmiş SRT", "Fixed SRT")}</span></div>""", "SRT · VTT"),
+    # converter: real tool panel (drop zone + 3 converted rows) on a blurred market photo, format tags
+    "webp-jpg-cevirici": card(bgp("cv-meyve", "center", "blur(16px) brightness(.5)") + f"""
+      <div class="win" style="left:150px;top:150px;width:660px;background:#f4efe8;outline:3px solid #FF6A1A"><img src="{R}cevirici.png"></div>
+      <div style="position:absolute;left:0;right:0;top:78px;display:flex;justify-content:center;gap:14px;z-index:5"><span class="tag" style="position:static">WebP · AVIF · PNG</span><span class="tag o" style="position:static">→ JPG · PNG · WebP</span></div>
+      <span class="tag" style="right:60px;bottom:52px">ZIP</span>""", T("Dönüştür", "Convert")),
     "cekim-plani": docs("d-plan", f"{A}/cekim-plani/rast-ornek-cekim-plani-onizleme-2.webp", f"{A}/cekim-plani/rast-ornek-cekim-plani-onizleme-1.webp", "30% 50%"),
     "cekim-planlayici": card(bgp("planlayici", "center", "blur(3px) brightness(.55)") + f"""
       <div class="win" style="left:110px;top:90px;width:740px;height:540px;background:#efe8df"><img src="{R}planlayici.png"></div>""", "Plan"),

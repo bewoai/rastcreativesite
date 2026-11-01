@@ -1,0 +1,813 @@
+---
+/**
+ * /araclar/webp-jpg-cevirici/ (TR) + /en/tools/webp-to-jpg/ (EN): bulk image converter.
+ * 100% client-side: WebP, AVIF, PNG, JPG, GIF, BMP, SVG → JPG, PNG or WebP with quality and
+ * optional max width, single downloads or one ZIP (store-only zip writer below, no library).
+ * Companion page of the free Chrome extension PixSwap (repo bewoai/pixswap-extension);
+ * privacy policy at /en/tools/pixswap-privacy/.
+ */
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import EmbedLayout from "../../../layouts/EmbedLayout.astro";
+import EmbedBox from "../EmbedBox.astro";
+import Section from "../../../components/Section.astro";
+import SectionHeading from "../../../components/SectionHeading.astro";
+import Extras from "../../../pages/araclar/_yaratici/Extras.astro";
+import { SITE } from "../../../consts";
+import { breadcrumb, faqPage } from "../../../lib/schema";
+import "../../../pages/araclar/_yaratici/tool.css";
+import ToolHeader from "../../../components/araclar/ToolHeader.astro";
+
+interface Props {
+  lang?: "tr" | "en";
+  /** /embed/ widget: tool only (src/layouts/EmbedLayout.astro). */
+  embed?: boolean;
+}
+const { lang = "tr", embed = false } = Astro.props;
+const Layout = embed ? EmbedLayout : BaseLayout;
+const en = lang === "en";
+const t = (tr: string, eng: string) => (en ? eng : tr);
+
+const PATH = "/araclar/webp-jpg-cevirici/";
+const EN_PATH = "/en/tools/webp-to-jpg/";
+const PAGE_URL = new URL(en ? EN_PATH : PATH, SITE.url).href;
+const SAMPLE = "/araclar/webp-jpg-cevirici/rast-ornek-istanbul.webp";
+const PRIVACY = "/en/tools/pixswap-privacy/";
+
+const title = en ? "WebP to JPG Converter: Free, Bulk, No Upload" : "WebP JPG Çevirici: Toplu, Ücretsiz, Yüklemesiz";
+const description = en
+  ? "Free WebP to JPG converter: turn WebP, AVIF, PNG and JPG images into JPG, PNG or WebP in bulk, pick the quality, download a ZIP. Files never leave your browser."
+  : "Ücretsiz WebP JPG çevirici: WebP, AVIF, PNG ve JPG resimleri toplu olarak JPG, PNG ya da WebP'ye çevirin, kaliteyi seçin, ZIP indirin. Dosyalar yüklenmez.";
+
+const faqs = [
+  {
+    question: "WebP dosyası JPG'ye nasıl çevrilir?",
+    answer:
+      "WebP dosyalarınızı bu sayfadaki alana sürükleyin ya da seçin, çıkış formatında JPG'yi bırakın. Dönüşüm hemen başlar; her dosyayı tek tek ya da hepsini tek bir ZIP olarak indirebilirsiniz. Dosya adı korunur, yalnızca uzantı .jpg olur.",
+  },
+  {
+    question: "Resimlerim bir sunucuya yükleniyor mu?",
+    answer:
+      "Hayır. Dönüşüm tarayıcınızın içinde (canvas ile) yapılır; dosyalar bilgisayarınızdan ya da telefonunuzdan çıkmaz, hiçbir sunucuya gönderilmez. Sayfa açıldıktan sonra internet bağlantısı kesilse de araç çalışır.",
+  },
+  {
+    question: "JPG kalitesi kaç olmalı?",
+    answer:
+      "Fotoğraflar için 85–92 arası iyi bir dengedir: gözle fark edilmeyen kayıpla dosya belirgin biçimde küçülür. Baskıya ya da tekrar düzenlemeye gidecek görsellerde 95 kullanın. 80'in altında, düz renkli alanlarda ve yazılarda bozulma görülmeye başlar.",
+  },
+  {
+    question: "PNG mi, JPG mi, WebP mi seçmeliyim?",
+    answer:
+      "Fotoğraf paylaşmak ya da her programda açılmasını istiyorsanız JPG, şeffaf arka planlı logo, ekran görüntüsü ve yazılı grafikler için PNG, web sitesine koyacağınız ve küçük olması gereken görseller için WebP seçin. WebP aynı kalitede JPG'den genellikle %25–35 daha küçüktür.",
+  },
+  {
+    question: "Şeffaf PNG ya da WebP, JPG yapılınca ne olur?",
+    answer:
+      "JPG şeffaflığı desteklemez. Araç şeffaf alanları siyah değil beyaz doldurur. Şeffaflığın kalmasını istiyorsanız çıkış formatı olarak PNG ya da WebP seçin.",
+  },
+  {
+    question: "Hareketli GIF ya da WebP çevrilebilir mi?",
+    answer:
+      "Hareketli dosyaların yalnızca ilk karesi dönüştürülür; sonuç tek karelik bir resimdir. Animasyonu korumak için video ya da GIF düzenleme programı kullanmanız gerekir.",
+  },
+  {
+    question: "Aynı anda kaç dosya çevirebilirim?",
+    answer:
+      "Sayfada bir sınır yok; dosyalar sırayla işlenir. Pratik sınır cihazınızın belleğidir: bilgisayarda yüzlerce fotoğraf sorun olmaz, telefonda çok büyük dosyaları birkaç parti halinde çevirmek daha hızlıdır.",
+  },
+  {
+    question: "Chrome'da bir resmi doğrudan JPG ya da PNG olarak kaydedebilir miyim?",
+    answer:
+      "Evet. Ücretsiz PixSwap Chrome eklentisi resme sağ tıklayınca “PNG / JPG / WebP olarak kaydet” ve “PNG olarak kopyala” seçeneklerini ekler; orijinal çözünürlüğü ve dosya adını korur. Bu sayfa da onun toplu dönüştürme aracıdır.",
+  },
+];
+const enFaqs = [
+  {
+    question: "How do I convert WebP to JPG?",
+    answer:
+      "Drop your WebP files onto this page or pick them, and keep JPG as the output format. Conversion starts right away; download each file on its own or all of them as one ZIP. The file name stays the same, only the extension changes to .jpg.",
+  },
+  {
+    question: "Are my images uploaded to a server?",
+    answer:
+      "No. The conversion runs inside your browser (canvas); your files never leave your computer or phone and are not sent to any server. Once the page has loaded, the tool keeps working even offline.",
+  },
+  {
+    question: "What JPG quality should I use?",
+    answer:
+      "For photos, 85–92 is a good balance: the file gets much smaller with no visible loss. Use 95 for images that go to print or will be edited again. Below 80, flat colors and text start to show artifacts.",
+  },
+  {
+    question: "Should I choose PNG, JPG or WebP?",
+    answer:
+      "Choose JPG to share photos or open them in any app, PNG for logos with transparent backgrounds, screenshots and graphics with text, and WebP for images on a website that need to be small. At the same quality, WebP is usually 25–35% smaller than JPG.",
+  },
+  {
+    question: "What happens to transparency when I convert to JPG?",
+    answer:
+      "JPG has no transparency. The tool fills transparent areas with white, not black. To keep transparency, choose PNG or WebP as the output format.",
+  },
+  {
+    question: "Can I convert animated GIF or WebP files?",
+    answer:
+      "Only the first frame of an animated file is converted; the result is a still image. To keep the animation you need a video or GIF editor.",
+  },
+  {
+    question: "How many files can I convert at once?",
+    answer:
+      "The page has no limit; files are processed one after another. The practical limit is your device's memory: hundreds of photos are fine on a computer, and on a phone very large files go faster in a few batches.",
+  },
+  {
+    question: "Can I save an image as JPG or PNG directly in Chrome?",
+    answer:
+      "Yes. The free PixSwap Chrome extension adds “Save image as PNG / JPG / WebP” and “Copy image as PNG” to the right-click menu of any image, keeping the full resolution and the file name. This page is its bulk converter.",
+  },
+];
+
+const jsonLd = [
+  en
+    ? breadcrumb([
+        { name: "Rast Creative", path: "/" },
+        { name: "Free tools", path: "/en/tools/" },
+        { name: "WebP to JPG converter", path: EN_PATH },
+      ])
+    : breadcrumb([
+        { name: "Ana Sayfa", path: "/" },
+        { name: "Araçlar", path: "/araclar/" },
+        { name: "WebP JPG çevirici", path: PATH },
+      ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: en ? "WebP to JPG Converter (bulk, in-browser)" : "WebP JPG Çevirici (toplu, tarayıcıda)",
+    alternateName: en ? ["Image format converter", "AVIF to JPG", "PNG to WebP"] : ["WebP to JPG converter", "Resim formatı dönüştürücü", "WebP PNG çevirme"],
+    url: PAGE_URL,
+    applicationCategory: "MultimediaApplication",
+    operatingSystem: "Web",
+    browserRequirements: en ? "A modern web browser with JavaScript" : "Modern bir web tarayıcısı; JavaScript gerekli",
+    isAccessibleForFree: true,
+    inLanguage: lang,
+    offers: { "@type": "Offer", price: "0", priceCurrency: en ? "USD" : "TRY" },
+    description,
+    featureList: en
+      ? ["WebP, AVIF, PNG, JPG, GIF, BMP, SVG input", "JPG, PNG or WebP output", "Quality slider and max width", "Bulk conversion and ZIP download", "No upload: runs in the browser"]
+      : ["WebP, AVIF, PNG, JPG, GIF, BMP, SVG girişi", "JPG, PNG ya da WebP çıkışı", "Kalite ayarı ve en fazla genişlik", "Toplu dönüştürme ve ZIP indirme", "Yükleme yok: tarayıcıda çalışır"],
+    provider: { "@id": `${SITE.url}#business` },
+    creator: { "@id": `${SITE.url}#business` },
+    dateModified: "2026-11-01",
+  },
+  faqPage(en ? enFaqs : faqs),
+];
+
+const WIDTHS = [0, 3840, 2560, 1920, 1280, 1080, 720];
+---
+
+<Layout title={title} description={description} jsonLd={embed ? undefined : jsonLd} full={en ? EN_PATH : PATH}>
+  <div class="yt-page">
+    <Section width="wide" space="tight">
+      {
+        !embed && (
+          <ToolHeader href={en ? EN_PATH : PATH} h1={en ? "WebP to JPG converter (bulk, free)" : "WebP JPG çevirici (toplu, ücretsiz)"}>
+            {en ? (
+              <p>
+                Got a .webp or .avif file that won't open, or need a batch of PNGs as JPG? Drop them here, choose JPG, PNG or WebP
+                and the quality, then download them one by one or as a ZIP. <strong>Your images are never uploaded</strong>: everything
+                happens in your browser.
+              </p>
+            ) : (
+              <p>
+                Açılmayan bir .webp ya da .avif dosyanız mı var, bir yığın PNG'yi JPG yapmanız mı gerekiyor? Dosyaları buraya bırakın,
+                JPG, PNG ya da WebP'yi ve kaliteyi seçin, tek tek ya da ZIP olarak indirin. <strong>Resimleriniz hiçbir sunucuya
+                yüklenmez</strong>: her şey tarayıcınızda olur.
+              </p>
+            )}
+          </ToolHeader>
+        )
+      }
+
+      <div id="arac" class="yt-tool yt-tool--split cv" data-tool>
+        <div class="yt-stage">
+          <label class="yt-drop cv-drop" data-drop>
+            <input type="file" class="yt-sr" data-file multiple accept="image/webp,image/avif,image/png,image/jpeg,image/gif,image/bmp,image/svg+xml,.webp,.avif,.png,.jpg,.jpeg,.jfif,.gif,.bmp,.svg,.heic" />
+            <span class="yt-drop__title">{t("Resimleri seçin ya da buraya sürükleyin", "Choose images or drop them here")}</span>
+            <span class="yt-drop__hint">{t("WebP, AVIF, PNG, JPG, GIF, BMP, SVG · birden çok dosya · yapıştırma (Ctrl+V) da çalışır", "WebP, AVIF, PNG, JPG, GIF, BMP, SVG · several files · paste (Ctrl+V) works too")}</span>
+          </label>
+          <div class="yt-actions cv-row">
+            <button type="button" class="yt-btn" data-sample>{t("Örnek WebP ile dene", "Try a sample WebP")}</button>
+            <span class="yt-small" data-sum aria-live="polite"></span>
+          </div>
+          <ul class="cv-list" data-list aria-live="polite"></ul>
+          <p class="yt-small cv-empty" data-empty>{t("Henüz dosya yok. Eklediğiniz resimler burada listelenir ve hemen dönüştürülür.", "No files yet. Images you add are listed here and converted right away.")}</p>
+          <noscript><p class="yt-warn">{t("Dönüştürücü için JavaScript gerekli.", "The converter needs JavaScript.")}</p></noscript>
+        </div>
+
+        <div class="cv-side">
+          <fieldset>
+            <legend>{t("Çıkış formatı", "Output format")}</legend>
+            <div class="yt-chips">
+              <label class="yt-chip"><input type="radio" name="cvfmt" value="jpg" checked /><span>JPG</span></label>
+              <label class="yt-chip"><input type="radio" name="cvfmt" value="png" /><span>PNG</span></label>
+              <label class="yt-chip"><input type="radio" name="cvfmt" value="webp" /><span>WebP</span></label>
+            </div>
+            <p class="yt-small" data-fmtnote></p>
+          </fieldset>
+          <fieldset data-qbox>
+            <legend>{t("Kalite", "Quality")} <span data-qv>92</span></legend>
+            <input type="range" min="50" max="100" step="1" value="92" data-q aria-label={t("Kalite", "Quality")} />
+            <p class="yt-small">{t("Fotoğraf için 85–92 önerilir; 95+ baskı ve yeniden düzenleme için.", "85–92 is best for photos; 95+ for print or further editing.")}</p>
+          </fieldset>
+          <fieldset>
+            <legend>{t("En fazla genişlik", "Max width")}</legend>
+            <select class="cv-select" data-w aria-label={t("En fazla genişlik", "Max width")}>
+              {WIDTHS.map((w) => <option value={w}>{w ? `${w} px` : t("Orijinal boyut", "Original size")}</option>)}
+            </select>
+            <p class="yt-small">{t("Daha geniş resimler oranı korunarak küçültülür; küçükler büyütülmez.", "Wider images are scaled down, keeping the aspect ratio; smaller ones are never upscaled.")}</p>
+          </fieldset>
+          <div class="yt-actions">
+            <button type="button" class="ev-btn ev-btn--sun" data-zip disabled>{t("Hepsini indir (ZIP)", "Download all (ZIP)")}</button>
+            <button type="button" class="yt-btn" data-clear hidden>{t("Listeyi temizle", "Clear list")}</button>
+          </div>
+          <p class="yt-small">{t("Şeffaf alanlar JPG'de beyaz olur. Format ve boyut aynı kalıyorsa orijinal dosya olduğu gibi verilir (kayıpsız). Hareketli GIF/WebP'nin ilk karesi alınır.", "Transparent areas turn white in JPG. If format and size stay the same, you get the original file untouched (lossless). Animated GIF/WebP: the first frame is used.")}</p>
+        </div>
+      </div>
+
+      {
+        !embed && (
+          <Fragment>
+            <ol class="at-steps" aria-label={t("Nasıl kullanılır", "How to use")}>
+              {en ? (
+                <Fragment>
+                  <li><strong>Add your images.</strong> Drop them, pick them, or paste one with Ctrl+V. WebP, AVIF, PNG, JPG, GIF, BMP and SVG all work.</li>
+                  <li><strong>Choose format and quality.</strong> JPG for sharing, PNG for transparency, WebP for the web. Optionally cap the width.</li>
+                  <li><strong>Download.</strong> Each file has its own button, or grab everything as one ZIP. Names stay the same, only the extension changes.</li>
+                </Fragment>
+              ) : (
+                <Fragment>
+                  <li><strong>Resimleri ekleyin.</strong> Sürükleyin, seçin ya da Ctrl+V ile yapıştırın. WebP, AVIF, PNG, JPG, GIF, BMP ve SVG çalışır.</li>
+                  <li><strong>Formatı ve kaliteyi seçin.</strong> Paylaşmak için JPG, şeffaflık için PNG, web için WebP. İsterseniz genişliği sınırlayın.</li>
+                  <li><strong>İndirin.</strong> Her dosyanın kendi düğmesi var ya da hepsini tek ZIP olarak alın. Dosya adı aynı kalır, yalnızca uzantı değişir.</li>
+                </Fragment>
+              )}
+            </ol>
+
+            <div class="cv-ext" id="chrome-eklentisi">
+              <figure class="cv-ext__fig">
+                <img src={SAMPLE} width="1280" height="853" alt={t("Örnek WebP görseli: İstanbul'da bir sokak", "Sample WebP image: a street in Istanbul")} loading="lazy" decoding="async" />
+                <figcaption class="yt-small">{t("Bu bir WebP dosyası: PixSwap ile sağ tıklayıp JPG olarak kaydetmeyi deneyin. (Fotoğraf: Pexels)", "This is a WebP file: right-click it with PixSwap to save it as JPG. (Photo: Pexels)")}</figcaption>
+              </figure>
+              <div>
+                <h2>{t("Tek resim için: PixSwap Chrome eklentisi", "For single images: the PixSwap Chrome extension")}</h2>
+                {en ? (
+                  <p>
+                    PixSwap adds <em>Save image as PNG / JPG / WebP</em> and <em>Copy image as PNG</em> to the right-click menu of any image
+                    in Chrome. It takes the largest version a site offers, keeps the original file name, and converts on your device. Free,
+                    no limits, no tracking; it asks for access to other sites only when an image needs it, once.
+                  </p>
+                ) : (
+                  <p>
+                    PixSwap, Chrome'da her resmin sağ tık menüsüne <em>PNG / JPG / WebP olarak kaydet</em> ve <em>PNG olarak kopyala</em>
+                    seçeneklerini ekler. Sitenin sunduğu en büyük sürümü alır, orijinal dosya adını korur ve dönüşümü cihazınızda yapar.
+                    Ücretsiz, limitsiz, takipsiz; başka bir siteye erişimi yalnızca bir resim gerektirdiğinde, bir kez ister.
+                  </p>
+                )}
+                <p class="yt-small">
+                  {t("Chrome Web Mağazası'nda incelemede; yayınlanınca bağlantısı buraya eklenecek.", "In review at the Chrome Web Store; the install link will appear here once it is published.")}{" "}
+                  <a href={PRIVACY} hreflang="en">{t("Gizlilik politikası (İngilizce)", "Privacy policy")}</a>
+                </p>
+              </div>
+            </div>
+          </Fragment>
+        )
+      }
+    </Section>
+
+    {
+      !embed && (
+        <Fragment>
+          <EmbedBox href={en ? EN_PATH : PATH} />
+
+          <Section width="default" space="tight" id={en ? "formats" : "formatlar"}>
+            <SectionHeading eyebrow={t("Formatlar", "Formats")}>{t("JPG, PNG, WebP ve AVIF: hangisi ne zaman?", "JPG, PNG, WebP and AVIF: which one when?")}</SectionHeading>
+            <div class="yt-tablewrap">
+              <table class="yt-table">
+                <caption>{t("Kısa karşılaştırma (genel eğilim; sonuç görsele göre değişir)", "Quick comparison (general tendency; results depend on the image)")}</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">{t("Format", "Format")}</th>
+                    <th scope="col">{t("Şeffaflık", "Transparency")}</th>
+                    <th scope="col">{t("Dosya boyutu", "File size")}</th>
+                    <th scope="col">{t("Nerede açılır?", "Opens in")}</th>
+                    <th scope="col">{t("En iyi kullanım", "Best for")}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><th scope="row">JPG</th><td>{t("Yok", "No")}</td><td>{t("Orta", "Medium")}</td><td>{t("Her yerde", "Everywhere")}</td><td>{t("Fotoğraf paylaşma, baskı, e-posta", "Sharing photos, print, email")}</td></tr>
+                  <tr><th scope="row">PNG</th><td>{t("Var", "Yes")}</td><td>{t("Büyük (kayıpsız)", "Large (lossless)")}</td><td>{t("Her yerde", "Everywhere")}</td><td>{t("Logo, ekran görüntüsü, yazılı grafik", "Logos, screenshots, graphics with text")}</td></tr>
+                  <tr><th scope="row">WebP</th><td>{t("Var", "Yes")}</td><td>{t("Küçük (JPG'den ~%25–35 az)", "Small (~25–35% below JPG)")}</td><td>{t("Tarayıcılar, yeni programlar", "Browsers, newer apps")}</td><td>{t("Web sitesi görselleri", "Website images")}</td></tr>
+                  <tr><th scope="row">AVIF</th><td>{t("Var", "Yes")}</td><td>{t("En küçük", "Smallest")}</td><td>{t("Güncel tarayıcılar", "Current browsers")}</td><td>{t("Web (bu araç AVIF'i okur, yazmaz)", "Web (this tool reads AVIF, doesn't write it)")}</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <ul class="yt-tips">
+              {en ? (
+                <Fragment>
+                  <li><strong>Why do I get .webp files?</strong> Most sites serve WebP or AVIF because they load faster. When you save one, it keeps that format, and some older apps and upload forms refuse it. Converting to JPG or PNG fixes that.</li>
+                  <li><strong>JPG to JPG again?</strong> Each re-save of a JPG loses a little detail. Only re-encode when you need a smaller size or width; otherwise keep the original (this tool hands it back untouched when nothing changes).</li>
+                  <li><strong>For social media:</strong> 1080 px wide is enough for Instagram feed posts. Checking a 9:16 cover? Use the <a href="/en/tools/reels-safe-zone-checker/">Reels safe zone checker</a>.</li>
+                </Fragment>
+              ) : (
+                <Fragment>
+                  <li><strong>Neden .webp dosyası iniyor?</strong> Siteler daha hızlı yüklendiği için çoğu resmi WebP ya da AVIF sunar. Kaydedince bu format kalır; bazı eski programlar ve yükleme formları kabul etmez. JPG ya da PNG'ye çevirmek bunu çözer.</li>
+                  <li><strong>JPG'yi yeniden JPG yapmak?</strong> JPG her yeniden kaydedişte biraz ayrıntı kaybeder. Yalnızca daha küçük boyut ya da genişlik gerekiyorsa yeniden kodlayın; hiçbir şey değişmiyorsa bu araç orijinali olduğu gibi verir.</li>
+                  <li><strong>Sosyal medya için:</strong> Instagram akış gönderisinde 1080 px genişlik yeterlidir. 9:16 kapağınızı mı kontrol ediyorsunuz? <a href="/araclar/guvenli-alan/">Güvenli alan kontrolü</a> aracını kullanın.</li>
+                </Fragment>
+              )}
+            </ul>
+          </Section>
+
+          <Extras
+            lang={lang}
+            faqs={en ? enFaqs : faqs}
+            pageUrl={PAGE_URL}
+            linkText={en ? "WebP to JPG converter" : "WebP JPG çevirici"}
+            attribution={en ? "WebP to JPG converter: Rast Creative Studio — rastcreative.com" : "WebP JPG çevirici: Rast Creative Studio — rastcreative.com"}
+            current={en ? EN_PATH : PATH}
+            checked={en ? "1 November 2026" : "1 Kasım 2026"}
+            ctaTitle={en ? "Need images and video that are made for the web?" : "Web için hazırlanmış görsel ve video mu lazım?"}
+          >
+            <Fragment slot="sources">
+              {en ? (
+                <Fragment>
+                  <p>How the conversion works and where the format notes come from:</p>
+                  <ul class="yt-sources">
+                    <li>MDN Web Docs, “HTMLCanvasElement: toBlob() method” and “OffscreenCanvas: convertToBlob()”: browser-side encoding to image/jpeg, image/png and image/webp with a quality value (accessed 1 Nov 2026). <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob" rel="noopener" target="_blank">developer.mozilla.org</a></li>
+                    <li>Google for Developers, “An image format for the Web” (WebP): lossy WebP images are 25–34% smaller than comparable JPEG images (accessed 1 Nov 2026). <a href="https://developers.google.com/speed/webp" rel="noopener" target="_blank">developers.google.com/speed/webp</a></li>
+                    <li>MDN Web Docs, “Image file type and format guide”: JPEG, PNG, WebP, AVIF, GIF support and transparency (accessed 1 Nov 2026). <a href="https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Image_types" rel="noopener" target="_blank">developer.mozilla.org</a></li>
+                  </ul>
+                </Fragment>
+              ) : (
+                <Fragment>
+                  <p>Dönüşümün nasıl yapıldığı ve format notlarının kaynakları:</p>
+                  <ul class="yt-sources">
+                    <li>MDN Web Docs, “HTMLCanvasElement: toBlob() method” ve “OffscreenCanvas: convertToBlob()”: tarayıcıda kalite değeriyle image/jpeg, image/png ve image/webp kodlama (erişim 01.11.2026). <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob" rel="noopener" target="_blank">developer.mozilla.org</a></li>
+                    <li>Google for Developers, “An image format for the Web” (WebP): kayıplı WebP, benzer JPEG'den %25–34 daha küçük (erişim 01.11.2026). <a href="https://developers.google.com/speed/webp" rel="noopener" target="_blank">developers.google.com/speed/webp</a></li>
+                    <li>MDN Web Docs, “Image file type and format guide”: JPEG, PNG, WebP, AVIF, GIF desteği ve şeffaflık (erişim 01.11.2026). <a href="https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Image_types" rel="noopener" target="_blank">developer.mozilla.org</a></li>
+                  </ul>
+                </Fragment>
+              )}
+            </Fragment>
+            <Fragment slot="cta">
+              {en ? (
+                <Fragment>
+                  Rast Creative Studio is a video production studio in Sakarya, Turkey. We shoot product, venue and brand content and
+                  deliver it in the sizes and formats each platform and website needs. Tell us about your project, in English or Turkish.
+                </Fragment>
+              ) : (
+                <Fragment>
+                  Rast Creative Studio, ürün ve mekân çekimlerini, sosyal medya içeriklerini her platformun ve web sitesinin istediği
+                  boyut ve formatta teslim eder. <a href="/urun-mekan-cekimi/">Ürün ve mekân çekimi</a> ile
+                  <a href="/sosyal-medya-icerigi/">sosyal medya içeriği</a> sayfalarına bakabilirsiniz.
+                </Fragment>
+              )}
+            </Fragment>
+          </Extras>
+        </Fragment>
+      )
+    }
+  </div>
+</Layout>
+
+<style>
+  .cv-row { align-items: center; }
+  .cv-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.55rem; max-height: 34rem; overflow: auto; }
+  .cv-empty { margin: 0; }
+  .cv-side { display: grid; gap: 1.1rem; }
+  .cv-side fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
+  .cv-side legend { font-weight: 600; color: var(--ink); margin-bottom: 0.4rem; }
+  .cv-side input[type="range"] { width: 100%; accent-color: var(--amber); }
+  .cv-select { min-height: 44px; padding: 0.4rem 0.8rem; border-radius: 0.7rem; border: 1px solid var(--line-strong); background: var(--paper); color: var(--ink); font: inherit; max-width: 16rem; }
+  .cv-side fieldset[data-off] { opacity: 0.45; }
+  :global(.cv-item) { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 0.75rem; align-items: center; padding: 0.55rem 0.65rem; border: 1px solid var(--line); border-radius: 0.8rem; background: color-mix(in srgb, var(--paper) 88%, transparent); }
+  :global(.cv-item img) { width: 56px; height: 56px; object-fit: cover; border-radius: 0.5rem; background: repeating-conic-gradient(#d9d4cc 0 25%, #f3efe9 0 50%) 0 0 / 12px 12px; display: block; }
+  :global(.cv-item .cv-name) { font-weight: 600; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.95rem; }
+  :global(.cv-item .cv-meta) { font-size: 0.82rem; color: var(--ink-soft); line-height: 1.35; }
+  :global(.cv-item .cv-meta b) { color: var(--ink); font-weight: 600; }
+  :global(.cv-item .cv-meta .cv-good) { color: #1d7a45; font-weight: 600; }
+  :global(.cv-item .cv-meta .cv-err) { color: #b3261e; font-weight: 600; }
+  :global(.cv-item a.yt-btn) { text-decoration: none; display: inline-flex; align-items: center; white-space: nowrap; }
+  .cv-ext { margin-top: clamp(1.4rem, 3vw, 2rem); display: grid; gap: 1.2rem; align-items: center; padding: clamp(1rem, 2.5vw, 1.5rem); border: 1px solid var(--line); border-radius: 1.2rem; background: color-mix(in srgb, var(--paper) 70%, transparent); }
+  .cv-ext h2 { font-size: clamp(1.15rem, 2vw, 1.4rem); margin: 0 0 0.6rem; color: var(--ink); }
+  .cv-ext p { margin: 0 0 0.7rem; color: var(--ink-soft); line-height: var(--leading-body, 1.6); }
+  .cv-ext a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--amber); text-underline-offset: 3px; }
+  .cv-ext__fig { margin: 0; }
+  .cv-ext__fig img { width: 100%; height: auto; border-radius: 0.9rem; display: block; }
+  .cv-ext__fig figcaption { margin-top: 0.4rem; }
+  @media (min-width: 860px) { .cv-ext { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); } }
+</style>
+
+<script>
+  // Page language (BaseLayout sets <html lang="en"> on /en/ twins): same logic, two languages.
+  const EN = document.documentElement.lang === "en";
+  const L = (tr: string, en: string) => (EN ? en : tr);
+  const NF = new Intl.NumberFormat(EN ? "en-US" : "tr-TR", { maximumFractionDigits: 1 });
+  const SAMPLE = "/araclar/webp-jpg-cevirici/rast-ornek-istanbul.webp";
+
+  type Fmt = "jpg" | "png" | "webp";
+  const MIME: Record<Fmt, string> = { jpg: "image/jpeg", png: "image/png", webp: "image/webp" };
+  interface Item {
+    id: number;
+    file: File;
+    thumb: string;
+    srcType: string;
+    w: number;
+    h: number;
+    out?: Blob;
+    outName?: string;
+    outW?: number;
+    outH?: number;
+    kept?: boolean;
+    frames?: number;
+    err?: string;
+    url?: string;
+    li: HTMLLIElement;
+  }
+
+  const root = document.querySelector<HTMLElement>("[data-tool]");
+  if (root) init(root);
+
+  function fmtBytes(n: number) {
+    if (n < 1024) return `${n} B`;
+    if (n < 1024 * 1024) return `${NF.format(n / 1024)} KB`;
+    return `${NF.format(n / 1024 / 1024)} MB`;
+  }
+
+  // Real type from the first bytes (a ".jpg" may be WebP; HEIC can't be decoded by browsers).
+  function sniff(b: Uint8Array): string {
+    const s = (i: number, n: number) => String.fromCharCode(...b.subarray(i, i + n));
+    if (b[0] === 0x89 && b[1] === 0x50) return "image/png";
+    if (b[0] === 0xff && b[1] === 0xd8) return "image/jpeg";
+    if (s(0, 4) === "GIF8") return "image/gif";
+    if (s(0, 4) === "RIFF" && s(8, 4) === "WEBP") return "image/webp";
+    if (s(4, 4) === "ftyp") {
+      const brand = s(8, 4);
+      if (brand === "avif" || brand === "avis") return "image/avif";
+      if (/^(heic|heix|hevc|mif1|msf1)$/.test(brand)) return "image/heic";
+    }
+    if (b[0] === 0x42 && b[1] === 0x4d) return "image/bmp";
+    const head = new TextDecoder().decode(b.subarray(0, 1024)).trimStart();
+    if (/^(<\?xml|<svg|<!--)/i.test(head) && /<svg[\s>]/i.test(head)) return "image/svg+xml";
+    return "";
+  }
+
+  function baseName(name: string) {
+    const b = name.replace(/\.(jpe?g|jfif|png|apng|gif|webp|avif|bmp|svg|heic|heif|tiff?)$/i, "") || name;
+    return b.replace(/[\u0000-\u001f<>:"/\\|?*]+/g, "_").trim().slice(0, 100) || "image";
+  }
+
+  async function frameCount(file: Blob, type: string) {
+    try {
+      const ID = (window as any).ImageDecoder;
+      if (!ID || !(await ID.isTypeSupported(type))) return 1;
+      const d = new ID({ data: file.stream(), type });
+      await d.tracks.ready;
+      const n = d.tracks.selectedTrack?.frameCount || 1;
+      d.close();
+      return n;
+    } catch {
+      return 1;
+    }
+  }
+
+  function loadImg(url: string) {
+    return new Promise<HTMLImageElement>((res, rej) => {
+      const i = new Image();
+      i.onload = () => res(i);
+      i.onerror = () => rej(new Error("decode"));
+      i.src = url;
+    });
+  }
+
+  function init(root: HTMLElement) {
+    const $ = <T extends Element>(s: string) => root.querySelector<T>(s)!;
+    const list = $<HTMLUListElement>("[data-list]");
+    const empty = $<HTMLElement>("[data-empty]");
+    const sum = $<HTMLElement>("[data-sum]");
+    const zipBtn = $<HTMLButtonElement>("[data-zip]");
+    const clearBtn = $<HTMLButtonElement>("[data-clear]");
+    const q = $<HTMLInputElement>("[data-q]");
+    const qv = $<HTMLElement>("[data-qv]");
+    const qbox = $<HTMLElement>("[data-qbox]");
+    const wSel = $<HTMLSelectElement>("[data-w]");
+    const note = $<HTMLElement>("[data-fmtnote]");
+    const items: Item[] = [];
+    let nextId = 1;
+    let busy = Promise.resolve();
+    let gen = 0;
+
+    const fmt = () => (root.querySelector<HTMLInputElement>('input[name="cvfmt"]:checked')?.value || "jpg") as Fmt;
+    const NOTES: Record<Fmt, string> = {
+      jpg: L("Her yerde açılır; şeffaflık beyaz olur.", "Opens everywhere; transparency becomes white."),
+      png: L("Kayıpsız ve şeffaflığı korur; dosya büyük olur.", "Lossless and keeps transparency; larger files."),
+      webp: L("Web için küçük dosya; şeffaflığı korur.", "Small files for the web; keeps transparency."),
+    };
+
+    async function decode(it: Item) {
+      const head = new Uint8Array(await it.file.slice(0, 4096).arrayBuffer());
+      it.srcType = sniff(head) || it.file.type;
+      if (it.srcType === "image/heic") throw new Error(L("HEIC tarayıcıda açılamıyor; telefonda “En Uyumlu” formatta (JPG) dışa aktarın.", "HEIC can't be opened in browsers; export it as “Most Compatible” (JPG) on the phone."));
+      if (!it.srcType.startsWith("image/")) throw new Error(L("Bu dosya bir resim değil.", "This file isn't an image."));
+      const blob = it.file.type === it.srcType ? it.file : new Blob([it.file], { type: it.srcType });
+      if (it.srcType === "image/svg+xml") {
+        const img = await loadImg(it.thumb);
+        let w = img.naturalWidth || 1024;
+        let h = img.naturalHeight || 1024;
+        const k = Math.max(1, 1024 / Math.max(w, h)); // rasterize small SVGs at ≥1024 px
+        return { src: img as CanvasImageSource, w: Math.round(w * k), h: Math.round(h * k), blob };
+      }
+      try {
+        const bm = await createImageBitmap(blob);
+        return { src: bm as CanvasImageSource, w: bm.width, h: bm.height, blob };
+      } catch {
+        const img = await loadImg(it.thumb);
+        return { src: img as CanvasImageSource, w: img.naturalWidth, h: img.naturalHeight, blob };
+      }
+    }
+
+    async function convert(it: Item, myGen: number) {
+      const f = fmt();
+      const quality = Number(q.value) / 100;
+      const maxW = Number(wSel.value) || 0;
+      it.err = undefined;
+      render(it, L("Dönüştürülüyor…", "Converting…"));
+      try {
+        const d = await decode(it);
+        if (myGen !== gen) return;
+        it.w = d.w;
+        it.h = d.h;
+        let W = d.w;
+        let H = d.h;
+        if (maxW && W > maxW) {
+          H = Math.round((H * maxW) / W);
+          W = maxW;
+        }
+        it.frames = /gif|webp|png|avif/.test(it.srcType) ? await frameCount(d.blob, it.srcType) : 1;
+        let out: Blob;
+        if (it.srcType === MIME[f] && W === d.w && H === d.h) {
+          out = d.blob;
+          it.kept = true;
+        } else {
+          const c = document.createElement("canvas");
+          c.width = W;
+          c.height = H;
+          const g = c.getContext("2d")!;
+          if (f === "jpg") {
+            g.fillStyle = "#fff";
+            g.fillRect(0, 0, W, H);
+          }
+          g.imageSmoothingQuality = "high";
+          g.drawImage(d.src, 0, 0, W, H);
+          out = await new Promise<Blob>((res, rej) => c.toBlob((b) => (b ? res(b) : rej(new Error("encode"))), MIME[f], f === "png" ? undefined : quality));
+          it.kept = false;
+          c.width = c.height = 0;
+        }
+        if ("close" in d.src && typeof (d.src as ImageBitmap).close === "function") (d.src as ImageBitmap).close();
+        if (myGen !== gen) return;
+        if (it.url) URL.revokeObjectURL(it.url);
+        it.out = out;
+        it.outW = W;
+        it.outH = H;
+        it.outName = `${baseName(it.file.name)}.${f}`;
+        it.url = URL.createObjectURL(out);
+        render(it);
+      } catch (e) {
+        it.out = undefined;
+        it.err = (e as Error).message === "decode" ? L("Bu resim açılamadı.", "This image couldn't be opened.") : (e as Error).message;
+        render(it);
+      }
+      summary();
+    }
+
+    function render(it: Item, status?: string) {
+      const li = it.li;
+      li.innerHTML = "";
+      const img = document.createElement("img");
+      img.src = it.thumb;
+      img.alt = "";
+      const mid = document.createElement("div");
+      const nm = document.createElement("div");
+      nm.className = "cv-name";
+      nm.textContent = it.outName ?? it.file.name;
+      nm.title = it.file.name;
+      const meta = document.createElement("div");
+      meta.className = "cv-meta";
+      const typ = (it.srcType || it.file.type || "?").replace("image/", "").replace("svg+xml", "svg").replace("jpeg", "jpg").toUpperCase();
+      if (status) meta.textContent = `${typ} · ${fmtBytes(it.file.size)} · ${status}`;
+      else if (it.err) meta.innerHTML = `${typ} · <span class="cv-err"></span>`, (meta.querySelector(".cv-err")!.textContent = it.err);
+      else if (it.out) {
+        const pct = Math.round((1 - it.out.size / it.file.size) * 100);
+        const change = it.kept ? L("orijinal korundu", "original kept") : pct > 0 ? L(`−%${pct}`, `−${pct}%`) : L(`+%${Math.abs(pct)}`, `+${Math.abs(pct)}%`);
+        meta.innerHTML = `${typ} ${it.w}×${it.h} · ${fmtBytes(it.file.size)} → <b>${fmt().toUpperCase()} ${it.outW}×${it.outH} · ${fmtBytes(it.out.size)}</b> <span class="${pct > 0 || it.kept ? "cv-good" : ""}">(${change})</span>`;
+        if ((it.frames || 1) > 1) meta.innerHTML += ` · ${L("ilk kare", "first frame")}`;
+      }
+      mid.append(nm, meta);
+      li.append(img, mid);
+      if (it.out && it.url && !status) {
+        const a = document.createElement("a");
+        a.className = "yt-btn";
+        a.href = it.url;
+        a.download = it.outName!;
+        a.textContent = L("İndir", "Download");
+        a.setAttribute("aria-label", `${L("İndir", "Download")}: ${it.outName}`);
+        li.append(a);
+      } else li.append(document.createElement("span"));
+    }
+
+    function summary() {
+      const done = items.filter((i) => i.out);
+      empty.hidden = items.length > 0;
+      clearBtn.hidden = items.length === 0;
+      zipBtn.disabled = done.length === 0;
+      if (!items.length) return (sum.textContent = "");
+      const a = done.reduce((s, i) => s + i.file.size, 0);
+      const b = done.reduce((s, i) => s + (i.out?.size || 0), 0);
+      const pct = a ? Math.round((1 - b / a) * 100) : 0;
+      sum.textContent = L(
+        `${done.length}/${items.length} dosya · ${fmtBytes(a)} → ${fmtBytes(b)}${pct ? ` (${pct > 0 ? "−" : "+"}%${Math.abs(pct)})` : ""}`,
+        `${done.length}/${items.length} files · ${fmtBytes(a)} → ${fmtBytes(b)}${pct ? ` (${pct > 0 ? "−" : "+"}${Math.abs(pct)}%)` : ""}`,
+      );
+    }
+
+    function queue(it: Item) {
+      const g = gen;
+      busy = busy.then(() => convert(it, g));
+    }
+    function add(files: File[]) {
+      for (const f of files) {
+        if (!f || (f.type && !f.type.startsWith("image/") && !/\.(webp|avif|png|jpe?g|jfif|gif|bmp|svg|heic)$/i.test(f.name))) continue;
+        const li = document.createElement("li");
+        li.className = "cv-item";
+        const it: Item = { id: nextId++, file: f, thumb: URL.createObjectURL(f), srcType: "", w: 0, h: 0, li };
+        items.push(it);
+        list.append(li);
+        render(it, L("Sırada", "Queued"));
+        queue(it);
+      }
+      summary();
+    }
+    function reconvertAll() {
+      gen++;
+      busy = Promise.resolve();
+      for (const it of items) queue(it);
+    }
+
+    // inputs
+    const input = $<HTMLInputElement>("[data-file]");
+    const drop = $<HTMLElement>("[data-drop]");
+    input.addEventListener("change", () => {
+      if (input.files?.length) add([...input.files]);
+      input.value = "";
+    });
+    ["dragenter", "dragover"].forEach((e) => drop.addEventListener(e, (ev) => (ev.preventDefault(), drop.classList.add("is-over"))));
+    ["dragleave", "drop"].forEach((e) => drop.addEventListener(e, () => drop.classList.remove("is-over")));
+    drop.addEventListener("drop", (ev) => {
+      ev.preventDefault();
+      const fl = (ev as DragEvent).dataTransfer?.files;
+      if (fl?.length) add([...fl]);
+    });
+    document.addEventListener("paste", (ev) => {
+      const fs = [...(ev.clipboardData?.files || [])].filter((f) => f.type.startsWith("image/"));
+      if (fs.length) add(fs.map((f, i) => (f.name && f.name !== "image.png" ? f : new File([f], `${L("yapistirilan", "pasted")}-${Date.now()}-${i}.${f.type.split("/")[1] || "png"}`, { type: f.type }))));
+    });
+    $<HTMLButtonElement>("[data-sample]").addEventListener("click", async () => {
+      const b = await (await fetch(SAMPLE)).blob();
+      add([new File([b], "rast-ornek-istanbul.webp", { type: "image/webp" })]);
+    });
+
+    // settings
+    let tmr = 0;
+    const later = () => {
+      clearTimeout(tmr);
+      tmr = window.setTimeout(reconvertAll, 250);
+    };
+    const syncFmt = () => {
+      const f = fmt();
+      note.textContent = NOTES[f];
+      if (f === "png") qbox.setAttribute("data-off", "");
+      else qbox.removeAttribute("data-off");
+      q.disabled = f === "png";
+    };
+    root.querySelectorAll<HTMLInputElement>('input[name="cvfmt"]').forEach((r) =>
+      r.addEventListener("change", () => {
+        syncFmt();
+        reconvertAll();
+      }),
+    );
+    q.addEventListener("input", () => {
+      qv.textContent = q.value;
+      later();
+    });
+    wSel.addEventListener("change", reconvertAll);
+    syncFmt();
+
+    clearBtn.addEventListener("click", () => {
+      gen++;
+      for (const it of items) {
+        URL.revokeObjectURL(it.thumb);
+        if (it.url) URL.revokeObjectURL(it.url);
+      }
+      items.length = 0;
+      list.innerHTML = "";
+      summary();
+    });
+
+    zipBtn.addEventListener("click", async () => {
+      const done = items.filter((i) => i.out);
+      if (!done.length) return;
+      const used = new Map<string, number>();
+      const entries: { name: string; data: Uint8Array }[] = [];
+      for (const it of done) {
+        let name = it.outName!;
+        const n = used.get(name.toLowerCase()) || 0;
+        used.set(name.toLowerCase(), n + 1);
+        if (n) name = name.replace(/(\.[^.]+)$/, ` (${n + 1})$1`);
+        entries.push({ name, data: new Uint8Array(await it.out!.arrayBuffer()) });
+      }
+      const zip = makeZip(entries);
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(zip);
+      a.download = L(`rast-donusturulen-resimler-${fmt()}.zip`, `rast-converted-images-${fmt()}.zip`);
+      document.body.append(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 60000);
+    });
+    summary();
+  }
+
+  // ---- minimal ZIP writer (STORE, no compression: images are already compressed). UTF-8 names.
+  const CRC = (() => {
+    const t = new Uint32Array(256);
+    for (let n = 0; n < 256; n++) {
+      let c = n;
+      for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+      t[n] = c >>> 0;
+    }
+    return t;
+  })();
+  function crc32(d: Uint8Array) {
+    let c = 0xffffffff;
+    for (let i = 0; i < d.length; i++) c = CRC[(c ^ d[i]) & 0xff] ^ (c >>> 8);
+    return (c ^ 0xffffffff) >>> 0;
+  }
+  function makeZip(files: { name: string; data: Uint8Array }[]) {
+    const enc = new TextEncoder();
+    const parts: BlobPart[] = [];
+    const central: Uint8Array[] = [];
+    let offset = 0;
+    const now = new Date();
+    const dosTime = (now.getHours() << 11) | (now.getMinutes() << 5) | (now.getSeconds() >> 1);
+    const dosDate = ((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate();
+    for (const f of files) {
+      const name = enc.encode(f.name);
+      const crc = crc32(f.data);
+      const h = new DataView(new ArrayBuffer(30));
+      h.setUint32(0, 0x04034b50, true);
+      h.setUint16(4, 20, true);
+      h.setUint16(6, 0x0800, true); // UTF-8 names
+      h.setUint16(8, 0, true);
+      h.setUint16(10, dosTime, true);
+      h.setUint16(12, dosDate, true);
+      h.setUint32(14, crc, true);
+      h.setUint32(18, f.data.length, true);
+      h.setUint32(22, f.data.length, true);
+      h.setUint16(26, name.length, true);
+      h.setUint16(28, 0, true);
+      parts.push(h.buffer, name, f.data);
+      const c = new DataView(new ArrayBuffer(46));
+      c.setUint32(0, 0x02014b50, true);
+      c.setUint16(4, 20, true);
+      c.setUint16(6, 20, true);
+      c.setUint16(8, 0x0800, true);
+      c.setUint16(10, 0, true);
+      c.setUint16(12, dosTime, true);
+      c.setUint16(14, dosDate, true);
+      c.setUint32(16, crc, true);
+      c.setUint32(20, f.data.length, true);
+      c.setUint32(24, f.data.length, true);
+      c.setUint16(28, name.length, true);
+      c.setUint32(42, offset, true);
+      const cc = new Uint8Array(46 + name.length);
+      cc.set(new Uint8Array(c.buffer), 0);
+      cc.set(name, 46);
+      central.push(cc);
+      offset += 30 + name.length + f.data.length;
+    }
+    const cdSize = central.reduce((s, c) => s + c.length, 0);
+    const e = new DataView(new ArrayBuffer(22));
+    e.setUint32(0, 0x06054b50, true);
+    e.setUint16(8, files.length, true);
+    e.setUint16(10, files.length, true);
+    e.setUint32(12, cdSize, true);
+    e.setUint32(16, offset, true);
+    return new Blob([...parts, ...central, e.buffer], { type: "application/zip" });
+  }
+</script>

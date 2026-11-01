@@ -40,6 +40,12 @@ export const EMBEDS: EmbedTool[] = [
     en: { full: "/en/tools/srt-subtitle-checker/", embed: "/en/embed/srt-subtitle-checker/", title: "SRT / VTT subtitle checker" },
     height: 2750,
   },
+  {
+    slug: "webp-jpg-cevirici",
+    tr: { full: "/araclar/webp-jpg-cevirici/", embed: "/embed/webp-jpg-cevirici/", title: "WebP JPG çevirici (toplu resim dönüştürücü)" },
+    en: { full: "/en/tools/webp-to-jpg/", embed: "/en/embed/webp-to-jpg/", title: "WebP to JPG converter (bulk image converter)" },
+    height: 1150,
+  },
 ];
 
 /** Embed entry + language for a full tool page path (TR or EN). */
