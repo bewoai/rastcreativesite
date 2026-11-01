@@ -180,7 +180,6 @@ body:has(.ev) {
 .ev-head__bar.ev-glass::before,
 .ev-onair.ev-glass::before,
 .ev-qa.ev-glass::before,
-.ev-case.ev-glass::before,
 .ev-panel.ev-glass::before,
 .ev-person.ev-glass::before {
   display: none;

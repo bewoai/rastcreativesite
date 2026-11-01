@@ -66,6 +66,7 @@ import { roman, WA_PATH, EV_CTA } from "../lib/evren";
 import EvHeader from "../components/evren/EvHeader.astro";
 import EvFooter from "../components/evren/EvFooter.astro";
 import EvReview from "../components/evren/EvReview.astro";
+import WorkCard, { type Work } from "../components/evren/EvWorkCard.astro";
 import { reviewsAreFixture, reviewRating, openReviews, moreReviews, fmtMonth, fmtScore, starFill } from "../lib/reviews";
 import { localBusiness, organization, webSite, faqPage, toPlainText } from "../lib/schema";
 import { SEO_SERVICES } from "../data/seo-services";
@@ -125,6 +126,39 @@ const cases = projects.filter((p) => p.data.featured);
 // Real work on the hero monitor, so the first screen reads "video studio",
 // not "AI startup": horizontal featured pieces only.
 const onAir = cases.filter((p) => !p.data.vertical).slice(0, 5);
+
+// Works grid (#isler): featured order, first horizontal = wide feature tile,
+// the vertical Reels pair up in one slot so rows stay tidy (desktop: beside
+// the feature; phone: two compact tiles side by side).
+const kindLabel: Record<string, string> = {
+  Ürün: "Ürün tanıtım filmi",
+  Medikal: "Medikal içerik",
+  Kurumsal: "Kurumsal film",
+  "Sosyal Medya": "Sosyal medya içeriği",
+};
+const toWork = (p: (typeof cases)[number], feature = false): Work => {
+  const d = p.data;
+  const kind = d.vertical ? "Reels" : (d.projectType ?? kindLabel[d.category] ?? d.category);
+  return {
+    id: p.id,
+    title: d.title,
+    client: d.client ?? "Rast Creative",
+    type: d.duration ? `${kind} · ${d.duration}` : kind,
+    vertical: Boolean(d.vertical),
+    feature,
+    poster: d.poster,
+    posterAlt: d.posterAlt ?? d.title,
+    preview: slot(`isler/${p.id}.mp4`),
+  };
+};
+const wide = cases.filter((p) => !p.data.vertical);
+const tall = cases.filter((p) => p.data.vertical);
+type WorkGroup = { kind: "one"; item: Work } | { kind: "pair"; items: Work[] };
+const workGroups: WorkGroup[] = [
+  ...(wide[0] ? [{ kind: "one" as const, item: toWork(wide[0], true) }] : []),
+  ...(tall.length ? [{ kind: "pair" as const, items: tall.slice(0, 2).map((p) => toWork(p)) }] : []),
+  ...wide.slice(1).map((p) => ({ kind: "one" as const, item: toWork(p) })),
+];
 
 // Real behind-the-scenes from our sets (Drive: rast-evren-gorseller/Kamera arkası).
 const btsShots = [
@@ -488,100 +522,22 @@ const year = new Date().getFullYear();
         <p class="ev-whisper ev-whisper--center" aria-hidden="true">hepsi gerçek müşteri işi</p>
       </header>
 
-      <div class="ev-cases" data-cases data-rise style="--d:1">
-        <button type="button" class="ev-cases__arrow ev-cases__arrow--prev" data-cases-prev aria-label="Önceki iş">
-          <span aria-hidden="true">←</span>
-        </button>
-        <ol class="ev-cases__track" data-cases-track tabindex="0" aria-label="İşler, yana kaydırılabilir">
-          {
-            cases.map((p, i) => (
-              <li
-                class:list={["ev-case ev-glass", { "is-active": i === 0 }]}
-                data-case
-                data-roman={roman(i + 1)}
-                data-yt={p.data.youtubeId ?? ""}
-                aria-label={`${i + 1} / ${cases.length}: ${p.data.title}`}
-              >
-                <div class="ev-case__mon">
-                  {p.data.poster.startsWith("https://i.ytimg.com/") ? (
-                    <Image
-                      src={ytThumbToWebp(p.data.poster, "large")}
-                      alt={p.data.posterAlt ?? p.data.title}
-                      inferSize
-                      widths={[480, 720, 960]}
-                      sizes="(max-width: 760px) 92vw, 44rem"
-                      format="webp"
-                      quality={62}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  ) : (
-                    <img
-                      src={ytThumbToWebp(p.data.poster, "large")}
-                      alt={p.data.posterAlt ?? p.data.title}
-                      width="1280"
-                      height="720"
-                      loading={i === 0 ? "eager" : "lazy"}
-                      decoding="async"
-                    />
-                  )}
-                </div>
-                <div class="ev-case__info">
-                  <p class="ev-case__client">{p.data.client ?? "Rast Creative"}</p>
-                  <h3 class="ev-case__title">{p.data.title}</h3>
-                  {p.data.summary && <p class="ev-case__sum">{p.data.summary}</p>}
-                  <dl class="ev-case__facts">
-                    <div>
-                      <dt>Sektör</dt>
-                      <dd>{p.data.sector ?? p.data.category}</dd>
-                    </div>
-                    <div>
-                      <dt>İş</dt>
-                      <dd>{p.data.projectType ?? p.data.category}</dd>
-                    </div>
-                    {p.data.duration && (
-                      <div>
-                        <dt>Süre</dt>
-                        <dd>{p.data.duration}</dd>
-                      </div>
-                    )}
-                  </dl>
-                  <div class="ev-case__act">
-                    {p.data.youtubeId && (
-                      <button type="button" class="ev-btn ev-btn--sm" data-case-play data-title={p.data.title} data-poster={ytThumbToWebp(p.data.poster, "large")}>
-                        ▶ Filmi izle
-                      </button>
-                    )}
-                    <a class="ev-link" href={`/projeler/${p.id}/`}>
-                      Proje sayfası<span class="sr-only">: {p.data.title}</span> <span aria-hidden="true">→</span>
-                    </a>
-                  </div>
-                </div>
-              </li>
-            ))
-          }
-        </ol>
-        <button type="button" class="ev-cases__arrow ev-cases__arrow--next" data-cases-next aria-label="Sonraki iş">
-          <span aria-hidden="true">→</span>
-        </button>
-        <p class="ev-cases__count" aria-hidden="true"><span data-case-count>1</span> / {roman(cases.length)}</p>
-        <div class="ev-cases__dots" role="group" aria-label="İş seç">
-          {
-            cases.map((p, i) => (
-              <button
-                type="button"
-                class="ev-dot"
-                data-case-dot={i}
-                aria-label={`${i + 1}. iş: ${p.data.title}`}
-                aria-current={i === 0 ? "true" : undefined}
-              />
-            ))
-          }
-        </div>
+      <div class="ev-grid" data-works data-rise style="--d:1">
+        {
+          workGroups.map((g) =>
+            g.kind === "pair" ? (
+              <div class="ev-grid__pair">
+                {g.items.map((w) => <WorkCard w={w} />)}
+              </div>
+            ) : (
+              <WorkCard w={g.item} />
+            ),
+          )
+        }
       </div>
 
       <p class="ev-works__more" data-rise style="--d:2">
-        <a class="ev-btn ev-btn--glass" href="/projeler/">Tüm arşiv · {projects.length} iş</a>
+        <a class="ev-btn ev-btn--glass" href="/projeler/">Tüm işler · {projects.length} iş <span aria-hidden="true">→</span></a>
       </p>
     </section>
 
@@ -1186,19 +1142,6 @@ const year = new Date().getFullYear();
       </div>
     </section>
 
-    {/* ───────── Cinema: the site's own player (no YouTube redirect) ───────── */}
-    <dialog class="ev-cinema" data-cinema aria-labelledby="ev-cinema-title">
-      <div class="ev-cinema__inner">
-        <div class="ev-cinema__bar">
-          <p id="ev-cinema-title" class="ev-cinema__title" data-cinema-title>Video</p>
-          <button type="button" class="ev-cinema__close" data-cinema-close aria-label="Oynatıcıyı kapat">
-            <span aria-hidden="true">✕</span>
-          </button>
-        </div>
-        <div class="ev-cinema__screen" data-cinema-slot></div>
-      </div>
-    </dialog>
-
     <EvFooter />
   </div>
 </BaseLayout>
@@ -1672,229 +1615,203 @@ const year = new Date().getFullYear();
   .ev-works .ev-head2 {
     padding: 0 var(--pad);
   }
-  .ev-cases {
-    --card-w: min(60rem, calc(100vw - 2 * var(--pad) - 2rem));
-    position: relative;
-  }
-  .ev-cases__track {
-    display: flex;
-    gap: clamp(1rem, 2.5vw, 2rem);
-    margin: 0;
-    /* Deep bottom padding: the scroller clips on both axes, so the card
-       shadow needs room to fade out instead of ending in a hard band. */
-    padding: 1.5rem calc((100% - var(--card-w)) / 2) 4.8rem;
-    margin-bottom: -2.4rem;
-    list-style: none;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    overscroll-behavior-x: contain;
-  }
-  @media (hover: hover) and (pointer: fine) {
-    .ev-cases__track {
-      cursor: grab;
-    }
-    .ev-cases__track.is-dragging {
-      cursor: grabbing;
-      user-select: none;
-    }
-  }
-  .ev-cases__track::-webkit-scrollbar {
-    display: none;
-  }
-  .ev-case {
-    flex: 0 0 var(--card-w);
+  /* Works grid (#isler, 01.11): a plain responsive grid, no sideways
+     scrolling. Whole card = one link (stretched title link). Desktop: 3
+     columns, the first film spans 2 and the two Reels share the third
+     column beside it; tablet 2; phone 1 with the Reels pair side by side.
+     Preview <video> is created by the script (hover / centre of screen). */
+  .ev-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-    gap: clamp(1rem, 2.5vw, 2rem);
-    padding: clamp(0.6rem, 1.2vw, 0.85rem);
-    scroll-snap-align: center;
-    opacity: 0.5;
-    transform: scale(0.94);
-    filter: saturate(0.6);
-    transition:
-      opacity 420ms var(--ease-out),
-      transform 420ms var(--ease-out),
-      filter 420ms var(--ease-out);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(0.9rem, 1.6vw, 1.4rem);
+    width: min(100% - 2 * var(--pad), 76rem);
+    margin: 0 auto;
   }
-  .ev-case.is-active {
-    opacity: 1;
-    transform: none;
-    filter: none;
+  .ev-grid__pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: inherit;
   }
-  .ev-case__mon {
+  .ev-work {
     position: relative;
-    aspect-ratio: 4 / 3.3;
-    overflow: hidden;
-    border-radius: calc(var(--r) - 0.55rem);
-    background: #1d1915;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 0.5rem;
+    border: 1px solid var(--edge);
+    border-radius: calc(var(--r) - 0.3rem);
+    background:
+      radial-gradient(120% 80% at 50% -10%, rgba(255, 250, 242, 0.6), transparent 60%),
+      rgba(247, 242, 235, 0.78);
     box-shadow:
-      0 0 0 1px rgba(255, 255, 255, 0.4),
-      0 18px 40px -24px rgba(60, 35, 15, 0.6);
+      inset 0 1px 0 rgba(255, 255, 255, 0.75),
+      var(--shade);
+    transition:
+      transform 260ms var(--ease-out),
+      box-shadow 260ms var(--ease-out);
   }
-  .ev-case__mon > img {
+  .ev-work--feature {
+    grid-column: span 2;
+  }
+  .ev-work__media {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: calc(var(--r) - 0.75rem);
+    background: #1d1915;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4);
+  }
+  /* Desktop: the Reels fill the feature row's height (cropped slightly). */
+  .ev-work--tall .ev-work__media {
+    flex: 1 1 0;
+    aspect-ratio: auto;
+    min-height: 14rem;
+  }
+  .ev-work__media > img,
+  .ev-work__vid {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transform: scale(1.02);
-    transition: transform 7s linear;
   }
-  .ev-case.is-active .ev-case__mon > img {
-    transform: scale(1.08);
+  .ev-work__media > img {
+    transition: transform 600ms var(--ease-out);
   }
-
-
-
-  .ev-case__embed {
+  .ev-work__vid {
+    opacity: 0;
+    transition: opacity 260ms var(--ease-out);
+  }
+  .ev-work.is-playing .ev-work__vid {
+    opacity: 1;
+  }
+  .ev-work__play {
+    position: absolute;
+    left: 0.7rem;
+    bottom: 0.7rem;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 2.3rem;
+    height: 2.3rem;
+    padding-left: 2px;
+    border-radius: 50%;
+    background: rgba(250, 246, 240, 0.88);
+    color: var(--sun-text);
+    box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.45);
+    transition: opacity 260ms var(--ease-out), transform 260ms var(--ease-out);
+  }
+  .ev-work.is-playing .ev-work__play {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  .ev-work__info {
+    padding: 0.75rem 0.45rem 0.35rem;
+  }
+  .ev-work__client {
+    margin: 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sun-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .ev-work__title {
+    margin: 0.3rem 0 0;
+    font-family: var(--serif);
+    font-weight: 560;
+    font-size: clamp(1.15rem, 0.5vw + 1rem, 1.35rem);
+    line-height: 1.12;
+    letter-spacing: -0.005em;
+    text-wrap: balance;
+  }
+  .ev-work--feature .ev-work__title {
+    font-size: clamp(1.35rem, 1vw + 1rem, 1.85rem);
+  }
+  .ev-work--tall .ev-work__title {
+    font-size: 1.02rem;
+  }
+  .ev-work__link {
+    color: inherit;
+    text-decoration: none;
+  }
+  /* The link covers the whole card; its ring goes around the card. */
+  .ev-work__link::after {
+    content: "";
     position: absolute;
     inset: 0;
     z-index: 2;
-    background: #000;
+    border-radius: inherit;
   }
-  .ev-case__embed iframe {
-    width: 100%;
-    height: 100%;
-    border: 0;
+  .ev-work__link:focus-visible {
+    outline: none;
   }
-  .ev-case__info {
-    display: flex;
-    flex-direction: column;
-    padding: clamp(0.5rem, 1.6vw, 1.3rem) clamp(0.3rem, 1.4vw, 1.1rem) clamp(0.4rem, 1vw, 0.8rem) 0;
+  .ev-work__link:focus-visible::after {
+    outline: 2px solid var(--sun-text);
+    outline-offset: 3px;
+    border-radius: calc(var(--r) - 0.3rem);
   }
-  .ev-case__client {
-    margin: 0;
-    font-family: var(--font-body);
-    font-size: 0.74rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--sun-text);
-  }
-  .ev-case__title {
-    margin: 0.55rem 0 0;
-    font-family: var(--serif);
-    font-weight: 560;
-    font-size: clamp(1.6rem, 1.4vw + 1.05rem, 2.3rem);
-    line-height: 1.04;
-    letter-spacing: -0.01em;
-    text-wrap: balance;
-  }
-  .ev-case__sum {
-    margin: 0.7rem 0 0;
-    font-size: 1rem;
+  .ev-work__type {
+    margin: 0.35rem 0 0;
+    font-size: 0.86rem;
+    line-height: 1.35;
     color: var(--ink-2);
   }
-  .ev-case__facts {
-    display: grid;
-    margin: auto 0 0;
-    padding-top: 1.3rem;
+  @media (hover: hover) and (pointer: fine) {
+    .ev-work:hover {
+      transform: translateY(-3px);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.75),
+        0 34px 60px -30px rgba(96, 62, 30, 0.5);
+    }
+    .ev-work:hover .ev-work__title {
+      color: var(--sun-text);
+    }
+    .ev-work:hover .ev-work__media > img {
+      transform: scale(1.03);
+    }
   }
-  .ev-case__facts div {
-    display: grid;
-    grid-template-columns: 4.5rem 1fr;
-    gap: 0.8rem;
-    padding: 0.45rem 0;
-    border-top: 1px solid rgba(114, 103, 92, 0.22);
-    font-size: 0.95rem;
+  @media (max-width: 1100px) {
+    .ev-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .ev-grid__pair {
+      grid-column: span 2;
+    }
+    .ev-work--tall .ev-work__media {
+      flex: none;
+      aspect-ratio: 4 / 5;
+      min-height: 0;
+    }
   }
-  .ev-case__facts dt {
-    font-family: var(--font-body);
-    font-weight: 700;
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--mute);
-    padding-top: 0.15rem;
-  }
-  .ev-case__facts dd {
-    margin: 0;
-    color: var(--ink);
-  }
-  .ev-case__act {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.4rem 1.1rem;
-    margin-top: 1rem;
-  }
-  .ev-cases__arrow {
-    position: absolute;
-    top: calc(50% - 1.6rem);
-    z-index: 3;
-    display: grid;
-    place-items: center;
-    width: 3rem;
-    height: 3rem;
-    border: 1px solid var(--edge);
-    border-radius: 50%;
-    background: var(--glass-strong);
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
-    color: var(--ink);
-    font-size: 1.1rem;
-    cursor: pointer;
-    box-shadow: 0 12px 26px -16px rgba(96, 62, 30, 0.6);
-  }
-  .ev-cases__arrow--prev {
-    left: calc((100% - var(--card-w)) / 2 - 1.5rem);
-  }
-  .ev-cases__arrow--next {
-    right: calc((100% - var(--card-w)) / 2 - 1.5rem);
-  }
-  .ev-cases__arrow:disabled {
-    opacity: 0.3;
-    cursor: default;
-  }
-  .ev-cases__dots {
-    display: flex;
-    justify-content: center;
-  }
-  .ev-dot {
-    position: relative;
-    width: 1.6rem;
-    height: var(--tap-min);
-    padding: 0;
-    border: 0;
-    background: none;
-    cursor: pointer;
-  }
-  .ev-dot::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 0.4rem;
-    height: 0.4rem;
-    border-radius: 999px;
-    background: rgba(114, 103, 92, 0.4);
-    translate: -50% -50%;
-    transition:
-      width var(--dur) var(--ease-out),
-      background-color var(--dur) var(--ease-out),
-      box-shadow var(--dur) var(--ease-out);
-  }
-  .ev-dot[aria-current="true"]::after {
-    width: 1.3rem;
-    background: var(--sun);
-    box-shadow: 0 0 10px rgba(224, 122, 46, 0.7);
+  @media (max-width: 760px) {
+    .ev-grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.9rem;
+    }
+    .ev-work--feature,
+    .ev-grid__pair {
+      grid-column: auto;
+    }
+    .ev-grid__pair {
+      gap: 0.7rem;
+    }
+    .ev-work--tall .ev-work__media {
+      aspect-ratio: 9 / 16;
+    }
+    .ev-work--tall .ev-work__info {
+      padding: 0.6rem 0.3rem 0.25rem;
+    }
+    .ev-work--tall .ev-work__type {
+      font-size: 0.8rem;
+    }
   }
   .ev-works__more {
     margin: 1.4rem 0 0;
     text-align: center;
-  }
-  @media (max-width: 760px) {
-    .ev-case {
-      grid-template-columns: 1fr;
-    }
-    .ev-case__mon {
-      aspect-ratio: 16 / 10;
-    }
-    .ev-case__info {
-      padding: 0.3rem 0.4rem 0.6rem;
-    }
-    .ev-cases__arrow {
-      display: none;
-    }
   }
 
   /* ───── Team ───── */
@@ -2779,13 +2696,6 @@ const year = new Date().getFullYear();
     font-size: 0.88rem;
     color: var(--ink-2);
   }
-  /* Vertical films open in a tall cinema. */
-  .ev-cinema.is-vertical {
-    width: min(92vw, calc((100svh - 8rem) * 9 / 16));
-  }
-  .ev-cinema.is-vertical .ev-cinema__screen {
-    aspect-ratio: 9 / 16;
-  }
   @media (max-width: 960px) {
     .ev-shoot {
       grid-template-columns: minmax(0, 1fr);
@@ -3519,92 +3429,6 @@ const year = new Date().getFullYear();
     color: var(--sun-text);
   }
 
-  /* ───── Cinema: in-site player ───── */
-  .ev-cinema {
-    position: fixed;
-    inset: 0;
-    width: min(92vw, 70rem, calc((100svh - 8rem) * 16 / 9));
-    max-width: none;
-    height: fit-content;
-    max-height: 100svh;
-    margin: auto;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: #f6f1ea;
-    overflow: visible;
-  }
-  .ev-cinema::backdrop {
-    background:
-      radial-gradient(60% 60% at 50% 40%, rgba(60, 40, 25, 0.55), rgba(15, 12, 10, 0.92)),
-      rgba(15, 12, 10, 0.85);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-  }
-  .ev-cinema[open] {
-    animation: ev-cinema-in 500ms var(--ease-out);
-  }
-  @keyframes ev-cinema-in {
-    from {
-      opacity: 0;
-      transform: scale(0.96);
-    }
-  }
-  .ev-cinema__bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 0.8rem;
-  }
-  .ev-cinema__title {
-    margin: 0;
-    font-family: var(--serif);
-    font-weight: 560;
-    font-size: clamp(1.2rem, 1vw + 1rem, 1.7rem);
-  }
-  .ev-cinema__close {
-    display: grid;
-    place-items: center;
-    width: var(--tap-min);
-    height: var(--tap-min);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
-    font-size: 1.1rem;
-    cursor: pointer;
-  }
-  .ev-cinema__close:hover {
-    background: rgba(255, 255, 255, 0.18);
-  }
-  .ev-cinema__screen {
-    position: relative;
-    aspect-ratio: 16 / 9;
-    overflow: hidden;
-    border-radius: 1rem;
-    background: #000;
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 40px 120px -30px rgba(224, 122, 46, 0.45);
-  }
-  .ev-cinema__screen iframe,
-  .ev-cinema__screen img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-    object-fit: cover;
-  }
-  .ev-cases__count {
-    margin: 0 0 0.2rem;
-    text-align: center;
-    font-family: var(--serif);
-    font-weight: 560;
-    font-size: 1.05rem;
-    color: var(--sun-text);
-  }
-
-
   /* ───── Who we work with ───── */
   .ev-who__list {
     display: grid;
@@ -3653,18 +3477,6 @@ const year = new Date().getFullYear();
   .ev-area__all > summary::-webkit-details-marker { display: none; }
   @media (min-width: 761px) {
     .ev-area__all > summary { display: none; }
-  }
-  @media (max-width: 760px) {
-    .ev-cases { padding-bottom: 0.2rem; }
-    .ev-cases .ev-cases__arrow {
-      display: grid;
-      top: auto;
-      bottom: 0;
-      width: 2.9rem;
-      height: 2.9rem;
-    }
-    .ev-cases .ev-cases__arrow--prev { left: 0.2rem; }
-    .ev-cases .ev-cases__arrow--next { right: 0.2rem; }
   }
 
   /* ───── Motion ───── */
@@ -3773,9 +3585,6 @@ const year = new Date().getFullYear();
     .ev *::after {
       animation: none !important;
       transition: none !important;
-    }
-    .ev-case.is-active .ev-case__mon > img {
-      transform: scale(1.02);
     }
   }
 </style>
@@ -4023,210 +3832,93 @@ const year = new Date().getFullYear();
     const areaAll = root.querySelector<HTMLDetailsElement>("[data-area-all]");
     if (areaAll && window.matchMedia("(min-width: 761px)").matches) areaAll.open = true;
 
-    /* ── Case carousel ──
-       Active card = the one whose centre is nearest the track centre (read from
-       scroll position, not IntersectionObserver: on wide screens two cards pass a
-       60% threshold at once, so arrows skipped or stuck). Arrow clicks aim at a
-       target index that stays locked until the smooth scroll settles, so fast
-       clicks move exactly one card each. Mouse users can drag; holding an arrow
-       keeps moving. */
-    const trackEl = root.querySelector<HTMLElement>("[data-cases-track]");
-    const cards = [...root.querySelectorAll<HTMLElement>("[data-case]")];
-    const dots = [...root.querySelectorAll<HTMLButtonElement>("[data-case-dot]")];
-    const prev = root.querySelector<HTMLButtonElement>("[data-cases-prev]");
-    const next = root.querySelector<HTMLButtonElement>("[data-cases-next]");
-    const counter = root.querySelector<HTMLElement>("[data-case-count]");
-    let active = 0;
-    let target: number | null = null;
-    let settle = 0;
-    const clamp = (i: number) => Math.max(0, Math.min(cards.length - 1, i));
-    const setActive = (i: number) => {
-      if (i === active && cards[i]?.classList.contains("is-active")) return;
-      active = i;
-      cards.forEach((c, k) => c.classList.toggle("is-active", k === i));
-      dots.forEach((d, k) => (k === i ? d.setAttribute("aria-current", "true") : d.removeAttribute("aria-current")));
-      if (prev) prev.disabled = i === 0;
-      if (next) next.disabled = i === cards.length - 1;
-      if (counter) counter.textContent = cards[i]?.dataset.roman ?? "";
-    };
-    const nearest = () => {
-      if (!trackEl) return 0;
-      const mid = trackEl.scrollLeft + trackEl.clientWidth / 2;
-      let best = 0;
-      let bestD = Infinity;
-      cards.forEach((c, k) => {
-        const d = Math.abs(c.offsetLeft - trackEl.offsetLeft + c.offsetWidth / 2 - mid);
-        if (d < bestD) {
-          bestD = d;
-          best = k;
+    /* ── Works grid previews ──
+       The muted clip is created on demand: desktop (fine pointer) on first
+       hover/focus, paused + rewound on leave; touch: only the card nearest
+       the viewport centre plays. Save-Data, 2g/3g and reduced motion keep
+       the poster only, so no video bytes at all. */
+    const works = [...root.querySelectorAll<HTMLElement>("[data-work][data-preview]")];
+    const conn = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+    const lite = reduce || Boolean(conn?.saveData) || /2g|3g/.test(conn?.effectiveType ?? "");
+    if (works.length && !lite) {
+      const clip = (card: HTMLElement) => {
+        let v = card.querySelector<HTMLVideoElement>("video");
+        if (!v) {
+          v = document.createElement("video");
+          v.className = "ev-work__vid";
+          v.muted = true;
+          v.loop = true;
+          v.playsInline = true;
+          v.preload = "none";
+          v.setAttribute("muted", "");
+          v.setAttribute("playsinline", "");
+          v.setAttribute("aria-hidden", "true");
+          v.tabIndex = -1;
+          v.disablePictureInPicture = true;
+          v.addEventListener("playing", () => card.classList.add("is-playing"));
+          v.src = card.dataset.preview ?? "";
+          card.querySelector(".ev-work__media")?.append(v);
         }
-      });
-      return best;
-    };
-    const goTo = (i: number) => {
-      const t = clamp(i);
-      const card = cards[t];
-      if (!card || !trackEl) return;
-      target = t;
-      setActive(t);
-      trackEl.scrollTo({
-        // offsetLeft is measured from .ev-cases (positioned), not the track.
-        left: card.offsetLeft - trackEl.offsetLeft - (trackEl.clientWidth - card.offsetWidth) / 2,
-        behavior: reduce ? "auto" : "smooth",
-      });
-    };
-    const step = (dir: number) => goTo((target ?? active) + dir);
-    if (trackEl) {
-      let raf = 0;
-      trackEl.addEventListener(
-        "scroll",
-        () => {
-          if (!raf)
-            raf = requestAnimationFrame(() => {
-              raf = 0;
-              if (target === null) setActive(nearest());
-            });
-          window.clearTimeout(settle);
-          settle = window.setTimeout(() => {
-            target = null;
-            setActive(nearest());
-          }, 140);
-        },
-        { passive: true },
-      );
-      trackEl.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowRight") {
-          e.preventDefault();
-          step(1);
-        } else if (e.key === "ArrowLeft") {
-          e.preventDefault();
-          step(-1);
-        }
-      });
-      // Mouse drag (touch already scrolls natively).
-      let drag: { x: number; left: number; moved: boolean; id: number } | null = null;
-      let swallowClick = false;
-      trackEl.addEventListener("pointerdown", (e) => {
-        if (e.pointerType !== "mouse" || e.button !== 0) return;
-        if ((e.target as Element).closest("a, button, iframe")) return;
-        drag = { x: e.clientX, left: trackEl.scrollLeft, moved: false, id: e.pointerId };
-        target = null;
-      });
-      trackEl.addEventListener("pointermove", (e) => {
-        if (!drag || e.pointerId !== drag.id) return;
-        const dx = e.clientX - drag.x;
-        if (!drag.moved && Math.abs(dx) < 6) return;
-        if (!drag.moved) {
-          drag.moved = true;
-          trackEl.setPointerCapture(e.pointerId);
-          trackEl.style.scrollSnapType = "none";
-          trackEl.style.scrollBehavior = "auto";
-          trackEl.classList.add("is-dragging");
-        }
-        trackEl.scrollLeft = drag.left - dx;
-      });
-      const endDrag = (e: PointerEvent) => {
-        if (!drag || e.pointerId !== drag.id) return;
-        const d = drag;
-        drag = null;
-        if (!d.moved) return;
-        swallowClick = true;
-        trackEl.classList.remove("is-dragging");
-        const dx = e.clientX - d.x;
-        const from = nearest();
-        // A short flick still moves one card in the drag direction.
-        const to = Math.abs(dx) > 40 && from === active ? active + (dx < 0 ? 1 : -1) : from;
-        trackEl.style.scrollSnapType = "";
-        trackEl.style.scrollBehavior = "";
-        goTo(to);
+        return v;
       };
-      trackEl.addEventListener("pointerup", endDrag);
-      trackEl.addEventListener("pointercancel", endDrag);
-      trackEl.addEventListener(
-        "click",
-        (e) => {
-          if (swallowClick) {
-            swallowClick = false;
-            e.preventDefault();
-            e.stopPropagation();
-          }
-        },
-        true,
-      );
-      trackEl.addEventListener("dragstart", (e) => e.preventDefault());
+      const play = (card: HTMLElement) => {
+        clip(card).play().catch(() => card.classList.remove("is-playing"));
+      };
+      const stop = (card: HTMLElement, rewind = true) => {
+        card.classList.remove("is-playing");
+        const v = card.querySelector<HTMLVideoElement>("video");
+        if (!v) return;
+        v.pause();
+        if (rewind) v.currentTime = 0;
+      };
+      if (matchMedia("(hover: hover) and (pointer: fine)").matches) {
+        works.forEach((card) => {
+          card.addEventListener("pointerenter", () => play(card));
+          card.addEventListener("pointerleave", () => stop(card));
+          card.addEventListener("focusin", () => play(card));
+          card.addEventListener("focusout", () => stop(card));
+        });
+      } else {
+        const near = new Set<HTMLElement>();
+        let current: HTMLElement | null = null;
+        let raf = 0;
+        const pick = () => {
+          raf = 0;
+          const mid = innerHeight / 2;
+          let best: HTMLElement | null = null;
+          let bestD = Infinity;
+          near.forEach((c) => {
+            const r = c.getBoundingClientRect();
+            const d = Math.abs(r.top + r.height / 2 - mid);
+            if (d < bestD) {
+              bestD = d;
+              best = c;
+            }
+          });
+          if (best === current) return;
+          if (current) stop(current, false);
+          current = best;
+          if (current) play(current);
+        };
+        const queue = () => {
+          if (!raf) raf = requestAnimationFrame(pick);
+        };
+        // Central band of the screen: a card plays once it sits mid-screen.
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => (e.isIntersecting ? near.add(e.target as HTMLElement) : near.delete(e.target as HTMLElement)));
+            queue();
+          },
+          { rootMargin: "-30% 0px -30% 0px" },
+        );
+        works.forEach((c) => io.observe(c));
+        addEventListener("scroll", () => near.size > 1 && queue(), { passive: true });
+        document.addEventListener("visibilitychange", () => {
+          if (document.hidden && current) stop(current, false);
+          else if (!document.hidden && current) play(current);
+        });
+      }
     }
-    // Arrows: click = one card; press and hold = keep going.
-    const holdable = (btn: HTMLButtonElement | null, dir: number) => {
-      if (!btn) return;
-      let hold = 0;
-      let rep = 0;
-      let fired = false;
-      const stop = () => {
-        window.clearTimeout(hold);
-        window.clearInterval(rep);
-        hold = rep = 0;
-      };
-      btn.addEventListener("pointerdown", (e) => {
-        if (e.button !== 0) return;
-        fired = false;
-        hold = window.setTimeout(() => {
-          fired = true;
-          step(dir);
-          rep = window.setInterval(() => step(dir), 420);
-        }, 380);
-      });
-      ["pointerup", "pointerleave", "pointercancel", "blur"].forEach((ev) => btn.addEventListener(ev, stop));
-      btn.addEventListener("click", () => {
-        if (fired) {
-          fired = false;
-          return;
-        }
-        step(dir);
-      });
-    };
-    holdable(prev, -1);
-    holdable(next, 1);
-    dots.forEach((d, i) => d.addEventListener("click", () => goTo(i)));
-    cards.forEach((c, i) =>
-      c.addEventListener("click", (e) => {
-        if (i !== active && !(e.target as Element).closest("a, button")) goTo(i);
-      }),
-    );
-    setActive(0);
-    if (trackEl) trackEl.scrollLeft = 0;
-
-    /* ── Cinema: plays inside the site, never sends people to YouTube ── */
-    const cinema = root.querySelector<HTMLDialogElement>("[data-cinema]");
-    const slot = root.querySelector<HTMLElement>("[data-cinema-slot]");
-    const cinemaTitle = root.querySelector<HTMLElement>("[data-cinema-title]");
-    let opener: HTMLElement | null = null;
-    const closeCinema = () => cinema?.open && cinema.close();
-    cinema?.addEventListener("close", () => {
-      slot?.replaceChildren(); // stops playback
-      opener?.focus();
-    });
-    root.querySelector("[data-cinema-close]")?.addEventListener("click", closeCinema);
-    cinema?.addEventListener("click", (e) => {
-      if (e.target === cinema) closeCinema(); // click on the dimmed backdrop
-    });
-    root.querySelectorAll<HTMLButtonElement>("[data-case-play]").forEach((btn) =>
-      btn.addEventListener("click", () => {
-        const card = btn.closest<HTMLElement>("[data-case]");
-        const id = btn.dataset.yt ?? card?.dataset.yt;
-        if (!cinema || !slot || !id) return;
-        cinema.classList.toggle("is-vertical", btn.hasAttribute("data-vertical"));
-        opener = btn;
-        const iframe = document.createElement("iframe");
-        iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
-        iframe.title = btn.dataset.title ?? "Video";
-        iframe.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
-        iframe.allowFullscreen = true;
-        slot.replaceChildren(iframe);
-        if (cinemaTitle) cinemaTitle.textContent = btn.dataset.title ?? "Video";
-        cinema.showModal();
-        track("video_play", { event_category: "portfolio", video_id: id, location: "evren_cinema" });
-      }),
-    );
 
     /* ── Process path: the sun walks I → IV, lighting one stop at a time ── */
     const path = root.querySelector<HTMLElement>("[data-path]");

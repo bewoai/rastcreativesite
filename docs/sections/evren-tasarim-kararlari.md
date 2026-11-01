@@ -473,3 +473,27 @@ sahibin adımları: `docs/sections/google-yorumlari.md`.
   kalırsa); `--sun-text`'in çıplak gökyüzündeki 3,54:1'i (etiket numaraları ve
   fısıltılar, ortak stil; #7a350b önerisi görsel onay ister); #gunluk'un bulutu blog
   boşken de basılıyor; kullanılmayan `TestimonialCard.astro`.
+
+## İş ızgarası (01.11.2026) — karuselin yerine
+
+Bewo: "Seçili işler" karuseli telefonda ve masaüstünde kolay anlaşılmıyordu. Yerine yatay
+kaydırması olmayan bir ızgara geldi (`#isler`, kart = `src/components/evren/EvWorkCard.astro`,
+stil index.astro "Works grid", script "Works grid previews"). Geri dönüş: `karusel-yedek-2026-11-01`
+etiketi (aee96a0) veya bu commit'in `git revert`'ü.
+
+- Düzen: masaüstü 3 sütun, ilk yatay iş 2 sütun "feature", iki dikey Reels üçüncü sütunda yan yana
+  (feature yüksekliğine uzar, kapak hafif kırpılır); tablet 2 sütun (Reels çifti tam satır, 4:5);
+  telefon 1 sütun, Reels çifti yan yana 9:16. Sıra = featured `order` (Altoteks 8.5, son satırda).
+- Kartın tamamı tek link (başlıktaki `<a>` + `::after` ile gerilmiş); erişilebilir ad = başlık;
+  odak halkası kartın çevresinde.
+- Önizleme klipleri `public/evren/isler/<proje-id>.mp4` (3–3.5 sn, sessiz, 640×360 / 360×640,
+  H.264 crf 30, 30–185 KB). HTML'de `<video>` yok: script ilk hover/focus'ta (hover:hover +
+  pointer:fine) oluşturur, ayrılınca durdurup başa sarar; dokunmatikte ekran ortasındaki bant
+  (rootMargin -30%) içindeki en yakın kart oynar, aynı anda tek klip. Save-Data, 2g/3g,
+  prefers-reduced-motion → yalnızca kapak. Klip yoksa (`slot()` dosya bulamazsa) kart kapakla kalır.
+- Aytaş Reels'in klibi bilinçli olarak yok: tüm karelerde fiyat/altyazı yazıları var.
+- Klipler kanalımızdaki YouTube videolarından (yt-dlp sunucu IP'sinden bot duvarına takılıyor →
+  ev PC'si) kesildi; kare seçimi: hasta yüzü yok, müşteri yazısı/logosu olmayan, hareketli plan
+  (Chint'te köşe logosu kırpıldı).
+- Eski karusel, "cinema" diyaloğu (yalnızca karusel kullanıyordu) ve CSS/JS'i kaldırıldı;
+  showreel diyaloğu (`data-reel`) ayrı ve duruyor.

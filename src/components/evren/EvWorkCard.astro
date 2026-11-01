@@ -1,0 +1,66 @@
+---
+/* One homepage work tile (#isler grid). The whole card is a single link to
+   the project page (stretched link on the title, so the accessible name is
+   the title alone). The muted preview clip is NOT in the HTML: the homepage
+   script creates the <video> on first hover/focus (desktop) or when the card
+   reaches the viewport centre (touch), so no video bytes load up front.
+   Styles live in index.astro (<style is:global>, "Works grid"). */
+import { Image } from "astro:assets";
+import { ytThumbToWebp } from "../../lib/ytimg";
+
+export interface Work {
+  id: string;
+  title: string;
+  client: string;
+  type: string;
+  vertical: boolean;
+  feature: boolean;
+  poster: string;
+  posterAlt: string;
+  preview: string | null;
+}
+interface Props {
+  w: Work;
+}
+const { w } = Astro.props;
+const src = ytThumbToWebp(w.poster, "large");
+const sizes = w.vertical
+  ? "(max-width: 760px) 46vw, (max-width: 1100px) 46vw, 13rem"
+  : w.feature
+    ? "(max-width: 1100px) 92vw, 50rem"
+    : "(max-width: 760px) 92vw, (max-width: 1100px) 46vw, 25rem";
+---
+
+<article
+  class:list={["ev-work", { "ev-work--feature": w.feature, "ev-work--tall": w.vertical }]}
+  data-work
+  data-preview={w.preview ?? undefined}
+>
+  <div class="ev-work__media">
+    {
+      src.startsWith("https://i.ytimg.com/") ? (
+        <Image
+          src={src}
+          alt={w.posterAlt}
+          inferSize
+          widths={w.vertical ? [240, 360, 480] : w.feature ? [480, 720, 960] : [360, 540, 720]}
+          sizes={sizes}
+          format="webp"
+          quality={w.feature ? 62 : 58}
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <img src={src} alt={w.posterAlt} width={w.vertical ? 360 : 1280} height={w.vertical ? 640 : 720} loading="lazy" decoding="async" />
+      )
+    }
+    <span class="ev-work__play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="14" height="14"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"></path></svg>
+    </span>
+  </div>
+  <div class="ev-work__info">
+    <p class="ev-work__client">{w.client}</p>
+    <h3 class="ev-work__title"><a class="ev-work__link" href={`/projeler/${w.id}/`}>{w.title}</a></h3>
+    <p class="ev-work__type">{w.type}</p>
+  </div>
+</article>
