@@ -32,6 +32,9 @@ const projects = all
 
 const others = SECTORS.filter((s) => s.slug !== sector.slug);
 
+// Proof list: published project count per client, straight from the collection.
+const countFor = (client: string) => all.filter((p) => p.data.client === client).length;
+
 const jsonLd = [
   breadcrumb([
     { name: "Ana Sayfa", path: "/" },
@@ -71,15 +74,33 @@ const jsonLd = [
   <Section width="narrow">
     <a href="/sektorler/" class="back">← Tüm sektörler</a>
     <SectionHeading as="h1" eyebrow={`Sektörler · ${sector.name}`}>
-      {sector.heading}
+      {sector.h1 ?? sector.heading}
       <Fragment slot="intro">
         <p>{sector.tagline}.</p>
       </Fragment>
     </SectionHeading>
 
+    {
+      sector.answer && (
+        <div class="answer">
+          <h2 class="answer__title">{sector.answer.title}</h2>
+          {sector.answer.text.map((t) => <p>{t}</p>)}
+        </div>
+      )
+    }
+
     <div class="prose">
       {sector.intro.map((t) => <p>{t}</p>)}
     </div>
+
+    {
+      sector.coverage && (
+        <div class="coverage">
+          <h2 class="block__title">{sector.coverage.title}</h2>
+          <p>{sector.coverage.text}</p>
+        </div>
+      )
+    }
 
     <h2 class="block__title">Neler üretiyoruz?</h2>
     <ul class="benefits">
@@ -103,6 +124,34 @@ const jsonLd = [
       </ol>
     </div>
 
+    {
+      sector.compliance && (
+        <section class="rules" aria-labelledby="kurallar">
+          <h2 id="kurallar" class="block__title">{sector.compliance.title}</h2>
+          <p class="rules__intro">{sector.compliance.intro}</p>
+          <ul class="rules__list">
+            {sector.compliance.items.map((r) => (
+              <li>
+                <h3 class="rules__h">{r.title}</h3>
+                <p>{r.text}</p>
+              </li>
+            ))}
+          </ul>
+          <p class="rules__note">{sector.compliance.note}</p>
+          <ul class="rules__links">
+            {sector.compliance.links.map((l) => (
+              <li>
+                <a href={l.href} {...(l.href.startsWith("http") ? { rel: "noopener", target: "_blank" } : {})}>
+                  {l.label}
+                  <Icon name="arrow-up-right" size={14} />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
     <div class="cta-inline">
       <Button href={PRIMARY_CTA.href} size="lg" arrow>Görüşelim</Button>
       <a href={`tel:${CONTACT.phoneIntl}`} class="phone">
@@ -120,6 +169,22 @@ const jsonLd = [
             <p>{sector.clients.join(", ")} için ürettiğimiz işlerden bir seçki.</p>
           </Fragment>
         </SectionHeading>
+        {sector.proof && (
+          <ul class="proof">
+            {sector.proof.map((pr) => {
+              const n = countFor(pr.client);
+              return (
+                <li class="proof__item">
+                  <h3 class="proof__client">
+                    {pr.href ? <a href={pr.href}>{pr.client}</a> : pr.client}
+                  </h3>
+                  <p>{pr.text}</p>
+                  {n > 0 && <p class="proof__n">Projeler sayfasında {n} iş</p>}
+                </li>
+              );
+            })}
+          </ul>
+        )}
         <div class="projects-grid">
           {projects.map((p) => (
             <ProjectCard
@@ -210,6 +275,116 @@ const jsonLd = [
     line-height: var(--leading-body);
     color: var(--ink-soft);
     max-width: 62ch;
+  }
+  .answer {
+    margin-top: 1.6rem;
+    padding: 1.2rem 1.4rem;
+    border-left: 3px solid var(--amber);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--amber) 6%, transparent);
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+    max-width: 66ch;
+  }
+  .answer__title {
+    margin: 0 0 0.4rem;
+    font-family: var(--font-utility);
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--amber-text);
+  }
+  .answer p + p,
+  .coverage p {
+    margin-top: 0.7rem;
+  }
+  .coverage p {
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+    max-width: 62ch;
+  }
+  .rules {
+    margin-top: 2.6rem;
+  }
+  .rules__intro,
+  .rules__note {
+    margin-top: 0.8rem;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+    max-width: 66ch;
+  }
+  .rules__note {
+    font-size: 0.92rem;
+    font-style: italic;
+  }
+  .rules__list {
+    list-style: none;
+    margin: 1.2rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.9rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  }
+  .rules__list li {
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    color: var(--ink-soft);
+    line-height: 1.55;
+    font-size: 0.97rem;
+  }
+  .rules__h {
+    margin: 0 0 0.35rem;
+    font-size: 1.02rem;
+    color: var(--ink);
+  }
+  .rules__links {
+    list-style: none;
+    margin: 0.9rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.4rem;
+  }
+  .rules__links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--amber-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .proof {
+    list-style: none;
+    margin: 0 0 2rem;
+    padding: 0;
+    display: grid;
+    gap: 0.9rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  }
+  .proof__item {
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    color: var(--ink-soft);
+    line-height: 1.55;
+    font-size: 0.97rem;
+  }
+  .proof__client {
+    margin: 0 0 0.35rem;
+    font-size: 1.02rem;
+    color: var(--ink);
+  }
+  .proof__client a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .proof__n {
+    margin-top: 0.5rem;
+    font-family: var(--font-utility);
+    font-size: 0.85rem;
+    color: var(--amber-text);
   }
   .prose p + p {
     margin-top: 1rem;

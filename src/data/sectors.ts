@@ -25,43 +25,136 @@ export interface Sector {
   clients: string[];
   services: { label: string; href: string }[];
   posts: { label: string; href: string }[];
+  /** Optional H1 override (heading stays the short name for link lists). */
+  h1?: string;
+  /** Optional short, direct answer box under the H1 (AEO). */
+  answer?: { title: string; text: string[] };
+  /** Optional "where we work" line. */
+  coverage?: { title: string; text: string };
+  /** Optional regulation/compliance block (sector-specific rules). */
+  compliance?: {
+    title: string;
+    intro: string;
+    items: { title: string; text: string }[];
+    note: string;
+    links: { label: string; href: string }[];
+  };
+  /** Optional proof list: real clients and what we made (counts come from the repo). */
+  proof?: { client: string; text: string; href?: string }[];
 }
 
 export const SECTORS: readonly Sector[] = [
   {
     slug: "doktor-klinik-video-cekimi",
     name: "Sağlık ve klinikler",
-    heading: "Doktor ve klinik video çekimi",
-    title: "Doktor ve Klinik Video Çekimi, Sağlık Sosyal Medyası",
+    heading: "Doktor ve klinik video çekimi, sosyal medya",
+    h1: "Doktor ve klinikler için video çekimi ve sosyal medya yönetimi",
+    title: "Doktor ve Klinik Sosyal Medya Ajansı, Video Çekimi",
     description:
-      "Doktorlar ve klinikler için video çekimi: bilgilendirici YouTube serileri, Reels, klinik tanıtımı ve sosyal medya yönetimi. Gerçek sağlık projelerimizi inceleyin.",
-    tagline: "Hekimin uzmanlığını anlaşılır, güvenilir ve düzenli içeriğe çeviriyoruz",
+      "Doktor ve klinik sosyal medya ajansı arayanlar için: yönetmeliğe uygun video çekimi, Reels, YouTube serisi ve sosyal medya yönetimi. Gerçek sağlık projeleri.",
+    tagline: "Hekimin uzmanlığını yönetmeliğe uygun, anlaşılır ve düzenli video içeriğe çeviriyoruz",
+    answer: {
+      title: "Kısaca",
+      text: [
+        "Doktorlar, muayenehaneler ve klinikler için video çekimi ve sosyal medya yönetimi yapıyoruz: konu planı, senaryo, çekim, kurgu, altyazı, kapak ve paylaşım takvimi tek ekipte. Kadın doğum uzmanının YouTube serisi, medikal estetik kliniğinin Instagram hesabı ve web sitesi, sağlık derneğinin sempozyum kaydı gerçek işlerimiz arasında.",
+        "Tüm içerikleri 12 Kasım 2025 tarihli Sağlık Hizmetlerinde Tanıtım ve Bilgilendirme Faaliyetleri Hakkında Yönetmelik'e göre hazırlıyoruz: fiyat ve kampanya yok, sonuç vaadi yok, sponsorlu paylaşım yok, her video yayından önce hekimin onayında.",
+      ],
+    },
+    coverage: {
+      title: "Hangi şehirlerde çalışıyoruz?",
+      text: "Sakarya, Kocaeli ve Düzce'de aynı gün çekim yapıyoruz; diğer şehirlerdeki doktor ve kliniklerle proje bazında çalışıyoruz. Elinizde görüntü varsa kurgu, altyazı ve platforma göre formatlama işini şehirden bağımsız olarak üstleniyoruz (PARHAD sempozyum kaydında yaptığımız gibi).",
+    },
     intro: [
       "Sağlıkta video, reklamdan çok güven işidir. Hasta adayları bir hekimi ya da kliniği seçmeden önce onu dinlemek, nasıl anlattığını görmek ister. Bu yüzden sağlık alanındaki içeriklerde en güçlü format, hekimin kendi sesinden kısa ve net bilgilendirici videolardır.",
-      "Kadın doğum uzmanının YouTube eğitim serisinden medikal estetik kliniğinin tanıtım ve uygulama videolarına, sağlık derneklerinin sempozyum çekimlerine kadar sağlık alanında düzenli üretim yapıyoruz. Bir çekim gününde birden fazla konu çekip ay boyunca yayınlanacak içerik setini birlikte hazırlıyoruz.",
+      "Kadın doğum uzmanının YouTube eğitim serisinden medikal estetik kliniğinin tanıtım ve uygulama videolarına, sağlık derneklerinin sempozyum kayıtlarına kadar sağlık alanında düzenli üretim yapıyoruz. Bir çekim gününde birden fazla konu çekip ay boyunca yayınlanacak içerik setini birlikte hazırlıyoruz.",
     ],
     deliverables: [
       { title: "Bilgilendirici video serileri", text: "Hastaların en sık sorduğu soruları hekimin anlattığı YouTube videoları ve kısa dikey kesitler." },
-      { title: "Klinik tanıtımı", text: "Kliniği, ekibi ve hasta deneyimini anlatan tanıtım filmi ve web sitesi videoları." },
-      { title: "Uygulama anlatımları", text: "Tedavi ve uygulama süreçlerini sakin ve anlaşılır bir dille anlatan içerikler." },
-      { title: "Sosyal medya yönetimi", text: "İçerik planı, paylaşım takvimi, açıklama metinleri ve aylık rapor." },
+      { title: "Klinik sosyal medya yönetimi", text: "Konu planı, paylaşım takvimi, açıklama metinleri, kapak tasarımı ve aylık değerlendirme. Paylaşımlar hekimin ya da kliniğin kendi hesabından, onun onayıyla yayınlanır." },
+      { title: "Klinik tanıtımı", text: "Kliniği, ekibi ve hizmet anlayışını anlatan tanıtım filmi ve web sitesi videoları; hasta yüzü olmadan." },
+      { title: "Uygulama anlatımları", text: "Tedavi ve uygulama süreçlerini sakin, abartısız ve anlaşılır bir dille anlatan içerikler." },
+      { title: "Web sitesi ve Google görünürlüğü", text: "Klinik web sitesi, videoların sitede ve YouTube'da aranabilir olması için başlık, açıklama ve sayfa düzeni." },
     ],
     process: [
       "Ön görüşmede hasta adaylarının en çok sorduğu konuları listeliyoruz; her biri bir video başlığına dönüşüyor.",
+      "Senaryoları hekimin üslubuyla yazıyor, çekimden önce onayına sunuyoruz.",
       "Hekimin muayene düzenini bozmayacak bir çekim gününde birden fazla konuyu art arda çekiyoruz.",
-      "Kurguda her konudan bir uzun YouTube videosu ve birkaç kısa dikey kesit çıkarıyoruz.",
-      "Paylaşım takvimiyle içerikler haftalara yayılıyor; kanal ve hesap düzenli büyüyor.",
+      "Kurguda her konudan bir uzun YouTube videosu ve birkaç kısa dikey kesit çıkarıyoruz; yayından önce her video yeniden hekimin onayından geçiyor.",
+      "Paylaşım takvimiyle içerikler haftalara yayılıyor; ay sonunda neyin işe yaradığına birlikte bakıyoruz.",
+    ],
+    compliance: {
+      title: "Yönetmeliğe uygun çalışma: neyi yapıyoruz, neyi yapmıyoruz?",
+      intro:
+        "Sağlık içeriklerinde dayanak, 12 Kasım 2025 tarihli ve 33075 sayılı Resmî Gazete'de yayımlanan Sağlık Hizmetlerinde Tanıtım ve Bilgilendirme Faaliyetleri Hakkında Yönetmelik. Çekimden yayına kadar uyduğumuz kurallar:",
+      items: [
+        { title: "Fiyat, kampanya, çekiliş yok", text: "Ücret, indirim, kampanya ve promosyon bilgisi (md. 5/m), çekiliş ve hediye (md. 5/l) içeren içerik üretmiyoruz." },
+        { title: "Sonuç vaadi ve üstünlük iddiası yok", text: "\"En iyi\", \"garantili\", \"kesin sonuç\" gibi ifadeler kullanmıyoruz; kanıtlanmamış yöntem anlatımı ve \"daha üstün\" algısı yasak (md. 5/ç, 5/h)." },
+        { title: "Hasta teşekkürü ve yorumu yok", text: "Hasta ya da yakınlarının teşekkür ve memnuniyet ifadeleri üzerinden paylaşım yapmıyoruz (md. 5/e, 7/ğ). Görsel paylaşımlarda yorum, beğeni ve yeniden paylaşımın kapatılması gerekiyor (md. 7/ğ)." },
+        { title: "Öncesi/sonrası görseli varsayılan olarak yok", text: "Yönetmelik bu görselleri yalnızca açık rıza (md. 7/b), aynı ortam ve teknik şartlar ile işlem tarihleri (md. 7/f) ve uyarı metniyle (md. 7/k) kabul ediyor. Biz varsayılan olarak üretmiyoruz; kullanılacaksa önce oda ya da hukuk görüşü alınmasını öneriyoruz." },
+        { title: "Sonradan düzeltilmiş görsel yok", text: "Görüntüler gerçeğe aykırı olamaz; yanıltıcı makyaj, filtre ya da sonradan teknolojik düzeltme uygulamıyoruz (md. 7/e)." },
+        { title: "Müdahale anı ve hasta yüzü yok", text: "Tıbbi müdahale ya da ameliyat anındaki hasta görüntüsü paylaşılamıyor (md. 7/h). Videolarımızda hekim anlatır; hasta yüzü kullanmıyoruz." },
+        { title: "Paylaşım hekimin ya da kliniğin kendi hesabından", text: "Görsel içerikli paylaşımların sağlık tesisi ya da hekimin kendisi tarafından yapılması gerekiyor (md. 7/i). İçeriği biz hazırlıyor ve planlıyoruz; yayın hesap sahibinin onayıyla, kendi hesabından çıkıyor." },
+        { title: "Sponsorlu ve ücretli tanıtım yok", text: "Sosyal medyada ve arama motorlarında ücretli, sponsorlu, öne çıkarılmış kayıt (md. 5/i) ve görsel içeriği sponsorlu ya da ücret vererek yayınlatmak (md. 7/j) yasak. Tek istisna, sağlık tesisinin açılış tarihini izleyen ilk ay (md. 5/j); orada da önce hukuk görüşü öneriyoruz." },
+      ],
+      note:
+        "Bu bölüm hukuk görüşü değildir; yönetmeliği bir video ekibi olarak nasıl uyguladığımızı anlatır. Tereddüt edilen her içerik için son söz tabip odasında ve hukuk danışmanınızdadır.",
+      links: [
+        { label: "Hekimler için reklam yasağı: 2025 yönetmeliği ne diyor?", href: "/blog/hekimler-icin-reklam-yasagi-2025-yonetmeligi/" },
+        { label: "Yönetmeliğin Resmî Gazete metni", href: "https://www.resmigazete.gov.tr/eskiler/2025/11/20251112-2.htm" },
+      ],
+    },
+    proof: [
+      {
+        client: "Op. Dr. Duygu Cebecik Özmüş",
+        text: "Kadın hastalıkları ve doğum uzmanı. YouTube gebelik bilgilendirme serisi: konu planı, senaryo, çekim, kurgu, altyazı ve yayın.",
+        href: "/projeler/marka/op-dr-duygu-cebecik-ozmus/",
+      },
+      {
+        client: "Dr. Erdem Çalışkan",
+        text: "Serdivan'da medikal estetik kliniği. Instagram hesap yönetimi, konu-anlatım videoları, kapaklar ve serdivanestetik.com web sitesi.",
+        href: "/projeler/marka/dr-erdem-caliskan/",
+      },
+      {
+        client: "PARHAD — Paramedik ve Hastane Öncesi Acil Tıp Derneği",
+        text: "\"Afetlere daha hazır bir sağlık sistemi\" sempozyum oturumunun kurgusu ve montajı.",
+        href: "/projeler/parhad-sempozyumu-afetlere-hazir-saglik-sistemi/",
+      },
     ],
     faqs: [
+      {
+        question: "Doktorlarla çalışmış bir sosyal medya ekibi misiniz?",
+        answer:
+          "Evet. Op. Dr. Duygu Cebecik Özmüş'ün YouTube gebelik bilgilendirme serisini planlayıp çekiyor ve kurguluyoruz; Dr. Erdem Çalışkan'ın medikal estetik kliniği için Instagram hesabını, konu-anlatım videolarını ve web sitesini yönetiyoruz; PARHAD sempozyum kaydının kurgusunu yaptık. Bu işlerin örnekleri bu sayfada.",
+      },
+      {
+        question: "Kliniğimin sosyal medya yönetimini üstleniyor musunuz?",
+        answer:
+          "Evet. Konu planı, senaryo, çekim, kurgu, altyazı, kapak, açıklama metinleri, paylaşım takvimi ve aylık değerlendirme bizde. Yönetmelik gereği görsel paylaşımlar hekimin ya da kliniğin kendi hesabından yapılır; içerikler yayından önce hesap sahibinin onayından geçer.",
+      },
+      {
+        question: "Doktor videoları yönetmeliğe uygun nasıl üretiliyor?",
+        answer:
+          "Fiyat, kampanya, çekiliş, sonuç vaadi, üstünlük iddiası ve hasta teşekkürü kullanmıyoruz; görüntülere sonradan düzeltme uygulamıyor, müdahale anı ve hasta yüzü göstermiyoruz; sponsorlu paylaşım yapmıyoruz. Dayanak, 12 Kasım 2025 tarihli Sağlık Hizmetlerinde Tanıtım ve Bilgilendirme Faaliyetleri Hakkında Yönetmelik. Bu bilgi hukuk görüşü değildir; tereddüt edilen içerikte tabip odası ya da hukuk danışmanı görüşü alınmasını öneriyoruz.",
+      },
+      {
+        question: "Sakarya dışındaki doktor ve kliniklerle çalışıyor musunuz?",
+        answer:
+          "Evet. Sakarya, Kocaeli ve Düzce'de aynı gün çekim yapıyoruz; diğer şehirlerde proje bazında çalışıyoruz. Elinizde görüntü varsa kurgu, altyazı ve formatlama işini şehirden bağımsız olarak üstleniyoruz.",
+      },
+      {
+        question: "Klinik videoları için sponsorlu reklam yapıyor musunuz?",
+        answer:
+          "Hayır. Yönetmelik, sağlık tesisleri ve hekimler için ücretli ya da sponsorlu öne çıkarmayı ve görsel içeriğin ücret verilerek yayınlatılmasını yasaklıyor. Tek istisna, sağlık tesisinin açılış tarihini izleyen ilk ay; orada da önce hukuk görüşü alınmasını öneriyoruz.",
+      },
+      {
+        question: "Öncesi/sonrası videosu çekiyor musunuz?",
+        answer:
+          "Varsayılan olarak hayır. Yönetmelik bu görselleri tamamen yasaklamıyor ama açık rıza, aynı ortam ve teknik şartlar, işlem tarihleri ve uyarı metni gibi koşullara bağlıyor. Kullanılacaksa önce oda ya da hukuk görüşü alınmasını öneriyoruz.",
+      },
       {
         question: "Kameraya alışkın olmayan bir hekim için çekim zor olur mu?",
         answer:
           "Hayır. Konuları önceden birlikte belirliyor, çekimde soru-cevap akışıyla ilerliyoruz. Ezber metin yerine hekimin her gün hastasına anlattığı gibi konuşması hem daha kolay hem daha güvenilir sonuç veriyor.",
-      },
-      {
-        question: "Sağlık içeriklerinde nelere dikkat ediyorsunuz?",
-        answer:
-          "Abartılı vaat içermeyen, bilgilendirici ve hasta mahremiyetine saygılı bir dil kullanıyoruz. Yayın öncesinde içerikler hekimin onayından geçiyor.",
       },
       {
         question: "Bir çekim gününden kaç video çıkar?",
@@ -71,12 +164,13 @@ export const SECTORS: readonly Sector[] = [
     ],
     clients: ["Op. Dr. Duygu Cebecik Özmüş", "Dr. Erdem Çalışkan", "PARHAD — Paramedik ve Hastane Öncesi Acil Tıp Derneği"],
     services: [
-      { label: "Hekimler için içerik sistemi ve paketler", href: "/hekim-icerik-sistemi/" },
-      { label: "Sosyal medya yönetimi", href: "/sosyal-medya-icerigi/sakarya/" },
-      { label: "Tanıtım filmi", href: "/tanitim-filmi/sakarya/" },
-      { label: "Video çekimi", href: "/video-cekimi/sakarya/" },
+      { label: "Hekimler için aylık içerik sistemi", href: "/hekim-icerik-sistemi/" },
+      { label: "Sosyal medya yönetimi", href: "/sosyal-medya-icerigi/" },
+      { label: "Video çekimi", href: "/video-cekimi/" },
+      { label: "Tanıtım filmi", href: "/tanitim-filmi/" },
     ],
     posts: [
+      { label: "Hekimler için reklam yasağı: 2025 yönetmeliği", href: "/blog/hekimler-icin-reklam-yasagi-2025-yonetmeligi/" },
       { label: "Sosyal medya videosu neden izlenmiyor?", href: "/blog/sosyal-medya-videosu-neden-izlenmiyor-durust-bir-cevap/" },
       { label: "Tek çekim gününden kaç içerik çıkar?", href: "/blog/tek-cekim-gununden-kac-icerik-cikar/" },
     ],

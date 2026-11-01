@@ -15,7 +15,6 @@ const isHiddenProjectPage = (page) =>
 // owner decision. Keep this list in sync with each page's ROBOTS constant:
 // when a page is approved, set its ROBOTS to undefined AND remove it here.
 const NOINDEX_PATHS = new Set([
-  '/hekim-icerik-sistemi/', // prices provisional
   '/projeler/vaka/duygu-hoca/', // client approval for the case study
   '/projeler/vaka/dr-erdem-caliskan/', // client approval for the case study
 ]);

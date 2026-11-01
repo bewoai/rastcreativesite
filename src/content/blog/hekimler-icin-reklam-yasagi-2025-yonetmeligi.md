@@ -73,7 +73,7 @@ Reklamın kapalı olduğu yerde açık olan şey güven. Hasta adayı bir hekimi
 - **Google İşletme Profili:** Yalnızca kayıt ve bilgi amaçlı kullanın: adres, saat, uzmanlık. Ücretli öne çıkarma yapmayın, yorumları paylaşmayın ya da alıntılamayın.
 - **Web sitesi:** Yönetmeliğe göre sitede son güncelleme tarihi ve editör iletişim bilgisi bulunmalı (md. 5/ı).
 
-Sektörümüzdeki yaklaşımı [sağlık ve klinikler sayfasında](/sektorler/doktor-klinik-video-cekimi/), paket yapısını [hekim içerik sistemi sayfasında](/hekim-icerik-sistemi/), uygulamayı ise [Dr. Erdem Çalışkan vaka çalışmasında](/projeler/vaka/dr-erdem-caliskan/) bulabilirsiniz.
+Sektörümüzdeki yaklaşımı [doktor ve klinik video çekimi sayfasında](/sektorler/doktor-klinik-video-cekimi/), paket yapısını [hekim içerik sistemi sayfasında](/hekim-icerik-sistemi/), uygulamayı ise [Dr. Erdem Çalışkan vaka çalışmasında](/projeler/vaka/dr-erdem-caliskan/) bulabilirsiniz.
 
 ## Ajansın sorumluluğu ve onay süreci
 

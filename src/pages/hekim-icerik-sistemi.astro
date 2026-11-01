@@ -4,11 +4,13 @@
  * Positioning: paid advertising is not a continuous option for physicians in
  * Turkey, so patient trust is earned with informative content instead.
  *
- * INDEXING: ships as "noindex, follow" until the owner confirms the prices
- * (provisional, see src/data/hekim-paketleri.ts) and the case pages. To
- * publish: set ROBOTS to undefined below AND remove "/hekim-icerik-sistemi/"
- * from NOINDEX_PATHS in astro.config.mjs (that list keeps it out of the
- * sitemap).
+ * INDEXING: indexed since 1.11.2026 (owner OK; no prices published). To hide
+ * again: set ROBOTS to "noindex, follow" AND add "/hekim-icerik-sistemi/" back
+ * to NOINDEX_PATHS in astro.config.mjs (that list keeps it out of the sitemap).
+ *
+ * Intent split (avoid cannibalising): this page = the MONTHLY content system /
+ * process for physicians. /sektorler/doktor-klinik-video-cekimi/ = "doktor/klinik
+ * video çekimi ve sosyal medya ajansı" (who we are for clinics, proof, rules).
  *
  * Copy rules: no Meta/Google ad management as a monthly item; promotion only
  * as the one-off, labelled add-ons. No article numbers; cautious wording.
@@ -24,12 +26,12 @@ import {
   ADDON_PRICE_NOTE,
 } from "../data/hekim-paketleri";
 
-const ROBOTS: string | undefined = "noindex, follow"; // → undefined when the owner approves
+const ROBOTS: string | undefined = undefined; // "noindex, follow" hides it again
 
 const PATH = "/hekim-icerik-sistemi/";
-const TITLE = "Hekimler için İçerik Sistemi"; // + " — Rast Creative Studio" = 52 chars
+const TITLE = "Hekim İçerik Sistemi: Aylık Video ve Yayın Planı"; // + " | Rast Creative" = 64 chars
 const DESCRIPTION =
-  "Reklamın sınırlı olduğu sağlıkta güven içerikle kazanılır: hekimlere konu-anlatım videosu, sosyal medya ve Google İşletme Profili yönetimi.";
+  "Hekimler için aylık içerik sistemi: konu planı, senaryo, çekim günü, kurgu ve yayın. Sağlıkta güveni düzenli bilgilendirme videolarıyla kurun.";
 const SECTOR_HREF = "/sektorler/doktor-klinik-video-cekimi/";
 
 const principles = [
@@ -112,7 +114,7 @@ const faqs = [
   {
     question: "Açılış dönemi tanıtımı nedir?",
     answer:
-      "Muayenehane ya da kliniğinizin açılış tarihini izleyen ilk bir ay içinde, yönetmeliğe uygun sponsorlu açılış duyurusudur. Fiyat, kampanya ve hasta görseli içermez; aylık paketlerin parçası değildir; kapsamı ve fiyatı görüşmede belirlenir.",
+      "Yönetmelik, sağlık tesisinin açılış tarihini izleyen ilk bir ay için sponsorlu tanıtıma izin veriyor; görsel içeriğin sponsorlu yayınlatılmasına dair ayrı bir yasak da bulunduğu için kapsamı her seferinde ayrıca değerlendiriyoruz. Fiyat, kampanya ve hasta görseli içermez; aylık paketlerin parçası değildir ve yayından önce hukuk görüşü alınmasını öneriyoruz.",
   },
   {
     question: "Paketlerin fiyatı nasıl belirleniyor?",
@@ -274,7 +276,7 @@ const jsonLd = [
         ))}
       </ul>
       <p class="hk__p">
-        <a class="ev-link" href={SECTOR_HREF}>Sağlık alanında ürettiğimiz tüm işler <span aria-hidden="true">→</span></a>
+        <a class="ev-link" href={SECTOR_HREF}>Doktor ve klinik video çekimi: sağlık alanındaki tüm işlerimiz <span aria-hidden="true">→</span></a>
       </p>
     </section>
 
