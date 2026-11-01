@@ -10,7 +10,7 @@ projectType: "Kurumsal tanıtım filmi"
 year: 2024
 publishDate: "2026-06-14"
 featured: true
-order: 1
+order: 8.5
 posterAlt: "Altoteks kurumsal fabrikatörlük ve üretim tesisleri 4K sinematik tanıtım filmi kapağı"
 duration: "02:15"
 ---

@@ -1690,6 +1690,15 @@ const year = new Date().getFullYear();
     scrollbar-width: none;
     overscroll-behavior-x: contain;
   }
+  @media (hover: hover) and (pointer: fine) {
+    .ev-cases__track {
+      cursor: grab;
+    }
+    .ev-cases__track.is-dragging {
+      cursor: grabbing;
+      user-select: none;
+    }
+  }
   .ev-cases__track::-webkit-scrollbar {
     display: none;
   }
@@ -4014,15 +4023,25 @@ const year = new Date().getFullYear();
     const areaAll = root.querySelector<HTMLDetailsElement>("[data-area-all]");
     if (areaAll && window.matchMedia("(min-width: 761px)").matches) areaAll.open = true;
 
-    /* ── Case carousel ── */
+    /* ── Case carousel ──
+       Active card = the one whose centre is nearest the track centre (read from
+       scroll position, not IntersectionObserver: on wide screens two cards pass a
+       60% threshold at once, so arrows skipped or stuck). Arrow clicks aim at a
+       target index that stays locked until the smooth scroll settles, so fast
+       clicks move exactly one card each. Mouse users can drag; holding an arrow
+       keeps moving. */
     const trackEl = root.querySelector<HTMLElement>("[data-cases-track]");
     const cards = [...root.querySelectorAll<HTMLElement>("[data-case]")];
     const dots = [...root.querySelectorAll<HTMLButtonElement>("[data-case-dot]")];
     const prev = root.querySelector<HTMLButtonElement>("[data-cases-prev]");
     const next = root.querySelector<HTMLButtonElement>("[data-cases-next]");
-    let active = 0;
     const counter = root.querySelector<HTMLElement>("[data-case-count]");
+    let active = 0;
+    let target: number | null = null;
+    let settle = 0;
+    const clamp = (i: number) => Math.max(0, Math.min(cards.length - 1, i));
     const setActive = (i: number) => {
+      if (i === active && cards[i]?.classList.contains("is-active")) return;
       active = i;
       cards.forEach((c, k) => c.classList.toggle("is-active", k === i));
       dots.forEach((d, k) => (k === i ? d.setAttribute("aria-current", "true") : d.removeAttribute("aria-current")));
@@ -4030,35 +4049,143 @@ const year = new Date().getFullYear();
       if (next) next.disabled = i === cards.length - 1;
       if (counter) counter.textContent = cards[i]?.dataset.roman ?? "";
     };
+    const nearest = () => {
+      if (!trackEl) return 0;
+      const mid = trackEl.scrollLeft + trackEl.clientWidth / 2;
+      let best = 0;
+      let bestD = Infinity;
+      cards.forEach((c, k) => {
+        const d = Math.abs(c.offsetLeft - trackEl.offsetLeft + c.offsetWidth / 2 - mid);
+        if (d < bestD) {
+          bestD = d;
+          best = k;
+        }
+      });
+      return best;
+    };
     const goTo = (i: number) => {
-      const card = cards[Math.max(0, Math.min(cards.length - 1, i))];
+      const t = clamp(i);
+      const card = cards[t];
       if (!card || !trackEl) return;
+      target = t;
+      setActive(t);
       trackEl.scrollTo({
-        left: card.offsetLeft - (trackEl.clientWidth - card.clientWidth) / 2,
+        // offsetLeft is measured from .ev-cases (positioned), not the track.
+        left: card.offsetLeft - trackEl.offsetLeft - (trackEl.clientWidth - card.offsetWidth) / 2,
         behavior: reduce ? "auto" : "smooth",
       });
     };
+    const step = (dir: number) => goTo((target ?? active) + dir);
     if (trackEl) {
-      const io = new IntersectionObserver(
-        (entries) =>
-          entries.forEach((e) => {
-            if (e.isIntersecting) setActive(cards.indexOf(e.target as HTMLElement));
-          }),
-        { root: trackEl, threshold: 0.6 },
+      let raf = 0;
+      trackEl.addEventListener(
+        "scroll",
+        () => {
+          if (!raf)
+            raf = requestAnimationFrame(() => {
+              raf = 0;
+              if (target === null) setActive(nearest());
+            });
+          window.clearTimeout(settle);
+          settle = window.setTimeout(() => {
+            target = null;
+            setActive(nearest());
+          }, 140);
+        },
+        { passive: true },
       );
-      cards.forEach((c) => io.observe(c));
       trackEl.addEventListener("keydown", (e) => {
         if (e.key === "ArrowRight") {
           e.preventDefault();
-          goTo(active + 1);
+          step(1);
         } else if (e.key === "ArrowLeft") {
           e.preventDefault();
-          goTo(active - 1);
+          step(-1);
         }
       });
+      // Mouse drag (touch already scrolls natively).
+      let drag: { x: number; left: number; moved: boolean; id: number } | null = null;
+      let swallowClick = false;
+      trackEl.addEventListener("pointerdown", (e) => {
+        if (e.pointerType !== "mouse" || e.button !== 0) return;
+        if ((e.target as Element).closest("a, button, iframe")) return;
+        drag = { x: e.clientX, left: trackEl.scrollLeft, moved: false, id: e.pointerId };
+        target = null;
+      });
+      trackEl.addEventListener("pointermove", (e) => {
+        if (!drag || e.pointerId !== drag.id) return;
+        const dx = e.clientX - drag.x;
+        if (!drag.moved && Math.abs(dx) < 6) return;
+        if (!drag.moved) {
+          drag.moved = true;
+          trackEl.setPointerCapture(e.pointerId);
+          trackEl.style.scrollSnapType = "none";
+          trackEl.style.scrollBehavior = "auto";
+          trackEl.classList.add("is-dragging");
+        }
+        trackEl.scrollLeft = drag.left - dx;
+      });
+      const endDrag = (e: PointerEvent) => {
+        if (!drag || e.pointerId !== drag.id) return;
+        const d = drag;
+        drag = null;
+        if (!d.moved) return;
+        swallowClick = true;
+        trackEl.classList.remove("is-dragging");
+        const dx = e.clientX - d.x;
+        const from = nearest();
+        // A short flick still moves one card in the drag direction.
+        const to = Math.abs(dx) > 40 && from === active ? active + (dx < 0 ? 1 : -1) : from;
+        trackEl.style.scrollSnapType = "";
+        trackEl.style.scrollBehavior = "";
+        goTo(to);
+      };
+      trackEl.addEventListener("pointerup", endDrag);
+      trackEl.addEventListener("pointercancel", endDrag);
+      trackEl.addEventListener(
+        "click",
+        (e) => {
+          if (swallowClick) {
+            swallowClick = false;
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        },
+        true,
+      );
+      trackEl.addEventListener("dragstart", (e) => e.preventDefault());
     }
-    prev?.addEventListener("click", () => goTo(active - 1));
-    next?.addEventListener("click", () => goTo(active + 1));
+    // Arrows: click = one card; press and hold = keep going.
+    const holdable = (btn: HTMLButtonElement | null, dir: number) => {
+      if (!btn) return;
+      let hold = 0;
+      let rep = 0;
+      let fired = false;
+      const stop = () => {
+        window.clearTimeout(hold);
+        window.clearInterval(rep);
+        hold = rep = 0;
+      };
+      btn.addEventListener("pointerdown", (e) => {
+        if (e.button !== 0) return;
+        fired = false;
+        hold = window.setTimeout(() => {
+          fired = true;
+          step(dir);
+          rep = window.setInterval(() => step(dir), 420);
+        }, 380);
+      });
+      ["pointerup", "pointerleave", "pointercancel", "blur"].forEach((ev) => btn.addEventListener(ev, stop));
+      btn.addEventListener("click", () => {
+        if (fired) {
+          fired = false;
+          return;
+        }
+        step(dir);
+      });
+    };
+    holdable(prev, -1);
+    holdable(next, 1);
     dots.forEach((d, i) => d.addEventListener("click", () => goTo(i)));
     cards.forEach((c, i) =>
       c.addEventListener("click", (e) => {
@@ -4066,6 +4193,7 @@ const year = new Date().getFullYear();
       }),
     );
     setActive(0);
+    if (trackEl) trackEl.scrollLeft = 0;
 
     /* ── Cinema: plays inside the site, never sends people to YouTube ── */
     const cinema = root.querySelector<HTMLDialogElement>("[data-cinema]");
