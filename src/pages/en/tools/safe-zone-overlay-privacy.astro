@@ -1,0 +1,122 @@
+---
+/**
+ * Privacy policy for the free Chrome extension "Safe Zone Overlay for Reels, TikTok & Shorts".
+ * Linked from the Chrome Web Store listing (privacy policy URL). Same text as PRIVACY.md in
+ * github.com/bewoai/rast-safe-zone-extension — keep both in sync.
+ */
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Section from "../../../components/Section.astro";
+import SectionHeading from "../../../components/SectionHeading.astro";
+import { CONTACT } from "../../../consts";
+import { breadcrumb } from "../../../lib/schema";
+
+const updated = "1 November 2026";
+const pageJsonLd = [
+  breadcrumb([
+    { name: "Free tools", path: "/en/tools/" },
+    { name: "Safe Zone Overlay privacy policy", path: "/en/tools/safe-zone-overlay-privacy/" },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Safe Zone Overlay (Chrome extension) privacy policy"
+  description="Privacy policy of the free Safe Zone Overlay Chrome extension by Rast Creative Studio: no data collected, no analytics, no network requests."
+  jsonLd={pageJsonLd}
+>
+  <Section width="narrow">
+    <SectionHeading eyebrow="Legal" as="h1">
+      Safe Zone Overlay privacy policy
+      <Fragment slot="intro">
+        <p>Chrome extension “Safe Zone Overlay for Reels, TikTok &amp; Shorts” · Last updated: {updated}</p>
+      </Fragment>
+    </SectionHeading>
+
+    <div class="legal">
+      <p>
+        <strong>Short version: the extension collects no data.</strong> It doesn't read, store or send your personal information,
+        your browsing history or the content of the pages you use it on, and it makes no network requests.
+      </p>
+
+      <h2>What the extension does</h2>
+      <p>
+        When you click its toolbar icon or press Alt+Shift+S, it draws a safe zone overlay (for Instagram Reels, TikTok, YouTube
+        Shorts or Instagram Story) over the largest video, image or canvas on the current tab, or shows a 9:16 frame you can move.
+        To place the overlay it measures the size and position of that element inside your browser. Nothing is recorded or sent.
+      </p>
+
+      <h2>Data we collect</h2>
+      <ul>
+        <li>None. No personal data, no page content, no browsing history, no usage statistics.</li>
+        <li>No analytics, no tracking, no advertising, no cookies, no remote code.</li>
+        <li>No account or sign-up.</li>
+      </ul>
+
+      <h2>Settings stored on your device</h2>
+      <p>
+        The extension remembers your last platform, style and opacity with Chrome's <code>chrome.storage.sync</code>. If you have
+        Chrome sync turned on, Google syncs these three settings between your own browsers as part of your Chrome profile; we never
+        receive them. Removing the extension deletes them.
+      </p>
+
+      <h2>Permissions</h2>
+      <ul>
+        <li><strong>activeTab</strong>: access to the current tab only after you click the icon or press the shortcut.</li>
+        <li><strong>scripting</strong>: to add the overlay to that tab.</li>
+        <li><strong>storage</strong>: to remember the three settings above.</li>
+      </ul>
+      <p>The extension does not request access to all websites and does not run in the background on pages you visit.</p>
+
+      <h2>Links</h2>
+      <p>
+        The popup links to our free tools page on rastcreative.com. If you open it, that website's own
+        <a href="/kvkk/">privacy notice</a> applies (it is in Turkish and covers cookies and analytics on rastcreative.com).
+      </p>
+
+      <h2>Sharing and selling</h2>
+      <p>We don't sell, share or transfer any user data, because we don't have any.</p>
+
+      <h2>Changes and contact</h2>
+      <p>
+        If this policy changes, we'll update this page and the date above. Questions:
+        <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a> — Rast Creative Studio, Sakarya, Türkiye.
+      </p>
+      <p>
+        Instagram, TikTok and YouTube are trademarks of their owners. The extension is not affiliated with or endorsed by them.
+      </p>
+      <p><a href="/en/tools/">← More free creator tools</a></p>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .legal {
+    margin-top: 2.5rem;
+    max-width: 68ch;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .legal h2 {
+    margin: 2rem 0 0.6rem;
+    font-family: var(--font-body);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .legal p {
+    margin: 0 0 1rem;
+  }
+  .legal ul {
+    margin: 0 0 1rem;
+    padding-left: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .legal a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--amber);
+    text-underline-offset: 3px;
+  }
+</style>
