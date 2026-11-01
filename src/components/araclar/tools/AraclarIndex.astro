@@ -168,6 +168,18 @@ const collage = COLLAGE_ORDER.map((h) => ARACLAR_EN.find((t) => t.href === h)).f
 {
   en ? (
     <Fragment>
+    <div class="ah-mcp">
+      <h2>Use these tools in AI assistants (MCP)</h2>
+      <p>
+        The safe zone, text position, bitrate, subtitle and export-settings checks are also available as a free remote MCP server,
+        Rast Creator Tools. Add the endpoint below to an assistant or client that supports remote MCP servers (Streamable HTTP, no
+        sign-in). It stores nothing and each answer links back to the matching tool page.
+      </p>
+      <pre><code>https://rast-creator-tools-mcp.studio-c25.workers.dev/v1/mcp</code></pre>
+      <p class="ah-mcp__legal">
+        <a href="/en/tools/creator-tools-mcp-privacy/">Privacy policy</a> · <a href="/en/tools/creator-tools-mcp-terms/">Terms of service</a>
+      </p>
+    </div>
     <div class="ah-cta">
       <div>
         <h2>Rather have the video made for you?</h2>
@@ -494,5 +506,40 @@ const collage = COLLAGE_ORDER.map((h) => ARACLAR_EN.find((t) => t.href === h)).f
   }
   .ah-cta p a {
     color: #ffb27d;
+  }
+  .ah-mcp {
+    margin: 0 0 2rem;
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+    border: 1px solid var(--line, rgba(0, 0, 0, 0.12));
+    border-radius: 1.2rem;
+  }
+  .ah-mcp h2 {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.7rem);
+  }
+  .ah-mcp p {
+    margin: 0 0 0.9rem;
+    max-width: 70ch;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+  .ah-mcp pre {
+    margin: 0 0 0.9rem;
+    padding: 0.8rem 1rem;
+    overflow-x: auto;
+    border-radius: 0.7rem;
+    background: #1d1915;
+    color: #faf9f6;
+    font-size: 0.9rem;
+  }
+  .ah-mcp__legal {
+    font-size: 0.95rem;
+  }
+  .ah-mcp a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--amber);
+    text-underline-offset: 3px;
   }
 </style>

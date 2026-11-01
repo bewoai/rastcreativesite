@@ -1,0 +1,112 @@
+---
+/**
+ * Terms of service for the "Rast Creator Tools" remote MCP server (repo bewoai/rast-creator-tools-mcp, endpoint /v1/mcp).
+ * Linked from the Google Connected Apps listing. Same text as TERMS.md in that repo — keep both in sync.
+ */
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Section from "../../../components/Section.astro";
+import SectionHeading from "../../../components/SectionHeading.astro";
+import { CONTACT } from "../../../consts";
+import { breadcrumb } from "../../../lib/schema";
+
+const updated = "1 November 2026";
+const ENDPOINT = "https://rast-creator-tools-mcp.studio-c25.workers.dev/v1/mcp";
+const pageJsonLd = [
+  breadcrumb([
+    { name: "Free tools", path: "/en/tools/" },
+    { name: "Rast Creator Tools MCP terms of service", path: "/en/tools/creator-tools-mcp-terms/" },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Rast Creator Tools (MCP server) terms of service"
+  description="Terms of service for Rast Creator Tools, the free MCP server by Rast Creative Studio: free and as is, fair use, no account, nothing stored."
+  jsonLd={pageJsonLd}
+>
+  <Section width="narrow">
+    <SectionHeading eyebrow="Legal" as="h1">
+      Rast Creator Tools terms of service
+      <Fragment slot="intro">
+        <p>Remote MCP server for AI assistants · Last updated: {updated}</p>
+      </Fragment>
+    </SectionHeading>
+
+    <div class="legal">
+      <ol>
+        <li>
+          <strong>Service.</strong> Rast Creator Tools is a free MCP server by Rast Creative Studio, available at
+          <code>{ENDPOINT}</code>. It returns safe-zone margins, text-position checks, bitrate and file-size calculations,
+          subtitle checks and export settings for video creators.
+        </li>
+        <li>
+          <strong>Free, as is.</strong> The service is provided free of charge and “as is”. Safe-zone values are approximate and
+          dated; platform figures come from the platforms' public help pages and can change. Check the platform's current
+          requirements before an important upload. Rast Creative Studio is not liable for losses from relying on the results.
+        </li>
+        <li>
+          <strong>Fair use.</strong> Don't use the service to overload, probe or attack the server, or to send unlawful content.
+          Automated abuse may be rate-limited or blocked.
+        </li>
+        <li>
+          <strong>No account, no content ownership.</strong> You keep all rights to anything you send (for example subtitle text).
+          The service does not store it (see the <a href="/en/tools/creator-tools-mcp-privacy/">privacy policy</a>).
+        </li>
+        <li>
+          <strong>Changes and availability.</strong> Tools may be improved, changed or discontinued. There is no uptime guarantee.
+        </li>
+        <li>
+          <strong>Trademarks.</strong> Instagram, TikTok, YouTube, Vimeo and ProRes are trademarks of their owners; the service is
+          not affiliated with or endorsed by them.
+        </li>
+        <li>
+          <strong>Contact.</strong> <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a> · Rast Creative Studio, Sakarya,
+          Türkiye · Governing law: Republic of Türkiye.
+        </li>
+      </ol>
+      <p>
+        <a href="/en/tools/creator-tools-mcp-privacy/">Privacy policy</a> ·
+        <a href="/en/tools/">← More free creator tools</a>
+      </p>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .legal {
+    margin-top: 2.5rem;
+    max-width: 68ch;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .legal h2 {
+    margin: 2rem 0 0.6rem;
+    font-family: var(--font-body);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .legal p {
+    margin: 0 0 1rem;
+  }
+  .legal ol {
+    margin: 0 0 1rem;
+    padding-left: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .legal ul {
+    margin: 0 0 1rem;
+    padding-left: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .legal a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--amber);
+    text-underline-offset: 3px;
+  }
+</style>
