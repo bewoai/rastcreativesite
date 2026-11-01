@@ -346,7 +346,7 @@ Build çıktısı (211 sayfa) tarandı ve `main` ile karşılaştırıldı.
 - Bu PR'ın getirdiği yeni sorun yok. Düzeltilenler (eskiden de vardı): kategori,
   marka, KVKK ve Telif sayfalarında H1 eksikti → `as="h1"`. "Bir çekim günü," H2'sinde
   `<br>` yüzünden birleşen kelimeler ayrıldı. Etiket (Eyebrow) dar yerde kırılmıyor.
-- GEO: robots.txt (OAI-SearchBot/ChatGPT-User açık, GPTBot kapalı, Content-Signal),
+- GEO: robots.txt (OAI-SearchBot/ChatGPT-User açık, GPTBot açık (01.11.2026, Bewo onayı: eğitim açık), Content-Signal ai-train=yes),
   llms.txt ve llms-full.txt geçerli, içlerindeki tüm URL'ler var.
 - Sonraya kalan (eski, bu PR dışı): bölge sayfalarının bir kısmında title 65+ /
   description 165+ karakter; bazı proje açıklamaları 70 karakterden kısa; ana sayfa
