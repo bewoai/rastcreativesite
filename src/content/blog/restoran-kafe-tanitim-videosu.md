@@ -1,9 +1,9 @@
 ---
 title: "Restoran ve kafeler için tanıtım videosu nasıl olmalı?"
-seoTitle: "Restoran Tanıtım Filmi Çekimi: Kafe ve Mekân Rehberi"
-description: "Restoran tanıtım filmi çekimi nasıl planlanır? Çekim saati, sahne listesi, bir günden çıkan videolar ve teslim süresi. Sakarya ve Kocaeli'deki işlerimizden."
+seoTitle: "Restoran Tanıtım Filmi Çekimi: Yarım Gün, 1 Film + 3 Reels"
+description: "Restoran ve kafe tanıtım filmi çekimi: yarım günden 1 tanıtım videosu, 3 Reels ve menü kareleri. Çekim saati, sahne listesi, teslim süresi ve örnek işler."
 pubDate: 2026-07-18
-updatedDate: 2026-10-31
+updatedDate: 2026-11-01
 cover: ../../assets/photos/crew-onset.jpg
 coverAlt: "Mekanda çekim yapan video prodüksiyon ekibi"
 tags: ["mekan çekimi", "restoran", "kafe", "sosyal medya", "Sakarya"]
@@ -42,6 +42,10 @@ Kafe ve restoranların en çok ihtiyaç duyduğu şey, düzenli sosyal medya iç
 ## Portföyden mekân videoları
 
 Mekân çekimine örnek olarak [Newlife Davet Salonu tanıtım videosu](/projeler/newlife-davet-salonu/) kurulmuş masaları, hazırlıkları ve davet anlarını dikey formatta gösteriyor. Etkinlik ve atmosfer tarafında Sapanca'daki [mum ışığında bale gösterimi](/projeler/candles-and-echoes-golden-swan/) aynı yaklaşımla çekildi: az ışıkta sıcak, kalabalığı rahatsız etmeyen bir çekim. Mağaza tarafında [Duru Optik videosu](/projeler/duru-optik-tanitim/) mekânın konumunu havadan, ürünleri yakından gösteriyor.
+
+## Sakarya'da restoran ve kafe çekimi: Serdivan, Sapanca, Karasu
+
+Aynı plan her ilçede biraz değişiyor. Serdivan'da üniversite çevresindeki kafeler öğleden sonra ve akşam doluyor; mekân planlarını öğleden önce, atmosferi akşamüstü çekiyoruz. Sapanca'daki kahvaltı ve göl kenarı mekânlarında en iyi ışık sabah, ama hafta sonu kalabalık oluyor; bu yüzden çekimi hafta içi sabaha koyuyoruz. Karasu'daki sahil restoranlarında video sezondan önce, Mayıs–Haziran başında hazır olmalı; deniz manzarası için gün batımını bekliyoruz. Bu ilçelerdeki çekimler için [Sakarya video çekimi](/video-cekimi/sakarya/), [Sapanca tanıtım videosu](/tanitim-filmi/sapanca/) ve [Karasu tanıtım videosu](/tanitim-filmi/karasu/) sayfalarına bakabilirsiniz; her ay içerik gerekiyorsa [Sakarya sosyal medya yönetimi](/sosyal-medya-icerigi/sakarya/) daha uygun.
 
 ## Çekim gününü doğru seçmek
 

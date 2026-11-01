@@ -94,3 +94,10 @@ Kâğıt zemin ve bölgesel keşif akışı korunur. Bu URL standardizasyonu gö
 - [x] Dahili kart ve breadcrumb URL’leri canonical hedefe gidiyor — 2026-09-10
 - [x] Harici proje URL’leri aynen korunuyor — 2026-09-10
 - [ ] Mobil (≤390px), a11y, reduced-motion ve CLS smoke kontrolü
+
+## Sakarya Dalga 1 (2026-11-01)
+
+- Yeni şehir hub'ı `/sakarya-reklam-ajansi/` (`src/pages/sakarya-reklam-ajansi.astro`): ajans niyeti, kapsam (video, sosyal medya, Meta reklam yönetimi, web sitesi tasarımı; yapmadıklarımız), 7 soruluk seçim listesi, kanıt, 16 ilçe, SSS. Footer'da "Sakarya'da hizmetler"; Sakarya ilindeki her hizmet×konum sayfası "diğer hizmetler" sütununda hub'a link veriyor.
+- `location-content.ts` yeni alanlar: `answer` (üst özet kutusunda BRAND.entity'den sonra), `sections[].links` (ilçe linkleri). Güçlendirilen: video/ürün-mekan/tanıtım/reklam × Sakarya, drone×Sapanca, tanıtım×Sapanca/Karasu.
+- İlçe adı yalnız çekim yeri doğrulanmış işlerde yazılır (Candles and Echoes = Sapanca, Dr. Erdem Çalışkan = Serdivan).
+- Plan: vault `07-Research/2026-11-01-sakarya-arama-hakimiyeti-plani.md`.

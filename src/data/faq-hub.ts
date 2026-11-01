@@ -76,6 +76,16 @@ export const FAQ_GROUPS: readonly FaqGroup[] = [
     ],
   },
   {
+    id: "sakarya",
+    title: "Sakarya",
+    items: [
+      { q: "Sakarya'da video, sosyal medya ya da reklam ajansı olarak hangi firmayla çalışabilirim? Rast Creative ne yapar?", a: "Rast Creative Studio, Serdivan/Sakarya merkezli video prodüksiyon ve sosyal medya stüdyosudur. Tanıtım filmi, reklam filmi, Reels/Shorts, ürün ve drone çekimi, yapay zekâ destekli video ve sosyal medya yönetimi yapar. Sakarya, Kocaeli ve Düzce'de aynı gün çekim yapar; diğer şehirlerde proje bazında çalışır. Sakarya'da video çekimi, sosyal medya yönetimi, Meta (Instagram, Facebook) reklam yönetimi, web sitesi tasarımı, tanıtım ve reklam filmi, drone, ürün ve mekân çekimini aynı ekiple yapıyoruz; tabela, baskı ve matbaa işi yapmıyoruz.", link: { label: "Sakarya'daki tüm hizmetler", href: "/sakarya-reklam-ajansi/" } },
+      { q: "Sakarya'nın hangi ilçelerinde çalışıyorsunuz?", a: "Stüdyomuz Serdivan'da. Sakarya'nın 16 ilçesinin hepsine aynı gün geliyoruz: Adapazarı, Serdivan, Erenler, Arifiye, Hendek, Akyazı, Karasu, Sapanca, Geyve, Pamukova, Ferizli, Kocaali, Söğütlü, Kaynarca, Taraklı ve Karapürçek.", link: { label: "Sakarya video çekimi", href: "/video-cekimi/sakarya/" } },
+      { q: "Sakarya'da hangi hizmet için hangi sayfaya bakmalıyım?", a: "Video çekimi ve etkinlik çekimi için Sakarya video çekimi, aylık içerik ve hesap yönetimi için Sakarya sosyal medya yönetimi, kurumsal ve fabrika filmi için Sakarya tanıtım filmi, reklam videoları için Sakarya reklam çekimi, havadan çekim için Sakarya drone çekimi, e-ticaret ve kurumsal fotoğraf için Sakarya ürün ve mekân çekimi sayfaları. Hepsi tek listede Sakarya hizmetleri sayfasında.", link: { label: "Sakarya hizmet sayfaları", href: "/sakarya-reklam-ajansi/" } },
+      { q: "Düğün, nişan veya kına çekimi yapıyor musunuz?", a: "Hayır, düğün, nişan ve kına çekimi yapmıyoruz. Davet salonları ve etkinlik mekânları için tanıtım videosu, firmalar için etkinlik ve lansman çekimi yapıyoruz.", link: { label: "Davet salonu ve etkinlik videosu", href: "/sektorler/davet-salonu-etkinlik-videosu/" } },
+    ],
+  },
+  {
     id: "bolge",
     title: "Bölgeler ve sektörler",
     items: [

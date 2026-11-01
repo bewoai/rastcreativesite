@@ -1,0 +1,740 @@
+---
+/**
+ * /sakarya-reklam-ajansi/ — Sakarya city hub + decision page for the
+ * "sakarya reklam / dijital / prodüksiyon ajansı, ajans firmaları" intent
+ * (plan: vault 07-Research/2026-11-01-sakarya-arama-hakimiyeti-plani.md, Dalga 1 #2).
+ *
+ * Copy rules: no prices; the brand is defined ONLY by the canonical BRAND
+ * sentences (no new "Rast bir reklam ajansıdır" sentence); services listed
+ * here are only the ones Rast sells (src/consts.ts BRAND, src/data/service-hub.ts,
+ * plus web design and Meta ads, confirmed by Bewo).
+ *
+ * Web site design and Meta ads management confirmed as sold services by Bewo
+ * (1.11.2026). Proof only: serdivanestetik.com + rastcreative.com (web),
+ * Aytaş Home Meta results (ads). No ads work for physicians/health facilities
+ * (Yönetmelik RG 33075 md. 5/i, 7/j). Separate /web-sitesi/sakarya/ and
+ * Meta-ads pages = wave 2, not here.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/Section.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import Button from "../components/Button.astro";
+import Icon from "../components/Icon.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import { PRIMARY_CTA, CONTACT, SITE, BRAND, BRAND_FULL } from "../consts";
+import { breadcrumb, faqPage, BUSINESS_ID } from "../lib/schema";
+import { GOOGLE_REVIEWS } from "../data/google-reviews";
+import { getCollection } from "astro:content";
+
+const path = "/sakarya-reklam-ajansi/";
+const title = "Sakarya Reklam Ajansı: Video ve Sosyal Medya";
+const description =
+  "Sakarya reklam ajansı arayanlara: video prodüksiyon, sosyal medya ve Meta reklam yönetimi, web sitesi tasarımı. Adapazarı, Serdivan, 16 ilçe; seçim listesi.";
+
+const DISTRICTS = [
+  "Adapazarı", "Serdivan", "Erenler", "Arifiye", "Hendek", "Akyazı", "Karasu", "Sapanca",
+  "Geyve", "Pamukova", "Ferizli", "Kocaali", "Söğütlü", "Kaynarca", "Taraklı", "Karapürçek",
+];
+
+const SERVICES = [
+  { href: "/video-cekimi/sakarya/", t: "Video çekimi ve prodüksiyon", d: "Tanıtım, Reels, etkinlik ve kongre çekimi; senaryodan teslime tek ekip." },
+  { href: "/sosyal-medya-icerigi/sakarya/", t: "Sosyal medya yönetimi", d: "Aylık plan, çekim günleri, kurgu, paylaşım ve rapor; ayda kaç video çıkacağı teklifte yazılı." },
+  { href: "/tanitim-filmi/sakarya/", t: "Tanıtım filmi ve fabrika filmi", d: "OSB tesisleri, klinikler ve markalar için 1–3 dakikalık kurumsal film ve kısa versiyonlar." },
+  { href: "/reklam-filmi/sakarya/", t: "Reklam çekimi ve reklam filmi", d: "Instagram, Facebook ve YouTube reklamları için 15–60 saniyelik versiyonlar." },
+  { href: "/drone-cekimi/sakarya/", t: "Drone çekimi", d: "Fabrika, inşaat, emlak ve etkinlik için 4K havadan video; SHGM İHA-1 ticari pilot lisansı." },
+  { href: "/urun-mekan-cekimi/sakarya/", t: "Ürün fotoğrafı ve mekân çekimi", d: "E-ticaret, katalog ve kurumsal fotoğraf; ürün videosu ve mekân çekimi aynı gün." },
+  { href: "#meta-reklam", t: "Meta (Instagram, Facebook) reklam yönetimi", d: "Kampanya kurulumu, hedefleme, reklam videoları ve takip; bütçe sizin hesabınızdan Meta'ya ödenir." },
+  { href: "#web-sitesi", t: "Web sitesi tasarımı", d: "Kurumsal ve klinik web siteleri: tasarım, metin, video yerleşimi ve Google'da bulunurluk." },
+];
+
+const SCOPE = {
+  yes: [
+    "Video prodüksiyon: senaryo, çekim, kurgu, renk, ses, altyazı ve platforma uygun teslim",
+    "Sosyal medya yönetimi: içerik planı, çekim, kurgu, açıklama metinleri, paylaşım takvimi, aylık rapor",
+    "Meta (Instagram, Facebook) reklam yönetimi: kampanya kurulumu, hedefleme, reklam kreatifi ve aylık takip; reklam bütçesi hizmet bedeline dahil değil",
+    "Web sitesi tasarımı: kurumsal ve klinik siteleri, sayfa metinleri, video yerleşimi, temel arama motoru düzeni",
+    "Tanıtım filmi, reklam filmi, Reels/Shorts, drone, ürün ve mekân çekimi",
+    "Yapay zekâ destekli video ve ürün fotoğraflarından reklam videosu",
+  ],
+  no: [
+    "Tabela, baskı, matbaa ve promosyon ürünleri",
+    "Düğün, nişan, kına ve bireysel fotoğraf çekimi",
+    "Hekim ve sağlık kuruluşları için reklam yönetimi (ücretli tanıtım yönetmelikle kısıtlı: md. 5/i, 7/j)",
+  ],
+};
+
+const AUDIENCE = [
+  { href: "/sektorler/fabrika-tanitim-filmi/", t: "Fabrika ve OSB firmaları", d: "Fuar, satın alma ekipleri ve işe alım için tanıtım filmi, LinkedIn kesitleri, drone." },
+  { href: "/sektorler/doktor-klinik-video-cekimi/", t: "Doktor, klinik ve muayenehaneler", d: "Yönetmeliğe uygun bilgilendirme videoları ve hesap yönetimi; hasta yüzü olmadan." },
+  { href: "/sektorler/magaza-sosyal-medya-icerigi/", t: "Mağaza ve perakende", d: "Ürün, kampanya ve mağaza Reels'leri; düzenli çekim günleriyle aylık içerik." },
+  { href: "/sektorler/davet-salonu-etkinlik-videosu/", t: "Davet salonu, kafe, restoran ve otel", d: "Mekân tanıtım videosu, rezervasyon Reels'i, etkinlik çekimi." },
+  { href: "/sektorler/youtube-egitim-icerigi/", t: "Eğitim ve YouTube kanalları", d: "Ders, kurs tanıtımı ve bilgilendirme serisi çekimi ve kurgusu." },
+];
+
+const CHECKLIST = [
+  { t: "Gerçek işleri ve sonuçları görün", d: "Tasarım örneği yerine ajansın yönettiği hesapları ve yönetimi devraldıktan sonra değişen rakamları isteyin." },
+  { t: "Kapsam yazılı mı?", d: "Ayda kaç video, kaç çekim günü, kaç revizyon ve hangi formatlar teslim ediliyor; teklifte rakamla yazmalı." },
+  { t: "İşi kim yapıyor?", d: "Toplantıya gelen kişi ile çekimi ve kurguyu yapan kişi aynı mı, yoksa iş dışarıya mı veriliyor?" },
+  { t: "Reklam bütçesi nerede?", d: "Reklam bütçesi fiyata dahil mi, reklam hesabı kimin adına açılıyor, harcamayı kendi panelinizden görebiliyor musunuz?" },
+  { t: "Rapor ne içeriyor?", d: "Her ay erişim, etkileşim, mesaj ve satışa yakın rakamlar raporlanıyor mu, sonraki ayın planı bu rakamlarla mı kuruluyor?" },
+  { t: "Ölçülemeyen söz var mı?", d: "Takipçi sayısı, satış ya da “ilk sıra” garantisi veren teklifler genellikle tutulamayan sözler içerir." },
+  { t: "Sözleşme ve haklar", d: "En az kaç ay çalışılıyor, ham görüntü ve müzik kullanım hakları kimde, ayrılırsanız hesap ve dosyalar size kalıyor mu?" },
+];
+
+const faqs = [
+  {
+    question: "Sakarya'da video, sosyal medya ya da reklam ajansı olarak Rast Creative ne yapar?",
+    answer: `${BRAND.entity} ${BRAND.services} Sakarya'da video çekimi, sosyal medya yönetimi, Meta reklam yönetimi, web sitesi tasarımı, tanıtım ve reklam filmi, drone, ürün ve mekân çekimini aynı ekiple yapıyoruz; tabela, baskı ve matbaa işi yapmıyoruz.`,
+  },
+  {
+    question: "Reklam ajansı mı, video prodüksiyon şirketi mi seçmeliyim?",
+    answer:
+      "İhtiyacınıza bağlı. Tabela, baskı, açık hava ve medya satın alma gibi işler istiyorsanız klasik reklam ajansı daha uygun. Asıl ihtiyacınız düzenli video, Reels ve sosyal medya içeriğiyse çekimi ve kurguyu kendi yapan bir ekip daha hızlı ve tutarlı çalışır; işin dışarıya verilmesiyle oluşan aracı katman olmaz.",
+  },
+  {
+    question: "Sakarya'da Meta ve Instagram reklam ajansı olarak çalışıyor musunuz?",
+    answer:
+      "Evet. Instagram ve Facebook reklamlarının kurulumunu, hedeflemesini, reklam videolarını ve takibini yapıyoruz; reklamı tek başına ya da sosyal medya yönetimiyle birlikte alabilirsiniz. Reklam bütçesi hizmet bedeline dahil değildir, Meta'ya doğrudan sizin hesabınızdan ödenir ve harcamayı kendi panelinizden görürsünüz. Aytaş Home'da video üretimi ile Meta reklamlarını birlikte yönettiğimiz ilk dört ayda içerik etkileşimi önceki dört aya göre +%311 arttı.",
+  },
+  {
+    question: "Sakarya'da web tasarım ve web sitesi yapıyor musunuz?",
+    answer:
+      "Evet. Kurumsal ve klinik web siteleri tasarlıyoruz: sayfa yapısı, metinler, video ve fotoğraf yerleşimi, mobil uyum ve Google'da bulunurluk için temel düzen. Serdivan'daki Dr. Erdem Çalışkan'ın kliniği için serdivanestetik.com'u ve bu siteyi (rastcreative.com) biz yaptık. Siteye konacak video ve fotoğrafları aynı ekipten alabilirsiniz.",
+  },
+  {
+    question: "Doktor ve klinikler için reklam yönetimi yapıyor musunuz?",
+    answer:
+      "Hayır. Sağlık Hizmetlerinde Tanıtım ve Bilgilendirme Faaliyetleri Yönetmeliği (RG 12.11.2025) hekim ve sağlık kuruluşlarının ücretli ve sponsorlu tanıtımını kısıtlıyor (md. 5/i, 7/j). Bu yüzden onlara reklam yönetimi sunmuyor, bilgilendirme videoları ve hesap yönetimi yapıyoruz. Bu yanıt hukuki görüş değildir.",
+  },
+  {
+    question: "Adapazarı ve Serdivan dışındaki ilçelere de geliyor musunuz?",
+    answer: `Evet. Stüdyomuz Serdivan'da; Sakarya'nın 16 ilçesinin hepsine aynı gün geliyoruz: ${DISTRICTS.join(", ")}. Kocaeli ve Düzce'de de aynı gün çekim yapıyoruz.`,
+  },
+  {
+    question: "Fiyatlarınız ne kadar?",
+    answer:
+      "Sabit fiyat listesi yayınlamıyoruz. Fiyatı çekim günü sayısı, çıkacak video sayısı, drone, kurgu kapsamı ve aylık işlerde platform ve rapor kapsamı belirliyor. Ücretsiz ön görüşmeden sonra yazılı teklif veriyoruz.",
+  },
+  {
+    question: "Tek seferlik bir video için de çalışıyor musunuz?",
+    answer:
+      "Evet. Tek seferlik çekim ve kurgu için aylık anlaşma gerekmez. Aylık sosyal medya paketlerinde ise en az üç ay çalışıyoruz, çünkü düzenli içeriğin etkisi birkaç ay içinde görünür hale geliyor.",
+  },
+  {
+    question: "Düğün, nişan ya da kına çekimi yapıyor musunuz?",
+    answer:
+      "Hayır, düğün, nişan ve kına çekimi yapmıyoruz. Davet salonları ve etkinlik mekânları için tanıtım videosu, firmalar için etkinlik ve lansman çekimi yapıyoruz.",
+  },
+  {
+    question: "Sakarya'da hangi markalarla çalıştınız?",
+    answer:
+      "Aytaş Home Outlet (sosyal medya yönetimi ve Meta reklamları), Serdivan'daki Dr. Erdem Çalışkan'ın medikal estetik kliniği, Op. Dr. Duygu Cebecik Özmüş'ün YouTube serisi, Duru Optik, Newlife Davet Salonu ve Sapanca'daki Candles and Echoes etkinliği bunlardan bazıları. Tüm işler projeler sayfasında.",
+  },
+];
+
+// Proof grid: 2026 work first; one 2024 industrial film (pre-studio).
+const PROJECT_IDS = [
+  "aytas-home-sosyal-medya",
+  "dr-erdem-caliskan-fraksiyonel-lazer",
+  "candles-and-echoes-golden-swan",
+  "duru-optik-tanitim",
+  "rast-mermi-7-saniye",
+  "canex-tanitim-filmi",
+];
+const all = await getCollection("projects");
+const projects = PROJECT_IDS.map((id) => all.find((p) => p.id === id)).filter(
+  (p): p is (typeof all)[number] => Boolean(p && !p.data.draft && !p.data.hidden),
+);
+
+const reviews = GOOGLE_REVIEWS.filter((r) => r.author === "Aytaş Home" || r.author === "M. S.");
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Sakarya reklam ajansı", path },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Sakarya video prodüksiyon ve sosyal medya hizmetleri",
+    serviceType: ["Video prodüksiyon", "Sosyal medya yönetimi", "Tanıtım filmi", "Reklam filmi", "Drone çekimi", "Ürün ve mekân çekimi"],
+    description: BRAND_FULL,
+    provider: { "@id": BUSINESS_ID },
+    areaServed: [
+      { "@type": "AdministrativeArea", name: "Sakarya" },
+      ...DISTRICTS.map((name) => ({ "@type": "City", name })),
+    ],
+    url: new URL(path, SITE.url).href,
+  },
+  faqPage(faqs),
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Sakarya'daki hizmet sayfaları",
+    itemListElement: SERVICES.filter((s) => s.href.startsWith("/")).map((s, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: new URL(s.href, SITE.url).href,
+      name: s.t,
+    })),
+  },
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <Section width="narrow">
+    <a href="/hizmetler/" class="back">← Tüm hizmetler</a>
+    <SectionHeading as="h1" eyebrow="Sakarya · Adapazarı · Serdivan">
+      Sakarya Reklam Ajansı ve Prodüksiyon Ajansı Arayanlara
+      <Fragment slot="intro">
+        <p>Sakarya'da video, sosyal medya ve reklam çekimi için kimle çalışacağınıza karar verirken bilmeniz gerekenler: ne yapıyoruz, ne yapmıyoruz, nasıl seçmelisiniz.</p>
+      </Fragment>
+    </SectionHeading>
+
+    <div class="answer">
+      <h2 class="answer__title">Kısaca</h2>
+      <p>{BRAND_FULL}</p>
+      <p>Sakarya'da “reklam ajansı”, “dijital ajans” ya da “prodüksiyon ajansı” diye aranan işlerin video, sosyal medya ve dijital reklam tarafını tek ekipte yapıyoruz: çekim, kurgu, aylık içerik ve paylaşım, Meta (Instagram, Facebook) reklam yönetimi ve web sitesi tasarımı. Tabela, baskı ve matbaa işi yapmıyoruz. Çekimi ve kurguyu kurucu ortaklar Berat Değirmenci ve Muhammed Ekrem Adnan bizzat yapıyor; ön görüşme ücretsiz.</p>
+    </div>
+
+    <h2 class="block__title">Sakarya'da ne yapıyoruz?</h2>
+    <ul class="cards">
+      {
+        SERVICES.map((s) => (
+          <li class="card">
+            <a href={s.href} class="card__link">
+              <h3 class="card__title">
+                {s.t} <Icon name="arrow-up-right" size={14} />
+              </h3>
+              <p class="card__text">{s.d}</p>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="note">
+      Sakarya dışındaki işletmeler için: <a href="/fotograftan-yapay-zeka-reklam-videosu/">ürün fotoğraflarından reklam videosu</a> (uzaktan, Türkiye geneli). Hekimler için: <a href="/hekim-icerik-sistemi/">aylık hekim içerik sistemi</a>.
+    </p>
+
+    <div class="scope">
+      <div class="scope__col">
+        <h2 class="block__title">Yaptıklarımız</h2>
+        <ul class="scope__list scope__list--yes">
+          {SCOPE.yes.map((t) => <li>{t}</li>)}
+        </ul>
+      </div>
+      <div class="scope__col">
+        <h2 class="block__title">Yapmadıklarımız</h2>
+        <ul class="scope__list scope__list--no">
+          {SCOPE.no.map((t) => <li>{t}</li>)}
+        </ul>
+      </div>
+    </div>
+
+    <section id="meta-reklam" class="svc">
+      <h2 class="block__title">Sakarya'da Meta reklam yönetimi (Instagram ve Facebook reklamları)</h2>
+      <div class="prose">
+        <p>Instagram ve Facebook reklamlarını kampanya kurulumundan aylık rapora kadar yönetiyoruz: hedef (mesaj, mağaza ziyareti, form), Sakarya ve ilçelere göre hedefleme, reklamda dönecek videolar ve farklı açılışlarla test, haftalık takip ve ay sonu raporu. Reklam bütçesi hizmet bedeline dahil değil; Meta'ya doğrudan sizin hesabınızdan ödenir, harcamayı kendi panelinizden görürsünüz. Satış ya da takipçi garantisi vermiyoruz.</p>
+        <p>Kanıt: mobilya perakendecisi Aytaş Home Outlet'te video üretimi ile Meta reklamlarını Mayıs 2026'dan beri birlikte yönetiyoruz. Meta Business Suite verisine göre ilk dört ayda içerik etkileşimi önceki dört aya göre 18,6 binden 76,5 bine (+%311), yeni mesajlaşan kişi 257'den 730'a çıktı (<a href="/projeler/vaka/aytas-home/">vaka çalışması</a>).</p>
+        <p class="note">Hekim ve sağlık kuruluşlarına reklam hizmeti vermiyoruz: yönetmelik ücretli ve sponsorlu tanıtımı kısıtlıyor (RG 12.11.2025, md. 5/i ve 7/j; hukuki görüş değildir).</p>
+      </div>
+    </section>
+
+    <section id="web-sitesi" class="svc">
+      <h2 class="block__title">Sakarya'da web tasarım: web sitesi yapımı</h2>
+      <div class="prose">
+        <p>Kurumsal ve klinik web siteleri tasarlıyoruz: sayfa yapısı, metinler, video ve fotoğraf yerleşimi, mobil uyum, hız ve Google'da bulunurluk için temel düzen (başlıklar, açıklamalar, yerel bilgiler). Siteye girecek tanıtım videosunu ve fotoğrafları aynı ekipten aldığınız için site ile içerik birbirine uyuyor.</p>
+        <p>Kanıt: Serdivan'daki Dr. Erdem Çalışkan'ın medikal estetik kliniği için <a href="https://serdivanestetik.com/" target="_blank" rel="noopener">serdivanestetik.com</a> ve şu an okuduğunuz rastcreative.com. Kapsam ve teslim takvimi ön görüşmeden sonra yazılı teklifte netleşir.</p>
+      </div>
+    </section>
+
+    <h2 class="block__title">Kimler için?</h2>
+    <ul class="benefits">
+      {
+        AUDIENCE.map((a) => (
+          <li class="benefit">
+            <Icon name="arrow-right" size={18} class="benefit__ic" />
+            <div>
+              <h3 class="benefit__title"><a href={a.href}>{a.t}</a></h3>
+              <p class="benefit__text">{a.d}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+
+    <section class="fit" aria-labelledby="secim">
+      <h2 id="secim" class="fit__title">Sakarya'da ajans seçerken sorulacak 7 soru</h2>
+      <ol class="steps">
+        {CHECKLIST.map((c) => (
+          <li><strong>{c.t}:</strong> {c.d}</li>
+        ))}
+      </ol>
+      <p class="fit__more">
+        Ayrıntılı kontrol listesi: <a href="/blog/sakarya-video-produksiyon-firmasi-nasil-secilir/">Sakarya'da video prodüksiyon firması nasıl seçilir?</a>
+      </p>
+    </section>
+
+    <h2 class="block__title">Kanıt: rakamlar ve yorumlar</h2>
+    <ul class="proof">
+      <li class="proof__item">
+        <h3 class="proof__client"><a href="/projeler/vaka/aytas-home/">Aytaş Home Outlet</a></h3>
+        <p>Mayıs 2026'dan beri sosyal medya yönetimi, çekim ve Meta reklamları. Önceki dört aya göre içerik etkileşimi 18,6 binden 76,5 bine (+%311), yeni mesajlaşan kişi 257'den 730'a (Meta Business Suite).</p>
+      </li>
+      <li class="proof__item">
+        <h3 class="proof__client">Dr. Erdem Çalışkan, Serdivan</h3>
+        <p>Medikal estetik kliniğinin Instagram hesabı ve yönetmeliğe uygun bilgilendirme videoları.</p>
+      </li>
+      <li class="proof__item">
+        <h3 class="proof__client">Candles and Echoes, Sapanca</h3>
+        <p>Kırkpınar Amfi Tiyatro'daki mum ışığında bale gösteriminin dikey sosyal medya çekimi (1 Ağustos 2026).</p>
+      </li>
+      <li class="proof__item">
+        <h3 class="proof__client">Rast Creative “7 Saniye”</h3>
+        <p>Kendi markamızın motion graphic Reels'i Instagram'da 84 binin üzerinde izlendi, 1.184 kez paylaşıldı (28 Ekim 2026).</p>
+      </li>
+    </ul>
+    {
+      reviews.length > 0 && (
+        <div class="reviews">
+          {reviews.map((r) => (
+            <blockquote class="review">
+              <p>“{r.text}”</p>
+              <footer>
+                {r.author}
+                {r.service && `, ${r.service}`} · Google
+              </footer>
+            </blockquote>
+          ))}
+          <a href={CONTACT.googleShare} class="reviews__more" target="_blank" rel="noopener">
+            Google'daki tüm yorumlarımız <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      )
+    }
+
+    <h2 class="block__title">Adapazarı, Serdivan ve Sakarya'nın 16 ilçesi</h2>
+    <div class="prose">
+      <p>
+        Stüdyomuz Serdivan'da. Adapazarı, Serdivan, Erenler ve Arifiye'deki işletmelerle aynı hafta içinde ön görüşme ve çekim planlayabiliyoruz. Hendek, Akyazı, Karasu, Sapanca, Geyve, Pamukova, Ferizli, Kocaali, Söğütlü, Kaynarca, Taraklı ve Karapürçek'e de aynı gün gidip dönüyoruz. “Adapazarı reklam ajansı” ya da “Serdivan reklam ajansı” diye arıyorsanız kapsam bu sayfadakiyle aynı; Kocaeli ve Düzce'de de aynı gün çekim yapıyoruz.
+      </p>
+      <p>
+        İletişim: {CONTACT.city} · <a href={`tel:${CONTACT.phoneIntl}`}>{CONTACT.phone}</a> · <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a> · <a href={CONTACT.googleShare} target="_blank" rel="noopener">Google haritada Rast Creative Studio</a>
+      </p>
+    </div>
+
+    <div class="cta-inline">
+      <Button href={PRIMARY_CTA.href} size="lg" arrow>Ücretsiz ön görüşme</Button>
+      <a href={`tel:${CONTACT.phoneIntl}`} class="phone">
+        <Icon name="contact" size={18} /> {CONTACT.phone}
+      </a>
+    </div>
+  </Section>
+
+  {
+    projects.length > 0 && (
+      <Section width="narrow" space="tight">
+        <SectionHeading eyebrow="Gerçek işler">
+          Sakarya ve çevresinden işler
+          <Fragment slot="intro">
+            <p>2026 tarihli mağaza, klinik, etkinlik işleri ve kendi markamızın Reels'i; Canex 2024 tarihli, kurucu ortaklarımızın stüdyoyu kurmadan önceki işi.</p>
+          </Fragment>
+        </SectionHeading>
+        <div class="projects-grid">
+          {projects.map((p) => (
+            <ProjectCard
+              href={p.data.externalUrl ?? `/projeler/${p.id}/`}
+              title={p.data.title}
+              category={p.data.category}
+              poster={p.data.poster}
+              posterAlt={p.data.posterAlt}
+              client={p.data.client}
+              year={p.data.year}
+              timecode={p.data.duration}
+              vertical={p.data.vertical}
+              summary={p.data.summary}
+            />
+          ))}
+        </div>
+      </Section>
+    )
+  }
+
+  <Section width="narrow" space="tight">
+    <SectionHeading eyebrow="Sık sorulanlar">Sakarya'da ajans seçimi hakkında</SectionHeading>
+    <dl class="faq">
+      {
+        faqs.map((f) => (
+          <div class="faq__item">
+            <dt class="faq__q">{f.question}</dt>
+            <dd class="faq__a">{f.answer}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Section>
+
+  <Section width="narrow" space="tight">
+    <div class="links">
+      <div class="links__col">
+        <h2 class="links__title">Sakarya hizmet sayfaları</h2>
+        <ul class="links__list">
+          {
+            SERVICES.filter((s) => s.href.startsWith("/")).map((s) => (
+              <li>
+                <a href={s.href}>
+                  Sakarya {s.t.toLocaleLowerCase("tr")}
+                  <Icon name="arrow-up-right" size={14} />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="links__col">
+        <h2 class="links__title">Sektörler ve rehberler</h2>
+        <ul class="links__list">
+          {
+            [
+              ...AUDIENCE.map((a) => ({ href: a.href, label: a.t })),
+              { href: "/projeler/", label: "Tüm projeler" },
+              { href: "/sss/#sakarya", label: "Sakarya hakkında sık sorulanlar" },
+            ].map((l) => (
+              <li>
+                <a href={l.href}>
+                  {l.label}
+                  <Icon name="arrow-up-right" size={14} />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 1.2rem;
+    font-family: var(--font-utility);
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .back:hover {
+    color: var(--amber-text);
+  }
+  .answer {
+    margin-top: 1.6rem;
+    padding: 1.2rem 1.4rem;
+    border-left: 3px solid var(--amber);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--amber) 6%, transparent);
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+    max-width: 66ch;
+  }
+  .answer__title {
+    margin: 0 0 0.4rem;
+    font-family: var(--font-utility);
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--amber-text);
+  }
+  .answer p + p {
+    margin-top: 0.7rem;
+  }
+  .block__title {
+    margin: 2.6rem 0 0.2rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 1.1rem + 1vw, 1.75rem);
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .cards {
+    list-style: none;
+    margin: 1.2rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.9rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  }
+  .card__link {
+    display: block;
+    height: 100%;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    color: var(--ink-soft);
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+  .card__link:hover {
+    border-color: var(--amber);
+  }
+  .card__title {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin: 0 0 0.35rem;
+    font-size: 1.02rem;
+    color: var(--ink);
+  }
+  .card__text {
+    margin: 0;
+    font-size: 0.97rem;
+    line-height: 1.55;
+  }
+  .note,
+  .fit__more {
+    margin-top: 1rem;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+    font-size: 0.97rem;
+  }
+  .note a,
+  .fit__more a,
+  .prose a,
+  .benefit__title a {
+    color: var(--amber-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .scope {
+    display: grid;
+    gap: 0 2rem;
+  }
+  .scope__list {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .scope__list li {
+    padding-left: 1.5rem;
+    position: relative;
+  }
+  .scope__list li::before {
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+  }
+  .scope__list--yes li::before {
+    content: "✓";
+    color: var(--amber-text);
+  }
+  .scope__list--no li::before {
+    content: "×";
+    color: var(--ink-soft);
+  }
+  .benefits {
+    list-style: none;
+    margin: 1.2rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+  }
+  .benefit {
+    display: flex;
+    gap: 0.8rem;
+    padding: 1.1rem 1.2rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--amber) 3%, transparent);
+  }
+  .benefit__ic {
+    margin-top: 0.25rem;
+    flex: none;
+    color: var(--amber-text);
+  }
+  .benefit__title {
+    margin: 0 0 0.3rem;
+    font-size: 1.05rem;
+  }
+  .benefit__text {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+    line-height: var(--leading-body);
+  }
+  .fit {
+    margin-top: 2.5rem;
+    padding: 1.4rem clamp(1.15rem, 4vw, 1.8rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--amber) 4%, transparent);
+  }
+  .fit__title {
+    margin: 0 0 1rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 1rem + 0.8vw, 1.5rem);
+    color: var(--ink);
+  }
+  .steps {
+    display: grid;
+    gap: 0.7rem;
+    padding-left: 1.3rem;
+    list-style: decimal;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .steps li::marker {
+    color: var(--amber-text);
+    font-weight: 600;
+  }
+  .steps strong {
+    color: var(--ink);
+  }
+  .proof {
+    list-style: none;
+    margin: 1.2rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.9rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  }
+  .proof__item {
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    color: var(--ink-soft);
+    line-height: 1.55;
+    font-size: 0.97rem;
+  }
+  .proof__client {
+    margin: 0 0 0.35rem;
+    font-size: 1.02rem;
+    color: var(--ink);
+  }
+  .proof__client a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .reviews {
+    display: grid;
+    gap: 0.9rem;
+    margin-top: 1.2rem;
+  }
+  .review {
+    margin: 0;
+    padding: 1rem 1.2rem;
+    border-left: 3px solid var(--line);
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .review footer {
+    margin-top: 0.4rem;
+    font-family: var(--font-utility);
+    font-size: 0.85rem;
+    color: var(--ink);
+  }
+  .reviews__more {
+    font-family: var(--font-utility);
+    font-size: 0.92rem;
+    color: var(--amber-text);
+  }
+  .prose {
+    margin-top: 1rem;
+    font-size: 1.05rem;
+    line-height: var(--leading-body);
+    color: var(--ink-soft);
+    max-width: 62ch;
+  }
+  .prose p + p {
+    margin-top: 1rem;
+  }
+  .cta-inline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.6rem;
+    margin-top: 2.5rem;
+  }
+  .phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-utility);
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .phone:hover {
+    color: var(--amber-text);
+  }
+  .svc {
+    scroll-margin-top: 6rem;
+  }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    margin-top: 2rem;
+  }
+  .faq {
+    margin: 2rem 0 0;
+    display: grid;
+    gap: 1.2rem;
+  }
+  .faq__item {
+    border-top: 1px solid var(--line);
+    padding-top: 1.2rem;
+  }
+  .faq__q {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  .faq__a {
+    margin: 0;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .links {
+    display: grid;
+    gap: 2rem;
+    margin-top: 1rem;
+  }
+  .links__title {
+    font-size: 1rem;
+    font-family: var(--font-utility);
+    letter-spacing: 0.02em;
+    margin: 0 0 1rem;
+    color: var(--ink);
+  }
+  .links__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .links__list a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.98rem;
+    color: var(--ink-soft);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .links__list a:hover {
+    color: var(--amber-text);
+  }
+  @media (min-width: 700px) {
+    .links,
+    .scope {
+      grid-template-columns: 1fr 1fr;
+    }
+    .projects-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

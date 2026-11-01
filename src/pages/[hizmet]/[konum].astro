@@ -171,7 +171,11 @@ if (projectsItemList) jsonLd.push(projectsItemList);
 
     <div class="prose">
       <div class="geo-summary">
-        <strong>Özet:</strong> {BRAND.entity} {location.name} ve çevresindeki {service.name.toLocaleLowerCase('tr')} projelerini (senaryo, çekim, kurgu) ücretsiz ön görüşmeyle anahtar teslim üretir. Aşağıda inceleyeceğiniz projeler, yetkinliğimizin gerçek referanslarıdır.
+        {extra?.answer ? (
+          <><strong>Kısaca:</strong> {BRAND.entity} {extra.answer}</>
+        ) : (
+          <><strong>Özet:</strong> {BRAND.entity} {location.name} ve çevresindeki {service.name.toLocaleLowerCase('tr')} projelerini (senaryo, çekim, kurgu) ücretsiz ön görüşmeyle anahtar teslim üretir. Aşağıda inceleyeceğiniz projeler, yetkinliğimizin gerçek referanslarıdır.</>
+        )}
       </div>
       <p>{service.intro}</p>
       <p>{location.blurb}</p>
@@ -191,6 +195,13 @@ if (projectsItemList) jsonLd.push(projectsItemList);
                         {it.title && <strong>{it.title}: </strong>}
                         {it.text}
                       </li>
+                    ))}
+                  </ul>
+                )}
+                {sec.links && sec.links.length > 0 && (
+                  <ul class="extra__inline">
+                    {sec.links.map((l) => (
+                      <li><a href={l.href}>{l.label}</a></li>
                     ))}
                   </ul>
                 )}
@@ -339,6 +350,16 @@ if (projectsItemList) jsonLd.push(projectsItemList);
                 </a>
               </li>
             ))
+          }
+          {
+            location.province === "Sakarya" && (
+              <li>
+                <a href="/sakarya-reklam-ajansi/">
+                  Sakarya'daki tüm hizmetler (reklam ve prodüksiyon)
+                  <Icon name="arrow-up-right" size={14} />
+                </a>
+              </li>
+            )
           }
         </ul>
       </div>
@@ -489,6 +510,19 @@ if (projectsItemList) jsonLd.push(projectsItemList);
     color: var(--amber-text);
   }
   .extra__links a {
+    color: var(--amber-text);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .extra__inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.1rem;
+    margin: 0 0 1.2rem;
+    padding: 0;
+    list-style: none;
+  }
+  .extra__inline a {
     color: var(--amber-text);
     text-decoration: underline;
     text-underline-offset: 2px;
