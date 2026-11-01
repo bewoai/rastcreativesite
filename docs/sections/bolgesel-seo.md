@@ -101,3 +101,8 @@ Kâğıt zemin ve bölgesel keşif akışı korunur. Bu URL standardizasyonu gö
 - `location-content.ts` yeni alanlar: `answer` (üst özet kutusunda BRAND.entity'den sonra), `sections[].links` (ilçe linkleri). Güçlendirilen: video/ürün-mekan/tanıtım/reklam × Sakarya, drone×Sapanca, tanıtım×Sapanca/Karasu.
 - İlçe adı yalnız çekim yeri doğrulanmış işlerde yazılır (Candles and Echoes = Sapanca, Dr. Erdem Çalışkan = Serdivan).
 - Plan: vault `07-Research/2026-11-01-sakarya-arama-hakimiyeti-plani.md`.
+
+## Konsolide edilen Sakarya ilçe sayfaları (1.11.2026, Sakarya dalga 2)
+- Liste tek yerde: `src/data/consolidated.ts` (36 URL: 11 ürün-mekan ilçesi + 0 tık, <10 gösterim/90 gün, özel içeriği olmayan video/sosyal/tanıtım/reklam ilçe sayfaları). Drone ilçe sayfaları ve tık/≥10 gösterim alan sayfalar kaldı.
+- Bu rotalar üretilmez (getStaticPaths), sitemap'te yok; `public/.htaccess` her biri için 301 → `/<hizmet>/sakarya/`. Liste değişirse ikisini birlikte güncelle.
+- Tüm iç linkler `isConsolidated()` / `serviceLocationHref()` üzerinden; Sakarya sayfalarında `#ilceler` bölümü 11 ilçeyi metin olarak tutar (konsolide ilçeler kendi metniyle, kalanlar linkle).

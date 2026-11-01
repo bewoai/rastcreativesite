@@ -3,6 +3,7 @@ import Eyebrow from "./Eyebrow.astro";
 import Icon from "./Icon.astro";
 import type { SeoService } from "../data/seo-services";
 import type { SeoLocation } from "../data/locations";
+import { isConsolidated } from "../data/consolidated";
 
 interface Props {
   eyebrow?: string;
@@ -60,7 +61,7 @@ const previewLocationNames = (items: readonly SeoLocation[]) =>
               <Icon name="arrow-up-right" size={13} />
             </a>
             <ul>
-              {locations.map((location) => (
+              {locations.filter((location) => !isConsolidated(service.slug, location.slug)).map((location) => (
                 <li>
                   <a
                     href={`/${service.slug}/${location.slug}/`}

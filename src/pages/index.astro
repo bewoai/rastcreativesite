@@ -70,6 +70,7 @@ import { reviewsAreFixture, reviewRating, openReviews, moreReviews, fmtMonth, fm
 import { localBusiness, organization, webSite, faqPage, toPlainText } from "../lib/schema";
 import { SEO_SERVICES } from "../data/seo-services";
 import { AREA_INDEX_LOCATION_SLUGS, SEO_LOCATIONS } from "../data/locations";
+import { isConsolidated } from "../data/consolidated";
 import { groupByBrand } from "../lib/brands";
 
 /* ---- Media slots (public/evren/*) ---------------------------------- */
@@ -1025,7 +1026,7 @@ const year = new Date().getFullYear();
               <div class="ev-qa__a">
                 <p>{svc.tagline}. <a class="ev-link" href={`/${svc.slug}/`}>{svc.name} sayfası</a></p>
                 <ul class="ev-area__places">
-                  {areaLocations.map((l) => (
+                  {areaLocations.filter((l) => !isConsolidated(svc.slug, l.slug)).map((l) => (
                     <li>
                       <a href={`/${svc.slug}/${l.slug}/`} title={`${l.name} ${svc.name} hizmeti`}>{l.name} {svc.name}</a>
                     </li>

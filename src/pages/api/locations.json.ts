@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { SITE } from "../../consts";
 import { SEO_LOCATIONS } from "../../data/locations";
+import { serviceLocationHref } from "../../data/consolidated";
 import { apiResponse } from "../../lib/api-response";
 
 export const GET: APIRoute = async () =>
@@ -15,6 +16,6 @@ export const GET: APIRoute = async () =>
       core: location.core,
       description: location.blurb,
       nearby: location.nearby,
-      url: `${SITE.url}/video-cekimi/${location.slug}/`,
+      url: `${SITE.url}${serviceLocationHref("video-cekimi", location.slug)}`,
     })),
   });

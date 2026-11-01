@@ -11,12 +11,15 @@ import { SEO_SERVICES, getService, type SeoService } from "../../data/seo-servic
 import { SEO_LOCATIONS, getLocation, type SeoLocation } from "../../data/locations";
 import { getServiceAudience } from "../../data/service-audience";
 import { getLocationContent } from "../../data/location-content";
+import { isConsolidated, isConsolidatedPath, serviceLocationHref, DISTRICT_ANCHOR } from "../../data/consolidated";
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
   // Matrix: every service × every location.
+  // Consolidated Sakarya district pages (data/consolidated.ts) are not built;
+  // public/.htaccess 301s them to /<service>/sakarya/.
   return SEO_SERVICES.flatMap((service) =>
-    SEO_LOCATIONS.map((location) => ({
+    SEO_LOCATIONS.filter((location) => !isConsolidated(service.slug, location.slug)).map((location) => ({
       params: { hizmet: service.slug, konum: location.slug },
       props: { service, location },
     })),
@@ -105,8 +108,27 @@ const jsonLd = [
 // Internal links.
 const nearby = location.nearby
   .map((slug) => getLocation(slug))
-  .filter((l): l is SeoLocation => Boolean(l));
+  .filter((l): l is SeoLocation => Boolean(l))
+  .filter((l) => !isConsolidated(service.slug, l.slug));
 const otherServices = SEO_SERVICES.filter((s) => s.slug !== service.slug);
+
+// Sakarya page: every district stays named on the page ("#ilceler"). Districts
+// whose page was consolidated here keep their local text; the rest link out.
+const isSakaryaHub = location.slug === "sakarya";
+const SAKARYA_NO_PAGE = ["Karapürçek", "Kaynarca", "Kocaali", "Söğütlü", "Taraklı"];
+const districts = isSakaryaHub
+  ? SEO_LOCATIONS.filter((l) => l.province === "Sakarya" && l.slug !== "sakarya").map((l) => {
+      const merged = isConsolidated(service.slug, l.slug);
+      const text = merged
+        ? (getLocationContent(service.slug, l.slug)?.paragraphs[0] ?? l.blurb)
+        : l.blurb.split(". ")[0].replace(/\.$/, "") + ".";
+      return { name: l.name, merged, text, href: merged ? undefined : `/${service.slug}/${l.slug}/` };
+    })
+  : [];
+// Section links on the Sakarya page that point at this service's district
+// pages are replaced by the "#ilceler" list; 301ed URLs are never linked.
+const keepLink = (href: string) =>
+  !isConsolidatedPath(href) && !(isSakaryaHub && new RegExp(`^/${service.slug}/[a-z]+/$`).test(href));
 
 const serviceProjectCategories: Record<string, string[]> = {
   // Video Çekimi is the umbrella service — show our best work across every category.
@@ -198,9 +220,9 @@ if (projectsItemList) jsonLd.push(projectsItemList);
                     ))}
                   </ul>
                 )}
-                {sec.links && sec.links.length > 0 && (
+                {sec.links && sec.links.filter((l) => keepLink(l.href)).length > 0 && (
                   <ul class="extra__inline">
-                    {sec.links.map((l) => (
+                    {sec.links.filter((l) => keepLink(l.href)).map((l) => (
                       <li><a href={l.href}>{l.label}</a></li>
                     ))}
                   </ul>
@@ -222,16 +244,45 @@ if (projectsItemList) jsonLd.push(projectsItemList);
                 </ol>
               </>
             )}
-            {extra.links && extra.links.length > 0 && (
+            {extra.links && extra.links.filter((l) => !isConsolidatedPath(l.href)).length > 0 && (
               <>
                 <h2 class="extra__title">İlgili yazılar</h2>
                 <ul class="extra__links">
-                  {extra.links.map((l) => (
+                  {extra.links.filter((l) => !isConsolidatedPath(l.href)).map((l) => (
                     <li><a href={l.href}>{l.label}</a></li>
                   ))}
                 </ul>
               </>
             )}
+          </>
+        )
+      }
+      {
+        isSakaryaHub && (
+          <>
+            <h2 class="extra__title" id={DISTRICT_ANCHOR}>Sakarya'nın ilçelerinde {service.name.toLocaleLowerCase("tr")}</h2>
+            <p>
+              Serdivan'daki stüdyomuzdan Sakarya'nın 16 ilçesinin hepsine aynı gün geliyoruz. Ayrı sayfası olan ilçeler
+              bağlantılı; diğer ilçelerdeki {service.name.toLocaleLowerCase("tr")} işleri bu sayfadan planlanır.
+            </p>
+            <ul class="extra__items">
+              {districts.map((d) => (
+                <li>
+                  <strong>{d.name}: </strong>
+                  {d.text}
+                  {d.href && (
+                    <>
+                      {" "}
+                      <a href={d.href}>{d.name} {service.name.toLocaleLowerCase("tr")}</a>
+                    </>
+                  )}
+                </li>
+              ))}
+              <li>
+                <strong>{SAKARYA_NO_PAGE.join(", ")}: </strong>
+                Bu ilçelere de aynı gün geliyoruz; yol süresi çekim planına ve teklife baştan yazılır.
+              </li>
+            </ul>
           </>
         )
       }
@@ -344,7 +395,7 @@ if (projectsItemList) jsonLd.push(projectsItemList);
           {
             otherServices.map((s) => (
               <li>
-                <a href={`/${s.slug}/${location.slug}/`}>
+                <a href={serviceLocationHref(s.slug, location.slug)}>
                   {location.name} {s.name}
                   <Icon name="arrow-up-right" size={14} />
                 </a>

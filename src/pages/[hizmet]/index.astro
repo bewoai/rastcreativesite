@@ -11,6 +11,7 @@ import { getServiceHub } from "../../data/service-hub";
 import { getCollection } from "astro:content";
 import { SEO_SERVICES, type SeoService } from "../../data/seo-services";
 import { SEO_LOCATIONS } from "../../data/locations";
+import { isConsolidated } from "../../data/consolidated";
 import { getServiceAudience } from "../../data/service-audience";
 
 export async function getStaticPaths() {
@@ -61,8 +62,8 @@ const categoryLinks = PROJECT_CATEGORIES.filter(
     allProjects.some((p) => p.data.category === c.label),
 );
 
-const coreLocations = SEO_LOCATIONS.filter((l) => l.core);
-const nearbyLocations = SEO_LOCATIONS.filter((l) => !l.core);
+const coreLocations = SEO_LOCATIONS.filter((l) => l.core && !isConsolidated(service.slug, l.slug));
+const nearbyLocations = SEO_LOCATIONS.filter((l) => !l.core && !isConsolidated(service.slug, l.slug));
 const audience = getServiceAudience(service.slug);
 const serviceDeliverables = [
   {
