@@ -133,6 +133,7 @@ export const SERVICE_HUB: Record<string, ServiceHub> = {
       },
     ],
     links: [
+      { href: "/drone-cekimi/sakarya/", label: "Sakarya drone çekimi: lisans, kullanım alanları ve örnek işler" },
       { href: "/blog/drone-cekimi-gerekli-mi/", label: "Drone çekimi gerçekten gerekli mi?" },
       { href: "/blog/drone-cekimi-fiyati-neye-gore-belirlenir/", label: "Drone çekimi fiyatı neye göre belirlenir?" },
       { href: "/blog/emlak-konut-drone-video-cekimi/", label: "Emlak ve konut projeleri için drone ve video çekimi" },
@@ -184,6 +185,7 @@ export const SERVICE_HUB: Record<string, ServiceHub> = {
       },
     ],
     links: [
+      { href: "/tanitim-filmi/kocaeli/", label: "Kocaeli fabrika ve endüstriyel tanıtım filmi: örnekler ve süreç" },
       { href: "/blog/tanitim-filmi-cektirmeden-once/", label: "Tanıtım filmi çektirmeden önce bilmeniz gerekenler" },
       { href: "/blog/fabrika-tanitim-filmi-sanayi/", label: "Fabrikanızı en iyi anlatan film nasıl çekilir?" },
       { href: "/blog/kurumsal-reklam-marka-hikayesi-hangisi/", label: "Kurumsal film mi, reklam filmi mi, marka hikâyesi mi?" },
@@ -287,6 +289,7 @@ export const SERVICE_HUB: Record<string, ServiceHub> = {
       },
     ],
     links: [
+      { href: "/sosyal-medya-icerigi/sakarya/", label: "Sakarya sosyal medya yönetimi: aylık kapsam ve portföy" },
       { href: "/projeler/vaka/aytas-home/", label: "Aytaş Home vaka çalışması: 4 ayda etkileşim +%311" },
       { href: "/blog/sosyal-medya-yonetimi-fiyati-neye-gore-belirlenir/", label: "Sosyal medya yönetimi fiyatı neye göre belirlenir?" },
       { href: "/blog/video-cektirmek-degil-icerik-sistemi-kurmak/", label: "Video çektirmek değil, içerik sistemi kurmak" },

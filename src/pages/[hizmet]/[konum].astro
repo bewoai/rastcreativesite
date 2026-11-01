@@ -35,7 +35,7 @@ const extra = getLocationContent(service.slug, location.slug);
 const fullTitle = `${location.name} ${service.name} ${service.seoTitleSuffix}`;
 // location-content `title` wins (written from Search Console queries, keyword first).
 const title = extra?.title ?? (fullTitle.length <= 47 ? fullTitle : `${location.name} ${service.name}`);
-const pageHeading = `${location.name} ${service.name}`;
+const pageHeading = extra?.h1 ?? `${location.name} ${service.name}`;
 const faqHeading = `${location.name} ${service.name} hakkında`;
 const path = `/${service.slug}/${location.slug}/`;
 // Generated fallback: drop the closing sentences when the long taglines push
@@ -180,6 +180,22 @@ if (projectsItemList) jsonLd.push(projectsItemList);
           <>
             <h2 class="extra__title">{extra.heading}</h2>
             {extra.paragraphs.map((t) => <p>{t}</p>)}
+            {extra.sections?.map((sec) => (
+              <>
+                <h2 class="extra__title">{sec.heading}</h2>
+                {sec.paragraphs?.map((t) => <p>{t}</p>)}
+                {sec.items && sec.items.length > 0 && (
+                  <ul class="extra__items">
+                    {sec.items.map((it) => (
+                      <li>
+                        {it.title && <strong>{it.title}: </strong>}
+                        {it.text}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </>
+            ))}
             {extra.steps && extra.steps.length > 0 && (
               <>
                 <h2 class="extra__title">{extra.stepsHeading ?? "Süreç ve teslim süresi"}</h2>
@@ -248,11 +264,11 @@ if (projectsItemList) jsonLd.push(projectsItemList);
     relatedProjects.length > 0 && (
       <Section width="narrow" space="tight">
         <SectionHeading eyebrow="Gerçek işler">
-          Portföyden {service.name.toLocaleLowerCase('tr')} örnekleri
+          {extra?.projectsHeading ?? `Portföyden ${service.name.toLocaleLowerCase('tr')} örnekleri`}
           <Fragment slot="intro">
             <p>
-              Farklı sektörlerden bir seçki. 2024–2025 tarihli işler, kurucu ortaklarımızın
-              stüdyoyu kurmadan önceki çalışmaları.
+              {extra?.projectsIntro ??
+                "Farklı sektörlerden bir seçki. 2024–2025 tarihli işler, kurucu ortaklarımızın stüdyoyu kurmadan önceki çalışmaları."}
             </p>
           </Fragment>
         </SectionHeading>
@@ -476,6 +492,21 @@ if (projectsItemList) jsonLd.push(projectsItemList);
     color: var(--amber-text);
     text-decoration: underline;
     text-underline-offset: 2px;
+  }
+  .extra__items {
+    margin: 0 0 1.2rem;
+    padding-left: 1.2rem;
+    list-style: disc;
+  }
+  .extra__items li {
+    margin: 0 0 0.6rem;
+  }
+  .extra__items li::marker {
+    color: var(--amber-text);
+  }
+  .extra__items strong {
+    color: var(--ink);
+    font-weight: 600;
   }
   .extra__steps {
     margin: 0 0 1.4rem;

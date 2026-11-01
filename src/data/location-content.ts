@@ -28,6 +28,19 @@ export interface LocationContent {
   steps?: { title: string; time?: string; text: string }[];
   /** H2 above `steps` (default "Süreç ve teslim süresi"). */
   stepsHeading?: string;
+  /** H1 override (default "<Konum> <Hizmet>"); keep the city + buyer's wording. */
+  h1?: string;
+  /** Extra H2 blocks after `paragraphs`: optional text and a bullet list
+   *  (`title` is bolded). Used for "what's included", proof lists, how-to-choose. */
+  sections?: {
+    heading: string;
+    paragraphs?: string[];
+    items?: { title?: string; text: string }[];
+  }[];
+  /** Proof-grid heading/intro overrides (the default intro says the work is
+   *  2024–2025 pre-studio, which is wrong for pages that lead with 2026 work). */
+  projectsHeading?: string;
+  projectsIntro?: string;
 }
 
 export const LOCATION_CONTENT: Record<string, LocationContent> = {
@@ -55,9 +68,10 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
   },
 
   "sosyal-medya-icerigi/sakarya": {
-    title: "Sakarya Sosyal Medya Ajansı ve Yönetimi",
+    title: "Sakarya Sosyal Medya Yönetimi Ajansı (Adapazarı, Serdivan)",
+    h1: "Sakarya Sosyal Medya Yönetimi Ajansı",
     description:
-      "Sakarya sosyal medya yönetimi: ayda kaç video, kaç çekim günü teklifte yazılı. Plan, çekim, kurgu, paylaşım, rapor. Aytaş Home'da 4 ayda etkileşim +%311.",
+      "Sakarya sosyal medya yönetimi: Adapazarı, Serdivan ve ilçelerde aylık plan, çekim, kurgu, paylaşım ve rapor. Portföy: Aytaş Home'da 4 ayda etkileşim +%311.",
     heading: "Sakarya'da sosyal medya ajansı seçerken: ayda kaç video, çekim dahil mi?",
     paragraphs: [
       "Sakarya'da sosyal medya yönetimi için teklif topladığınızda birçok paketin gönderi ve hikâye sayısıyla satıldığını görürsünüz. Bu paketlerin bir kısmında ayda kaç video çekileceği yazmaz. Bizim paketlerimiz video üzerine kurulu: ayda kaç video çıkacağı ve kaç çekim günü yapılacağı teklifte yazılı olur. Böylece neye para verdiğinizi baştan bilir, ay sonunda yayına çıkanla karşılaştırabilirsiniz.",
@@ -65,6 +79,41 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
       "Bu düzenle yönettiğimiz hesaplardan biri, mobilya perakendecisi Aytaş Home Outlet'in Instagram hesabı. Hesabı Mayıs 2026'da devraldık. Mağazada düzenli çekim günleriyle ürün, kampanya ve festival videoları ürettik, Meta reklamlarını da biz yönettik. Meta Business Suite verisine göre önceki dört ay (Ocak–Nisan) ile ilk dört ayımız (Mayıs–Ağustos 2026) karşılaştırıldığında içerik etkileşimi 18,6 binden 76,5 bine çıktı (+%311). Yeni mesajlaşan kişi sayısı 257'den 730'a yükseldi. Karşılaştırmanın tamamı Aytaş Home vaka çalışmasında.",
       "Yönettiğimiz hesaplardan ikisi hekimlere ait: Serdivan'da medikal estetik hizmeti veren Dr. Erdem Çalışkan'ın Instagram hesabı ve Op. Dr. Duygu Cebecik Özmüş'ün gebelik bilgilendirme serisini yayınladığı YouTube kanalı. Sağlıkta reklam yönetmelikle sınırlı olduğu için bu hesaplarda kampanya, fiyat ya da sonuç vaadi kullanmıyoruz. Hastaların sık sorduğu konuları hekim kendi ağzından, sade bir dille anlatıyor. “Fraksiyonel Lazer Nedir?” ve “Gebelik: İlk 7 Gün” bu düzenle çıkan videolardan.",
     ],
+    sections: [
+      {
+        heading: "Aylık sosyal medya yönetimine neler dahil?",
+        items: [
+          { title: "Strateji ve aylık plan", text: "Hedef (mesaj, rezervasyon, mağaza ziyareti), ayın konuları, kampanya günleri ve paylaşım takvimi tek listede onayınıza gelir." },
+          { title: "Çekim günleri", text: "Ayda bir ya da iki planlı çekim günü; Adapazarı, Serdivan, Erenler, Arifiye, Hendek, Akyazı, Sapanca ve Karasu'ya aynı gün geliyoruz. Ayda kaç video çıkacağı teklifte yazılıdır." },
+          { title: "Kurgu ve tasarım", text: "Dikey Reels kurgusu, altyazı, kapak görselleri, gönderi ve hikâye tasarımları." },
+          { title: "Metin ve paylaşım", text: "Açıklama metinleri, hashtag ve konum etiketleri; içerikler takvime göre sizin onayınızla yayına alınır." },
+          { title: "Raporlama", text: "Ay sonunda erişim, etkileşim, profil ziyareti ve gelen mesajları özetleyen kısa rapor; sonraki ayın planı bu veriyle kurulur." },
+          { title: "İsteğe bağlı", text: "Meta (Instagram ve Facebook) reklam yönetimi, Google İşletme Profili gönderileri, YouTube kanalı. Reklam bütçesi hizmet bedeline dahil değildir." },
+        ],
+      },
+      {
+        heading: "Portföy: yönettiğimiz ve ürettiğimiz hesaplar",
+        items: [
+          { title: "Aytaş Home Outlet (mobilya perakende, Instagram)", text: "Mayıs 2026'dan beri yönetim, çekim ve Meta reklamları. Önceki dört aya göre ilk dört ayda içerik etkileşimi 18,6 binden 76,5 bine (+%311), yeni mesajlaşan kişi 257'den 730'a çıktı (Meta Business Suite)." },
+          { title: "Dr. Erdem Çalışkan (medikal estetik, Serdivan, Instagram)", text: "Yönetmeliğe uygun bilgilendirme videoları; “Fraksiyonel Lazer Nedir?” ve “Dr. Erdem Çalışkan Kimdir?” bu seriden." },
+          { title: "Op. Dr. Duygu Cebecik Özmüş (kadın doğum, YouTube)", text: "Gebelik bilgilendirme serisi; “Gebelik: İlk 7 Gün” ile başlayan bölümler." },
+          { title: "Rast Creative (kendi hesabımız)", text: "Motion graphic Reels “7 Saniye (Mermi)” Instagram'da 84 binin üzerinde izlendi ve 1.184 kez paylaşıldı (28 Ekim 2026)." },
+        ],
+      },
+      {
+        heading: "Sakarya'da sosyal medya yönetimi ajansı nasıl seçilir?",
+        items: [
+          { title: "Portföy", text: "Ajansın yönettiği gerçek hesapları ve yönetimi devraldıktan sonraki değişimi görün; yalnızca tasarım örneği değil." },
+          { title: "Video ve çekim", text: "Ayda kaç video çekileceği ve kaç çekim günü yapılacağı teklifte yazıyor mu, yoksa sadece gönderi sayısı mı var?" },
+          { title: "Kim çalışıyor", text: "Çekimi ve kurguyu kim yapıyor, hesabınızla ilgilenen kişi ay ay değişiyor mu?" },
+          { title: "Rapor", text: "Her ay hangi rakamlar raporlanıyor (erişim, etkileşim, mesaj), plan bu rakamlara göre değişiyor mu?" },
+          { title: "Reklam bütçesi", text: "Reklam bütçesi fiyata dahil mi, reklam hesabı kimin adına açılıyor?" },
+          { title: "Sözleşme", text: "En az kaç ay çalışılıyor, takipçi ya da satış garantisi gibi ölçülemeyen sözler var mı?" },
+        ],
+      },
+    ],
+    projectsIntro:
+      "Yönettiğimiz ve ürettiğimiz hesaplardan 2026 tarihli işler: perakende, medikal estetik, kadın doğum ve etkinlik.",
     faqs: [
       {
         question: "Sakarya'da sosyal medya ajansı tekliflerini nasıl karşılaştırmalıyım?",
@@ -284,10 +333,10 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
       },
     ],
     projects: [
+      "canex-tanitim-filmi",
       "mavi-vatan-gemi-insa",
       "meteors-shipping-tanitim-filmi",
-      "canex-tanitim-filmi",
-      "altoteks-tanitim-filmi",
+      "chint-power-milas-urun-tanitimi",
       "aytas-home-sosyal-medya",
       "duru-optik-tanitim",
     ],
@@ -296,6 +345,22 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
       { href: "/sektorler/fabrika-tanitim-filmi/", label: "Fabrika tanıtım filmi: sanayi tesisleri için çekim" },
       { href: "/blog/video-cekimi-fiyati-neye-gore-belirlenir/", label: "Video çekimi fiyatı neye göre belirlenir?" },
       { href: "/projeler/vaka/aytas-home/", label: "Aytaş Home vaka çalışması: 4 ayda etkileşim +%311" },
+      { href: "/tanitim-filmi/kocaeli/", label: "Kocaeli fabrika ve kurumsal tanıtım filmi" },
+      { href: "/drone-cekimi/kocaeli/", label: "Kocaeli drone çekimi: tesis ve şantiye" },
+    ],
+    sections: [
+      {
+        heading: "Endüstriyel video çekimi: portföydeki fabrika, liman ve tersane filmleri",
+        items: [
+          { title: "Canex, 1:50", text: "Metal ve alüminyum imalat: pres, kesim, büküm, kalite kontrol ve sevkiyat; fabrika dışı drone ile." },
+          { title: "Mavi Vatan Gemi İnşa, 2:40", text: "Gece ve gündüz takip edilen blok ve modül transferi; tersane, ağır nakliye ve drone planları." },
+          { title: "Meteors Shipping, 2:10", text: "Liman, römorkör manevraları ve güverte detayları; drone ve yer çekimi birlikte." },
+          { title: "Chint Power Milas, 1:30", text: "Güneş enerjisi sahasında ürün tanıtım videosu." },
+        ],
+        paragraphs: [
+          "Aşağıdaki filmlerin hepsi 4K çekildi; 2024 tarihli, kurucu ortaklarımızın stüdyoyu kurmadan önceki işleri. Fabrika filmi planlıyorsanız süreç, versiyonlar ve sık sorulanlar Kocaeli tanıtım filmi sayfasında.",
+        ],
+      },
     ],
     stepsHeading: "Kocaeli'nde bir fabrika filmi nasıl ilerler, ne kadar sürer?",
     steps: [
@@ -324,6 +389,165 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
         time: "toplamda genellikle 3–4 hafta",
         text: "Web, YouTube ve fuar ekranı için dosyalar teslim ediliyor; istenirse İngilizce altyazılı ihracat versiyonu aynı kurgudan çıkıyor.",
       },
+    ],
+  },
+  "tanitim-filmi/kocaeli": {
+    title: "Kocaeli Fabrika ve Kurumsal Tanıtım Filmi Çekimi",
+    h1: "Kocaeli Fabrika ve Kurumsal Tanıtım Filmi",
+    description:
+      "Kocaeli fabrika tanıtım filmi: İzmit, Gebze, Dilovası ve Gölcük'te üretim hattı, drone ve röportaj çekimi. 4 endüstriyel film örneği, teslim genelde 3–4 hafta.",
+    heading: "Kocaeli'nde endüstriyel tanıtım filmi: fabrikayı alıcının gözüyle anlatmak",
+    paragraphs: [
+      "Kocaeli'ndeki bir fabrikanın tanıtım filmini çoğu zaman tedarikçi arayan bir satın alma ekibi, yurt dışındaki bir alıcı ya da fuarda standın önünden geçen bir mühendis izliyor. Bu izleyici makine listesinden çok üretimin kontrol altında olduğunu görmek istiyor. Bu yüzden filmi bir tur gibi değil, üretimin akışı gibi kuruyoruz: hammadde girişi, üretim hattı, kalite kontrol, paketleme ve sevkiyat; açılışta tesisin büyüklüğünü gösteren havadan planlar, aralarda kısa bir yönetici ya da mühendis röportajı.",
+      "Serdivan'daki stüdyomuzdan İzmit, Gebze, Dilovası, Körfez, Gölcük, Kartepe ve Başiskele'ye aynı gün gidip dönüyoruz; Kocaeli çekimlerinin teklifine yol ya da konaklama kalemi eklemiyoruz. Çekim saatini tesisin düzenine göre seçiyoruz: üretim hattını vardiyanın dolu saatinde, röportajları makine sesinden uzak bir odada, dış cepheyi ışığın uygun olduğu saatte. Projeyi kurucu ortaklar Berat Değirmenci ve Muhammed Ekrem Adnan ile konuşursunuz; sette ve kurguda da onlar çalışır.",
+    ],
+    sections: [
+      {
+        heading: "Portföydeki endüstriyel ve fabrika filmleri",
+        paragraphs: [
+          "Aşağıdaki filmlerin hepsi 4K çekildi ve 16:9 kurumsal film olarak teslim edildi. 2024 tarihli işler; kurucu ortaklarımızın stüdyoyu kurmadan önce çektiği ve bugün de aynı ekiple ürettiğimiz türden filmler.",
+        ],
+        items: [
+          { title: "Canex (metal ve alüminyum imalat, 1:50)", text: "Fabrika dışı drone ile, içeride hammadde ruloları, forklift taşıma, tam otomatik pres, kesim ve büküm makineleri, kalite kontrol, paketleme ve sevkiyat; grafik ve metin animasyonlarıyla." },
+          { title: "Mavi Vatan Gemi İnşa (ağır sanayi, 2:40)", text: "Blok ve modül transferini gece ve gündüz takip eden operasyon belgeseli: hangar, ağır nakliye araçları, mühendislik ekipleri, tersane ve liman, drone planları." },
+          { title: "Meteors Shipping (denizcilik ve lojistik, 2:10)", text: "Limanda demirli kargo gemileri, römorkör destekli manevralar, güverte ve pervane detayları; drone ve yer çekimi birlikte kurgulandı." },
+          { title: "Chint Power Milas (enerji, 1:30)", text: "Güneş enerjisi sahası için ürün tanıtım videosu: teknik detay ve sahanın ölçeği aynı filmde." },
+        ],
+      },
+      {
+        heading: "Fabrika tanıtım filminde neler gösterilir?",
+        items: [
+          { title: "Tesis ve konum", text: "Havadan açılış: arazinin büyüklüğü, yükleme alanları, otoyol ya da liman bağlantısı (uçuş, konumun kurallarına göre)." },
+          { title: "Üretim akışı", text: "Hammaddeden sevkiyata kadar her aşamadan birkaç güçlü plan; makine sesi ve ritimle kurgulanır." },
+          { title: "Kalite ve standartlar", text: "Kalite kontrol, laboratuvar testleri, ölçüm; varsa sertifikalar ekranda kısa metinle." },
+          { title: "İnsanlar", text: "Ekip, iş güvenliği ekipmanıyla çalışan operatörler, kısa yönetici ya da mühendis röportajı." },
+          { title: "Kapanış", text: "Firmanın ne sunduğunu tek cümleyle söyleyen bitiş ve iletişim bilgisi; ihracat için İngilizce altyazı." },
+        ],
+      },
+      {
+        heading: "Aynı çekimden hangi versiyonlar çıkar?",
+        items: [
+          { text: "Web sitesi ve YouTube için 2–3 dakikalık 4K ana film (16:9)" },
+          { text: "LinkedIn ve satış sunumu için 30–60 saniyelik kısa versiyon" },
+          { text: "Instagram ve işe alım ilanları için dikey kesitler (9:16)" },
+          { text: "Fuar standı ekranı için sesi kapalı dönen döngü versiyonu" },
+          { text: "İstenirse İngilizce altyazılı ihracat versiyonu ve ham görüntü" },
+        ],
+      },
+    ],
+    stepsHeading: "Kocaeli'nde bir fabrika filmi nasıl ilerler, ne kadar sürer?",
+    steps: [
+      {
+        title: "Ön görüşme",
+        time: "1. hafta, 30–45 dakika",
+        text: "Filmin kime gösterileceğini (alıcı, fuar, yatırımcı, işe alım) ve nerede kullanılacağını konuşuyoruz. Kapsam netleşince yazılı teklif geliyor.",
+      },
+      {
+        title: "Keşif ve çekim planı",
+        time: "çekimden yaklaşık 1 hafta önce",
+        text: "Gerekirse tesisi önceden görmeye geliyoruz. Sahne listesi, vardiya saatleri, çekilmemesi gereken alanlar, iş güvenliği kuralları ve drone uçuş kontrolü yazılı plana giriyor.",
+      },
+      {
+        title: "Çekim",
+        time: "1 tam gün ya da iki yarım gün",
+        text: "Hat çalışırken çekiyoruz; üretimi durdurmanız genellikle gerekmiyor. Röportajlar ve havadan planlar aynı gün içinde.",
+      },
+      {
+        title: "Kurgu, renk ve ses",
+        time: "çekimden sonra 1–2 hafta",
+        text: "İlk kurgu size geliyor; geri bildirimi tek listede toplayıp revizyonu yapıyoruz.",
+      },
+      {
+        title: "Teslim",
+        time: "toplamda genellikle 3–4 hafta",
+        text: "Ana film, kısa versiyonlar ve fuar döngüsü teslim ediliyor. Fuar tarihi yakınsa takvimi ön görüşmede ona göre kuruyoruz.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Kocaeli'nde fabrika tanıtım filmi ne kadar sürede teslim edilir?",
+        answer:
+          "Ön görüşmeden teslime genellikle 3–4 hafta. Çekim bir tam gün ya da iki yarım gün sürüyor, kurgu ve revizyon çekimden sonra 1–2 hafta. Fuar ya da lansman tarihi varsa takvimi geriye doğru planlıyoruz.",
+      },
+      {
+        question: "Endüstriyel işlerinizi nerede görebilirim?",
+        answer:
+          "Bu sayfadaki portföy bölümünde Canex, Mavi Vatan Gemi İnşa, Meteors Shipping ve Chint Power filmlerini izleyebilirsiniz. Hepsi 4K; fabrika, tersane, liman ve enerji sahası çekimleri. Kurucu ortaklarımızın stüdyoyu kurmadan önceki 2024 tarihli işleri.",
+      },
+      {
+        question: "Çekilmemesi gereken alanlar ve gizli süreçler ne olacak?",
+        answer:
+          "Çekim planına gizli alanları baştan yazıyoruz; ekranda görünmemesi gereken makine, ürün ya da belge varsa o planı çekmiyor ya da kurguda çıkarıyoruz. Film yayına girmeden önce yetkilinizin onayına gidiyor. Gerekirse gizlilik sözleşmesi imzalıyoruz.",
+      },
+      {
+        question: "Tanıtım filmini kimler çekiyor, dışarıya iş veriyor musunuz?",
+        answer:
+          "Senaryo, çekim ve kurguyu kurucu ortaklar Berat Değirmenci ve Muhammed Ekrem Adnan bizzat yapıyor; muhatabınız proje boyunca değişmiyor. Seslendirme gibi ayrı uzmanlık isteyen işler gerekiyorsa teklifte ayrıca yazıyoruz.",
+      },
+    ],
+    projects: [
+      "canex-tanitim-filmi",
+      "mavi-vatan-gemi-insa",
+      "meteors-shipping-tanitim-filmi",
+      "chint-power-milas-urun-tanitimi",
+      "federal-reklam-filmi",
+    ],
+    projectsHeading: "Portföyden endüstriyel tanıtım filmleri",
+    projectsIntro:
+      "Fabrika, tersane, liman ve enerji sahası filmleri. 2024 tarihli işler, kurucu ortaklarımızın stüdyoyu kurmadan önceki çalışmaları.",
+    links: [
+      { href: "/sektorler/fabrika-tanitim-filmi/", label: "Fabrika tanıtım filmi: sanayi tesisleri için çekim" },
+      { href: "/blog/fabrika-tanitim-filmi-sanayi/", label: "Fabrikanızı en iyi anlatan film nasıl çekilir?" },
+      { href: "/blog/tanitim-filmi-cektirmeden-once/", label: "Tanıtım filmi çektirmeden önce bilmeniz gerekenler" },
+      { href: "/video-cekimi/kocaeli/", label: "Kocaeli video çekimi: fabrika, liman ve mağaza" },
+      { href: "/drone-cekimi/kocaeli/", label: "Kocaeli drone çekimi: tesis ve şantiye" },
+      { href: "/reklam-filmi/kocaeli/", label: "Kocaeli reklam filmi ve ürün videosu" },
+    ],
+  },
+
+  "reklam-filmi/kocaeli": {
+    title: "Kocaeli Reklam Filmi ve Endüstriyel Ürün Videosu",
+    description:
+      "Kocaeli reklam filmi: endüstriyel ürün videosu, B2B kampanya ve Meta reklam kreatifi. İzmit, Gebze, Gölcük'e aynı gün çekim; tek çekimden çok versiyon.",
+    heading: "Kocaeli'nde reklam filmi: ürünü tek mesajla satmak",
+    paragraphs: [
+      "Kocaeli'ndeki reklam filmi işlerinin bir kısmı son tüketiciye değil, başka firmalara satış yapan üreticilerden geliyor. Endüstriyel bir ürünün reklamında izleyici hızlı karar vermez ama ilk saniyelerde ürünün ne işe yaradığını anlamak ister. Kurguyu buna göre kuruyoruz: problem, ürün, kanıt ve iletişim. Chint Power için çektiğimiz Milas güneş enerjisi sahası videosu, teknik bir ürünü sahanın ölçeğiyle birlikte gösteren bu tür bir işe örnek.",
+      "Mağaza, kafe, klinik ve davet salonu gibi yerel işletmeler için reklam filmi çoğunlukla Instagram ve Facebook reklamlarında dönen kısa dikey videolar demek. Aytaş Home'un Instagram hesabında video üretimiyle Meta reklamlarını birlikte yönettik; Meta Business Suite verisine göre ilk dört ayda içerik etkileşimi önceki dört aya göre 18,6 binden 76,5 bine, yeni mesajlaşan kişi 257'den 730'a çıktı. Kendi markamız için ürettiğimiz 30 saniyelik “7 Saniye (Mermi)” Reels'i 84 binin üzerinde izlendi (28 Ekim 2026).",
+    ],
+    sections: [
+      {
+        heading: "Aynı çekimden hangi reklam versiyonları çıkar?",
+        items: [
+          { text: "YouTube ve web için 30–60 saniyelik yatay reklam filmi" },
+          { text: "Instagram, Facebook ve TikTok reklamları için 9:16 dikey 15–30 saniyelik kesitler" },
+          { text: "Aynı mesajın farklı açılışlarla 2–3 versiyonu (hangisinin işlediğini yayında test etmek için)" },
+          { text: "LinkedIn ve B2B satış sunumu için sade, altyazılı versiyon" },
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Kocaeli'nde reklam filmi çekimi kaç gün sürer?",
+        answer:
+          "Çoğu reklam işi yarım ya da tam günlük tek çekimle tamamlanıyor. Ön görüşmeden teslime, senaryo onayı ve revizyonlar dahil, genellikle 2–4 hafta sürüyor.",
+      },
+      {
+        question: "Reklamı yayına da koyuyor musunuz?",
+        answer:
+          "İsterseniz Meta (Instagram ve Facebook) reklam kurulumu ve takibini de yapıyoruz. Reklam bütçesi hizmet bedeline dahil değil; Meta'ya doğrudan siz ödüyorsunuz.",
+      },
+    ],
+    projects: [
+      "chint-power-milas-urun-tanitimi",
+      "aytas-home-sosyal-medya",
+      "rast-mermi-7-saniye",
+      "canex-tanitim-filmi",
+    ],
+    links: [
+      { href: "/tanitim-filmi/kocaeli/", label: "Kocaeli fabrika ve kurumsal tanıtım filmi" },
+      { href: "/blog/kurumsal-reklam-marka-hikayesi-hangisi/", label: "Kurumsal film mi, reklam filmi mi, marka hikâyesi mi?" },
+      { href: "/blog/reklam-filmi-neden-ise-yaramiyor/", label: "Reklam filminiz neden işe yaramıyor olabilir?" },
+      { href: "/video-cekimi/kocaeli/", label: "Kocaeli video çekimi" },
     ],
   },
   // ── Round 2 (Search Console impressions, Oct 2026) ──
@@ -493,14 +717,57 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
   },
 
   "drone-cekimi/sakarya": {
+    title: "Sakarya Drone Çekimi: Fabrika, İnşaat, Emlak, Etkinlik",
+    h1: "Sakarya Drone Çekimi ve Havadan Video",
     description:
-      "Sakarya drone çekimi: fabrika, tesis ve mağazalar için 4K havadan görüntü, uçuş öncesi izin kontrolü, yerden çekimle aynı gün. Örnek işleri görün.",
+      "Sakarya drone çekimi: fabrika, inşaat, emlak ve etkinlik için 4K havadan video. Ekipte SHGM İHA-1 ticari pilot lisansı, uçuş öncesi izin kontrolü, örnek işler.",
     heading: "Sakarya'da drone çekimi: ne zaman gerekir, nasıl planlanır?",
     paragraphs: [
       "Drone en çok iki şeyi anlatırken işe yarıyor: büyüklük ve konum. Örneğin Hendek'te bir üretim tesisinin araziye nasıl yayıldığı ya da Sapanca Gölü kıyısındaki bir otelin suya ne kadar yakın olduğu, yerden çekilen planlarla tam anlaşılmıyor; yukarıdan tek karede görülüyor. Küçük bir iç mekânda, ürün çekiminde ya da röportajda ise drone filme bir şey katmıyor. Böyle işlerde bütçeyi yerden çekime ve kurguya ayırmanızı öneriyoruz.",
-      "Aşağıdaki projelerde bunun örnekleri var. Altoteks ve Canex tanıtım filmlerinde fabrikanın dışı havadan, üretim hattı içeriden çekildi. Mavi Vatan'ın modül transferini belgeleyen filmde gece ve gündüz yapılan saha çekimleri, Meteors Shipping filminde de tersane ve liman çekimleri drone görüntüleriyle birlikte kurgulandı. Bu filmler 2024 tarihli, kurucu ortaklarımızın stüdyoyu kurmadan önce yaptığı işler. Çekimde ve kurguda bugün de onlar bizzat yer alıyor.",
+      "Aşağıdaki projelerde bunun örnekleri var. Canex tanıtım filminde fabrikanın dışı havadan, üretim hattı içeriden çekildi. Mavi Vatan'ın modül transferini belgeleyen filmde gece ve gündüz yapılan saha çekimleri, Meteors Shipping filminde de tersane ve liman çekimleri drone görüntüleriyle birlikte kurgulandı. Bu filmler 2024 tarihli, kurucu ortaklarımızın stüdyoyu kurmadan önce yaptığı işler. Çekimde ve kurguda bugün de onlar bizzat yer alıyor.",
       "Müşterinin gelip bulması gereken mağazalarda da birkaç saniyelik bir havadan plan işe yarıyor. Mağazalara mesajla gelen en sık sorulardan biri “Yeriniz nerede?” oluyor. Binayı ve çevresindeki tanıdık bir caddeyi ya da meydanı gösteren kısa bir plan, bu soruyu videonun içinde cevaplıyor. Duru Optik için çektiğimiz dikey videoda da mağazanın konumu havadan, gözlük koleksiyonu ve göz ölçümü yakından gösteriliyor.",
       "Teklif için uzun bir dosya hazırlamanız gerekmiyor. Çekim yerinin konum linkini, görüntülerin nerede kullanılacağını (web sitesi, sosyal medya, fuar ya da reklam), yalnız havadan mı yoksa yerden çekimle birlikte mi istediğinizi ve tarih aralığınızı yazmanız yeterli. Kapsamı ücretsiz ön görüşmede birlikte netleştiriyoruz. Ücreti hangi kalemlerin belirlediğini de blogdaki “Drone çekimi fiyatı neye göre belirlenir?” yazısında anlattık.",
+    ],
+    sections: [
+      {
+        heading: "Lisans, izin ve güvenlik",
+        paragraphs: [
+          "Ticari drone çekimini SHGM (Sivil Havacılık Genel Müdürlüğü) kurallarına göre yapıyoruz; ekibimizde, kurucu ortağımız Muhammed Ekrem Adnan'da SHGM İHA-1 ticari pilot lisansı var. Her çekimden önce konumu kontrol ediyoruz: havalimanı ya da askeri alan yakınlığı, kamu tesisi ve kalabalık üzeri gibi kısıtlar varsa bunu teklif aşamasında söylüyor, izin gerekiyorsa takvime baştan koyuyoruz. Fabrika, şantiye ve özel arazilerde uçuştan önce tesis yönetiminin onayını alıyoruz.",
+        ],
+      },
+      {
+        heading: "Sakarya'da drone çekimi ne için kullanılıyor?",
+        items: [
+          { title: "Fabrika ve OSB tesisleri", text: "Tanıtım filminin açılışı: arazinin büyüklüğü, binaların yerleşimi, yükleme alanları ve yol bağlantısı. İçerideki üretim çekimiyle aynı gün." },
+          { title: "İnşaat ilerleme takibi", text: "Şantiyeyi her ay aynı noktadan ve aynı açıdan çekip ilerlemeyi karşılaştırılabilir hale getirmek; yatırımcıya ve alıcıya düzenli rapor videosu." },
+          { title: "Emlak, arsa ve konut projeleri", text: "Parselin sınırları, yola ve merkeze uzaklık, çevredeki göl, orman ya da sahil; Sapanca, Serdivan ve Karasu çevresindeki satış videoları." },
+          { title: "Etkinlik, açılış ve festival", text: "Mekânın ve kalabalığın genel planı. Kalabalığın tam üzerinden uçulmaz; planları alanın kenarından ve kurallara uygun yükseklikten kuruyoruz." },
+          { title: "Mağaza, otel ve restoran", text: "Müşterinin “Yeriniz nerede?” sorusunu cevaplayan birkaç saniyelik konum planı; dikey Reels ve Google İşletme Profili için." },
+        ],
+      },
+    ],
+    stepsHeading: "Drone çekimi nasıl ilerler, ne kadar sürer?",
+    steps: [
+      {
+        title: "Konum ve amaç",
+        time: "ön görüşme, 15–30 dakika",
+        text: "Konum linkini, görüntülerin nerede kullanılacağını ve tarih aralığını konuşuyoruz.",
+      },
+      {
+        title: "Uçuş uygunluk kontrolü",
+        time: "çekimden önce",
+        text: "Konumu SHGM kurallarına göre kontrol ediyor, tesis onayını ve gerekiyorsa izin takvimini netleştiriyoruz. Uçuş mümkün değilse bunu çekim gününden önce söylüyoruz.",
+      },
+      {
+        title: "Çekim",
+        time: "havadan planlar genellikle 1–3 saat",
+        text: "Işığın ve rüzgârın uygun olduğu saatte uçuyoruz; yerden çekim de varsa aynı güne yarım ya da tam gün olarak planlanıyor. Hava uygun değilse yedek gün belirleniyor.",
+      },
+      {
+        title: "Kurgu ve teslim",
+        time: "çekimden sonra genellikle 1–2 hafta",
+        text: "Kurgulu video yatay ve dikey formatlarda teslim ediliyor; ham görüntü istenirse kapsama ekleniyor.",
+      },
     ],
     faqs: [
       {
@@ -519,21 +786,42 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
           "Evet. Tesis, arazi ya da proje alanı için yalnız havadan çekim de yapıyoruz. Tesisin içi, ekip ya da ürün de anlatılacaksa yerden çekimi aynı güne eklemek çoğu zaman daha verimli oluyor; hangisinin gerektiğine ön görüşmede birlikte karar veriyoruz.",
       },
       {
+        question: "Drone pilotunuzun lisansı var mı?",
+        answer:
+          "Evet. Kurucu ortağımız Muhammed Ekrem Adnan'ın SHGM İHA-1 ticari pilot lisansı var. Çekimi SHGM kurallarına göre planlıyor, her uçuştan önce konumun kısıtlarını kontrol ediyoruz.",
+      },
+      {
+        question: "İnşaat ya da şantiye için düzenli drone çekimi yapıyor musunuz?",
+        answer:
+          "Evet. İnşaat ilerlemesini her ay aynı noktalardan, aynı açı ve yükseklikten çekiyoruz; böylece aylar arası karşılaştırma yapılabiliyor. Takvimi ve teslim formatını ilk görüşmede birlikte belirliyoruz.",
+      },
+      {
+        question: "Düğün, festival ya da açılışta drone kullanılabilir mi?",
+        answer:
+          "Kurallara uygun şekilde evet. Kalabalığın tam üzerinden uçulmaz, bu yüzden planları alanın kenarından kuruyoruz. Etkinlik yerini önceden kontrol edip uçuşun mümkün olup olmadığını teklif aşamasında söylüyoruz.",
+      },
+      {
         question: "Drone görüntülerinin ham dosyalarını da alabilir miyim?",
         answer:
           "Evet. Kurgulu videonun yanında ham görüntü teslimi de kapsama eklenebilir; bunu ön görüşmede konuşup teklife ayrı kalem olarak yazıyoruz.",
       },
     ],
     projects: [
-      "altoteks-tanitim-filmi",
       "canex-tanitim-filmi",
       "mavi-vatan-gemi-insa",
       "meteors-shipping-tanitim-filmi",
       "duru-optik-tanitim",
+      "altoteks-tanitim-filmi",
     ],
+    projectsHeading: "Portföyden drone çekimi içeren işler",
+    projectsIntro:
+      "Fabrika, tersane, liman ve mağaza işleri. Duru Optik 2026 tarihli; diğerleri 2024 tarihli, kurucu ortaklarımızın stüdyoyu kurmadan önceki çalışmaları.",
     links: [
       { href: "/blog/drone-cekimi-gerekli-mi/", label: "Drone çekimi gerçekten gerekli mi?" },
       { href: "/blog/drone-cekimi-fiyati-neye-gore-belirlenir/", label: "Drone çekimi fiyatı neye göre belirlenir?" },
+      { href: "/blog/emlak-konut-drone-video-cekimi/", label: "Emlak ve konut projeleri için drone ve video çekimi" },
+      { href: "/drone-cekimi/sapanca/", label: "Sapanca drone çekimi: otel, villa ve göl" },
+      { href: "/tanitim-filmi/kocaeli/", label: "Fabrika tanıtım filmi örnekleri (Kocaeli)" },
     ],
   },
   // ── Round 3 (next tier, 6–13 impressions) ──
