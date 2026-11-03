@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Rast LUT Pack: 5 creative 33^3 .cube LUTs for Rec.709 (display-referred) footage.
+"""Rast LUT Pack: 8 creative 33^3 .cube LUTs for Rec.709 (display-referred) footage.
 Math only (numpy). Skin-safe: a soft skin-hue mask pulls graded chroma back toward the
 tone-only version so faces don't go orange/green/grey."""
 import numpy as np, os, sys
@@ -133,12 +133,48 @@ def altin_saat(x0):
     return finish(x0, x, 0.5)
 
 
+def teal_orange(x0):
+    """Subtle teal & orange: cool shadows/backgrounds, warm highlights; skin kept natural."""
+    y = luma(x0)
+    yn = rolloff(scurve(y, 0.16, 0.44), 0.84)
+    x = set_luma(x0, yn)
+    x = split_tone(x, (0.415, 0.505, 0.58), (0.565, 0.515, 0.435), 0.55, 0.36)
+    h, s = hue_sat(x0)
+    # push blues/cyans/greens toward teal, oranges a little richer
+    cool = smooth(90, 150, h) * (1 - smooth(230, 260, h))
+    x = x + (cool * s * 0.12)[:, None] * np.array([-1.0, 0.15, 0.5])
+    warm = smooth(12, 25, h) * (1 - smooth(45, 60, h))
+    x = saturate(x, 1.0 + 0.12 * warm)
+    return finish(x0, x, 0.7)
+
+
+def mono_kontrast(x0):
+    """Black & white with a red-filter style channel mix and a firm, monotonic S-curve."""
+    y = x0 @ np.array([0.36, 0.54, 0.10])
+    yn = rolloff(scurve(y, 0.34, 0.42), 0.86) * 0.985 + 0.01
+    return np.clip(np.repeat(yn[:, None], 3, 1), 0, 1)
+
+
+def bleach_bypass(x0):
+    """Bleach bypass: silver-retained look, low saturation, hard contrast, slightly cool."""
+    y = luma(x0)
+    yn = rolloff(scurve(y, 0.42, 0.44), 0.82)
+    x = set_luma(x0, yn)
+    x = saturate(x, 0.45)
+    x = x * np.array([0.99, 1.0, 1.015])
+    return finish(x0, x, 0.35)
+
+
 LUTS = [
     ("rast-sicak-film", "Rast Sicak Film", sicak_film),
     ("rast-soguk-gece", "Rast Soguk Gece", soguk_gece),
     ("rast-dogal-kontrast", "Rast Dogal Kontrast", dogal_kontrast),
     ("rast-soluk-matte", "Rast Soluk Matte", soluk_matte),
     ("rast-altin-saat-hafif", "Rast Altin Saat Hafif", altin_saat),
+    # added 2026-11-03
+    ("rast-teal-orange", "Rast Teal Orange", teal_orange),
+    ("rast-mono-kontrast", "Rast Mono Kontrast", mono_kontrast),
+    ("rast-bleach-bypass", "Rast Bleach Bypass", bleach_bypass),
 ]
 
 if __name__ == "__main__":

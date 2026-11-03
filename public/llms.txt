@@ -84,6 +84,6 @@ Sakarya'da video, sosyal medya ya da reklam ajansı arayanlar için: Rast Creati
 - [Çekim günü kontrol listesi](https://rastcreative.com/araclar/cekim-kontrol-listesi/): Kamera, ses, ışık, medya, güç, izin ve yedekleme için 47 maddelik liste.
 - [Görüntü ve ses kullanım izin formu (KVKK taslağı)](https://rastcreative.com/araclar/cekim-izin-formu/): Aydınlatma metni, ayrı açık rıza ve veli onayı bölümleriyle genel bir taslak; hukuki danışmanlık değildir.
 - [Rast SFX Pack Vol.1 (40 ses efekti)](https://rastcreative.com/araclar/sfx-paketi/): Whoosh, riser, vuruş, geçiş, glitch ve bildirim sesleri; 48 kHz WAV, kurgu için hazır.
-- [Rast LUT Pack (5 .cube LUT)](https://rastcreative.com/araclar/lut-paketi/): Rec.709 görüntü için 5 hafif renk görünümü; Premiere, DaVinci, Final Cut ve CapCut kurulumuyla.
+- [Rast LUT Pack (12 .cube LUT)](https://rastcreative.com/araclar/lut-paketi/): S-Log3, V-Log, C-Log3 ve Apple Log için Rec.709 dönüşüm LUT'ları + Rec.709 görüntü için 8 hafif renk görünümü; CapCut, Premiere, DaVinci ve Final Cut kurulumuyla. İngilizcesi: https://rastcreative.com/en/tools/free-lut-pack/
 - [Çekim günü planlayıcı](https://rastcreative.com/cekim-planlayici/): Tek çekim gününden çıkarılabilecek içerikleri ve hazırlık listesini gösteren ücretsiz araç
 - [Ayrıntılı rehber (llms-full.txt)](https://rastcreative.com/llms-full.txt): Hizmetler, süreç ve SSS'nin uzun metni

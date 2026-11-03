@@ -39,6 +39,18 @@ gitmez. `cta_click` artik yalniz form/sayfa CTA'lari icindir. Eski
 iki ismi birlikte filtreleyin. GA4'te `link_location` icin Event scope
 custom dimension ekleyin.
 
+Indirmeler (03.11.2026): `download` ozniteligi olan ya da .zip/.cube/.pdf/
+.png/.docx/.xlsx ile biten linkler `file_download` atar (file_name,
+file_extension, link_url, link_text, link_location, page_path). Indirme
+linkleri ayrica `cta_click` atmaz. `link_location` icin once en yakin
+`[data-link-location]` okunur (tool_header, log_section, looks_section,
+extension_card ...). Chrome eklenti kartlari `cta_click`
+(location/link_location = extension_card) atar. Key event degildir.
+DIKKAT: GA4 Gelismis olcum "Dosya indirmeleri" aciksa .zip/.pdf/.docx/.xlsx
+tiklamalarinda GA kendi `file_download`'unu da atar (cift sayim). Bizimkiler
+`event_category = download` + `link_location` tasir; temiz sayim icin Admin ->
+Veri akislari -> Gelismis olcum -> Dosya indirmeleri kapatilmali.
+
 Alternatif kontrol hedefi:
 
 ```text

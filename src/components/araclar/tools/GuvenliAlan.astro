@@ -10,6 +10,7 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 import CcByAttribution from "../CcByAttribution.astro";
 import EmbedLayout from "../../../layouts/EmbedLayout.astro";
 import EmbedBox from "../EmbedBox.astro";
+import ExtensionCard from "../ExtensionCard.astro";
 import Section from "../../../components/Section.astro";
 import SectionHeading from "../../../components/SectionHeading.astro";
 import Button from "../../../components/Button.astro";
@@ -441,6 +442,7 @@ const STR = en
     <p>
       <a class="ev-btn ev-btn--sun" href={TPL + "rast-guvenli-alan-sablonlari.zip"} download>↓ All templates (ZIP, {publicFileSize(TPL + "rast-guvenli-alan-sablonlari.zip")})</a>
     </p>
+    <ExtensionCard lang="en" items={["safezone"]} heading="Check safe zones right in your browser" />
   </Section>
     </Fragment>
   ) : (
@@ -475,6 +477,7 @@ const STR = en
     <p>
       <a class="ev-btn ev-btn--sun" href={TPL + "rast-guvenli-alan-sablonlari.zip"} download>↓ Tüm şablonlar (ZIP, {publicFileSize(TPL + "rast-guvenli-alan-sablonlari.zip")})</a>
     </p>
+    <ExtensionCard lang="tr" items={["safezone"]} heading="Güvenli alanı tarayıcıda da görün" />
   </Section>
     </Fragment>
   )

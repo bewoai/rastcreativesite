@@ -1,0 +1,56 @@
+RAST LUT PACK
+Rast Creative Studio — rastcreative.com
+https://rastcreative.com/araclar/lut-paketi/
+
+12 ücretsiz .cube LUT (33x33x33), iki klasörde:
+
+  Looks/          Rec.709 (normal, renkli) görüntü için 8 yaratıcı görünüm
+  Log-to-Rec709/  Log görüntüyü normal Rec.709'a çeviren 4 dönüşüm LUT'u
+
+LOG > REC.709 (Log-to-Rec709/)
+  rast-slog3-to-rec709.cube     Sony S-Log3 / S-Gamut3.Cine
+  rast-vlog-to-rec709.cube      Panasonic V-Log / V-Gamut
+  rast-clog3-to-rec709.cube     Canon C-Log3 / Cinema Gamut
+  rast-applelog-to-rec709.cube  Apple Log (iPhone 15 Pro ve sonrası, Rec.2020 renk alanı)
+
+  Bunlar Rast'ın kendi dönüşüm LUT'larıdır; üreticilerin yayımladığı log eğrisi ve renk alanı
+  tanımlarından hesaplandı (çözme > Rec.709 renk alanı > yumuşak gamut sıkıştırma > ışıkları
+  yumuşak bastıran hafif film eğrisi). Sony, Panasonic, Canon ya da Apple'ın resmî LUT'u DEĞİLDİR.
+  %18 gri yaklaşık 0,435'e (Rec.709, gamma 2.4) düşer ve nötr kalır.
+  %100 yoğunlukta, İLK adım olarak kullanın; beyaz dengesi ve pozlamayı LUT'tan önce ayarlayın.
+  Giriş = kameranın normal kod değerleri (üreticilerin kendi LUT'larıyla aynı kabul).
+  DJI D-Log M LUT'u yok: DJI, D-Log M eğrisini yayımlamadı; onun için DJI'ın kendi LUT'unu kullanın.
+
+GÖRÜNÜMLER (Looks/)
+  rast-sicak-film.cube        Yumuşak siyahlar, sıcak ışıklar, hafif film kontrastı
+  rast-soguk-gece.cube        Serin gölgeler, hafif düşük pozlama, gece/şehir havası
+  rast-dogal-kontrast.cube    Nötr, biraz daha canlı kontrast; ten rengine dokunmaz
+  rast-soluk-matte.cube       Kaldırılmış siyahlar, yumuşak beyazlar, düşük doygunluk
+  rast-altin-saat-hafif.cube  Hafif altın saat sıcaklığı, turuncu/sarılar biraz zengin
+  rast-teal-orange.cube       Teal & Orange: serin camgöbeği gölgeler, sıcak ışıklar, ten doğal
+  rast-mono-kontrast.cube     Mono Kontrast: belirgin kontrastlı siyah-beyaz
+  rast-bleach-bypass.cube     Bleach Bypass: düşük doygunluk, sert kontrast, gümüşî film hissi
+
+Renkli görünümler ten rengini koruyacak şekilde hesaplandı (cilt tonu aralığında renk kayması sınırlı).
+İpucu: LUT'u %50–80 yoğunlukta kullanmak çoğu zaman en doğal sonucu verir.
+Log çektiyseniz: önce uygun Log-to-Rec709 LUT'u, sonra üstüne bir görünüm.
+
+NASIL KULLANILIR
+  Premiere Pro: Lumetri Renk > Yaratıcı (Creative) > Görünüm (Look) > Gözat... > .cube seçin.
+               Yoğunluk (Intensity) kaydırıcısıyla gücünü ayarlayın. Log dönüşümü: Temel Düzeltme > Giriş LUT'u.
+  DaVinci Resolve: Proje Ayarları > Renk Yönetimi > LUT Klasörünü Aç; klasörleri kopyalayın,
+               'LUT listesini güncelle'. Color sayfasında node'a sağ tık > 3D LUT > Rast.
+  Final Cut Pro: Efektler > Renk > Özel LUT (Custom LUT) > LUT seç > Özel LUT Seç... > .cube.
+  CapCut (masaüstü, Windows/Mac): Ayarlama (Adjustment) > LUT > İçe aktar; .cube dosyalarını seçin,
+               LUT'u klibe (ya da ayar katmanı olarak) uygulayın, Yoğunluk'u ayarlayın. CapCut telefon
+               uygulamasında özel LUT içe aktarma yok: LUT'u masaüstünde ya da önce başka bir uygulamada uygulayın.
+
+LİSANS
+  Creative Commons Atıf 4.0 (CC BY 4.0) — https://creativecommons.org/licenses/by/4.0/deed.tr
+  Ticari işler ve müşteri projeleri dahil kullanabilir, değiştirebilirsiniz.
+  Şart: atıf. Örnek: "Renk LUT'u: Rast Creative Studio — rastcreative.com"
+  LUT dosyalarını olduğu gibi yeniden satmayın / başka bir paket olarak dağıtmayın.
+  Kamera ve uygulama adları sahiplerinin markalarıdır; bir bağlantımız yoktur.
+
+Rast Creative Studio — video prodüksiyon, renk ve kurgu, Sakarya.
+https://rastcreative.com

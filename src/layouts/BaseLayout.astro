@@ -326,22 +326,45 @@ const ogImage = new URL(image ?? SITE.ogImage, SITE.url).href;
         const isPhone = href.startsWith("tel:");
         const isEmail = href.startsWith("mailto:");
         const isWhatsApp = href.includes("wa.me/") || href.includes("api.whatsapp.com/");
-        // Where on the page the contact link sits (GA4 param link_location).
-        const linkLocation = link.closest(".ev-callbar, [data-callbar]")
-          ? "callbar"
-          : link.closest("header, .ev-head, .ev-menu, [data-menu]")
-            ? "header"
-            : link.closest("footer, .ev-foot")
-              ? "footer"
-              : "body";
+        // Where on the page the link sits (GA4 param link_location). An explicit
+        // data-link-location on the link or a wrapper wins (tool header, extension card…).
+        const tagged = link.closest("[data-link-location]");
+        const linkLocation = tagged instanceof HTMLElement && tagged.dataset.linkLocation
+          ? tagged.dataset.linkLocation
+          : link.closest(".ev-callbar, [data-callbar]")
+            ? "callbar"
+            : link.closest("header, .ev-head, .ev-menu, [data-menu]")
+              ? "header"
+              : link.closest("footer, .ev-foot")
+                ? "footer"
+                : "body";
+        // File downloads (free packs, templates, documents): one file_download
+        // event per click, never also cta_click (added 03.11.2026).
+        let filePath = "";
+        try { filePath = new URL(href, window.location.href).pathname; } catch (e) {}
+        const extMatch = filePath.match(/\.(zip|cube|pdf|png|docx|xlsx)$/i);
+        const isDownload = !isPhone && !isEmail && !isWhatsApp && (link.hasAttribute("download") || !!extMatch);
+        if (isDownload) {
+          const fileName = decodeURIComponent(filePath.split("/").pop() || "");
+          window.rcTrack("file_download", {
+            event_category: "download",
+            file_name: fileName,
+            file_extension: (fileName.match(/\.([a-z0-9]+)$/i) || ["", ""])[1].toLowerCase(),
+            link_url: href,
+            link_text: text,
+            link_location: linkLocation,
+            ...(ctaLocation ? { cta_location: ctaLocation } : {}),
+          });
+        }
         // Contact links fire one contact event (below), not cta_click as well,
         // so a WhatsApp/phone tap in the call bar isn't counted twice.
-        if (ctaLocation && !isPhone && !isEmail && !isWhatsApp) {
+        if (ctaLocation && !isPhone && !isEmail && !isWhatsApp && !isDownload) {
           window.rcTrack("cta_click", {
             event_category: "engagement",
             cta_text: text,
             location: ctaLocation,
             link_url: href,
+            link_location: linkLocation,
           });
         }
 

@@ -40,7 +40,7 @@ const preview = p.preview ?? true;
 const isAnchor = (h: string) => h.startsWith("#");
 ---
 
-<header class:list={["th", { "th--media": preview, "th--tool": item.type === "arac" }]}>
+<header class:list={["th", { "th--media": preview, "th--tool": item.type === "arac" }]} data-link-location="tool_header">
   <div class="th__top">
     {
       en ? (
