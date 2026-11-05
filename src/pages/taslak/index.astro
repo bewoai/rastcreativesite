@@ -513,6 +513,253 @@ const whatsappHref = WHATSAPP_CTA_HREF ?? "/iletisim/";
 
     <Footer />
   </div>
+<script>
+  const root = document.querySelector<HTMLElement>("[data-lt]");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (root) {
+    /* ── Monitor timecode: runs only while the monitor is on screen ── */
+    const tc = root.querySelector<HTMLElement>("[data-tc]");
+    const video = root.querySelector<HTMLVideoElement>("[data-mon-video]");
+    const monitor = root.querySelector<HTMLElement>("[data-monitor]");
+    let tcStart = performance.now();
+    let tcRaf = 0;
+    const pad = (n: number) => String(Math.floor(n)).padStart(2, "0");
+    const tick = (now: number) => {
+      const s = (now - tcStart) / 1000;
+      if (tc) tc.textContent = `${pad(s / 3600)}:${pad((s / 60) % 60)}:${pad(s % 60)}:${pad((s % 1) * 25)}`;
+      tcRaf = requestAnimationFrame(tick);
+    };
+    if (monitor && !reduce) {
+      new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          if (!tcRaf) tcRaf = requestAnimationFrame(tick);
+          if (video && !video.closest("[hidden]") && root.dataset.program === undefined) {
+            video.play().catch(() => {});
+          }
+        } else {
+          cancelAnimationFrame(tcRaf);
+          tcRaf = 0;
+          video?.pause();
+        }
+      }).observe(monitor);
+    }
+
+    /* ── Strip → monitor ── */
+    const pick = root.querySelector<HTMLElement>("[data-mon-pick]");
+    const img = root.querySelector<HTMLImageElement>("[data-mon-img]");
+    const label = root.querySelector<HTMLElement>("[data-mon-label]");
+    const client = root.querySelector<HTMLElement>("[data-mon-client]");
+    const title = root.querySelector<HTMLElement>("[data-mon-title]");
+    const link = root.querySelector<HTMLAnchorElement>("[data-mon-link]");
+    const play = root.querySelector<HTMLButtonElement>("[data-mon-play]");
+    const embed = root.querySelector<HTMLElement>("[data-mon-embed]");
+    const frames = [...root.querySelectorAll<HTMLButtonElement>("[data-frame]")];
+    let currentYt = "";
+
+    const closeEmbed = () => {
+      if (embed) {
+        embed.hidden = true;
+        embed.replaceChildren();
+      }
+    };
+
+    frames.forEach((frame) => {
+      frame.addEventListener("click", () => {
+        frames.forEach((f) => {
+          const on = f === frame;
+          f.classList.toggle("is-on", on);
+          f.setAttribute("aria-pressed", String(on));
+        });
+        closeEmbed();
+        tcStart = performance.now();
+        if (label) label.textContent = frame.dataset.label ?? "";
+
+        if (frame.dataset.frame === "reel") {
+          delete root.dataset.program;
+          if (pick) pick.hidden = true;
+          if (video && !reduce) video.play().catch(() => {});
+          return;
+        }
+        root.dataset.program = frame.dataset.frame;
+        video?.pause();
+        currentYt = frame.dataset.yt ?? "";
+        if (img) img.src = frame.dataset.poster ?? "";
+        if (client) client.textContent = frame.dataset.client ?? "";
+        if (title) title.textContent = frame.dataset.title ?? "";
+        if (link) link.href = frame.dataset.href ?? "/projeler/";
+        if (play) play.hidden = !currentYt;
+        if (pick) {
+          pick.hidden = false;
+          pick.classList.remove("is-in");
+          void pick.offsetWidth; // restart the "cut" flash
+          pick.classList.add("is-in");
+        }
+      });
+    });
+
+    play?.addEventListener("click", () => {
+      if (!embed || !currentYt) return;
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://www.youtube-nocookie.com/embed/${currentYt}?autoplay=1&rel=0&modestbranding=1`;
+      iframe.title = title?.textContent ?? "Video";
+      iframe.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+      iframe.allowFullscreen = true;
+      embed.replaceChildren(iframe);
+      embed.hidden = false;
+      iframe.focus();
+      (window as any).rcTrack?.("video_play", { event_category: "portfolio", video_id: currentYt, location: "taslak_monitor" });
+    });
+
+    /* ── Contact sheet filter ── */
+    const LIMIT = 12;
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>("[data-tabs] [data-cat]")];
+    const cells = [...root.querySelectorAll<HTMLElement>("[data-sheet] > li")];
+    tabs.forEach((tab) =>
+      tab.addEventListener("click", () => {
+        const cat = tab.dataset.cat;
+        tabs.forEach((t) => t.setAttribute("aria-pressed", String(t === tab)));
+        let shown = 0;
+        cells.forEach((cell) => {
+          const match = cat === "*" || cell.dataset.cat === cat;
+          const show = match && shown < LIMIT;
+          if (show) shown++;
+          cell.hidden = !show;
+        });
+      }),
+    );
+
+    /* ── Edit timeline ── */
+    const range = root.querySelector<HTMLInputElement>("[data-tl-range]");
+    const head = root.querySelector<HTMLElement>("[data-tl-head]");
+    const clips = [...root.querySelectorAll<HTMLElement>("[data-clip]")];
+    const stageEls = [...root.querySelectorAll<HTMLElement>("[data-stage]")];
+    const playBtn = root.querySelector<HTMLButtonElement>("[data-tl-play]");
+    const playLabel = root.querySelector<HTMLElement>("[data-tl-play-label]");
+    const spans = clips.map((c) => ({
+      key: c.dataset.clip!,
+      from: Number(getComputedStyle(c).getPropertyValue("--from")),
+      to: Number(getComputedStyle(c).getPropertyValue("--to")),
+      title: c.textContent?.trim() ?? "",
+    }));
+
+    const setAt = (v: number) => {
+      head?.style.setProperty("--at", String(v));
+      const live = spans.find((s) => v >= s.from && v < s.to) ?? spans[spans.length - 1];
+      clips.forEach((c) => c.classList.toggle("is-live", c.dataset.clip === live?.key));
+      stageEls.forEach((el) => {
+        if (el.dataset.stage === live?.key) el.setAttribute("aria-current", "step");
+        else el.removeAttribute("aria-current");
+      });
+      const week = Math.min(4, Math.floor(v / 25) + 1);
+      range?.setAttribute("aria-valuetext", `${week}. hafta — ${live?.title ?? ""}`);
+    };
+    range?.addEventListener("input", () => {
+      stopPlay();
+      setAt(Number(range.value));
+    });
+    if (range) setAt(Number(range.value));
+
+    let playRaf = 0;
+    let last = 0;
+    const stopPlay = () => {
+      cancelAnimationFrame(playRaf);
+      playRaf = 0;
+      playBtn?.setAttribute("aria-pressed", "false");
+      if (playLabel) playLabel.textContent = "▶ Oynat";
+    };
+    const step = (now: number) => {
+      if (!range) return;
+      const dt = last ? now - last : 16;
+      last = now;
+      const next = Number(range.value) + dt / 60; // full pass ≈ 6s
+      if (next >= 99) {
+        range.value = "99";
+        setAt(99);
+        stopPlay();
+        return;
+      }
+      range.value = String(next);
+      setAt(next);
+      playRaf = requestAnimationFrame(step);
+    };
+    playBtn?.addEventListener("click", () => {
+      if (!range) return;
+      if (playRaf) return stopPlay();
+      if (reduce) {
+        // No sweep: jump stage by stage instead.
+        const at = Number(range.value);
+        const nextSpan = spans.find((s) => s.from > at) ?? spans[0];
+        range.value = String(nextSpan.from + 1);
+        setAt(nextSpan.from + 1);
+        return;
+      }
+      if (Number(range.value) >= 98) range.value = "0";
+      last = 0;
+      playBtn.setAttribute("aria-pressed", "true");
+      if (playLabel) playLabel.textContent = "❚❚ Durdur";
+      playRaf = requestAnimationFrame(step);
+    });
+
+    /* ── Call sheet: grow inputs with their content, submit like /iletisim/ ── */
+    const form = root.querySelector<HTMLFormElement>("[data-lt-form]");
+    const status = root.querySelector<HTMLElement>("[data-lt-status]");
+    form?.querySelectorAll<HTMLInputElement>(".lt-fill input").forEach((input) => {
+      const base = input.type === "tel" ? 12 : 11;
+      const fit = () => {
+        input.style.width = `${Math.max(base, input.value.length + 1)}ch`;
+      };
+      input.addEventListener("input", fit);
+    });
+    form?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!form.checkValidity()) {
+        if (status) {
+          status.textContent = "Adınızı ve telefon numaranızı yazmanız yeterli.";
+          status.className = "lt-form__status is-err";
+        }
+        form.reportValidity();
+        return;
+      }
+      const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (submit) submit.disabled = true;
+      if (status) {
+        status.textContent = "Gönderiliyor…";
+        status.className = "lt-form__status";
+      }
+      try {
+        const res = await fetch(form.action, {
+          method: "POST",
+          headers: { Accept: "application/json" },
+          body: new FormData(form),
+        });
+        const json = await res.json().catch(() => ({}));
+        if (res.ok && json.success) {
+          form.reset();
+          if (status) {
+            status.textContent = "Föy elimizde — en kısa sürede sizi arıyoruz.";
+            status.className = "lt-form__status is-ok";
+          }
+          const go = () => (window.location.href = "/tesekkurler/");
+          const track = (window as any).rcTrack;
+          if (typeof track === "function") {
+            track("generate_lead", { event_category: "lead", event_label: "taslak_call_sheet", form_id: "taslak_call_sheet" }, go);
+          } else go();
+        } else if (status) {
+          status.textContent = json.message ?? "Gönderilemedi. Lütfen tekrar deneyin.";
+          status.className = "lt-form__status is-err";
+        }
+      } catch {
+        if (status) {
+          status.textContent = "Bağlantı hatası. Lütfen tekrar deneyin ya da WhatsApp'tan yazın.";
+          status.className = "lt-form__status is-err";
+        }
+      } finally {
+        if (submit) submit.disabled = false;
+      }
+    });
+  }
+</script>
 </BaseLayout>
 
 <style is:global>
@@ -1760,250 +2007,3 @@ const whatsappHref = WHATSAPP_CTA_HREF ?? "/iletisim/";
   }
 </style>
 
-<script>
-  const root = document.querySelector<HTMLElement>("[data-lt]");
-  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  if (root) {
-    /* ── Monitor timecode: runs only while the monitor is on screen ── */
-    const tc = root.querySelector<HTMLElement>("[data-tc]");
-    const video = root.querySelector<HTMLVideoElement>("[data-mon-video]");
-    const monitor = root.querySelector<HTMLElement>("[data-monitor]");
-    let tcStart = performance.now();
-    let tcRaf = 0;
-    const pad = (n: number) => String(Math.floor(n)).padStart(2, "0");
-    const tick = (now: number) => {
-      const s = (now - tcStart) / 1000;
-      if (tc) tc.textContent = `${pad(s / 3600)}:${pad((s / 60) % 60)}:${pad(s % 60)}:${pad((s % 1) * 25)}`;
-      tcRaf = requestAnimationFrame(tick);
-    };
-    if (monitor && !reduce) {
-      new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting) {
-          if (!tcRaf) tcRaf = requestAnimationFrame(tick);
-          if (video && !video.closest("[hidden]") && root.dataset.program === undefined) {
-            video.play().catch(() => {});
-          }
-        } else {
-          cancelAnimationFrame(tcRaf);
-          tcRaf = 0;
-          video?.pause();
-        }
-      }).observe(monitor);
-    }
-
-    /* ── Strip → monitor ── */
-    const pick = root.querySelector<HTMLElement>("[data-mon-pick]");
-    const img = root.querySelector<HTMLImageElement>("[data-mon-img]");
-    const label = root.querySelector<HTMLElement>("[data-mon-label]");
-    const client = root.querySelector<HTMLElement>("[data-mon-client]");
-    const title = root.querySelector<HTMLElement>("[data-mon-title]");
-    const link = root.querySelector<HTMLAnchorElement>("[data-mon-link]");
-    const play = root.querySelector<HTMLButtonElement>("[data-mon-play]");
-    const embed = root.querySelector<HTMLElement>("[data-mon-embed]");
-    const frames = [...root.querySelectorAll<HTMLButtonElement>("[data-frame]")];
-    let currentYt = "";
-
-    const closeEmbed = () => {
-      if (embed) {
-        embed.hidden = true;
-        embed.replaceChildren();
-      }
-    };
-
-    frames.forEach((frame) => {
-      frame.addEventListener("click", () => {
-        frames.forEach((f) => {
-          const on = f === frame;
-          f.classList.toggle("is-on", on);
-          f.setAttribute("aria-pressed", String(on));
-        });
-        closeEmbed();
-        tcStart = performance.now();
-        if (label) label.textContent = frame.dataset.label ?? "";
-
-        if (frame.dataset.frame === "reel") {
-          delete root.dataset.program;
-          if (pick) pick.hidden = true;
-          if (video && !reduce) video.play().catch(() => {});
-          return;
-        }
-        root.dataset.program = frame.dataset.frame;
-        video?.pause();
-        currentYt = frame.dataset.yt ?? "";
-        if (img) img.src = frame.dataset.poster ?? "";
-        if (client) client.textContent = frame.dataset.client ?? "";
-        if (title) title.textContent = frame.dataset.title ?? "";
-        if (link) link.href = frame.dataset.href ?? "/projeler/";
-        if (play) play.hidden = !currentYt;
-        if (pick) {
-          pick.hidden = false;
-          pick.classList.remove("is-in");
-          void pick.offsetWidth; // restart the "cut" flash
-          pick.classList.add("is-in");
-        }
-      });
-    });
-
-    play?.addEventListener("click", () => {
-      if (!embed || !currentYt) return;
-      const iframe = document.createElement("iframe");
-      iframe.src = `https://www.youtube-nocookie.com/embed/${currentYt}?autoplay=1&rel=0&modestbranding=1`;
-      iframe.title = title?.textContent ?? "Video";
-      iframe.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
-      iframe.allowFullscreen = true;
-      embed.replaceChildren(iframe);
-      embed.hidden = false;
-      iframe.focus();
-      (window as any).rcTrack?.("video_play", { event_category: "portfolio", video_id: currentYt, location: "taslak_monitor" });
-    });
-
-    /* ── Contact sheet filter ── */
-    const LIMIT = 12;
-    const tabs = [...root.querySelectorAll<HTMLButtonElement>("[data-tabs] [data-cat]")];
-    const cells = [...root.querySelectorAll<HTMLElement>("[data-sheet] > li")];
-    tabs.forEach((tab) =>
-      tab.addEventListener("click", () => {
-        const cat = tab.dataset.cat;
-        tabs.forEach((t) => t.setAttribute("aria-pressed", String(t === tab)));
-        let shown = 0;
-        cells.forEach((cell) => {
-          const match = cat === "*" || cell.dataset.cat === cat;
-          const show = match && shown < LIMIT;
-          if (show) shown++;
-          cell.hidden = !show;
-        });
-      }),
-    );
-
-    /* ── Edit timeline ── */
-    const range = root.querySelector<HTMLInputElement>("[data-tl-range]");
-    const head = root.querySelector<HTMLElement>("[data-tl-head]");
-    const clips = [...root.querySelectorAll<HTMLElement>("[data-clip]")];
-    const stageEls = [...root.querySelectorAll<HTMLElement>("[data-stage]")];
-    const playBtn = root.querySelector<HTMLButtonElement>("[data-tl-play]");
-    const playLabel = root.querySelector<HTMLElement>("[data-tl-play-label]");
-    const spans = clips.map((c) => ({
-      key: c.dataset.clip!,
-      from: Number(getComputedStyle(c).getPropertyValue("--from")),
-      to: Number(getComputedStyle(c).getPropertyValue("--to")),
-      title: c.textContent?.trim() ?? "",
-    }));
-
-    const setAt = (v: number) => {
-      head?.style.setProperty("--at", String(v));
-      const live = spans.find((s) => v >= s.from && v < s.to) ?? spans[spans.length - 1];
-      clips.forEach((c) => c.classList.toggle("is-live", c.dataset.clip === live?.key));
-      stageEls.forEach((el) => {
-        if (el.dataset.stage === live?.key) el.setAttribute("aria-current", "step");
-        else el.removeAttribute("aria-current");
-      });
-      const week = Math.min(4, Math.floor(v / 25) + 1);
-      range?.setAttribute("aria-valuetext", `${week}. hafta — ${live?.title ?? ""}`);
-    };
-    range?.addEventListener("input", () => {
-      stopPlay();
-      setAt(Number(range.value));
-    });
-    if (range) setAt(Number(range.value));
-
-    let playRaf = 0;
-    let last = 0;
-    const stopPlay = () => {
-      cancelAnimationFrame(playRaf);
-      playRaf = 0;
-      playBtn?.setAttribute("aria-pressed", "false");
-      if (playLabel) playLabel.textContent = "▶ Oynat";
-    };
-    const step = (now: number) => {
-      if (!range) return;
-      const dt = last ? now - last : 16;
-      last = now;
-      const next = Number(range.value) + dt / 60; // full pass ≈ 6s
-      if (next >= 99) {
-        range.value = "99";
-        setAt(99);
-        stopPlay();
-        return;
-      }
-      range.value = String(next);
-      setAt(next);
-      playRaf = requestAnimationFrame(step);
-    };
-    playBtn?.addEventListener("click", () => {
-      if (!range) return;
-      if (playRaf) return stopPlay();
-      if (reduce) {
-        // No sweep: jump stage by stage instead.
-        const at = Number(range.value);
-        const nextSpan = spans.find((s) => s.from > at) ?? spans[0];
-        range.value = String(nextSpan.from + 1);
-        setAt(nextSpan.from + 1);
-        return;
-      }
-      if (Number(range.value) >= 98) range.value = "0";
-      last = 0;
-      playBtn.setAttribute("aria-pressed", "true");
-      if (playLabel) playLabel.textContent = "❚❚ Durdur";
-      playRaf = requestAnimationFrame(step);
-    });
-
-    /* ── Call sheet: grow inputs with their content, submit like /iletisim/ ── */
-    const form = root.querySelector<HTMLFormElement>("[data-lt-form]");
-    const status = root.querySelector<HTMLElement>("[data-lt-status]");
-    form?.querySelectorAll<HTMLInputElement>(".lt-fill input").forEach((input) => {
-      const base = input.type === "tel" ? 12 : 11;
-      const fit = () => {
-        input.style.width = `${Math.max(base, input.value.length + 1)}ch`;
-      };
-      input.addEventListener("input", fit);
-    });
-    form?.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      if (!form.checkValidity()) {
-        if (status) {
-          status.textContent = "Adınızı ve telefon numaranızı yazmanız yeterli.";
-          status.className = "lt-form__status is-err";
-        }
-        form.reportValidity();
-        return;
-      }
-      const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
-      if (submit) submit.disabled = true;
-      if (status) {
-        status.textContent = "Gönderiliyor…";
-        status.className = "lt-form__status";
-      }
-      try {
-        const res = await fetch(form.action, {
-          method: "POST",
-          headers: { Accept: "application/json" },
-          body: new FormData(form),
-        });
-        const json = await res.json().catch(() => ({}));
-        if (res.ok && json.success) {
-          form.reset();
-          if (status) {
-            status.textContent = "Föy elimizde — en kısa sürede sizi arıyoruz.";
-            status.className = "lt-form__status is-ok";
-          }
-          const go = () => (window.location.href = "/tesekkurler/");
-          const track = (window as any).rcTrack;
-          if (typeof track === "function") {
-            track("generate_lead", { event_category: "lead", event_label: "taslak_call_sheet", form_id: "taslak_call_sheet" }, go);
-          } else go();
-        } else if (status) {
-          status.textContent = json.message ?? "Gönderilemedi. Lütfen tekrar deneyin.";
-          status.className = "lt-form__status is-err";
-        }
-      } catch {
-        if (status) {
-          status.textContent = "Bağlantı hatası. Lütfen tekrar deneyin ya da WhatsApp'tan yazın.";
-          status.className = "lt-form__status is-err";
-        }
-      } finally {
-        if (submit) submit.disabled = false;
-      }
-    });
-  }
-</script>

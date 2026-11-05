@@ -1201,6 +1201,574 @@ const year = new Date().getFullYear();
 
     <EvFooter />
   </div>
+<script>
+  const root = document.querySelector<HTMLElement>("[data-ev]");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const track = (name: string, params: Record<string, unknown>, cb?: () => void) => {
+    const fn = (window as any).rcTrack;
+    if (typeof fn === "function") fn(name, params, cb);
+    else cb?.();
+  };
+
+  if (root) {
+    /* ── In-page links (#on-gorusme, …) ──
+       Scenes below the hero use content-visibility:auto (v14.2, mobile INP)
+       and stand in at 900px until rendered. A smooth scroll renders them on
+       the way, the page shrinks under it and the target drifts: "Görüşelim"
+       landed ~2,800px above the form on phones and in the footer on desktop,
+       the /#on-gorusme deep link too. An instant jump skips them (they stay
+       placeholders, so the target holds still). The landing scenes render
+       right after and, where the browser doesn't anchor the scroll (Safari,
+       keyboard activation), push the target away — so the position is
+       re-checked every frame until it holds for a few frames. The visitor's
+       own wheel/touch/key/pointer input ends that watch. */
+    let watch = 0;
+    const jumpTo = (target: HTMLElement, focus = false) => {
+      const align = () => {
+        try {
+          target.scrollIntoView({ behavior: "instant", block: "start" });
+        } catch {
+          // No "instant" in this engine: turn smooth scrolling off for one call.
+          const html = document.documentElement.style;
+          const prev = html.scrollBehavior;
+          html.scrollBehavior = "auto";
+          target.scrollIntoView(true);
+          html.scrollBehavior = prev;
+        }
+      };
+      cancelAnimationFrame(watch);
+      align();
+      if (focus) {
+        // A native anchor jump moves the focus start point to the target;
+        // preventDefault took that away, and Tab went back to the header.
+        if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+        target.focus({ preventScroll: true });
+      }
+      const margin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+      let still = 0;
+      let frames = 0;
+      const check = () => {
+        if (Math.abs(target.getBoundingClientRect().top - margin) > 4) {
+          align();
+          still = 0;
+        } else still++;
+        if (still < 3 && ++frames < 90) watch = requestAnimationFrame(check);
+      };
+      watch = requestAnimationFrame(check);
+    };
+    const userMoves = ["wheel", "touchstart", "keydown", "pointerdown"];
+    userMoves.forEach((t) => addEventListener(t, () => cancelAnimationFrame(watch), { passive: true }));
+    const hashTarget = (hash: string) => {
+      let id = hash.slice(1);
+      try {
+        id = decodeURIComponent(id);
+      } catch {
+        // A malformed "#%…" must not take the rest of this script down.
+      }
+      const el = id ? document.getElementById(id) : null;
+      return el && root.contains(el) ? el : null;
+    };
+    root.addEventListener("click", (e) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const link = (e.target as Element).closest<HTMLAnchorElement>('a[href^="#"]');
+      const target = link ? hashTarget(link.getAttribute("href") ?? "") : null;
+      if (!link || !target) return;
+      e.preventDefault();
+      if (location.hash !== link.hash) history.pushState(null, "", link.hash);
+      // The jump forces a full layout; run it after the next paint so the
+      // tap itself answers fast (INP).
+      requestAnimationFrame(() => setTimeout(() => jumpTo(target, true)));
+    });
+    // Arriving on /#on-gorusme (ads, shared links): the browser's own jump
+    // runs before the scenes settle, so align again now and after load —
+    // unless the visitor has started moving around by then.
+    const landing = hashTarget(location.hash);
+    if (landing) {
+      let moved = false;
+      [...userMoves, "mousedown"].forEach((t) => addEventListener(t, () => (moved = true), { once: true, passive: true }));
+      jumpTo(landing);
+      addEventListener("load", () => !moved && jumpTo(landing), { once: true });
+    }
+
+    /* ── Reviews: "Daha az gösterin" keeps the reader on the card ──
+       The control sits under the text it shortens. On a small phone, after
+       reading to the end, closing pulled the still-focused control up under
+       the header and the review's start off screen (320×568: control at
+       y=4–52, header to 73). Only then, bring the card back under the header. */
+    const head = root.querySelector<HTMLElement>(".ev-head");
+    root.querySelectorAll<HTMLDetailsElement>(".ev-review__more").forEach((more) =>
+      more.addEventListener("toggle", () => {
+        const card = more.closest<HTMLElement>(".ev-review");
+        const top = more.getBoundingClientRect().top;
+        if (!more.open && card && top < (head?.getBoundingClientRect().bottom ?? 0)) jumpTo(card);
+      }),
+    );
+
+    /* ── Hero: on-air monitor cycles only while the hero is visible ── */
+    const hero = root.querySelector<HTMLElement>(".ev-hero");
+    const frames = [...root.querySelectorAll<HTMLImageElement>("[data-onair-frame]")];
+    const onAirTitle = root.querySelector<HTMLElement>("[data-onair-title]");
+    let cycle = 0;
+    let frame = 0;
+    const live = () => frames.filter((f) => !f.hasAttribute("data-broken"));
+    const nextFrame = () => {
+      const ok = live();
+      if (!ok.length) return;
+      const cur = frames[frame];
+      const img = ok[(ok.indexOf(cur) + 1) % ok.length] ?? ok[0];
+      if (img === cur) return;
+      cur.classList.remove("is-on");
+      frame = frames.indexOf(img);
+      img.classList.add("is-on");
+      if (onAirTitle) onAirTitle.textContent = img.dataset.title ?? "";
+    };
+    // A cover that fails to load (YouTube down, blocked) is skipped; if none
+    // load, the monitor steps aside instead of showing a broken image.
+    const onAir = root.querySelector<HTMLElement>("[data-onair]");
+    frames.forEach((f) => {
+      const broke = () => {
+        f.setAttribute("data-broken", "");
+        if (!live().length) {
+          if (onAir) onAir.hidden = true;
+        } else if (f.classList.contains("is-on")) nextFrame();
+      };
+      if (f.complete && f.naturalWidth === 0 && f.currentSrc) broke();
+      else f.addEventListener("error", broke, { once: true });
+    });
+    if (hero && !reduce) {
+      new IntersectionObserver(([e]) => {
+        if (e.isIntersecting) {
+          cycle ||= window.setInterval(nextFrame, 3200);
+        } else {
+          window.clearInterval(cycle);
+          cycle = 0;
+        }
+      }).observe(hero);
+    }
+
+    /* ── Dolly-in: scroll progress through the pinned hero → --p (0…1) ── */
+    const dolly = root.querySelector<HTMLElement>("[data-dolly]");
+    if (dolly && !reduce) {
+      let ticking = false;
+      const update = () => {
+        ticking = false;
+        const r = (hero ?? dolly).getBoundingClientRect();
+        const p = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height)));
+        dolly.style.setProperty("--p", p.toFixed(4));
+        dolly.toggleAttribute("data-deep", p > 0.3);
+      };
+      const onScroll = () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+      };
+      addEventListener("scroll", onScroll, { passive: true });
+      addEventListener("resize", onScroll);
+      // First read in a frame, not synchronously at init (avoids a forced reflow).
+      onScroll();
+    }
+
+    /* ── Posters far below the fold (call-scene dawn, showreel dialog) ──
+       A <video poster> downloads at parse time wherever it sits; on a slow
+       phone these competed with the hero still (the LCP). They carry
+       data-poster and get it once near the viewport (or on open). */
+    const setPoster = (v: HTMLVideoElement) => {
+      if (v.dataset.poster && !v.poster) v.poster = v.dataset.poster;
+    };
+    const posterIo = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          setPoster(e.target as HTMLVideoElement);
+          posterIo.unobserve(e.target);
+        }),
+      { rootMargin: "1500px 0px" },
+    );
+    root.querySelectorAll<HTMLVideoElement>("video[data-poster]:not([data-reel-video])").forEach((v) => posterIo.observe(v));
+
+    /* ── Ambient videos play only on screen ──
+       Started after the load event (+ idle), so the hero loop and the
+       monitor clip don't take bandwidth/main thread from the LCP still. */
+    const afterLoad = (fn: () => void) => {
+      const idle = () => ("requestIdleCallback" in window ? requestIdleCallback(fn, { timeout: 1500 }) : setTimeout(fn, 200));
+      if (document.readyState === "complete") idle();
+      else addEventListener("load", idle, { once: true });
+    };
+    if (!reduce) afterLoad(() => {
+      const io = new IntersectionObserver((entries) =>
+        entries.forEach((e) => {
+          const v = e.target as HTMLVideoElement;
+          if (e.isIntersecting) v.play().catch(() => {});
+          else v.pause();
+        }),
+      );
+      const conn = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+      const slowNet = !!conn && (conn.saveData === true || /(^|-)2g|3g/.test(conn.effectiveType ?? ""));
+      root.querySelectorAll<HTMLVideoElement>("video[data-ambient]").forEach((v) => {
+        if (slowNet && v.hasAttribute("data-light")) return; // poster only on slow connections
+        io.observe(v);
+      });
+    });
+
+    /* ── Showreel dialog ── */
+    const reel = root.querySelector<HTMLDialogElement>("[data-reel]");
+    const reelVideo = root.querySelector<HTMLVideoElement>("[data-reel-video]");
+    if (reel && reelVideo && typeof reel.showModal === "function") {
+      root.querySelectorAll<HTMLAnchorElement>("[data-reel-open]").forEach((a) =>
+        a.addEventListener("click", (e) => {
+          e.preventDefault();
+          setPoster(reelVideo);
+          reel.showModal();
+          reelVideo.currentTime = 0;
+          reelVideo.play().catch(() => {});
+        }),
+      );
+      const close = () => {
+        reelVideo.pause();
+        reel.close();
+      };
+      root.querySelector("[data-reel-close]")?.addEventListener("click", close);
+      reel.addEventListener("click", (e) => {
+        if (e.target === reel) close();
+      });
+      reel.addEventListener("close", () => reelVideo.pause());
+    }
+    root.querySelector<HTMLVideoElement>(".ev-hero__motion")?.addEventListener(
+      "playing",
+      (e) => (e.target as HTMLElement).classList.add("is-playing"),
+      { once: true },
+    );
+
+    /* Region links: collapsed on phones (looked like a spam list), open on desktop. */
+    const areaAll = root.querySelector<HTMLDetailsElement>("[data-area-all]");
+    if (areaAll && window.matchMedia("(min-width: 761px)").matches) areaAll.open = true;
+
+    /* ── Case carousel ──
+       Active card = the one whose centre is nearest the track centre (read from
+       scroll position, not IntersectionObserver: on wide screens two cards pass a
+       60% threshold at once, so arrows skipped or stuck). Arrow clicks aim at a
+       target index that stays locked until the smooth scroll settles, so fast
+       clicks move exactly one card each. Mouse users can drag; holding an arrow
+       keeps moving. */
+    const trackEl = root.querySelector<HTMLElement>("[data-cases-track]");
+    const cards = [...root.querySelectorAll<HTMLElement>("[data-case]")];
+    const dots = [...root.querySelectorAll<HTMLButtonElement>("[data-case-dot]")];
+    const prev = root.querySelector<HTMLButtonElement>("[data-cases-prev]");
+    const next = root.querySelector<HTMLButtonElement>("[data-cases-next]");
+    const counter = root.querySelector<HTMLElement>("[data-case-count]");
+    let active = 0;
+    let target: number | null = null;
+    let settle = 0;
+    const clamp = (i: number) => Math.max(0, Math.min(cards.length - 1, i));
+    const setActive = (i: number) => {
+      if (i === active && cards[i]?.classList.contains("is-active")) return;
+      active = i;
+      cards.forEach((c, k) => c.classList.toggle("is-active", k === i));
+      dots.forEach((d, k) => (k === i ? d.setAttribute("aria-current", "true") : d.removeAttribute("aria-current")));
+      if (prev) prev.disabled = i === 0;
+      if (next) next.disabled = i === cards.length - 1;
+      if (counter) counter.textContent = cards[i]?.dataset.roman ?? "";
+    };
+    const nearest = () => {
+      if (!trackEl) return 0;
+      const mid = trackEl.scrollLeft + trackEl.clientWidth / 2;
+      let best = 0;
+      let bestD = Infinity;
+      cards.forEach((c, k) => {
+        const d = Math.abs(c.offsetLeft - trackEl.offsetLeft + c.offsetWidth / 2 - mid);
+        if (d < bestD) {
+          bestD = d;
+          best = k;
+        }
+      });
+      return best;
+    };
+    const goTo = (i: number) => {
+      const t = clamp(i);
+      const card = cards[t];
+      if (!card || !trackEl) return;
+      target = t;
+      setActive(t);
+      trackEl.scrollTo({
+        // offsetLeft is measured from .ev-cases (positioned), not the track.
+        left: card.offsetLeft - trackEl.offsetLeft - (trackEl.clientWidth - card.offsetWidth) / 2,
+        behavior: reduce ? "auto" : "smooth",
+      });
+    };
+    const step = (dir: number) => goTo((target ?? active) + dir);
+    if (trackEl) {
+      let raf = 0;
+      trackEl.addEventListener(
+        "scroll",
+        () => {
+          if (!raf)
+            raf = requestAnimationFrame(() => {
+              raf = 0;
+              if (target === null) setActive(nearest());
+            });
+          window.clearTimeout(settle);
+          settle = window.setTimeout(() => {
+            target = null;
+            setActive(nearest());
+          }, 140);
+        },
+        { passive: true },
+      );
+      trackEl.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight") {
+          e.preventDefault();
+          step(1);
+        } else if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          step(-1);
+        }
+      });
+      // Mouse drag (touch already scrolls natively).
+      let drag: { x: number; left: number; moved: boolean; id: number } | null = null;
+      let swallowClick = false;
+      trackEl.addEventListener("pointerdown", (e) => {
+        if (e.pointerType !== "mouse" || e.button !== 0) return;
+        if ((e.target as Element).closest("a, button, iframe")) return;
+        drag = { x: e.clientX, left: trackEl.scrollLeft, moved: false, id: e.pointerId };
+        target = null;
+      });
+      trackEl.addEventListener("pointermove", (e) => {
+        if (!drag || e.pointerId !== drag.id) return;
+        const dx = e.clientX - drag.x;
+        if (!drag.moved && Math.abs(dx) < 6) return;
+        if (!drag.moved) {
+          drag.moved = true;
+          trackEl.setPointerCapture(e.pointerId);
+          trackEl.style.scrollSnapType = "none";
+          trackEl.style.scrollBehavior = "auto";
+          trackEl.classList.add("is-dragging");
+        }
+        trackEl.scrollLeft = drag.left - dx;
+      });
+      const endDrag = (e: PointerEvent) => {
+        if (!drag || e.pointerId !== drag.id) return;
+        const d = drag;
+        drag = null;
+        if (!d.moved) return;
+        swallowClick = true;
+        trackEl.classList.remove("is-dragging");
+        const dx = e.clientX - d.x;
+        const from = nearest();
+        // A short flick still moves one card in the drag direction.
+        const to = Math.abs(dx) > 40 && from === active ? active + (dx < 0 ? 1 : -1) : from;
+        trackEl.style.scrollSnapType = "";
+        trackEl.style.scrollBehavior = "";
+        goTo(to);
+      };
+      trackEl.addEventListener("pointerup", endDrag);
+      trackEl.addEventListener("pointercancel", endDrag);
+      trackEl.addEventListener(
+        "click",
+        (e) => {
+          if (swallowClick) {
+            swallowClick = false;
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        },
+        true,
+      );
+      trackEl.addEventListener("dragstart", (e) => e.preventDefault());
+    }
+    // Arrows: click = one card; press and hold = keep going.
+    const holdable = (btn: HTMLButtonElement | null, dir: number) => {
+      if (!btn) return;
+      let hold = 0;
+      let rep = 0;
+      let fired = false;
+      const stop = () => {
+        window.clearTimeout(hold);
+        window.clearInterval(rep);
+        hold = rep = 0;
+      };
+      btn.addEventListener("pointerdown", (e) => {
+        if (e.button !== 0) return;
+        fired = false;
+        hold = window.setTimeout(() => {
+          fired = true;
+          step(dir);
+          rep = window.setInterval(() => step(dir), 420);
+        }, 380);
+      });
+      ["pointerup", "pointerleave", "pointercancel", "blur"].forEach((ev) => btn.addEventListener(ev, stop));
+      btn.addEventListener("click", () => {
+        if (fired) {
+          fired = false;
+          return;
+        }
+        step(dir);
+      });
+    };
+    holdable(prev, -1);
+    holdable(next, 1);
+    dots.forEach((d, i) => d.addEventListener("click", () => goTo(i)));
+    cards.forEach((c, i) =>
+      c.addEventListener("click", (e) => {
+        if (i !== active && !(e.target as Element).closest("a, button")) goTo(i);
+      }),
+    );
+    setActive(0);
+    if (trackEl) trackEl.scrollLeft = 0;
+
+    /* ── Cinema: plays inside the site, never sends people to YouTube ── */
+    const cinema = root.querySelector<HTMLDialogElement>("[data-cinema]");
+    const slot = root.querySelector<HTMLElement>("[data-cinema-slot]");
+    const cinemaTitle = root.querySelector<HTMLElement>("[data-cinema-title]");
+    let opener: HTMLElement | null = null;
+    const closeCinema = () => cinema?.open && cinema.close();
+    cinema?.addEventListener("close", () => {
+      slot?.replaceChildren(); // stops playback
+      opener?.focus();
+    });
+    root.querySelector("[data-cinema-close]")?.addEventListener("click", closeCinema);
+    cinema?.addEventListener("click", (e) => {
+      if (e.target === cinema) closeCinema(); // click on the dimmed backdrop
+    });
+    root.querySelectorAll<HTMLButtonElement>("[data-case-play]").forEach((btn) =>
+      btn.addEventListener("click", () => {
+        const card = btn.closest<HTMLElement>("[data-case]");
+        const id = btn.dataset.yt ?? card?.dataset.yt;
+        if (!cinema || !slot || !id) return;
+        cinema.classList.toggle("is-vertical", btn.hasAttribute("data-vertical"));
+        opener = btn;
+        const iframe = document.createElement("iframe");
+        iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+        iframe.title = btn.dataset.title ?? "Video";
+        iframe.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+        iframe.allowFullscreen = true;
+        slot.replaceChildren(iframe);
+        if (cinemaTitle) cinemaTitle.textContent = btn.dataset.title ?? "Video";
+        cinema.showModal();
+        track("video_play", { event_category: "portfolio", video_id: id, location: "evren_cinema" });
+      }),
+    );
+
+    /* ── Process path: the sun walks I → IV, lighting one stop at a time ── */
+    const path = root.querySelector<HTMLElement>("[data-path]");
+    const steps = [...root.querySelectorAll<HTMLElement>("[data-step]")];
+    if (path && steps.length) {
+      let at = 0;
+      let walk = 0;
+      const light = (i: number) => {
+        at = i;
+        path.style.setProperty("--at", String(i));
+        steps.forEach((el, k) => el.classList.toggle("is-lit", k === i));
+      };
+      const start = () => {
+        if (reduce || walk) return;
+        walk = window.setInterval(() => light((at + 1) % steps.length), 3400);
+      };
+      const stop = () => {
+        window.clearInterval(walk);
+        walk = 0;
+      };
+      // Pointing at a stop moves the sun there and holds it.
+      steps.forEach((el, i) => {
+        el.addEventListener("pointerenter", () => {
+          stop();
+          light(i);
+        });
+        el.addEventListener("pointerleave", start);
+      });
+      new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0.3 }).observe(path);
+    }
+
+    /* ── Sections surface as they arrive ── */
+    const risers = [...root.querySelectorAll<HTMLElement>("[data-rise]")];
+    if (reduce || !("IntersectionObserver" in window)) {
+      risers.forEach((el) => el.classList.add("is-in"));
+    } else {
+      const rio = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("is-in");
+              rio.unobserve(e.target);
+            }
+          }),
+        { rootMargin: "0px 0px 15% 0px", threshold: 0.01 },
+      );
+      risers.forEach((el) => rio.observe(el));
+    }
+
+    /* ── Hero: the world leans a little toward the pointer ── */
+    const media = root.querySelector<HTMLElement>(".ev-hero__media");
+    if (hero && media && !reduce && matchMedia("(pointer: fine)").matches) {
+      let mx = 0;
+      let my = 0;
+      let pending = false;
+      hero.addEventListener("pointermove", (e) => {
+        const r = hero.getBoundingClientRect();
+        mx = ((e.clientX - r.left) / r.width - 0.5) * -14;
+        my = ((e.clientY - r.top) / r.height - 0.5) * -10;
+        if (pending) return;
+        pending = true;
+        requestAnimationFrame(() => {
+          media.style.translate = `${mx}px ${my}px`;
+          pending = false;
+        });
+      });
+      media.style.transition = "translate 1.2s cubic-bezier(0.22, 1, 0.36, 1)";
+    }
+
+    /* ── Call sheet ── */
+    const call = root.querySelector<HTMLElement>("[data-call]");
+    const form = root.querySelector<HTMLFormElement>("[data-ev-form]");
+    const status = root.querySelector<HTMLElement>("[data-ev-status]");
+    const hug = CSS.supports("field-sizing", "content");
+    if (!hug) form?.querySelectorAll<HTMLInputElement>(".ev-fill input").forEach((input) => {
+      input.addEventListener("input", () => {
+        input.style.width = `${Math.max(input.type === "tel" ? 11 : 9, input.value.length + 1)}ch`;
+      });
+    });
+    const say = (text: string, err = false) => {
+      if (!status) return;
+      status.textContent = text;
+      status.className = `ev-form__status${err ? " is-err" : ""}`;
+    };
+    form?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!form.checkValidity()) {
+        say("Adınızı ve telefon numaranızı yazmanız yeterli.", true);
+        form.reportValidity();
+        return;
+      }
+      const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (submit) submit.disabled = true;
+      say("Gönderiliyor…");
+      try {
+        const res = await fetch(form.action, {
+          method: "POST",
+          headers: { Accept: "application/json" },
+          body: new FormData(form),
+        });
+        const json = await res.json().catch(() => ({}));
+        if (res.ok && json.success) {
+          form.reset();
+          say("Teşekkürler, mesajınız bize ulaştı.");
+          call?.classList.add("is-sent");
+          track(
+            "generate_lead",
+            { event_category: "lead", event_label: "evren_call_sheet", form_id: "evren_call_sheet" },
+            () => window.setTimeout(() => (window.location.href = "/tesekkurler/"), reduce ? 0 : 1400),
+          );
+        } else {
+          say(json.message ?? "Gönderilemedi. Lütfen tekrar deneyin.", true);
+        }
+      } catch {
+        say("Bağlantı hatası. Lütfen tekrar deneyin ya da WhatsApp'tan yazın.", true);
+      } finally {
+        if (submit) submit.disabled = false;
+      }
+    });
+  }
+</script>
 </BaseLayout>
 
 <style is:global>
@@ -3780,571 +4348,3 @@ const year = new Date().getFullYear();
   }
 </style>
 
-<script>
-  const root = document.querySelector<HTMLElement>("[data-ev]");
-  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const track = (name: string, params: Record<string, unknown>, cb?: () => void) => {
-    const fn = (window as any).rcTrack;
-    if (typeof fn === "function") fn(name, params, cb);
-    else cb?.();
-  };
-
-  if (root) {
-    /* ── In-page links (#on-gorusme, …) ──
-       Scenes below the hero use content-visibility:auto (v14.2, mobile INP)
-       and stand in at 900px until rendered. A smooth scroll renders them on
-       the way, the page shrinks under it and the target drifts: "Görüşelim"
-       landed ~2,800px above the form on phones and in the footer on desktop,
-       the /#on-gorusme deep link too. An instant jump skips them (they stay
-       placeholders, so the target holds still). The landing scenes render
-       right after and, where the browser doesn't anchor the scroll (Safari,
-       keyboard activation), push the target away — so the position is
-       re-checked every frame until it holds for a few frames. The visitor's
-       own wheel/touch/key/pointer input ends that watch. */
-    let watch = 0;
-    const jumpTo = (target: HTMLElement, focus = false) => {
-      const align = () => {
-        try {
-          target.scrollIntoView({ behavior: "instant", block: "start" });
-        } catch {
-          // No "instant" in this engine: turn smooth scrolling off for one call.
-          const html = document.documentElement.style;
-          const prev = html.scrollBehavior;
-          html.scrollBehavior = "auto";
-          target.scrollIntoView(true);
-          html.scrollBehavior = prev;
-        }
-      };
-      cancelAnimationFrame(watch);
-      align();
-      if (focus) {
-        // A native anchor jump moves the focus start point to the target;
-        // preventDefault took that away, and Tab went back to the header.
-        if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
-        target.focus({ preventScroll: true });
-      }
-      const margin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
-      let still = 0;
-      let frames = 0;
-      const check = () => {
-        if (Math.abs(target.getBoundingClientRect().top - margin) > 4) {
-          align();
-          still = 0;
-        } else still++;
-        if (still < 3 && ++frames < 90) watch = requestAnimationFrame(check);
-      };
-      watch = requestAnimationFrame(check);
-    };
-    const userMoves = ["wheel", "touchstart", "keydown", "pointerdown"];
-    userMoves.forEach((t) => addEventListener(t, () => cancelAnimationFrame(watch), { passive: true }));
-    const hashTarget = (hash: string) => {
-      let id = hash.slice(1);
-      try {
-        id = decodeURIComponent(id);
-      } catch {
-        // A malformed "#%…" must not take the rest of this script down.
-      }
-      const el = id ? document.getElementById(id) : null;
-      return el && root.contains(el) ? el : null;
-    };
-    root.addEventListener("click", (e) => {
-      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      const link = (e.target as Element).closest<HTMLAnchorElement>('a[href^="#"]');
-      const target = link ? hashTarget(link.getAttribute("href") ?? "") : null;
-      if (!link || !target) return;
-      e.preventDefault();
-      if (location.hash !== link.hash) history.pushState(null, "", link.hash);
-      // The jump forces a full layout; run it after the next paint so the
-      // tap itself answers fast (INP).
-      requestAnimationFrame(() => setTimeout(() => jumpTo(target, true)));
-    });
-    // Arriving on /#on-gorusme (ads, shared links): the browser's own jump
-    // runs before the scenes settle, so align again now and after load —
-    // unless the visitor has started moving around by then.
-    const landing = hashTarget(location.hash);
-    if (landing) {
-      let moved = false;
-      [...userMoves, "mousedown"].forEach((t) => addEventListener(t, () => (moved = true), { once: true, passive: true }));
-      jumpTo(landing);
-      addEventListener("load", () => !moved && jumpTo(landing), { once: true });
-    }
-
-    /* ── Reviews: "Daha az gösterin" keeps the reader on the card ──
-       The control sits under the text it shortens. On a small phone, after
-       reading to the end, closing pulled the still-focused control up under
-       the header and the review's start off screen (320×568: control at
-       y=4–52, header to 73). Only then, bring the card back under the header. */
-    const head = root.querySelector<HTMLElement>(".ev-head");
-    root.querySelectorAll<HTMLDetailsElement>(".ev-review__more").forEach((more) =>
-      more.addEventListener("toggle", () => {
-        const card = more.closest<HTMLElement>(".ev-review");
-        const top = more.getBoundingClientRect().top;
-        if (!more.open && card && top < (head?.getBoundingClientRect().bottom ?? 0)) jumpTo(card);
-      }),
-    );
-
-    /* ── Hero: on-air monitor cycles only while the hero is visible ── */
-    const hero = root.querySelector<HTMLElement>(".ev-hero");
-    const frames = [...root.querySelectorAll<HTMLImageElement>("[data-onair-frame]")];
-    const onAirTitle = root.querySelector<HTMLElement>("[data-onair-title]");
-    let cycle = 0;
-    let frame = 0;
-    const live = () => frames.filter((f) => !f.hasAttribute("data-broken"));
-    const nextFrame = () => {
-      const ok = live();
-      if (!ok.length) return;
-      const cur = frames[frame];
-      const img = ok[(ok.indexOf(cur) + 1) % ok.length] ?? ok[0];
-      if (img === cur) return;
-      cur.classList.remove("is-on");
-      frame = frames.indexOf(img);
-      img.classList.add("is-on");
-      if (onAirTitle) onAirTitle.textContent = img.dataset.title ?? "";
-    };
-    // A cover that fails to load (YouTube down, blocked) is skipped; if none
-    // load, the monitor steps aside instead of showing a broken image.
-    const onAir = root.querySelector<HTMLElement>("[data-onair]");
-    frames.forEach((f) => {
-      const broke = () => {
-        f.setAttribute("data-broken", "");
-        if (!live().length) {
-          if (onAir) onAir.hidden = true;
-        } else if (f.classList.contains("is-on")) nextFrame();
-      };
-      if (f.complete && f.naturalWidth === 0 && f.currentSrc) broke();
-      else f.addEventListener("error", broke, { once: true });
-    });
-    if (hero && !reduce) {
-      new IntersectionObserver(([e]) => {
-        if (e.isIntersecting) {
-          cycle ||= window.setInterval(nextFrame, 3200);
-        } else {
-          window.clearInterval(cycle);
-          cycle = 0;
-        }
-      }).observe(hero);
-    }
-
-    /* ── Dolly-in: scroll progress through the pinned hero → --p (0…1) ── */
-    const dolly = root.querySelector<HTMLElement>("[data-dolly]");
-    if (dolly && !reduce) {
-      let ticking = false;
-      const update = () => {
-        ticking = false;
-        const r = (hero ?? dolly).getBoundingClientRect();
-        const p = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height)));
-        dolly.style.setProperty("--p", p.toFixed(4));
-        dolly.toggleAttribute("data-deep", p > 0.3);
-      };
-      const onScroll = () => {
-        if (!ticking) {
-          ticking = true;
-          requestAnimationFrame(update);
-        }
-      };
-      addEventListener("scroll", onScroll, { passive: true });
-      addEventListener("resize", onScroll);
-      // First read in a frame, not synchronously at init (avoids a forced reflow).
-      onScroll();
-    }
-
-    /* ── Posters far below the fold (call-scene dawn, showreel dialog) ──
-       A <video poster> downloads at parse time wherever it sits; on a slow
-       phone these competed with the hero still (the LCP). They carry
-       data-poster and get it once near the viewport (or on open). */
-    const setPoster = (v: HTMLVideoElement) => {
-      if (v.dataset.poster && !v.poster) v.poster = v.dataset.poster;
-    };
-    const posterIo = new IntersectionObserver(
-      (entries) =>
-        entries.forEach((e) => {
-          if (!e.isIntersecting) return;
-          setPoster(e.target as HTMLVideoElement);
-          posterIo.unobserve(e.target);
-        }),
-      { rootMargin: "1500px 0px" },
-    );
-    root.querySelectorAll<HTMLVideoElement>("video[data-poster]:not([data-reel-video])").forEach((v) => posterIo.observe(v));
-
-    /* ── Ambient videos play only on screen ──
-       Started after the load event (+ idle), so the hero loop and the
-       monitor clip don't take bandwidth/main thread from the LCP still. */
-    const afterLoad = (fn: () => void) => {
-      const idle = () => ("requestIdleCallback" in window ? requestIdleCallback(fn, { timeout: 1500 }) : setTimeout(fn, 200));
-      if (document.readyState === "complete") idle();
-      else addEventListener("load", idle, { once: true });
-    };
-    if (!reduce) afterLoad(() => {
-      const io = new IntersectionObserver((entries) =>
-        entries.forEach((e) => {
-          const v = e.target as HTMLVideoElement;
-          if (e.isIntersecting) v.play().catch(() => {});
-          else v.pause();
-        }),
-      );
-      const conn = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
-      const slowNet = !!conn && (conn.saveData === true || /(^|-)2g|3g/.test(conn.effectiveType ?? ""));
-      root.querySelectorAll<HTMLVideoElement>("video[data-ambient]").forEach((v) => {
-        if (slowNet && v.hasAttribute("data-light")) return; // poster only on slow connections
-        io.observe(v);
-      });
-    });
-
-    /* ── Showreel dialog ── */
-    const reel = root.querySelector<HTMLDialogElement>("[data-reel]");
-    const reelVideo = root.querySelector<HTMLVideoElement>("[data-reel-video]");
-    if (reel && reelVideo && typeof reel.showModal === "function") {
-      root.querySelectorAll<HTMLAnchorElement>("[data-reel-open]").forEach((a) =>
-        a.addEventListener("click", (e) => {
-          e.preventDefault();
-          setPoster(reelVideo);
-          reel.showModal();
-          reelVideo.currentTime = 0;
-          reelVideo.play().catch(() => {});
-        }),
-      );
-      const close = () => {
-        reelVideo.pause();
-        reel.close();
-      };
-      root.querySelector("[data-reel-close]")?.addEventListener("click", close);
-      reel.addEventListener("click", (e) => {
-        if (e.target === reel) close();
-      });
-      reel.addEventListener("close", () => reelVideo.pause());
-    }
-    root.querySelector<HTMLVideoElement>(".ev-hero__motion")?.addEventListener(
-      "playing",
-      (e) => (e.target as HTMLElement).classList.add("is-playing"),
-      { once: true },
-    );
-
-    /* Region links: collapsed on phones (looked like a spam list), open on desktop. */
-    const areaAll = root.querySelector<HTMLDetailsElement>("[data-area-all]");
-    if (areaAll && window.matchMedia("(min-width: 761px)").matches) areaAll.open = true;
-
-    /* ── Case carousel ──
-       Active card = the one whose centre is nearest the track centre (read from
-       scroll position, not IntersectionObserver: on wide screens two cards pass a
-       60% threshold at once, so arrows skipped or stuck). Arrow clicks aim at a
-       target index that stays locked until the smooth scroll settles, so fast
-       clicks move exactly one card each. Mouse users can drag; holding an arrow
-       keeps moving. */
-    const trackEl = root.querySelector<HTMLElement>("[data-cases-track]");
-    const cards = [...root.querySelectorAll<HTMLElement>("[data-case]")];
-    const dots = [...root.querySelectorAll<HTMLButtonElement>("[data-case-dot]")];
-    const prev = root.querySelector<HTMLButtonElement>("[data-cases-prev]");
-    const next = root.querySelector<HTMLButtonElement>("[data-cases-next]");
-    const counter = root.querySelector<HTMLElement>("[data-case-count]");
-    let active = 0;
-    let target: number | null = null;
-    let settle = 0;
-    const clamp = (i: number) => Math.max(0, Math.min(cards.length - 1, i));
-    const setActive = (i: number) => {
-      if (i === active && cards[i]?.classList.contains("is-active")) return;
-      active = i;
-      cards.forEach((c, k) => c.classList.toggle("is-active", k === i));
-      dots.forEach((d, k) => (k === i ? d.setAttribute("aria-current", "true") : d.removeAttribute("aria-current")));
-      if (prev) prev.disabled = i === 0;
-      if (next) next.disabled = i === cards.length - 1;
-      if (counter) counter.textContent = cards[i]?.dataset.roman ?? "";
-    };
-    const nearest = () => {
-      if (!trackEl) return 0;
-      const mid = trackEl.scrollLeft + trackEl.clientWidth / 2;
-      let best = 0;
-      let bestD = Infinity;
-      cards.forEach((c, k) => {
-        const d = Math.abs(c.offsetLeft - trackEl.offsetLeft + c.offsetWidth / 2 - mid);
-        if (d < bestD) {
-          bestD = d;
-          best = k;
-        }
-      });
-      return best;
-    };
-    const goTo = (i: number) => {
-      const t = clamp(i);
-      const card = cards[t];
-      if (!card || !trackEl) return;
-      target = t;
-      setActive(t);
-      trackEl.scrollTo({
-        // offsetLeft is measured from .ev-cases (positioned), not the track.
-        left: card.offsetLeft - trackEl.offsetLeft - (trackEl.clientWidth - card.offsetWidth) / 2,
-        behavior: reduce ? "auto" : "smooth",
-      });
-    };
-    const step = (dir: number) => goTo((target ?? active) + dir);
-    if (trackEl) {
-      let raf = 0;
-      trackEl.addEventListener(
-        "scroll",
-        () => {
-          if (!raf)
-            raf = requestAnimationFrame(() => {
-              raf = 0;
-              if (target === null) setActive(nearest());
-            });
-          window.clearTimeout(settle);
-          settle = window.setTimeout(() => {
-            target = null;
-            setActive(nearest());
-          }, 140);
-        },
-        { passive: true },
-      );
-      trackEl.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowRight") {
-          e.preventDefault();
-          step(1);
-        } else if (e.key === "ArrowLeft") {
-          e.preventDefault();
-          step(-1);
-        }
-      });
-      // Mouse drag (touch already scrolls natively).
-      let drag: { x: number; left: number; moved: boolean; id: number } | null = null;
-      let swallowClick = false;
-      trackEl.addEventListener("pointerdown", (e) => {
-        if (e.pointerType !== "mouse" || e.button !== 0) return;
-        if ((e.target as Element).closest("a, button, iframe")) return;
-        drag = { x: e.clientX, left: trackEl.scrollLeft, moved: false, id: e.pointerId };
-        target = null;
-      });
-      trackEl.addEventListener("pointermove", (e) => {
-        if (!drag || e.pointerId !== drag.id) return;
-        const dx = e.clientX - drag.x;
-        if (!drag.moved && Math.abs(dx) < 6) return;
-        if (!drag.moved) {
-          drag.moved = true;
-          trackEl.setPointerCapture(e.pointerId);
-          trackEl.style.scrollSnapType = "none";
-          trackEl.style.scrollBehavior = "auto";
-          trackEl.classList.add("is-dragging");
-        }
-        trackEl.scrollLeft = drag.left - dx;
-      });
-      const endDrag = (e: PointerEvent) => {
-        if (!drag || e.pointerId !== drag.id) return;
-        const d = drag;
-        drag = null;
-        if (!d.moved) return;
-        swallowClick = true;
-        trackEl.classList.remove("is-dragging");
-        const dx = e.clientX - d.x;
-        const from = nearest();
-        // A short flick still moves one card in the drag direction.
-        const to = Math.abs(dx) > 40 && from === active ? active + (dx < 0 ? 1 : -1) : from;
-        trackEl.style.scrollSnapType = "";
-        trackEl.style.scrollBehavior = "";
-        goTo(to);
-      };
-      trackEl.addEventListener("pointerup", endDrag);
-      trackEl.addEventListener("pointercancel", endDrag);
-      trackEl.addEventListener(
-        "click",
-        (e) => {
-          if (swallowClick) {
-            swallowClick = false;
-            e.preventDefault();
-            e.stopPropagation();
-          }
-        },
-        true,
-      );
-      trackEl.addEventListener("dragstart", (e) => e.preventDefault());
-    }
-    // Arrows: click = one card; press and hold = keep going.
-    const holdable = (btn: HTMLButtonElement | null, dir: number) => {
-      if (!btn) return;
-      let hold = 0;
-      let rep = 0;
-      let fired = false;
-      const stop = () => {
-        window.clearTimeout(hold);
-        window.clearInterval(rep);
-        hold = rep = 0;
-      };
-      btn.addEventListener("pointerdown", (e) => {
-        if (e.button !== 0) return;
-        fired = false;
-        hold = window.setTimeout(() => {
-          fired = true;
-          step(dir);
-          rep = window.setInterval(() => step(dir), 420);
-        }, 380);
-      });
-      ["pointerup", "pointerleave", "pointercancel", "blur"].forEach((ev) => btn.addEventListener(ev, stop));
-      btn.addEventListener("click", () => {
-        if (fired) {
-          fired = false;
-          return;
-        }
-        step(dir);
-      });
-    };
-    holdable(prev, -1);
-    holdable(next, 1);
-    dots.forEach((d, i) => d.addEventListener("click", () => goTo(i)));
-    cards.forEach((c, i) =>
-      c.addEventListener("click", (e) => {
-        if (i !== active && !(e.target as Element).closest("a, button")) goTo(i);
-      }),
-    );
-    setActive(0);
-    if (trackEl) trackEl.scrollLeft = 0;
-
-    /* ── Cinema: plays inside the site, never sends people to YouTube ── */
-    const cinema = root.querySelector<HTMLDialogElement>("[data-cinema]");
-    const slot = root.querySelector<HTMLElement>("[data-cinema-slot]");
-    const cinemaTitle = root.querySelector<HTMLElement>("[data-cinema-title]");
-    let opener: HTMLElement | null = null;
-    const closeCinema = () => cinema?.open && cinema.close();
-    cinema?.addEventListener("close", () => {
-      slot?.replaceChildren(); // stops playback
-      opener?.focus();
-    });
-    root.querySelector("[data-cinema-close]")?.addEventListener("click", closeCinema);
-    cinema?.addEventListener("click", (e) => {
-      if (e.target === cinema) closeCinema(); // click on the dimmed backdrop
-    });
-    root.querySelectorAll<HTMLButtonElement>("[data-case-play]").forEach((btn) =>
-      btn.addEventListener("click", () => {
-        const card = btn.closest<HTMLElement>("[data-case]");
-        const id = btn.dataset.yt ?? card?.dataset.yt;
-        if (!cinema || !slot || !id) return;
-        cinema.classList.toggle("is-vertical", btn.hasAttribute("data-vertical"));
-        opener = btn;
-        const iframe = document.createElement("iframe");
-        iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
-        iframe.title = btn.dataset.title ?? "Video";
-        iframe.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
-        iframe.allowFullscreen = true;
-        slot.replaceChildren(iframe);
-        if (cinemaTitle) cinemaTitle.textContent = btn.dataset.title ?? "Video";
-        cinema.showModal();
-        track("video_play", { event_category: "portfolio", video_id: id, location: "evren_cinema" });
-      }),
-    );
-
-    /* ── Process path: the sun walks I → IV, lighting one stop at a time ── */
-    const path = root.querySelector<HTMLElement>("[data-path]");
-    const steps = [...root.querySelectorAll<HTMLElement>("[data-step]")];
-    if (path && steps.length) {
-      let at = 0;
-      let walk = 0;
-      const light = (i: number) => {
-        at = i;
-        path.style.setProperty("--at", String(i));
-        steps.forEach((el, k) => el.classList.toggle("is-lit", k === i));
-      };
-      const start = () => {
-        if (reduce || walk) return;
-        walk = window.setInterval(() => light((at + 1) % steps.length), 3400);
-      };
-      const stop = () => {
-        window.clearInterval(walk);
-        walk = 0;
-      };
-      // Pointing at a stop moves the sun there and holds it.
-      steps.forEach((el, i) => {
-        el.addEventListener("pointerenter", () => {
-          stop();
-          light(i);
-        });
-        el.addEventListener("pointerleave", start);
-      });
-      new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0.3 }).observe(path);
-    }
-
-    /* ── Sections surface as they arrive ── */
-    const risers = [...root.querySelectorAll<HTMLElement>("[data-rise]")];
-    if (reduce || !("IntersectionObserver" in window)) {
-      risers.forEach((el) => el.classList.add("is-in"));
-    } else {
-      const rio = new IntersectionObserver(
-        (entries) =>
-          entries.forEach((e) => {
-            if (e.isIntersecting) {
-              e.target.classList.add("is-in");
-              rio.unobserve(e.target);
-            }
-          }),
-        { rootMargin: "0px 0px 15% 0px", threshold: 0.01 },
-      );
-      risers.forEach((el) => rio.observe(el));
-    }
-
-    /* ── Hero: the world leans a little toward the pointer ── */
-    const media = root.querySelector<HTMLElement>(".ev-hero__media");
-    if (hero && media && !reduce && matchMedia("(pointer: fine)").matches) {
-      let mx = 0;
-      let my = 0;
-      let pending = false;
-      hero.addEventListener("pointermove", (e) => {
-        const r = hero.getBoundingClientRect();
-        mx = ((e.clientX - r.left) / r.width - 0.5) * -14;
-        my = ((e.clientY - r.top) / r.height - 0.5) * -10;
-        if (pending) return;
-        pending = true;
-        requestAnimationFrame(() => {
-          media.style.translate = `${mx}px ${my}px`;
-          pending = false;
-        });
-      });
-      media.style.transition = "translate 1.2s cubic-bezier(0.22, 1, 0.36, 1)";
-    }
-
-    /* ── Call sheet ── */
-    const call = root.querySelector<HTMLElement>("[data-call]");
-    const form = root.querySelector<HTMLFormElement>("[data-ev-form]");
-    const status = root.querySelector<HTMLElement>("[data-ev-status]");
-    const hug = CSS.supports("field-sizing", "content");
-    if (!hug) form?.querySelectorAll<HTMLInputElement>(".ev-fill input").forEach((input) => {
-      input.addEventListener("input", () => {
-        input.style.width = `${Math.max(input.type === "tel" ? 11 : 9, input.value.length + 1)}ch`;
-      });
-    });
-    const say = (text: string, err = false) => {
-      if (!status) return;
-      status.textContent = text;
-      status.className = `ev-form__status${err ? " is-err" : ""}`;
-    };
-    form?.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      if (!form.checkValidity()) {
-        say("Adınızı ve telefon numaranızı yazmanız yeterli.", true);
-        form.reportValidity();
-        return;
-      }
-      const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
-      if (submit) submit.disabled = true;
-      say("Gönderiliyor…");
-      try {
-        const res = await fetch(form.action, {
-          method: "POST",
-          headers: { Accept: "application/json" },
-          body: new FormData(form),
-        });
-        const json = await res.json().catch(() => ({}));
-        if (res.ok && json.success) {
-          form.reset();
-          say("Teşekkürler, mesajınız bize ulaştı.");
-          call?.classList.add("is-sent");
-          track(
-            "generate_lead",
-            { event_category: "lead", event_label: "evren_call_sheet", form_id: "evren_call_sheet" },
-            () => window.setTimeout(() => (window.location.href = "/tesekkurler/"), reduce ? 0 : 1400),
-          );
-        } else {
-          say(json.message ?? "Gönderilemedi. Lütfen tekrar deneyin.", true);
-        }
-      } catch {
-        say("Bağlantı hatası. Lütfen tekrar deneyin ya da WhatsApp'tan yazın.", true);
-      } finally {
-        if (submit) submit.disabled = false;
-      }
-    });
-  }
-</script>

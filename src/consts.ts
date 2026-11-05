@@ -9,7 +9,7 @@ export const SITE = {
   name: "Rast Creative Studio",
   shortName: "Rast Creative",
   /** Home-page <title>. Inner pages pass their own `title` to BaseLayout. */
-  defaultTitle: "Sakarya Video Prodüksiyon & Sosyal Medya Stüdyosu | Rast Creative",
+  defaultTitle: "Sakarya Video Prodüksiyon & Sosyal Medya | Rast Creative",
   /** `%s` is replaced by the page title on inner pages. */
   titleTemplate: "%s — Rast Creative Studio",
   /** Default meta description (≤160): canonical entity + services, "Sakarya video" first. */

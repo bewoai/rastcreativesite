@@ -499,8 +499,6 @@ const jsonLd = [
       <Button href={PRIMARY_CTA.href}>Görüşelim</Button>
     </div>
   </Section>
-</BaseLayout>
-
 <script>
   const copyBtn = document.querySelector<HTMLButtonElement>("[data-copy]");
   copyBtn?.addEventListener("click", async () => {
@@ -515,6 +513,7 @@ const jsonLd = [
     out.textContent = "Kopyalandı.";
   });
 </script>
+</BaseLayout>
 
 <style>
   .crumbs {

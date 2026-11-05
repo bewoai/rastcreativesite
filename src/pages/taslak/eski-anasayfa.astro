@@ -479,6 +479,103 @@ const pageJsonLd = [
       <Button href={PRIMARY_CTA.href} size="lg" arrow data-cta-location="final_band">{PRIMARY_CTA.label}</Button>
     </div>
   </Section>
+<script>
+  const dailyProjectRoot = document.querySelector<HTMLElement>("[data-daily-projects]");
+  if (dailyProjectRoot) {
+    const cards = Array.from(dailyProjectRoot.querySelectorAll<HTMLElement>("[data-daily-project]"));
+    const count = Math.min(Number(dailyProjectRoot.dataset.dailyCount ?? 3), cards.length);
+
+    const istanbulDateKey = () => {
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Europe/Istanbul",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).formatToParts(new Date());
+      const get = (type: string) => parts.find((part) => part.type === type)?.value ?? "";
+      return `${get("year")}-${get("month")}-${get("day")}`;
+    };
+
+    const seedFromString = (value: string) => {
+      let seed = 2166136261;
+      for (let i = 0; i < value.length; i += 1) {
+        seed ^= value.charCodeAt(i);
+        seed = Math.imul(seed, 16777619);
+      }
+      return seed >>> 0;
+    };
+
+    const nextRandom = (seed: number) => {
+      let state = seed || 1;
+      return () => {
+        state = Math.imul(state ^ (state >>> 15), 1 | state);
+        state ^= state + Math.imul(state ^ (state >>> 7), 61 | state);
+        return ((state ^ (state >>> 14)) >>> 0) / 4294967296;
+      };
+    };
+
+    let equalizeFrame = 0;
+    const equalizeProjectCards = () => {
+      if (equalizeFrame) window.cancelAnimationFrame(equalizeFrame);
+      equalizeFrame = window.requestAnimationFrame(() => {
+        const activeCards = cards
+          .filter((card) => !card.classList.contains("is-inactive"))
+          .map((card) => card.querySelector<HTMLElement>(".card"))
+          .filter((card): card is HTMLElement => !!card);
+
+        // Frame 1: clear heights — browser recalculates layout before next frame
+        activeCards.forEach((card) => {
+          card.style.minHeight = "";
+        });
+
+        if (activeCards.length < 2) { equalizeFrame = 0; return; }
+
+        // Frame 2: read after layout settles, then write (no forced reflow)
+        equalizeFrame = window.requestAnimationFrame(() => {
+          equalizeFrame = 0;
+          const maxHeight = Math.max(
+            ...activeCards.map((card) => card.offsetHeight),
+          );
+          activeCards.forEach((card) => {
+            card.style.minHeight = `${Math.ceil(maxHeight)}px`;
+          });
+        });
+      });
+    };
+
+    let currentDateKey = "";
+    const applyDailyProjects = () => {
+      const dateKey = istanbulDateKey();
+      if (dateKey === currentDateKey) {
+        equalizeProjectCards();
+        return;
+      }
+      currentDateKey = dateKey;
+
+      const random = nextRandom(seedFromString(dateKey));
+      const indexes = cards.map((_, index) => index);
+      for (let i = indexes.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(random() * (i + 1));
+        [indexes[i], indexes[j]] = [indexes[j], indexes[i]];
+      }
+
+      const selected = new Set(indexes.slice(0, count));
+      cards.forEach((card, index) => {
+        const order = indexes.indexOf(index);
+        const active = selected.has(index);
+        card.classList.toggle("is-active", active);
+        card.classList.toggle("is-inactive", !active);
+        if (active) card.style.order = String(order);
+      });
+      equalizeProjectCards();
+    };
+
+    applyDailyProjects();
+    window.addEventListener("load", equalizeProjectCards, { once: true });
+    window.addEventListener("resize", equalizeProjectCards, { passive: true });
+    window.setInterval(applyDailyProjects, 60_000);
+  }
+</script>
 </BaseLayout>
 
 <style>
@@ -1144,100 +1241,3 @@ const pageJsonLd = [
   }
 </style>
 
-<script>
-  const dailyProjectRoot = document.querySelector<HTMLElement>("[data-daily-projects]");
-  if (dailyProjectRoot) {
-    const cards = Array.from(dailyProjectRoot.querySelectorAll<HTMLElement>("[data-daily-project]"));
-    const count = Math.min(Number(dailyProjectRoot.dataset.dailyCount ?? 3), cards.length);
-
-    const istanbulDateKey = () => {
-      const parts = new Intl.DateTimeFormat("en-CA", {
-        timeZone: "Europe/Istanbul",
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      }).formatToParts(new Date());
-      const get = (type: string) => parts.find((part) => part.type === type)?.value ?? "";
-      return `${get("year")}-${get("month")}-${get("day")}`;
-    };
-
-    const seedFromString = (value: string) => {
-      let seed = 2166136261;
-      for (let i = 0; i < value.length; i += 1) {
-        seed ^= value.charCodeAt(i);
-        seed = Math.imul(seed, 16777619);
-      }
-      return seed >>> 0;
-    };
-
-    const nextRandom = (seed: number) => {
-      let state = seed || 1;
-      return () => {
-        state = Math.imul(state ^ (state >>> 15), 1 | state);
-        state ^= state + Math.imul(state ^ (state >>> 7), 61 | state);
-        return ((state ^ (state >>> 14)) >>> 0) / 4294967296;
-      };
-    };
-
-    let equalizeFrame = 0;
-    const equalizeProjectCards = () => {
-      if (equalizeFrame) window.cancelAnimationFrame(equalizeFrame);
-      equalizeFrame = window.requestAnimationFrame(() => {
-        const activeCards = cards
-          .filter((card) => !card.classList.contains("is-inactive"))
-          .map((card) => card.querySelector<HTMLElement>(".card"))
-          .filter((card): card is HTMLElement => !!card);
-
-        // Frame 1: clear heights — browser recalculates layout before next frame
-        activeCards.forEach((card) => {
-          card.style.minHeight = "";
-        });
-
-        if (activeCards.length < 2) { equalizeFrame = 0; return; }
-
-        // Frame 2: read after layout settles, then write (no forced reflow)
-        equalizeFrame = window.requestAnimationFrame(() => {
-          equalizeFrame = 0;
-          const maxHeight = Math.max(
-            ...activeCards.map((card) => card.offsetHeight),
-          );
-          activeCards.forEach((card) => {
-            card.style.minHeight = `${Math.ceil(maxHeight)}px`;
-          });
-        });
-      });
-    };
-
-    let currentDateKey = "";
-    const applyDailyProjects = () => {
-      const dateKey = istanbulDateKey();
-      if (dateKey === currentDateKey) {
-        equalizeProjectCards();
-        return;
-      }
-      currentDateKey = dateKey;
-
-      const random = nextRandom(seedFromString(dateKey));
-      const indexes = cards.map((_, index) => index);
-      for (let i = indexes.length - 1; i > 0; i -= 1) {
-        const j = Math.floor(random() * (i + 1));
-        [indexes[i], indexes[j]] = [indexes[j], indexes[i]];
-      }
-
-      const selected = new Set(indexes.slice(0, count));
-      cards.forEach((card, index) => {
-        const order = indexes.indexOf(index);
-        const active = selected.has(index);
-        card.classList.toggle("is-active", active);
-        card.classList.toggle("is-inactive", !active);
-        if (active) card.style.order = String(order);
-      });
-      equalizeProjectCards();
-    };
-
-    applyDailyProjects();
-    window.addEventListener("load", equalizeProjectCards, { once: true });
-    window.addEventListener("resize", equalizeProjectCards, { passive: true });
-    window.setInterval(applyDailyProjects, 60_000);
-  }
-</script>

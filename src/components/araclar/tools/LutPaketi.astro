@@ -681,8 +681,6 @@ const T = en
     </Fragment>
   )
 }
-</BaseLayout>
-
 <script>
   document.querySelectorAll<HTMLElement>(".ba").forEach((fig) => {
     const r = fig.querySelector<HTMLInputElement>("input[type=range]")!;
@@ -728,6 +726,7 @@ const T = en
     out.textContent = copyBtn.dataset.done ?? "Kopyalandı.";
   });
 </script>
+</BaseLayout>
 
 <style>
   .facts {
