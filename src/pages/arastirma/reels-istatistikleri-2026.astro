@@ -1,0 +1,699 @@
+---
+/**
+ * Statistics page: Türkiye Reels and short-form video statistics, 2026.
+ * Link-building data hub — every third-party figure lives in
+ * src/data/arastirma/reels-istatistikleri-2026.ts with its source.
+ * Rast's own figures: anonymous pooled ranges across managed ad accounts
+ * (Oct 2026) + Rast's own Instagram account (organic).
+ * CSV download: ./reels-istatistikleri-2026/rast-reels-istatistikleri-2026.csv.ts
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Section from "../../components/Section.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import Button from "../../components/Button.astro";
+import ToolFaq from "../../components/araclar/ToolFaq.astro";
+import { PRIMARY_CTA, SITE } from "../../consts";
+import { breadcrumb, faqPage } from "../../lib/schema";
+import {
+  SOURCES,
+  TR_USAGE,
+  TR_VIDEO,
+  TR_BRANDS,
+  PLATFORM,
+  BENCH,
+  ADS,
+  ALL_STATS,
+  OWN_PAID,
+  OWN_ORGANIC,
+  UPDATED,
+  UPDATED_TR,
+  ACCESSED,
+  type Stat,
+} from "../../data/arastirma/reels-istatistikleri-2026";
+
+const PATH = "/arastirma/reels-istatistikleri-2026/";
+const PAGE_URL = new URL(PATH, SITE.url).href;
+const CSV = `${PATH}rast-reels-istatistikleri-2026.csv`;
+const PUBLISHED = "2026-11-05";
+const h1 = "Türkiye Reels ve Kısa Video İstatistikleri 2026";
+const title = "Türkiye Reels ve Kısa Video İstatistikleri 2026";
+const description =
+  "Türkiye’de Instagram ve kısa video kullanımı, Reels erişim ve etkileşim kıyasları, izlenme süresi, reklam video metrikleri. Kaynaklı veriler ve kendi ölçümlerimiz.";
+
+// Sibling research page (built in parallel): link only if it exists.
+const sibling =
+  Object.keys(
+    import.meta.glob(["./meta-reklam-maliyetleri-2026.astro", "./meta-reklam-maliyetleri-2026/index.astro"]),
+  ).length > 0;
+
+const statCount = ALL_STATS.length;
+const o = OWN_ORGANIC;
+const p = OWN_PAID;
+
+const groups: { id: string; eyebrow: string; heading: string; intro: string; stats: Stat[] }[] = [
+  {
+    id: "turkiye-kullanim",
+    eyebrow: "Türkiye · 2025–2026",
+    heading: "Türkiye’de sosyal medya ve Instagram kullanımı",
+    intro:
+      "Kaç kişi internette, kaçı Instagram’da? Reklam araçlarının gösterdiği erişim rakamları aylık aktif kullanıcıyla aynı şey değil; DataReportal bu farkın altını kendisi çiziyor. TÜİK ise 16–74 yaş arasında hane anketi yapıyor, bu yüzden oranlar birbirini tutmayabilir.",
+    stats: TR_USAGE,
+  },
+  {
+    id: "turkiye-video",
+    eyebrow: "Türkiye · izleme süresi",
+    heading: "Türkiye ne kadar kısa video izliyor?",
+    intro:
+      "GWI’ın 16 yaş üstü internet kullanıcılarıyla yaptığı anketten, We Are Social ve Meltwater’ın Digital 2026 raporuna alınan Türkiye değerleri. Yanına TÜİK ve RTÜK’ün kendi araştırmalarını koyduk. Sayfa numaraları rapor PDF’ine ait.",
+    stats: TR_VIDEO,
+  },
+  {
+    id: "turkiye-marka",
+    eyebrow: "Türkiye · markalar",
+    heading: "Türkiye’de kullanıcılar markaları sosyal medyada nasıl buluyor?",
+    intro: "Aynı GWI anketinden, marka keşfi ve satın alma araştırmasıyla ilgili Türkiye değerleri.",
+    stats: TR_BRANDS,
+  },
+  {
+    id: "platform",
+    eyebrow: "Meta ve Instagram · dünya",
+    heading: "Reels’in Instagram içindeki ağırlığı",
+    intro:
+      "Meta’nın yatırımcılara açıkladığı rakamlar ve Sensor Tower verisi. Ülke kırılımı yok; Türkiye için yön gösterir.",
+    stats: PLATFORM,
+  },
+  {
+    id: "kiyas",
+    eyebrow: "Organik kıyaslar · dünya",
+    heading: "Reels erişim, etkileşim ve atlanma oranı kıyasları",
+    intro:
+      "Milyonlarca marka gönderisinden çıkarılmış ortalamalar. Örneklem dünya geneli marka hesapları; kişisel hesapları ve içerik üreticilerini kapsamıyor. Etkileşim oranı burada (beğeni + yorum) / takipçi olarak hesaplanıyor.",
+    stats: BENCH,
+  },
+  {
+    id: "reklam",
+    eyebrow: "Reklam · dünya",
+    heading: "Reels reklamlarında video metrikleri",
+    intro:
+      "Meta’nın kendi testlerinden ve bir sosyal medya analiz şirketinin ABD verisinden. Meta rakamları reklamverenle paylaştığı bir sunumdan; testlerin ayrıntısı sunumun dipnotlarında.",
+    stats: ADS,
+  },
+];
+
+const faqs = [
+  {
+    question: "Türkiye’de kaç kişi Instagram kullanıyor?",
+    answer:
+      "DataReportal’ın Digital 2026 Türkiye raporuna göre Instagram reklamları 2025 sonunda Türkiye’de 62,3 milyon kişiye ulaşabiliyordu; bu, 18 yaş üstü nüfusun %92,1’i ve ölçülen ülkeler arasında en yüksek oran. TÜİK’in 2026 araştırmasında ise 16–74 yaş arası kişilerin %71,1’i Instagram kullandığını söyledi. İlk rakam reklam aracının erişim tahmini, ikincisi hane anketi; ikisi farklı şeyi ölçüyor.",
+  },
+  {
+    question: "Türkiye’de insanlar haftada ne kadar Reels ve kısa video izliyor?",
+    answer:
+      "GWI’ın 2025’in ikinci çeyreğinde yaptığı ankete göre Türkiye’de 16 yaş üstü internet kullanıcıları haftada ortalama 8 saat 13 dakika kısa video (Reels, TikTok vb.) izliyor. Dünya ortalaması 6 saat 39 dakika. Kısa video haftada ortalama 4,28 gün izleniyor.",
+  },
+  {
+    question: "Instagram Reels için iyi bir etkileşim oranı nedir?",
+    answer:
+      "Socialinsider’ın 579 bin marka hesabını kapsayan analizine göre 2025’te Reels’in ortalama etkileşim oranı takipçiye göre %0,52’ydi; karuseller %0,55, tek görseller %0,37. 2026’nın ilk yarısında Reels için aralık %0,40–0,80. Küçük hesaplarda oran genelde daha yüksek çıkar. Kendi oranınızı aynı formülle hesaplayın: (beğeni + yorum) / takipçi.",
+  },
+  {
+    question: "Reels kaç saniye olmalı?",
+    answer:
+      "Socialinsider’ın Ocak–Haziran 2026 arasındaki 9,77 milyon Reels analizinde en yüksek erişim oranı 30–60 saniyelik videolarda çıktı (%5,60); 2 dakikayı geçen videolarda %3,50’ye düşüyor. Instagram Ocak 2025’ten beri 3 dakikaya kadar Reels yüklemeye izin veriyor. Süreyi içerik belirler: bizim en çok izlenen videomuz 30 saniyeydi.",
+  },
+  {
+    question: "Reels atlanma oranı (skip rate) nedir, ne kadar olmalı?",
+    answer:
+      "Atlanma oranı, Reels’inizi ilk 3 saniyede kaydırıp geçen izleyicilerin payıdır. Socialinsider verisinde ortalama %60,5 (büyük hesaplar) ile %65,5 (1–5 bin takipçi) arasında. Kendi hesabımızda 18 Reels’in medyanı %53. Atlanma oranı sizinkinden belirgin yüksekse önce ilk 1–2 saniyeyi değiştirin.",
+  },
+  {
+    question: "ThruPlay nedir, Türkiye’de ThruPlay başı maliyet ne kadar?",
+    answer:
+      "ThruPlay, Meta’nın video reklam ölçüsüdür: video en az 15 saniye ya da 15 saniyeden kısaysa sonuna kadar izlendiğinde sayılır. Rast Creative’in yönettiği hesaplarda Ekim 2026’da ThruPlay hedefli 4 kampanyada ThruPlay başı maliyet 0,02–0,19 TL (medyan 0,04 TL) oldu. Başka hedefle açılan kampanyalarda aynı metrik 0,16–15,87 TL’ye çıktı. KDV ve konum ücreti hariç.",
+  },
+  {
+    question: "Bu sayfadaki verileri yazımda kullanabilir miyim?",
+    answer:
+      "Evet. Sayfadaki metin ve kendi ölçümlerimiz CC BY 4.0 lisanslı: kaynak olarak “Rast Creative, Türkiye Reels ve Kısa Video İstatistikleri 2026” yazıp bu sayfaya bağlantı vermeniz yeterli. Üçüncü taraf rakamlarda asıl kaynağı da anın; her rakamın yanında kaynağı ve tarihi var. Tüm tabloyu CSV olarak indirebilirsiniz.",
+  },
+];
+
+const citeText = `Rast Creative (2026). Türkiye Reels ve Kısa Video İstatistikleri 2026. Son güncelleme ${UPDATED_TR}. ${PAGE_URL}`;
+const citeHtml = `<a href="${PAGE_URL}">Türkiye Reels ve kısa video istatistikleri 2026 — Rast Creative</a>`;
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Araştırma", path: "/arastirma/" },
+    { name: "Reels istatistikleri 2026", path: PATH },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: h1,
+    description,
+    url: PAGE_URL,
+    mainEntityOfPage: PAGE_URL,
+    inLanguage: "tr",
+    datePublished: PUBLISHED,
+    dateModified: UPDATED,
+    image: `${SITE.url}${PATH}og.jpg`,
+    author: { "@id": `${SITE.url}#organization` },
+    publisher: { "@id": `${SITE.url}#organization` },
+    about: ["Instagram Reels", "Kısa video", "Türkiye sosyal medya kullanımı", "Video reklam", "ThruPlay"],
+    citation: Object.values(SOURCES).map((s) => ({ "@type": "CreativeWork", name: s.title, url: s.url })),
+    license: "https://creativecommons.org/licenses/by/4.0/deed.tr",
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    name: "Türkiye Reels ve kısa video istatistikleri 2026 (Rast Creative)",
+    description:
+      "Türkiye’de Instagram ve kısa video kullanımına dair kaynaklı istatistikler; Rast Creative’in yönettiği Meta reklam hesaplarından anonim, toplulaştırılmış Ekim 2026 video metrikleri (ThruPlay başı maliyet, ThruPlay oranı, CPM) ve ajansın kendi Instagram hesabının Reels verileri.",
+    url: PAGE_URL,
+    creator: { "@id": `${SITE.url}#organization` },
+    publisher: { "@id": `${SITE.url}#organization` },
+    license: "https://creativecommons.org/licenses/by/4.0/deed.tr",
+    isAccessibleForFree: true,
+    inLanguage: "tr",
+    dateModified: UPDATED,
+    temporalCoverage: "2025-04-01/2026-11-02",
+    spatialCoverage: { "@type": "Place", name: "Türkiye" },
+    keywords: ["Reels istatistikleri", "Instagram Türkiye", "kısa video", "ThruPlay maliyeti", "Reels etkileşim oranı", "atlanma oranı"],
+    variableMeasured: [
+      "Haftalık kısa video izleme süresi",
+      "Instagram kullanım oranı",
+      "Reels etkileşim oranı",
+      "Reels erişim oranı",
+      "Reels atlanma oranı",
+      "ThruPlay başı maliyet",
+      "CPM",
+    ],
+    distribution: [{ "@type": "DataDownload", encodingFormat: "text/csv", contentUrl: `${SITE.url}${CSV}` }],
+  },
+  faqPage(faqs),
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd} ogType="article" image={`${PATH}og.jpg`}>
+  <Section width="default" space="tight">
+    <nav class="crumbs" aria-label="Sayfa yolu"><a href="/">Ana Sayfa</a> / <a href="/arastirma/">Araştırma</a> / Reels istatistikleri 2026</nav>
+    <p class="eyebrow">Araştırma · Veri sayfası</p>
+    <h1>{h1}</h1>
+    <p class="lede">
+      Türkiye kısa videoya dünya ortalamasından haftada bir buçuk saat fazla zaman ayırıyor. Instagram reklamları
+      yetişkinlerin %92’sine ulaşabiliyor, oran ölçülen ülkeler arasında en yüksek. Bu sayfada Türkiye’nin sosyal medya
+      ve video alışkanlıklarını, Reels kıyaslarını ve reklam tarafındaki video metriklerini kaynaklarıyla topladık. Yanına
+      kendi ölçümlerimizi koyduk: yönettiğimiz reklam hesaplarının anonim Ekim 2026 rakamları ve kendi Instagram
+      hesabımızın Reels verisi.
+    </p>
+    <p class="meta">
+      <strong>Son güncelleme:</strong> <time datetime={UPDATED}>{UPDATED_TR}</time> · {statCount} kaynaklı istatistik ·
+      kendi verimiz: {p.campaigns} reklam kampanyası, {o.reels} Reels · <a href={CSV} download>CSV indir</a>
+    </p>
+
+    <div class="keys">
+      <article>
+        <span class="k">8 sa 13 dk</span>
+        <p>Türkiye’de haftalık kısa video izleme süresi; dünya 6 sa 39 dk (2025). <a href={SOURCES.gdr.url} rel="noopener" target="_blank">GWI / Digital 2026</a></p>
+      </article>
+      <article>
+        <span class="k">%92,1</span>
+        <p>Instagram reklamlarının ulaşabildiği yetişkin oranı, dünyada 1. sıra (2025 sonu). <a href={SOURCES.gdr.url} rel="noopener" target="_blank">Digital 2026</a></p>
+      </article>
+      <article>
+        <span class="k">%83,4</span>
+        <p>Paylaşım servislerinden video izleyen internet kullanıcısı (2026). <a href={SOURCES.tuik12.url} rel="noopener" target="_blank">TÜİK</a></p>
+      </article>
+      <article>
+        <span class="k">%0,52</span>
+        <p>Marka hesaplarında ortalama Reels etkileşim oranı (2025). <a href={SOURCES.siBench.url} rel="noopener" target="_blank">Socialinsider</a></p>
+      </article>
+      <article>
+        <span class="k">0,02–0,19 TL</span>
+        <p>ThruPlay hedefli kampanyalarda ThruPlay başı maliyet, Ekim 2026. <a href="#rast-verisi">Rast Creative</a></p>
+      </article>
+      <article>
+        <span class="k">87.754</span>
+        <p>400’den az takipçili hesabımızda tek bir Reels’in izlenmesi (Ekim 2026). <a href="#rast-organik">Rast Creative</a></p>
+      </article>
+    </div>
+  </Section>
+
+  <Section width="default" space="tight" id="rast-verisi">
+    <SectionHeading eyebrow="Kendi verimiz · Ekim 2026">Reklamda video: ThruPlay maliyeti ve izlenme oranları</SectionHeading>
+    <div class="prose">
+      <p>
+        Kıyas raporları yurt dışındaki binlerce markanın ortalaması. Türkiye’de yerel bir işletmenin videosu reklamda nasıl
+        izleniyor, onu görmek için kendi tablomuzu açıyoruz. Veriyi Meta Ads API’den kampanya düzeyinde, salt okunur çektik
+        ({p.period}). Kapsam: <strong>{p.accounts} reklam hesabı</strong> (ajansın kendi iki hesabı ve yerel perakendeden iki
+        hesap), harcaması olan <strong>{p.campaigns} kampanya</strong>, {p.impressionsApprox} gösterim, {p.thruplaysApprox} ThruPlay.
+        Müşteri adı ya da tek bir hesabın rakamı yok; sağlık sektöründen hesap dahil değil.
+      </p>
+    </div>
+    <div class="tablewrap">
+      <table class="zt">
+        <caption>
+          Kaynak: Rast Creative’in yönettiği hesaplar, Meta Ads API, {p.period}, n={p.accounts} hesap / {p.campaigns} kampanya.
+          Aralık = en düşük–en yüksek kampanya. ThruPlay oranı = ThruPlay / video oynatma. Tutarlar KDV ve konum ücreti hariç, TL.
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Kampanya hedefi</th>
+            <th scope="col">Örnek</th>
+            <th scope="col">ThruPlay başı maliyet</th>
+            <th scope="col">CPM</th>
+            <th scope="col">ThruPlay oranı</th>
+            <th scope="col">%25’ini izleyen</th>
+            <th scope="col">Sonuna kadar izleyen</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            p.rows.map((r) => (
+              <tr>
+                <th scope="row">{r.goal}</th>
+                <td>{r.n}</td>
+                <td>{r.thruCost}</td>
+                <td>{r.cpm}</td>
+                <td>{r.thruRate}</td>
+                <td>{r.p25}</td>
+                <td>{r.p100}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="small">
+      Okuması şöyle: aynı videoyu “video izlenme” hedefiyle yayınladığınızda Meta onu izlemeye yatkın kişilere gösterir;
+      oynatmaların medyan %42’si ThruPlay’e dönüşüyor. Profil ziyareti ya da mesaj hedefinde Meta tıklayacak kişiyi arar,
+      videoyu sonuna kadar izleyen oranı medyan %9’a iniyor. Ucuz ThruPlay görünürlük için iyi bir işaret, satış ya da mesaj
+      getirdiğini göstermez. ThruPlay tanımı: video en az 15 saniye izlenirse ya da daha kısaysa sonuna kadar izlenirse
+      (<a href={SOURCES.metaThruplay.url} rel="noopener" target="_blank">Meta İşletme Yardım Merkezi</a>).
+    </p>
+  </Section>
+
+  <Section width="default" space="tight" id="rast-organik">
+    <SectionHeading eyebrow="Kendi verimiz · organik">Küçük hesapta büyük Reels: takipçi sayısı izlenmeyi sınırlamıyor</SectionHeading>
+    <div class="prose">
+      <p>
+        Kendi Instagram hesabımızda ({o.period}) {o.reels} Reels paylaştık. Hesabın takipçisi bu dönemde 400’ün altından
+        {o.followersNow}’e çıktı. Rakamlar Instagram’ın hesap içi istatistiklerinden. Bu dönemde iki videoya küçük bir reklam
+        desteği verdik; en çok izlenen videoya giden reklam gösterimi, izlenmesinin %3’ünden azdı.
+      </p>
+    </div>
+    <div class="tablewrap">
+      <table class="zt">
+        <caption>Kaynak: Rast Creative Instagram hesabı (@rastcreative), Instagram istatistikleri, {o.period}, n={o.reels} Reels. Erişim: {ACCESSED}.</caption>
+        <thead>
+          <tr><th scope="col">Ölçü</th><th scope="col">Değer</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Reels başına medyan izlenme</th><td>{o.medianViews}</td></tr>
+          <tr><th scope="row">Takipçi sayısını aşan izlenme alan Reels</th><td>{o.aboveFollowers} / {o.reels}</td></tr>
+          <tr><th scope="row">En çok izlenen Reels</th><td>{o.peakViews} izlenme, {o.peakReach} hesaba erişim (takipçi sayısının {o.peakRatio})</td></tr>
+          <tr><th scope="row">Bu videonun dönemdeki toplam izlenme payı</th><td>{o.peakShareOfTotal}</td></tr>
+          <tr><th scope="row">1.000 izlenme başına paylaşım</th><td>{o.peakSharesPer1k} (diğer 17 Reels’in medyanı {o.othersSharesPer1k})</td></tr>
+          <tr><th scope="row">1.000 izlenme başına kaydetme</th><td>{o.peakSavesPer1k} (diğer 17 Reels’in medyanı {o.othersSavesPer1k})</td></tr>
+          <tr><th scope="row">Atlanma oranı</th><td>en çok izlenen: {o.peakSkip} · tüm Reels medyanı: {o.medianSkip}</td></tr>
+          <tr><th scope="row">Ortalama izlenme süresi</th><td>en çok izlenen: {o.peakAvgWatch} · tüm Reels medyanı: {o.medianAvgWatch}</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="prose">
+      <p>
+        87 bin izlenmeyi alan video, bir merminin kutuyu deldiği anı 7 saniye boyunca bekleten bir “durdur” oyunuydu.
+        İlginç olan, atlanma oranının diğer videolarımızdan farklı olmaması (%54). Farkı paylaşım yarattı: 1.000 izlenmede
+        14 paylaşım, diğer videolarımızın neredeyse 9 katı. İnsanlar videoyu arkadaşına gönderdi, Instagram da onu takipçi
+        olmayanlara taşıdı. Instagram’ın başı Adam Mosseri de öneri sıralamasında en çok izlenme süresine, beğeniye ve
+        paylaşıma (gönderime) bakıldığını söylüyor (<a href={SOURCES.hootsuite.url} rel="noopener" target="_blank">Hootsuite’in aktarımı</a>).
+      </p>
+      <p>
+        Tek hesap, kısa dönem: bu bir kıyas değil, bir vaka. Ama küçük bir hesabın bile doğru videoyla takipçisinin yüzlerce
+        katına ulaşabildiğini gösteriyor.
+      </p>
+    </div>
+  </Section>
+
+  {
+    groups.map((g) => (
+      <Section width="default" space="tight" id={g.id}>
+        <SectionHeading eyebrow={g.eyebrow}>{g.heading}</SectionHeading>
+        <p class="intro">{g.intro}</p>
+        <div class="tablewrap">
+          <table class="zt stats">
+            <thead>
+              <tr>
+                <th scope="col">İstatistik</th>
+                <th scope="col">Değer</th>
+                <th scope="col">Dönem</th>
+                <th scope="col">Kaynak</th>
+              </tr>
+            </thead>
+            <tbody>
+              {g.stats.map((s) => (
+                <tr>
+                  <th scope="row">{s.label}</th>
+                  <td class="v">{s.value}</td>
+                  <td>{s.period}</td>
+                  <td>
+                    <a href={SOURCES[s.src].url} rel="noopener" target="_blank">{SOURCES[s.src].name}</a>
+                    <small> · {SOURCES[s.src].title}{s.note ? `, ${s.note}` : ""} · {SOURCES[s.src].date}</small>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Section>
+    ))
+  }
+
+  <Section width="default" space="tight" id="ne-anlama-geliyor">
+    <SectionHeading eyebrow="Yorum">Bu rakamlar bir marka için ne anlama geliyor?</SectionHeading>
+    <div class="prose">
+      <h3>1. Türkiye’de kitle zaten Reels’te</h3>
+      <p>
+        Türkiye’de internet kullanıcılarının %89,5’i son bir ayda Instagram kullandı ve haftada 8 saatten fazla kısa video
+        izleniyor. İzleyici zaten orada. Zor olan, kaydıran parmağı durduracak videoyu yapmak.
+      </p>
+      <h3>2. İlk saniyeler eleme turu</h3>
+      <p>
+        Marka Reels’lerinin üçte ikiye yakını ilk 3 saniyede geçiliyor (Socialinsider, %60–66). Meta’nın sunumuna göre
+        Reels oynatmalarının %75’i sesli izleniyor. Yani ilk kare ve ilk ses aynı anda çalışmalı: yazı tek başına yetmez.
+      </p>
+      <h3>3. Paylaşılan video, takipçiyi aşıyor</h3>
+      <p>
+        Küçük hesaplarda Reels hâlâ en geniş erişimi alan format (1–5 bin takipçide erişim oranı %9,78). Kendi hesabımızda
+        izlenmeyi takipçinin 225 katına çıkaran şey, izleyicinin videoyu birine göndermesiydi. “Bunu kime atarım?” sorusuna
+        cevabı olan video, reklamsız da yayılabiliyor.
+      </p>
+      <h3>4. Reklamda format fiyatı değiştiriyor</h3>
+      <p>
+        Meta’nın kendi testlerinde 9:16, sesli ve yazıları güvenli alanda tutan Reels reklamları görsel reklamlardan %34,5
+        daha düşük edinme maliyeti verdi. Bizim hesaplarda da hedef seçimi videonun nasıl izlendiğini değiştirdi: izlenme
+        hedefinde videoların medyan %80’i en az çeyreğine kadar izlendi, diğer hedeflerde %21.
+      </p>
+    </div>
+  </Section>
+
+  <Section width="default" space="tight" id="sss">
+    <SectionHeading eyebrow="SSS">Sık sorulan sorular</SectionHeading>
+    <ToolFaq faqs={faqs} />
+  </Section>
+
+  <Section width="default" space="tight" id="atif">
+    <div class="cite">
+      <h2>Atıf yapmak için</h2>
+      <p>
+        Bu sayfadaki metin ve kendi ölçümlerimiz <a href="https://creativecommons.org/licenses/by/4.0/deed.tr" rel="license noopener" target="_blank">CC BY 4.0</a> lisanslı.
+        Haberde, blog yazısında ya da sunumda kullanabilirsiniz; kaynak olarak Rast Creative’i anıp bu sayfaya bağlantı vermeniz yeterli.
+        Üçüncü taraf rakamlarda asıl kaynağı da belirtin.
+      </p>
+      <label for="cite-plain" class="small">Önerilen atıf</label>
+      <textarea id="cite-plain" readonly rows="3" data-cite-reels>{citeText}</textarea>
+      <label for="cite-code" class="small">HTML bağlantısı</label>
+      <textarea id="cite-code" readonly rows="2" data-cite-reels-html>{citeHtml}</textarea>
+      <p class="btns">
+        <button type="button" class="ev-btn" data-copy-reels="plain">Atfı kopyala</button>
+        <button type="button" class="ev-btn" data-copy-reels="html">HTML’i kopyala</button>
+        <a class="ev-btn" href={CSV} download>Veriyi indir (CSV)</a>
+        <span class="small" data-copied-reels aria-live="polite"></span>
+      </p>
+    </div>
+  </Section>
+
+  <Section width="default" space="tight" id="yontem">
+    <SectionHeading eyebrow="Yöntem">Bu sayfayı nasıl hazırladık?</SectionHeading>
+    <ul class="tips">
+      <li>Her üçüncü taraf rakamı, yanında bağlantısı verilen sayfadan ya da PDF’ten {ACCESSED} tarihinde okuduk. Doğrulayamadığımız rakamı sayfaya almadık.</li>
+      <li>GWI değerleri We Are Social ve Meltwater’ın Digital 2026 Global Overview Report PDF’inden; satırda sayfa numarası var. Anket 2025’in ikinci çeyreğinde, 16 yaş üstü internet kullanıcılarıyla yapıldı.</li>
+      <li>TÜİK 2026 rakamlarını TÜİK veri portalındaki <a href="https://veriportali.tuik.gov.tr/tr/press/58006" rel="noopener" target="_blank">Hanehalkı Bilişim Teknolojileri Kullanım Araştırması bülteninden</a> aktaran haberlerden aldık; portal sunucumuzdan açılmadığı için bağlantıyı aktaran habere verdik.</li>
+      <li>Reklam verimiz: Meta Ads API, kampanya düzeyi, {p.period}, harcaması olan {p.campaigns} kampanya, {p.accounts} hesap. Rakamlar havuzlanmış aralık ve medyan; tek bir hesabın ya da müşterinin rakamı yok.</li>
+      <li>Organik verimiz: kendi Instagram hesabımızın ({o.period}) Reels istatistikleri, {ACCESSED} itibarıyla. Yeni videoların sayıları birkaç gün daha artabilir.</li>
+      <li>Sayfayı yeni veri çıktıkça güncelliyoruz; güncelleme tarihi en üstte.</li>
+    </ul>
+    {
+      sibling && (
+        <p class="small">
+          Reklam bütçesi tarafını merak ediyorsanız: <a href="/arastirma/meta-reklam-maliyetleri-2026/">Türkiye’de Meta reklam maliyetleri 2026</a>.
+        </p>
+      )
+    }
+  </Section>
+
+  <Section width="default" space="tight">
+    <div class="cta">
+      <h2>Reels’leriniz bu rakamların neresinde?</h2>
+      <p>
+        Rast Creative, Sakarya’dan markalara Reels ve reklam videosu üretiyor. Hesabınızın atlanma oranına, izlenme süresine
+        ve paylaşımlarına birlikte bakalım. <a href="/sosyal-medya-icerigi/">Sosyal medya içeriği</a> sayfamıza da göz
+        atabilirsiniz.
+      </p>
+      <Button href={PRIMARY_CTA.href}>Görüşelim</Button>
+    </div>
+  </Section>
+
+  <script>
+    const out = document.querySelector<HTMLElement>("[data-copied-reels]");
+    document.querySelectorAll<HTMLButtonElement>("[data-copy-reels]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const sel = btn.dataset.copyReels === "html" ? "[data-cite-reels-html]" : "[data-cite-reels]";
+        const ta = document.querySelector<HTMLTextAreaElement>(sel);
+        if (!ta) return;
+        try {
+          await navigator.clipboard.writeText(ta.value);
+        } catch {
+          ta.select();
+          document.execCommand("copy");
+        }
+        if (out) out.textContent = "Kopyalandı.";
+      });
+    });
+  </script>
+</BaseLayout>
+<style>
+  .crumbs {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .crumbs a,
+  .meta a,
+  .keys a,
+  .small a,
+  .prose a,
+  .tips a,
+  .cite a:not(.ev-btn),
+  .cta a:not(.ev-btn, .btn),
+  .zt a {
+    color: var(--amber-text);
+  }
+  .eyebrow {
+    font-family: var(--font-utility);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+  }
+  h1 {
+    margin: 0.4rem 0 1rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 1.2rem + 2.4vw, 3rem);
+    line-height: 1.1;
+    color: var(--ink);
+  }
+  .lede {
+    max-width: 68ch;
+    font-size: 1.08rem;
+    line-height: var(--leading-body);
+    color: var(--ink-soft);
+  }
+  .meta {
+    margin-top: 0.9rem;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .keys {
+    display: grid;
+    gap: 0.9rem;
+    margin-top: 1.6rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (min-width: 900px) {
+    .keys {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .keys article {
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+    background: color-mix(in srgb, var(--paper) 82%, transparent);
+  }
+  .keys .k {
+    display: block;
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 1rem + 1.2vw, 2rem);
+    line-height: 1.15;
+    white-space: nowrap;
+    color: var(--ink);
+  }
+  .keys p {
+    margin-top: 0.3rem;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: var(--ink-soft);
+  }
+  .intro {
+    margin-top: 0.8rem;
+    max-width: 70ch;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .small {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .tablewrap {
+    overflow-x: auto;
+    margin: 1.2rem 0 0.8rem;
+  }
+  .zt {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+    color: var(--ink);
+  }
+  .zt caption {
+    caption-side: bottom;
+    padding-top: 0.6rem;
+    text-align: left;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .zt th,
+  .zt td {
+    padding: 0.6rem 0.7rem;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+    min-width: 8rem;
+  }
+  .zt tbody th {
+    font-weight: 500;
+  }
+  .zt thead th {
+    font-family: var(--font-utility);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+  }
+  .zt small {
+    color: var(--ink-soft);
+  }
+  .stats .v {
+    font-weight: 600;
+    white-space: normal;
+  }
+  @media (max-width: 700px) {
+    .stats thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
+    .stats tr {
+      display: grid;
+      gap: 0.2rem;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .stats th,
+    .stats td {
+      display: block;
+      min-width: 0;
+      padding: 0;
+      border: 0;
+    }
+    .stats td:nth-of-type(2)::before {
+      content: "Dönem: ";
+      color: var(--ink-soft);
+    }
+    .stats td:nth-of-type(2),
+    .stats td:nth-of-type(3) {
+      font-size: 0.85rem;
+    }
+  }
+  .prose {
+    display: grid;
+    gap: 0.7rem;
+    margin-top: 1rem;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .prose h3 {
+    margin-top: 0.8rem;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--ink);
+  }
+  .prose strong,
+  .tips strong {
+    color: var(--ink);
+  }
+  .tips {
+    display: grid;
+    gap: 0.8rem;
+    margin-top: 1.2rem;
+    padding-left: 1.2rem;
+    list-style: disc;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .cite,
+  .cta {
+    display: grid;
+    gap: 0.8rem;
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+    border: 1px solid var(--line);
+    border-radius: 1.2rem;
+    background: color-mix(in srgb, var(--paper) 80%, transparent);
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .cite {
+    border-color: var(--line-strong);
+  }
+  .cite h2,
+  .cta h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.7rem);
+    color: var(--ink);
+  }
+  .cite textarea {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 0.6rem;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: ui-monospace, monospace;
+    font-size: 0.85rem;
+    resize: none;
+  }
+  .btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+  }
+  .cta :global(a.btn),
+  .cta :global(.ev-btn) {
+    justify-self: start;
+  }
+</style>
