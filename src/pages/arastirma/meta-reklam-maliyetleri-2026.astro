@@ -1,0 +1,681 @@
+---
+/**
+ * Statistics page: Meta (Instagram/Facebook) ad costs in Türkiye, 2026.
+ * Link-building data hub — every third-party figure lives in
+ * src/data/arastirma/meta-reklam-maliyetleri-2026.ts with its source.
+ * Rast's own figures = anonymous ranges across managed accounts (Oct 2026).
+ * CSV download: ./meta-reklam-maliyetleri-2026/rast-meta-reklam-maliyetleri-2026.csv.ts
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Section from "../../components/Section.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import Button from "../../components/Button.astro";
+import ToolFaq from "../../components/araclar/ToolFaq.astro";
+import { PRIMARY_CTA, SITE } from "../../consts";
+import { breadcrumb, faqPage } from "../../lib/schema";
+import {
+  SOURCES,
+  TR_BENCH,
+  GLOBAL_BENCH,
+  META_STATS,
+  AUDIENCE,
+  MARKET,
+  TAX_FX,
+  DEFINITIONS,
+  OWN,
+  ALL_STATS,
+  UPDATED,
+  UPDATED_TR,
+  ACCESSED,
+  USD_TRY,
+  USD_TRY_DATE,
+  type Stat,
+} from "../../data/arastirma/meta-reklam-maliyetleri-2026";
+
+const PATH = "/arastirma/meta-reklam-maliyetleri-2026/";
+const PAGE_URL = new URL(PATH, SITE.url).href;
+const CSV = `${PATH}rast-meta-reklam-maliyetleri-2026.csv`;
+const PUBLISHED = "2026-11-05";
+const h1 = "Türkiye’de Meta (Instagram/Facebook) Reklam Maliyetleri 2026: Yerel İşletmeler İçin Gerçek Veriler";
+const title = "Türkiye Meta Reklam Maliyetleri 2026: CPM, CPC, Mesaj";
+const description =
+  "Türkiye’de Instagram ve Facebook reklam maliyetleri 2026: CPM, CPC, mesaj ve ThruPlay başı maliyet, vergi ve kur. Kaynaklı veriler ve kendi kampanya aralıklarımız.";
+
+// Sibling research page (built by another agent): link only if it exists.
+const sibling = Object.keys(
+  import.meta.glob(["./reels-istatistikleri-2026.astro", "./reels-istatistikleri-2026/index.astro"]),
+).length > 0;
+
+const statCount = ALL_STATS.length;
+const ownCount = OWN.rows.length * 3 + OWN.overall.length;
+const usd = USD_TRY.toLocaleString("tr-TR", { minimumFractionDigits: 4 });
+
+const groups: { id: string; eyebrow: string; heading: string; intro: string; stats: Stat[] }[] = [
+  {
+    id: "turkiye-kiyas",
+    eyebrow: "Türkiye · Ekim 2026",
+    heading: "Türkiye’de Meta reklam kıyas verileri",
+    intro:
+      "Bir reklam aracının kullanıcılarından derlenen, Türkiye’ye gösterilen Meta reklamlarının Ekim 2026 değerleri. Örnek küçük (30’dan fazla reklamveren), sektörler karışık. Dolar değerleri kaynağın kendisine ait, TL karşılıkları bizim çevirimiz.",
+    stats: TR_BENCH,
+  },
+  {
+    id: "kuresel-kiyas",
+    eyebrow: "Dünya · 2026",
+    heading: "Küresel kıyaslar: CPM, CPC, TO ve lead maliyeti",
+    intro:
+      "Türkiye rakamlarını bir yere oturtmak için. Bu kaynakların örneklemi ağırlıklı olarak yurt dışındaki reklamverenlerden oluşuyor; doğrudan Türkiye fiyatı gibi okumayın.",
+    stats: GLOBAL_BENCH,
+  },
+  {
+    id: "meta-geneli",
+    eyebrow: "Meta · 3. çeyrek 2026",
+    heading: "Meta genelinde reklam fiyatı nereye gidiyor?",
+    intro: "Meta’nın yatırımcılara açıkladığı dünya geneli rakamlar. Ülke kırılımı değil, yön gösterir.",
+    stats: META_STATS,
+  },
+  {
+    id: "kitle",
+    eyebrow: "Türkiye · 2025 sonu",
+    heading: "Türkiye’de Instagram ve Facebook reklam kitlesi",
+    intro:
+      "Reklam araçlarının gösterdiği erişilebilir kitle. Aylık aktif kullanıcıyla aynı şey değil; DataReportal bu farkın altını kendisi çiziyor.",
+    stats: AUDIENCE,
+  },
+  {
+    id: "pazar",
+    eyebrow: "Türkiye · 2024",
+    heading: "Türkiye reklam pazarı: dijitalin ve sosyal medyanın payı",
+    intro:
+      "Sektör derneklerinin Deloitte’a hazırlattığı son yıllık rapor 2024 yılını kapsıyor (Nisan 2025’te yayımlandı). 2025 yılı raporunun rakamlarını resmî kaynaktan doğrulayamadığımız için buraya almadık.",
+    stats: MARKET,
+  },
+  {
+    id: "vergi-kur",
+    eyebrow: "Vergi · ücret · kur",
+    heading: "Faturaya eklenenler: KDV, konum ücreti ve kur",
+    intro:
+      "Reklam yöneticisinde gördüğünüz harcama, kartınızdan çekilen tutarla aynı olmayabilir. Aşağıdakiler bütçenin üstüne biner ya da TL karşılığını değiştirir.",
+    stats: TAX_FX,
+  },
+  {
+    id: "tanimlar",
+    eyebrow: "Tanımlar",
+    heading: "Meta bu iki metriği nasıl sayıyor?",
+    intro: "Maliyetler ancak neyin sayıldığı bilinirse karşılaştırılabilir.",
+    stats: DEFINITIONS,
+  },
+];
+
+const faqs = [
+  {
+    question: "Türkiye’de Instagram reklamında 1.000 gösterim ne kadar?",
+    answer: `Ekim 2026’da Türkiye’ye gösterilen Meta reklamlarında medyan CPM 2,64 $ oldu (AdKit; TCMB ${USD_TRY_DATE} kuruyla yaklaşık 132 TL). Bizim yönettiğimiz hesaplarda aynı ay 19 kampanyanın medyan CPM’i 67,11 TL’ydi; video izlenme hedefli kampanyalarda 13–41 TL, mesaj hedefli kampanyalarda 149–171 TL aralığına çıktı. Yani CPM’i en çok kampanya hedefi belirliyor.`,
+  },
+  {
+    question: "Instagram reklamıyla mesaj (DM) almanın maliyeti nedir?",
+    answer:
+      "Ekim 2026’da yönettiğimiz mesaj hedefli kampanyalarda başlatılan konuşma başına maliyet 76–211 TL arasındaydı (3 kampanya, 2 hesap, 116 konuşma). Örnek küçük; ürüne, şehre ve teklife göre çok değişir. Meta bir konuşmayı, kişi size ilk kez ya da en az 7 gün sessizlikten sonra yazdığında sayıyor.",
+  },
+  {
+    question: "Meta reklamlarına KDV ve dijital hizmet vergisi ekleniyor mu?",
+    answer:
+      "Meta Ireland 1 Nisan 2019’dan beri Türkiye’de KDV mükellefi olarak kayıtlı; reklam hesabına Türk vergi numarası eklemeyenlerin faturasına KDV ekleniyor, ekleyenler KDV’yi kendisi beyan ediyor. Genel KDV oranı 10 Temmuz 2023’ten beri %20. Ayrıca Meta’nın yardım sayfası, Türkiye’deki kitleye gösterilen reklamlara %5 konum ücreti eklendiğini yazıyor; bu ücret bütçeye dahil değil, faturada ayrı satır olarak çıkıyor. Türkiye’de dijital hizmet vergisi oranı 2026’da %5, 1 Ocak 2027’den itibaren %2,5. Kendi durumunuz için mali müşavirinize danışın.",
+  },
+  {
+    question: "Türkiye’de Meta reklamları neden dünya ortalamasından ucuz görünüyor?",
+    answer:
+      "Ekim 2026’da tüm ülkelerde medyan CPM 8,82 $ iken Türkiye’de 2,64 $ idi (AdKit). Reklam fiyatı açık artırmayla oluşur: aynı kişiye ulaşmak isteyen reklamverenlerin sayısı ve teklifleri fiyatı belirler. Dolar bazında düşük görünmesinde kurun da payı var: dolar Ekim 2025’ten Ekim 2026’ya TL karşısında yaklaşık %18,8 değer kazandı (TCMB).",
+  },
+  {
+    question: "ThruPlay nedir, ucuz ThruPlay iyi bir sonuç mu?",
+    answer:
+      "ThruPlay, videonun en az 15 saniye (seçilirse 6 saniye) izlenmesi ya da daha kısa videolarda %97’sinin izlenmesidir. Bizim video izlenme kampanyalarımızda ThruPlay başı 0,02–0,19 TL’ydi. Ucuz ThruPlay, videonun izlendiğini gösterir ama satış ya da mesaj getirdiğini göstermez; bu kampanyaların tıklama oranı %0,10–1,72 ile düşük kaldı. Görünürlük için iyi, satış için ikinci adımda başka bir hedef gerekir.",
+  },
+  {
+    question: "Bu sayfadaki verileri yazımda kullanabilir miyim?",
+    answer:
+      "Evet. Sayfadaki metin ve kendi verilerimiz CC BY 4.0 lisanslı: kaynak olarak “Rast Creative, Türkiye’de Meta Reklam Maliyetleri 2026” yazıp bu sayfaya bağlantı vermeniz yeterli. Üçüncü taraf rakamlarda lütfen asıl kaynağı da anın; her rakamın yanında kaynağı ve tarihi var. Ham tabloyu CSV olarak indirebilirsiniz.",
+  },
+];
+
+const citeText = `Rast Creative (2026). Türkiye’de Meta (Instagram/Facebook) Reklam Maliyetleri 2026. Son güncelleme ${UPDATED_TR}. ${PAGE_URL}`;
+const citeHtml = `<a href="${PAGE_URL}">Türkiye’de Meta reklam maliyetleri 2026 — Rast Creative</a>`;
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Araştırma", path: "/arastirma/" },
+    { name: "Meta reklam maliyetleri 2026", path: PATH },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: h1,
+    description,
+    url: PAGE_URL,
+    mainEntityOfPage: PAGE_URL,
+    inLanguage: "tr",
+    datePublished: PUBLISHED,
+    dateModified: UPDATED,
+    image: `${SITE.url}${PATH}og.jpg`,
+    author: { "@id": `${SITE.url}#organization` },
+    publisher: { "@id": `${SITE.url}#organization` },
+    about: ["Meta reklamları", "Instagram reklam maliyeti", "Facebook reklam maliyeti", "CPM", "CPC", "Türkiye dijital reklam"],
+    citation: Object.values(SOURCES).map((s) => ({ "@type": "CreativeWork", name: s.title, url: s.url })),
+    license: "https://creativecommons.org/licenses/by/4.0/deed.tr",
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    name: "Türkiye’de Meta reklam maliyetleri 2026 (Rast Creative)",
+    description:
+      "Rast Creative’in yönettiği Meta reklam hesaplarından anonim, toplulaştırılmış Ekim 2026 maliyet aralıkları (CPM, ThruPlay, profil ziyareti, mesaj konuşması) ve kaynaklı Türkiye/dünya kıyas verileri.",
+    url: PAGE_URL,
+    creator: { "@id": `${SITE.url}#organization` },
+    publisher: { "@id": `${SITE.url}#organization` },
+    license: "https://creativecommons.org/licenses/by/4.0/deed.tr",
+    isAccessibleForFree: true,
+    inLanguage: "tr",
+    dateModified: UPDATED,
+    temporalCoverage: "2026-10-01/2026-10-31",
+    spatialCoverage: { "@type": "Place", name: "Türkiye" },
+    keywords: ["Meta reklam maliyeti", "Instagram CPM Türkiye", "Facebook CPC Türkiye", "mesaj başı maliyet", "ThruPlay"],
+    variableMeasured: ["CPM", "CPC", "TO", "ThruPlay başı maliyet", "Profil ziyareti başı maliyet", "Mesajlaşma konuşması başı maliyet"],
+    distribution: [{ "@type": "DataDownload", encodingFormat: "text/csv", contentUrl: `${SITE.url}${CSV}` }],
+  },
+  faqPage(faqs),
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd} ogType="article" image={`${PATH}og.jpg`}>
+  <Section width="default" space="tight">
+    <nav class="crumbs" aria-label="Sayfa yolu"><a href="/">Ana Sayfa</a> / <a href="/arastirma/">Araştırma</a> / Meta reklam maliyetleri 2026</nav>
+    <p class="eyebrow">Araştırma · Veri sayfası</p>
+    <h1>{h1}</h1>
+    <p class="lede">
+      Sakarya’da bir mağazanın Instagram’da 1.000 kişiye görünmesi kaç lira? Bir mesaj kaça geliyor? Bu sayfada
+      Türkiye ve dünya için yayımlanmış Meta reklam kıyas verilerini, vergileri ve kur etkisini kaynaklarıyla topladık.
+      Yanına da kendi yönettiğimiz hesapların Ekim 2026 rakamlarını koyduk: anonim, toplulaştırılmış, aralık olarak.
+    </p>
+    <p class="meta">
+      <strong>Son güncelleme:</strong> <time datetime={UPDATED}>{UPDATED_TR}</time> · {statCount} kaynaklı istatistik ·
+      {ownCount} kendi ölçümümüz · <a href={CSV} download>CSV indir</a>
+    </p>
+
+    <div class="keys">
+      <article>
+        <span class="k">2,64 $</span>
+        <p>Türkiye’de medyan CPM, Ekim 2026 (≈132 TL). <a href={SOURCES.adkitTR.url} rel="noopener" target="_blank">AdKit</a></p>
+      </article>
+      <article>
+        <span class="k">67,11 TL</span>
+        <p>Yönettiğimiz 19 kampanyanın medyan CPM’i, Ekim 2026. <a href="#rast-verisi">Rast Creative</a></p>
+      </article>
+      <article>
+        <span class="k">76–211 TL</span>
+        <p>Instagram/Messenger’da başlatılan konuşma başı maliyet, Ekim 2026. <a href="#rast-verisi">Rast Creative</a></p>
+      </article>
+      <article>
+        <span class="k">+%14</span>
+        <p>Meta’da reklam başına ortalama fiyat, 3. çeyrek 2026, yıllık. <a href={SOURCES.metaQ3.url} rel="noopener" target="_blank">Meta</a></p>
+      </article>
+      <article>
+        <span class="k">%5</span>
+        <p>Türkiye’ye gösterilen reklamlara Meta’nın eklediği konum ücreti. <a href={SOURCES.metaLocation.url} rel="noopener" target="_blank">Meta</a></p>
+      </article>
+      <article>
+        <span class="k">62,3 milyon</span>
+        <p>Instagram’ın Türkiye reklam erişimi, 2025 sonu. <a href={SOURCES.datareportal.url} rel="noopener" target="_blank">DataReportal</a></p>
+      </article>
+    </div>
+  </Section>
+
+  <Section width="default" space="tight" id="rast-verisi">
+    <SectionHeading eyebrow="Kendi verimiz · Ekim 2026">Rast Creative’in yönettiği hesaplarda gerçek maliyetler</SectionHeading>
+    <div class="prose">
+      <p>
+        Kıyas sitelerinin rakamları yüzlerce reklamverenin ortalaması. Yerel bir işletme için daha yakın bir resim
+        isteyenlere kendi tablomuzu açıyoruz. Veriyi Meta Ads API’den kampanya düzeyinde, salt okunur çektik
+        ({OWN.period}). Kapsam: <strong>{OWN.accounts} reklam hesabı</strong> (ajansın kendi hesabı ve iki yerel perakende
+        müşterisi), harcaması olan <strong>{OWN.campaigns} kampanya</strong>, {OWN.spendApprox} harcama, {OWN.impressionsApprox} gösterim.
+        Müşteri adı ya da tek bir hesabın toplamı yok; tek hesapta kalan hedefleri (form ve bağlantı tıklaması) tabloya almadık.
+      </p>
+    </div>
+    <div class="tablewrap">
+      <table class="zt">
+        <caption>
+          Kaynak: Rast Creative’in yönettiği hesaplar, Meta Ads API, {OWN.period}, n={OWN.accounts} hesap / {OWN.campaigns} kampanya.
+          Aralık = en düşük–en yüksek kampanya; havuz = toplam harcama / toplam sonuç. Tutarlar KDV ve konum ücreti hariç, TL.
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Kampanya hedefi</th>
+            <th scope="col">Örnek</th>
+            <th scope="col">Sonuç başı maliyet</th>
+            <th scope="col">CPM</th>
+            <th scope="col">TO (tümü)</th>
+            <th scope="col">Not</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            OWN.rows.map((r) => (
+              <tr>
+                <th scope="row">{r.goal}</th>
+                <td>{r.n}</td>
+                <td>{r.result}</td>
+                <td>{r.cpm}</td>
+                <td>{r.ctr}</td>
+                <td>{r.note}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <div class="tablewrap">
+      <table class="zt">
+        <caption>Kaynak: Rast Creative’in yönettiği hesaplar, {OWN.period}, n={OWN.accounts} hesap / {OWN.campaigns} kampanya.</caption>
+        <thead>
+          <tr><th scope="col">Tüm kampanyalar</th><th scope="col">Değer</th></tr>
+        </thead>
+        <tbody>
+          {OWN.overall.map((o) => (<tr><th scope="row">{o.label}</th><td>{o.value}</td></tr>))}
+        </tbody>
+      </table>
+    </div>
+    <p class="small">
+      Takip başı maliyeti dikkatli okuyun: Meta yalnızca reklama doğrudan atfedebildiği takipleri sayıyor. Reklamı görüp
+      sonradan profile gelen ve takip eden kişiler bu sayıya girmiyor, bu yüzden gerçek takip başı maliyet büyük olasılıkla
+      daha düşük. Profil ziyareti başı maliyet takip büyümesi için daha güvenilir bir gösterge.
+    </p>
+  </Section>
+
+  {
+    groups.map((g) => (
+      <Section width="default" space="tight" id={g.id}>
+        <SectionHeading eyebrow={g.eyebrow}>{g.heading}</SectionHeading>
+        <p class="intro">{g.intro}</p>
+        <div class="tablewrap">
+          <table class="zt stats">
+            <thead>
+              <tr>
+                <th scope="col">İstatistik</th>
+                <th scope="col">Değer</th>
+                <th scope="col">Dönem</th>
+                <th scope="col">Kaynak</th>
+              </tr>
+            </thead>
+            <tbody>
+              {g.stats.map((s) => (
+                <tr>
+                  <th scope="row">{s.label}</th>
+                  <td class="v">{s.value}</td>
+                  <td>{s.period}</td>
+                  <td>
+                    <a href={SOURCES[s.src].url} rel="noopener" target="_blank">{SOURCES[s.src].name}</a>
+                    <small> · {SOURCES[s.src].title} · {SOURCES[s.src].date}</small>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {g.id === "turkiye-kiyas" && (
+          <p class="small">
+            TL karşılıkları TCMB’nin {USD_TRY_DATE} tarihli döviz satış kuruyla ({usd} TL) bizim hesabımızdır. Bu medyanlar
+            yönettiğimiz hesaplardan yüksek çıkıyor: örneklemde e-ticaret ve dönüşüm hedefli kampanyalar var, bizim hesaplarda
+            ise video ve profil ziyareti hedefleri ağırlıkta.
+          </p>
+        )}
+      </Section>
+    ))
+  }
+
+  <Section width="default" space="tight" id="maliyeti-ne-belirler">
+    <SectionHeading eyebrow="Neden bu kadar farklı?">Meta reklam maliyetini ne belirler?</SectionHeading>
+    <div class="prose">
+      <h3>1. Kampanya hedefi, her şeyden önce</h3>
+      <p>
+        Meta reklamı, seçtiğiniz sonucu verme olasılığı yüksek kişilere gösterir. Video izlenme hedefinde videoyu izleyecek
+        çok kişi vardır, bu yüzden gösterim ucuzdur: bizim hesaplarda CPM 13–41 TL. Mesaj hedefinde ise size yazacak kişi
+        azdır ve o kişiye ulaşmak için yarışan reklamveren çoktur: aynı ay CPM 149–171 TL. En ucuz video kampanyamızla en
+        pahalı mesaj kampanyamız arasında 1.000 gösterimin fiyatı 12 kattan fazla değişti.
+      </p>
+      <h3>2. Açık artırma ve rekabet</h3>
+      <p>
+        Fiyat sabit bir tarifeden gelmez, her gösterim için açık artırma yapılır. Aynı kitleye ulaşmak isteyen reklamveren
+        sayısı arttıkça fiyat yükselir. Meta’nın kendi açıklamasına göre 2026’nın üçüncü çeyreğinde reklam başına ortalama
+        fiyat bir yıl öncesine göre %14 arttı; gösterim sayısı ise %10 arttı.
+      </p>
+      <h3>3. Kreatif: aynı hedefte 7 kat fark</h3>
+      <p>
+        Profil ziyareti hedefli 10 kampanyamızda ziyaret başı maliyet 0,49 TL ile 3,66 TL arasında değişti. Hedef aynıydı;
+        farkı bizce büyük ölçüde videonun ilk saniyeleri ve kime gösterildiği yarattı. İlgi çeken kreatif daha
+        çok etkileşim alır, Meta onu daha ucuza dağıtır.
+      </p>
+      <h3>4. Kitle ve konum</h3>
+      <p>
+        Dar bir ilçe hedeflemesi küçük bir kitle demektir; Meta aynı kişilere tekrar tekrar göstermek zorunda kalır ve
+        maliyet artar. Daha önce sayfanızla etkileşime girmiş kişiler (yeniden hedefleme) çoğu zaman daha ucuz sonuç verir.
+      </p>
+      <h3>5. Kur, vergi ve ücretler</h3>
+      <p>
+        Reklam yöneticisinde gördüğünüz tutar KDV ve konum ücreti hariçtir. Türkiye’ye gösterilen reklamlara %5 konum ücreti
+        biner, vergi numarası girilmemiş hesaplarda %20 KDV de faturaya eklenir. Dolar bir yılda yaklaşık %18,8 değer kazandı;
+        dolarla yayımlanan kıyas rakamlarını TL bütçenize çevirirken hangi günün kurunu kullandığınızı mutlaka not edin.
+      </p>
+    </div>
+  </Section>
+
+  <Section width="default" space="tight" id="nasil-okunur">
+    <SectionHeading eyebrow="Okuma rehberi">Bu sayılar nasıl okunur?</SectionHeading>
+    <ul class="tips">
+      <li><strong>Sonuç başı maliyeti hedefle birlikte okuyun.</strong> “Sonuç” izlenme kampanyasında ThruPlay, trafik kampanyasında ziyaret ya da tıklama, mesaj kampanyasında konuşmadır. 0,04 TL’lik ThruPlay ile 78 TL’lik konuşmayı karşılaştırmak anlamsız.</li>
+      <li><strong>TO (tümü) ile bağlantı TO’su aynı şey değil.</strong> “Tümü” beğeni, profil ve “devamını gör” tıklamalarını da sayar. Siteye giden tıklamaya bakmak için giden (outbound) TO’yu kullanın: Türkiye medyanı %2,27’ye karşı %0,92.</li>
+      <li><strong>Medyan, ortalamadan daha dürüsttür.</strong> Birkaç çok pahalı kampanya ortalamayı yukarı çeker. Bu sayfadaki kıyas verileri ve bizim tablolarımız çoğunlukla medyan ve aralık veriyor.</li>
+      <li><strong>Dolar değerini TL’ye çevirirken tarihi yazın.</strong> Kur bir yılda %18,8 değiştiğinde aynı 2,64 $ farklı bir TL tutarı demektir.</li>
+      <li><strong>Küçük örneği aralık olarak okuyun.</strong> Mesaj tablomuz 116 konuşmaya dayanıyor. Bir sonraki ay bu aralık kayabilir.</li>
+      <li><strong>Mesaj konuşması satış değildir.</strong> Meta konuşmayı ilk mesajda sayar. Kaçının teklif istediğini, kaçının mağazaya geldiğini kendi kaydınızdan izleyin.</li>
+    </ul>
+  </Section>
+
+  <Section width="default" space="tight" id="sss">
+    <SectionHeading eyebrow="SSS">Sık sorulan sorular</SectionHeading>
+    <ToolFaq faqs={faqs} />
+  </Section>
+
+  <Section width="default" space="tight" id="atif">
+    <div class="cite">
+      <h2>Atıf yapmak için</h2>
+      <p>
+        Bu sayfadaki metin ve kendi ölçümlerimiz <a href="https://creativecommons.org/licenses/by/4.0/deed.tr" rel="license noopener" target="_blank">CC BY 4.0</a> lisanslı.
+        Haberde, blog yazısında ya da sunumda kullanabilirsiniz; kaynak olarak Rast Creative’i anıp bu sayfaya bağlantı vermeniz yeterli.
+        Üçüncü taraf rakamlarda asıl kaynağı da belirtin.
+      </p>
+      <label for="cite-plain" class="small">Önerilen atıf</label>
+      <textarea id="cite-plain" readonly rows="3" data-cite-meta>{citeText}</textarea>
+      <label for="cite-code" class="small">HTML bağlantısı</label>
+      <textarea id="cite-code" readonly rows="2" data-cite-meta-html>{citeHtml}</textarea>
+      <p class="btns">
+        <button type="button" class="ev-btn" data-copy-meta="plain">Atfı kopyala</button>
+        <button type="button" class="ev-btn" data-copy-meta="html">HTML’i kopyala</button>
+        <a class="ev-btn" href={CSV} download>Veriyi indir (CSV)</a>
+        <span class="small" data-copied-meta aria-live="polite"></span>
+      </p>
+    </div>
+  </Section>
+
+  <Section width="default" space="tight" id="yontem">
+    <SectionHeading eyebrow="Yöntem">Bu sayfayı nasıl hazırladık?</SectionHeading>
+    <ul class="tips">
+      <li>Her üçüncü taraf rakamı, yanında bağlantısı verilen sayfadan {ACCESSED} tarihinde okuduk. Doğrulayamadığımız rakamı (örneğin 2025 yılı reklam yatırımı toplamı) sayfaya almadık.</li>
+      <li>Kendi verimiz: Meta Ads API, kampanya düzeyi, {OWN.period}, harcaması olan {OWN.campaigns} kampanya, {OWN.accounts} hesap. Sağlık sektöründen hesap dahil değil.</li>
+      <li>Kendi rakamlarımız KDV ve konum ücreti hariç, reklam yöneticisinde görünen harcamadır. Sonuçlar Meta’nın varsayılan atıf penceresiyle sayıldı.</li>
+      <li>Sayfayı yeni veri çıktıkça güncelliyoruz; güncelleme tarihi en üstte.</li>
+    </ul>
+    {
+      sibling && (
+        <p class="small">
+          Organik tarafı merak ediyorsanız: <a href="/arastirma/reels-istatistikleri-2026/">Reels istatistikleri 2026</a>.
+        </p>
+      )
+    }
+  </Section>
+
+  <Section width="default" space="tight">
+    <div class="cta">
+      <h2>Kendi hesabınızın rakamlarını bu tabloyla karşılaştırmak ister misiniz?</h2>
+      <p>
+        Rast Creative, Sakarya’dan yerel işletmelere reklam videosu çekiyor ve Meta reklamlarını yönetiyor. Reklam hesabınıza
+        birlikte bakalım; hangi hedefin size uygun olduğunu konuşalım. <a href="/sosyal-medya-icerigi/">Sosyal medya içeriği</a>
+        ve <a href="/reklam-filmi/">reklam filmi</a> sayfalarına da göz atabilirsiniz.
+      </p>
+      <Button href={PRIMARY_CTA.href}>Görüşelim</Button>
+    </div>
+  </Section>
+
+  <script>
+    const out = document.querySelector<HTMLElement>("[data-copied-meta]");
+    document.querySelectorAll<HTMLButtonElement>("[data-copy-meta]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const sel = btn.dataset.copyMeta === "html" ? "[data-cite-meta-html]" : "[data-cite-meta]";
+        const ta = document.querySelector<HTMLTextAreaElement>(sel);
+        if (!ta) return;
+        try {
+          await navigator.clipboard.writeText(ta.value);
+        } catch {
+          ta.select();
+          document.execCommand("copy");
+        }
+        if (out) out.textContent = "Kopyalandı.";
+      });
+    });
+  </script>
+</BaseLayout>
+
+<style>
+  .crumbs {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .crumbs a,
+  .meta a,
+  .keys a,
+  .small a,
+  .prose a,
+  .tips a,
+  .cite a:not(.ev-btn),
+  .cta a:not(.ev-btn, .btn),
+  .zt a {
+    color: var(--amber-text);
+  }
+  .eyebrow {
+    font-family: var(--font-utility);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+  }
+  h1 {
+    margin: 0.4rem 0 1rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 1.2rem + 2.4vw, 3rem);
+    line-height: 1.1;
+    color: var(--ink);
+  }
+  .lede {
+    max-width: 68ch;
+    font-size: 1.08rem;
+    line-height: var(--leading-body);
+    color: var(--ink-soft);
+  }
+  .meta {
+    margin-top: 0.9rem;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .keys {
+    display: grid;
+    gap: 0.9rem;
+    margin-top: 1.6rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (min-width: 900px) {
+    .keys {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .keys article {
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+    background: color-mix(in srgb, var(--paper) 82%, transparent);
+  }
+  .keys .k {
+    display: block;
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 1rem + 1.2vw, 2rem);
+    line-height: 1.15;
+    white-space: nowrap;
+    color: var(--ink);
+  }
+  .keys p {
+    margin-top: 0.3rem;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: var(--ink-soft);
+  }
+  .intro {
+    margin-top: 0.8rem;
+    max-width: 70ch;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .small {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .tablewrap {
+    overflow-x: auto;
+    margin: 1.2rem 0 0.8rem;
+  }
+  .zt {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+    color: var(--ink);
+  }
+  .zt caption {
+    caption-side: bottom;
+    padding-top: 0.6rem;
+    text-align: left;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .zt th,
+  .zt td {
+    padding: 0.6rem 0.7rem;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+    min-width: 8rem;
+  }
+  .zt tbody th {
+    font-weight: 500;
+  }
+  .zt thead th {
+    font-family: var(--font-utility);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+  }
+  .zt small {
+    color: var(--ink-soft);
+  }
+  .stats .v {
+    font-weight: 600;
+    white-space: normal;
+  }
+  @media (max-width: 700px) {
+    .stats thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
+    .stats tr {
+      display: grid;
+      gap: 0.2rem;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .stats th,
+    .stats td {
+      display: block;
+      min-width: 0;
+      padding: 0;
+      border: 0;
+    }
+    .stats td:nth-of-type(2)::before {
+      content: "Dönem: ";
+      color: var(--ink-soft);
+    }
+    .stats td:nth-of-type(2),
+    .stats td:nth-of-type(3) {
+      font-size: 0.85rem;
+    }
+  }
+  .prose {
+    display: grid;
+    gap: 0.7rem;
+    margin-top: 1rem;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .prose h3 {
+    margin-top: 0.8rem;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--ink);
+  }
+  .prose strong,
+  .tips strong {
+    color: var(--ink);
+  }
+  .tips {
+    display: grid;
+    gap: 0.8rem;
+    margin-top: 1.2rem;
+    padding-left: 1.2rem;
+    list-style: disc;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .cite,
+  .cta {
+    display: grid;
+    gap: 0.8rem;
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+    border: 1px solid var(--line);
+    border-radius: 1.2rem;
+    background: color-mix(in srgb, var(--paper) 80%, transparent);
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .cite {
+    border-color: var(--line-strong);
+  }
+  .cite h2,
+  .cta h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.7rem);
+    color: var(--ink);
+  }
+  .cite textarea {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 0.6rem;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: ui-monospace, monospace;
+    font-size: 0.85rem;
+    resize: none;
+  }
+  .btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+  }
+  .cta :global(a.btn),
+  .cta :global(.ev-btn) {
+    justify-self: start;
+  }
+</style>

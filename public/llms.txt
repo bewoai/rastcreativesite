@@ -60,6 +60,10 @@ Sakarya'da video, sosyal medya ya da reklam ajansı arayanlar için: Rast Creati
 - [Sakarya'da Video Prodüksiyon Firması Nasıl Seçilir?](https://rastcreative.com/blog/sakarya-video-produksiyon-firmasi-nasil-secilir/): Teklif karşılaştırma kontrol listesi
 - [Fotoğraftan Reklam Videosu mu, Çekim mi?](https://rastcreative.com/blog/fotograftan-reklam-videosu-mu-cekim-mi/): Altı ölçütle karşılaştırma ve karar listesi
 
+## Araştırma (veri sayfaları)
+
+- [Türkiye'de Meta (Instagram/Facebook) reklam maliyetleri 2026](https://rastcreative.com/arastirma/meta-reklam-maliyetleri-2026/): Türkiye ve dünya CPM, CPC, TO kıyasları, KDV/konum ücreti/kur, Rast Creative'in yönettiği hesaplardan anonim Ekim 2026 aralıkları (mesaj, profil ziyareti, ThruPlay). Her rakam kaynaklı, CC BY 4.0, CSV indirilebilir.
+
 ## Optional
 
 - [Blog](https://rastcreative.com/blog/): Video prodüksiyon ve içerik pazarlaması üzerine tüm yazılar

@@ -1,0 +1,124 @@
+---
+/**
+ * /arastirma/ — hub for Rast's statistics pages (link-building data hub).
+ * An entry shows up only when its page file exists, so pages built in
+ * parallel appear here without editing this file again. New page = add one
+ * object to PAGES (path + file globs + texts).
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Section from "../../components/Section.astro";
+import { SITE } from "../../consts";
+import { breadcrumb } from "../../lib/schema";
+
+const files = Object.keys(import.meta.glob("./*.astro")).concat(Object.keys(import.meta.glob("./*/index.astro")));
+const has = (slug: string) => files.includes(`./${slug}.astro`) || files.includes(`./${slug}/index.astro`);
+
+const PAGES = [
+  {
+    slug: "meta-reklam-maliyetleri-2026",
+    title: "Türkiye’de Meta (Instagram/Facebook) reklam maliyetleri 2026",
+    text: "CPM, CPC, tıklama oranı, mesaj ve ThruPlay başı maliyet; vergiler, kur ve yönettiğimiz hesapların Ekim 2026 aralıkları.",
+    updated: "5 Kasım 2026",
+  },
+  {
+    slug: "reels-istatistikleri-2026",
+    title: "Instagram Reels istatistikleri 2026",
+    text: "Reels izlenme, etkileşim ve izlenme süresi verileri, kaynaklarıyla.",
+    updated: "",
+  },
+].filter((p) => has(p.slug));
+
+const PATH = "/arastirma/";
+const title = "Araştırma: Türkiye sosyal medya ve reklam istatistikleri";
+const description =
+  "Rast Creative’in veri sayfaları: Türkiye’de Instagram, Reels ve Meta reklam istatistikleri, her rakam kaynağı ve tarihiyle. Alıntılamak serbest.";
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Araştırma", path: PATH },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: title,
+    description,
+    url: new URL(PATH, SITE.url).href,
+    inLanguage: "tr",
+    hasPart: PAGES.map((p) => ({ "@type": "Article", name: p.title, url: new URL(`${PATH}${p.slug}/`, SITE.url).href })),
+  },
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <Section width="default" space="tight">
+    <p class="eyebrow">Araştırma</p>
+    <h1>Türkiye sosyal medya ve reklam istatistikleri</h1>
+    <p class="lede">
+      Yazı, haber ya da sunum hazırlarken güvenilir bir rakam arayanlar için. Her sayfada rakamın kaynağı, tarihi ve
+      bağlantısı yanında duruyor; kendi müşteri hesaplarımızdan gelen verileri anonim ve toplu olarak paylaşıyoruz.
+      Atıf vererek kullanabilirsiniz.
+    </p>
+    <ul class="list">
+      {
+        PAGES.map((p) => (
+          <li>
+            <a href={`${PATH}${p.slug}/`}>
+              <strong>{p.title}</strong>
+              <span>{p.text}</span>
+              {p.updated && <small>Son güncelleme: {p.updated}</small>}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+</BaseLayout>
+
+<style>
+  .eyebrow {
+    font-family: var(--font-utility);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+  }
+  h1 {
+    margin: 0.4rem 0 1rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 1.2rem + 2.4vw, 3rem);
+    line-height: 1.1;
+    color: var(--ink);
+  }
+  .lede {
+    max-width: 66ch;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .list {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.6rem;
+  }
+  .list a {
+    display: grid;
+    gap: 0.35rem;
+    padding: 1.1rem 1.3rem;
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+    color: var(--ink-soft);
+    text-decoration: none;
+    background: color-mix(in srgb, var(--paper) 82%, transparent);
+  }
+  .list a:hover,
+  .list a:focus-visible {
+    border-color: var(--line-strong);
+  }
+  .list strong {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--ink);
+  }
+  .list small {
+    color: var(--amber-text);
+  }
+</style>
