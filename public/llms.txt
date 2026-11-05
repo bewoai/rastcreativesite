@@ -63,6 +63,7 @@ Sakarya'da video, sosyal medya ya da reklam ajansı arayanlar için: Rast Creati
 ## Araştırma (veri sayfaları)
 
 - [Türkiye'de Meta (Instagram/Facebook) reklam maliyetleri 2026](https://rastcreative.com/arastirma/meta-reklam-maliyetleri-2026/): Türkiye ve dünya CPM, CPC, TO kıyasları, KDV/konum ücreti/kur, Rast Creative'in yönettiği hesaplardan anonim Ekim 2026 aralıkları (mesaj, profil ziyareti, ThruPlay). Her rakam kaynaklı, CC BY 4.0, CSV indirilebilir.
+- [Türkiye Reels ve kısa video istatistikleri 2026](https://rastcreative.com/arastirma/reels-istatistikleri-2026/): Türkiye'de Instagram ve kısa video kullanımı (DataReportal, GWI, TÜİK, RTÜK), Reels erişim/etkileşim/atlanma oranı kıyasları, Reels reklam video metrikleri; Rast Creative'in yönettiği hesaplardan anonim Ekim 2026 ThruPlay maliyet aralıkları ve kendi Instagram hesabının Reels verisi. Her rakam kaynaklı, CC BY 4.0, CSV indirilebilir.
 
 ## Optional
 
