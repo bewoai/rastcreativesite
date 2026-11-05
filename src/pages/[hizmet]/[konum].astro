@@ -106,7 +106,14 @@ const jsonLd = [
 ];
 
 // Internal links.
-const nearby = location.nearby
+// Sakarya district pages always link up to the province page of the same
+// service (the page that targets "sakarya <hizmet>"), even when the
+// district's own nearby list leaves it out.
+const nearbySlugs =
+  location.province === "Sakarya" && location.slug !== "sakarya" && !location.nearby.includes("sakarya")
+    ? ["sakarya", ...location.nearby]
+    : location.nearby;
+const nearby = nearbySlugs
   .map((slug) => getLocation(slug))
   .filter((l): l is SeoLocation => Boolean(l))
   .filter((l) => !isConsolidated(service.slug, l.slug));

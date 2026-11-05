@@ -19,7 +19,7 @@ Günümüzde Instagram, TikTok ve YouTube Shorts'ta erişimi en çok dikey video
 
 ## 2. Video çekimi pakete dahil mi?
 
-Birçok pakette içerikleri işletmenin kendisi çeker, ajans yalnızca düzenleyip paylaşır. Profesyonel çekim pakete dahilse ayda kaç çekim günü yapılacağı önemlidir. Biz [sosyal medya yönetimini](/sosyal-medya-icerigi/sakarya/) genellikle ayda bir ya da iki planlı çekim günüyle kuruyoruz: o günden çıkan içerikler ay boyunca takvime yayılıyor. Bu model hem markanın görsel dilini tutarlı tutuyor hem de her hafta set kurmanın maliyetini ortadan kaldırıyor.
+Birçok pakette içerikleri işletmenin kendisi çeker, ajans yalnızca düzenleyip paylaşır. Profesyonel çekim pakete dahilse ayda kaç çekim günü yapılacağı önemlidir. Biz [Sakarya'da sosyal medya yönetimini](/sosyal-medya-icerigi/sakarya/) genellikle ayda bir ya da iki planlı çekim günüyle kuruyoruz: o günden çıkan içerikler ay boyunca takvime yayılıyor. Bu model hem markanın görsel dilini tutarlı tutuyor hem de her hafta set kurmanın maliyetini ortadan kaldırıyor.
 
 ## 3. Strateji ve içerik planı
 

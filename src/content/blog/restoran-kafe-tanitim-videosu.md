@@ -29,7 +29,7 @@ Tabağın yakın çekimi elbette iştah açar — buhar tüten bir kahve, kesile
 
 ## Tek video değil, içerik olarak düşünün
 
-Kafe ve restoranların en çok ihtiyaç duyduğu şey, düzenli sosyal medya içeriği. O yüzden mekana bir kez geldiğimizde tek bir "tanıtım filmi" değil, aylarca kullanılabilecek bir malzeme havuzu çekmeyi öneriyoruz: bir ana tanıtım videosu, birkaç kısa dikey Reels, bir de menü için ürün kareleri. Bu mantığı [video çektirmek değil, içerik sistemi kurmak yazımızda](/blog/video-cektirmek-degil-icerik-sistemi-kurmak/) uzun uzun anlattık. Sonrasında bu içerikleri [sosyal medya içeriği](/sosyal-medya-icerigi/sakarya/) tarafında düzenli yayına çevirmek çok daha kolay oluyor.
+Kafe ve restoranların en çok ihtiyaç duyduğu şey, düzenli sosyal medya içeriği. O yüzden mekana bir kez geldiğimizde tek bir "tanıtım filmi" değil, aylarca kullanılabilecek bir malzeme havuzu çekmeyi öneriyoruz: bir ana tanıtım videosu, birkaç kısa dikey Reels, bir de menü için ürün kareleri. Bu mantığı [video çektirmek değil, içerik sistemi kurmak yazımızda](/blog/video-cektirmek-degil-icerik-sistemi-kurmak/) uzun uzun anlattık. Sonrasında bu içerikleri [sosyal medya yönetimi](/sosyal-medya-icerigi/sakarya/) tarafında düzenli yayına çevirmek çok daha kolay oluyor.
 
 ## Restoran tanıtım filmi çekimi adım adım
 

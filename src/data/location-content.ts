@@ -73,10 +73,12 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
   },
 
   "sosyal-medya-icerigi/sakarya": {
-    title: "Sakarya Sosyal Medya Yönetimi Ajansı (Adapazarı, Serdivan)",
+    title: "Sakarya Sosyal Medya Yönetimi Ajansı",
     h1: "Sakarya Sosyal Medya Yönetimi Ajansı",
     description:
-      "Sakarya sosyal medya yönetimi: Adapazarı, Serdivan ve ilçelerde aylık plan, çekim, kurgu, paylaşım ve rapor. Portföy: Aytaş Home'da 4 ayda etkileşim +%311.",
+      "Sakarya sosyal medya yönetimi: Adapazarı, Serdivan ve ilçelerde aylık plan, çekim günü, kurgu, paylaşım ve rapor. Aytaş Home'da 4 ayda etkileşim +%311.",
+    answer:
+      "Sakarya'da sosyal medya yönetimini video üzerine kuruyoruz: aylık içerik planı, işletmenizde bir ya da iki çekim günü, Reels kurgusu, paylaşım takvimi ve ay sonu raporu. Ayda kaç video çıkacağı teklifte yazılı olur. Hesabı kendiniz yönetmek isterseniz yalnızca içerik üretimi ya da danışmanlık da alabilirsiniz.",
     heading: "Sakarya'da sosyal medya ajansı seçerken: ayda kaç video, çekim dahil mi?",
     paragraphs: [
       "Sakarya'da sosyal medya yönetimi için teklif topladığınızda birçok paketin gönderi ve hikâye sayısıyla satıldığını görürsünüz. Bu paketlerin bir kısmında ayda kaç video çekileceği yazmaz. Bizim paketlerimiz video üzerine kurulu: ayda kaç video çıkacağı ve kaç çekim günü yapılacağı teklifte yazılı olur. Böylece neye para verdiğinizi baştan bilir, ay sonunda yayına çıkanla karşılaştırabilirsiniz.",
@@ -103,6 +105,23 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
           { title: "Dr. Erdem Çalışkan (medikal estetik, Serdivan, Instagram)", text: "Yönetmeliğe uygun bilgilendirme videoları; “Fraksiyonel Lazer Nedir?” ve “Dr. Erdem Çalışkan Kimdir?” bu seriden." },
           { title: "Op. Dr. Duygu Cebecik Özmüş (kadın doğum, YouTube)", text: "Gebelik bilgilendirme serisi; “Gebelik: İlk 7 Gün” ile başlayan bölümler." },
           { title: "Rast Creative (kendi hesabımız)", text: "Motion graphic Reels “7 Saniye (Mermi)” Instagram'da 84 binin üzerinde izlendi ve 1.184 kez paylaşıldı (28 Ekim 2026)." },
+        ],
+      },
+      {
+        heading: "Yönetim, içerik üretimi ya da danışmanlık: hangisi size uygun?",
+        paragraphs: [
+          "Sakarya'da sosyal medya desteği arayan işletmelerin hepsi aynı şeye ihtiyaç duymuyor. Kimi hesabı tamamen devretmek istiyor, kimi paylaşımı kendi ekibiyle sürdürüp yalnızca videoları dışarıdan almak istiyor. Üç düzenin farkı şöyle:",
+        ],
+        items: [
+          { title: "Sosyal medya yönetimi", text: "Plan, çekim, kurgu, metin, paylaşım ve aylık raporun hepsi bizde. Hesapla ilgilenecek kimseniz yoksa ya da paylaşımlar düzensiz gidiyorsa bu düzen uygun." },
+          { title: "Yalnızca içerik üretimi", text: "Ayın videolarını planlayıp çekiyor ve kurguluyoruz; paylaşımı ve mesajları kendi ekibiniz yapıyor. Hesabı içeride yöneten biri varsa ama çekim ve kurgu için zaman ya da ekipman yoksa uygun." },
+          { title: "Sosyal medya danışmanlığı", text: "Mevcut hesabınıza birlikte bakıyor, neyin işlediğini ve neyin eksik kaldığını konuşuyoruz; içerik planı ve çekim düzeni için yol haritası çıkarıyoruz. Paylaşımı ve çekimi kendiniz yapacaksanız uygun." },
+          { title: "Meta reklam yönetimi", text: "Üç düzene de eklenebiliyor: Instagram ve Facebook reklamlarını aynı çekimden çıkan videolarla kuruyor, haftalık takip edip ay sonunda raporluyoruz. Reklam bütçesi Meta'ya doğrudan sizin hesabınızdan ödenir. Hekim ve sağlık kuruluşu hesaplarında yönetmelik gereği reklam yönetimi yapmıyoruz." },
+        ],
+        links: [
+          { href: "/sektorler/magaza-sosyal-medya-icerigi/", label: "Mağaza ve perakende için sosyal medya içeriği" },
+          { href: "/sektorler/doktor-klinik-video-cekimi/", label: "Doktor ve klinik hesapları için video" },
+          { href: "/sakarya-reklam-ajansi/", label: "Sakarya'daki tüm hizmetlerimiz" },
         ],
       },
       {
@@ -357,10 +376,10 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
   },
 
   "tanitim-filmi/sakarya": {
-    title: "Sakarya Tanıtım Filmi ve Fabrika Filmi Çekimi",
+    title: "Sakarya Tanıtım Filmi: Fabrika ve Kurumsal Film",
     h1: "Sakarya Tanıtım Filmi ve Fabrika Tanıtım Filmi",
     description:
-      "Sakarya tanıtım filmi ve fabrika filmi: OSB tesisleri, klinik ve markalar için 1–3 dk ana film, fuar ve LinkedIn versiyonları. Çekim 1–2 gün, teslim 2–4 hafta.",
+      "Sakarya tanıtım filmi çekimi: OSB fabrikaları ve kurumsal markalar için 1–3 dk film, drone ve röportaj, fuar ve LinkedIn versiyonları. Teslim 2–4 hafta.",
     answer:
       "Sakarya'da kurumsal ve fabrika tanıtım filmi çekiyoruz: organize sanayi bölgelerindeki üretim tesisleri, klinikler ve yerel markalar için 1–3 dakikalık ana film ve aynı çekimden fuar, LinkedIn ve Instagram versiyonları. Çekim çoğunlukla bir ya da iki gün, revizyonlar dahil teslim genellikle 2–4 hafta (fabrika filmlerinde çoğunlukla 3–4 hafta).",
     heading: "Sakarya'da tanıtım filmi nasıl planlanır?",
@@ -890,8 +909,10 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
   // ── Round 2 (Search Console impressions, Oct 2026) ──
 
   "sosyal-medya-icerigi/gebze": {
+    title: "Gebze Sosyal Medya Ajansı: Sanayi ve B2B Markaları",
+    h1: "Gebze Sosyal Medya Ajansı ve Yönetimi",
     description:
-      "Gebze sosyal medya ajansı: içerik planı, Reels ve kurumsal video çekimi, paylaşım takvimi ve aylık rapor. Sanayi ve B2B markaları için.",
+      "Gebze sosyal medya ajansı: fabrika ve B2B firmaları için tesiste çekim, LinkedIn ve Instagram videoları, paylaşım takvimi ve aylık performans raporu.",
     heading: "Gebze'de sosyal medya: B2B ve sanayi markaları için",
     paragraphs: [
       "Gebze'deki markaların büyük kısmı son tüketiciye değil, başka firmalara satış yapıyor. Bu yüzden sosyal medya burada takipçi yarışından çok güven inşa etmekle ilgili: üretim kapasitesini, kalite süreçlerini, ekibi ve teslim ettiğiniz işleri düzenli ve profesyonel biçimde göstermek. LinkedIn ve Instagram için aynı çekimden farklı kurgular çıkarıyoruz.",
@@ -925,10 +946,32 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
   },
 
   "sosyal-medya-icerigi/izmit": {
+    title: "İzmit Sosyal Medya Yönetimi ve Danışmanlığı",
+    h1: "İzmit Sosyal Medya Yönetimi ve Danışmanlığı",
+    description:
+      "İzmit sosyal medya yönetimi ve danışmanlığı: aylık içerik planı, işletmenizde çekim günü, Reels kurgusu, paylaşım takvimi ve rapor. Ön görüşme ücretsiz.",
     heading: "İzmit'te sosyal medya yönetimi",
     paragraphs: [
       "İzmit hem Kocaeli'nin ticaret merkezi hem de yoğun bir hizmet sektörüne sahip; sağlık kuruluşları, eğitim kurumları, restoranlar ve perakende markaları için düzenli içerik ihtiyacı yüksek. Sosyal medya yönetimini aylık içerik planı, planlı çekim günü, kurgu, paylaşım takvimi ve rapordan oluşan tek bir akış olarak yürütüyoruz.",
-      "Sakarya'dan İzmit'e aynı gün gidip dönebildiğimiz için çekim günlerini işletmenizin yoğunluğuna göre esnek planlayabiliyoruz.",
+      "Sakarya'dan İzmit'e aynı gün gidip dönebildiğimiz için çekim günlerini işletmenizin yoğunluğuna göre esnek planlayabiliyoruz. Ayın videolarını genellikle bir ya da iki çekim gününde topluca çekiyor, ay boyunca takvime yayıyoruz.",
+      "Hesabınızı kendi ekibinizle yönetmek istiyorsanız danışmanlık da veriyoruz: mevcut hesabınıza birlikte bakıp neyin işlediğini, neyin eksik kaldığını konuşuyor, içerik planı ve çekim düzeni için yol haritası çıkarıyoruz. Yalnızca çekim ve kurguyu bize bırakmak da mümkün.",
+    ],
+    faqs: [
+      {
+        question: "İzmit'te sosyal medya danışmanlığı ile yönetim arasındaki fark ne?",
+        answer:
+          "Yönetimde plan, çekim, kurgu, paylaşım ve aylık rapor bizde. Danışmanlıkta hesabı siz yönetiyorsunuz; biz mevcut durumu birlikte inceliyor, içerik planı ve çekim düzeni için öneri veriyoruz. İkisinin arasında bir düzen de var: videoları biz çekip kurguluyoruz, paylaşımı kendi ekibiniz yapıyor.",
+      },
+      {
+        question: "İzmit'e çekim için ne sıklıkla geliyorsunuz?",
+        answer:
+          "Aylık pakette genellikle ayda bir ya da iki planlı çekim günü yapıyoruz. Kaç çekim günü ve kaç video olacağı teklifte yazılı olur; kampanya ya da etkinlik varsa ek çekim günü planlanabilir.",
+      },
+    ],
+    links: [
+      { href: "/sosyal-medya-icerigi/kocaeli/", label: "Kocaeli sosyal medya yönetimi" },
+      { href: "/projeler/vaka/aytas-home/", label: "Aytaş Home vaka çalışması: 4 ayda etkileşim +%311" },
+      { href: "/blog/sosyal-medya-yonetimi-fiyati-neye-gore-belirlenir/", label: "Sosyal medya yönetimi fiyatı neye göre belirlenir?" },
     ],
   },
 
@@ -1429,10 +1472,26 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
     ],
   },
   "reklam-filmi/kartepe": {
+    title: "Kartepe Reklam Ajansı: Reklam Filmi ve Reklam Yönetimi",
+    h1: "Kartepe Reklam Filmi ve Reklam Yönetimi",
+    description:
+      "Kartepe reklam ajansı: otel, kayak ve doğa turizmi için reklam filmi ile Instagram ve Facebook reklam yönetimi. Dikey ve yatay versiyonlar, aylık rapor.",
     heading: "Kartepe'de reklam filmi çekimi",
     paragraphs: [
       "Kartepe'de reklam filmi taleplerinin önemli kısmı otel, kayak ve doğa turizmi işletmelerinden geliyor. Bu reklamlarda sezonun atmosferi ve misafir deneyimi ön planda; kar, orman ve manzara planlarını havadan ve yerden çekimle birlikte kurguluyoruz.",
       "Sezon kampanyaları için reklamı önceden hazırlayıp farklı mecralara uygun versiyonlarla teslim ediyoruz.",
+      "Reklamın yayınını da yönetebiliyoruz: Instagram ve Facebook (Meta) kampanyalarını aynı çekimden çıkan videolarla kuruyor, hedef kitleyi Kartepe'ye gelecek misafirlere ya da çevredeki müşterilere göre ayarlıyor, sonuçları haftalık takip edip ay sonunda raporluyoruz. Reklam bütçesi Meta'ya doğrudan sizin hesabınızdan ödenir.",
+    ],
+    faqs: [
+      {
+        question: "Kartepe'de sadece reklam yönetimi yapıyor musunuz?",
+        answer:
+          "Reklamı, kullanılacak videoları biz üreterek yönetmeyi tercih ediyoruz; çünkü sonucu en çok reklamın ilk saniyeleri belirliyor. Hazır videolarınız varsa yalnızca Instagram ve Facebook reklam kurulumu ve takibi de konuşulabilir.",
+      },
+    ],
+    links: [
+      { href: "/sosyal-medya-icerigi/kartepe/", label: "Kartepe sosyal medya yönetimi" },
+      { href: "/projeler/vaka/aytas-home/", label: "Aytaş Home: Meta reklamları ve içerikle 4 ayda etkileşim +%311" },
     ],
   },
   "video-cekimi/sapanca": {
