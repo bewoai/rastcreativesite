@@ -11,20 +11,38 @@ const abs = (path: string) => new URL(path, SITE.url).href;
 /** Stable @id so other nodes can reference the business. */
 export const BUSINESS_ID = `${SITE.url}#business`;
 
-/** Service area — "Sakarya geneli" per client (2026-06). */
+/** Service area — matches the Google Business Profile service area (2026-11-06). */
 const AREA_SERVED = [
   "Sakarya",
   "Serdivan",
   "Adapazarı",
   "Erenler",
   "Arifiye",
-  "Hendek",
   "Sapanca",
+  "Akyazı",
+  "Hendek",
+  "Karasu",
   "Kocaeli",
   "İzmit",
   "Gebze",
   "Düzce",
 ].map((name) => ({ "@type": "City", name }));
+
+/** Opening hours — must stay identical to the Google Business Profile hours. */
+const OPENING_HOURS = [
+  {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    opens: "09:00",
+    closes: "18:00",
+  },
+  {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: ["Saturday", "Sunday"],
+    opens: "10:00",
+    closes: "16:00",
+  },
+];
 
 const CORE_SERVICES = [
   {
@@ -76,6 +94,7 @@ export const localBusiness = {
     addressCountry: CONTACT.addressCountry,
   },
   areaServed: AREA_SERVED,
+  openingHoursSpecification: OPENING_HOURS,
   knowsAbout: [
     "video çekimi",
     "profesyonel video çekimi",
