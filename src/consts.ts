@@ -120,8 +120,10 @@ export const CONTACT = {
   addressLocality: "Serdivan",
   addressRegion: "Sakarya",
   addressCountry: "TR",
-  phone: "0533 128 1080",
+  phone: "0533 128 10 80",
   phoneIntl: "+905331281080", // for tel: links
+  /** schema.org `telephone` (same number, international display form) */
+  phoneSchema: "+90 533 128 10 80",
   email: "studio@rastcreative.com",
   whatsapp: "905331281080", // for wa.me links
 } as const;

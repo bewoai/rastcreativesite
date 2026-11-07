@@ -81,7 +81,7 @@ export const localBusiness = {
   url: SITE.url,
   image: abs(SITE.ogImage),
   logo: abs("/logo-black.svg"),
-  telephone: CONTACT.phoneIntl,
+  telephone: CONTACT.phoneSchema,
   email: CONTACT.email,
   priceRange: "₺₺₺",
   foundingDate: SITE.foundingDate,
@@ -140,7 +140,7 @@ export const organization = {
   logo: abs("/logo-black.svg"),
   image: abs(SITE.ogImage),
   email: CONTACT.email,
-  telephone: CONTACT.phoneIntl,
+  telephone: CONTACT.phoneSchema,
   address: {
     "@type": "PostalAddress",
     addressLocality: CONTACT.addressLocality,
