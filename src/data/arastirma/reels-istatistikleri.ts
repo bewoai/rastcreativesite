@@ -6,8 +6,10 @@
  * update the figure or drop it. GWI figures come from the Digital 2026 Global
  * Overview Report PDF (page number in `note`).
  * Rast's own numbers:
- *  - paid: Meta Ads API, read-only, campaign level, 01–31.10.2026, 4 managed
- *    ad accounts / 19 campaigns, published only as pooled ranges/medians
+ *  - paid: Meta Ads API, read-only, campaign level, 01–31.10.2026, 3 managed
+ *    ad accounts / 19 campaigns (same pull and same 19 campaigns as the Meta
+ *    cost page; Rast's own main + boost Meta IDs count as one account there,
+ *    so both pages say 3 — see vault 2026-11-05-istatistik-sayfalari.md), published only as pooled ranges/medians
  *    (no client name, no single account's figure, no health account);
  *  - organic: Rast's own @rastcreative Instagram account via Zernio analytics.
  * Raw pull + aggregation: vault 07-Research/2026-11-05-istatistik-sayfalari.md.
@@ -218,7 +220,7 @@ export const ALL_STATS: Stat[] = [...TR_USAGE, ...TR_VIDEO, ...TR_BRANDS, ...PLA
 /** Rast Creative's own data (aggregated; see header). */
 export const OWN_PAID = {
   period: "1–31 Ekim 2026",
-  accounts: 4,
+  accounts: 3,
   campaigns: 19,
   impressionsApprox: "yaklaşık 1,09 milyon",
   thruplaysApprox: "yaklaşık 273 bin",
@@ -234,7 +236,7 @@ export const OWN_PAID = {
     },
     {
       goal: "Diğer hedefler (profil ziyareti, trafik, mesaj, form)",
-      n: "15 kampanya, 4 hesap",
+      n: "15 kampanya, 3 hesap",
       thruCost: "0,16–15,87 TL (medyan 2,01)",
       cpm: "42–539 TL (medyan 69)",
       thruRate: "%1–42 (medyan %9)",

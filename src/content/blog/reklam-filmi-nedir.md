@@ -45,7 +45,7 @@ Senaryo ve storyboard aşaması, çekimden önce her detayın kâğıt üzerinde
 
 ### Pre-Prodüksiyon: Stratejik Planlama ve Senaryo
 
-Her şey bir fikirle başlar ancak her fikir iyi bir filme dönüşmez. Pre-prodüksiyon aşamasında markanın 'sesini' belirliyor, hedef kitlenizin hangi duygusal tetikleyicilere yanıt vereceğini analiz ediyoruz. Mekan keşfi (Recce) yaparak ışık ve kompozisyon planlarını önceden netleştiriyoruz. Doğru cast seçimi ve ekip organizasyonuyla prodüksiyonun her saniyesini önceden tasarlıyoruz. Bu titiz hazırlık süreci, bütçenin ve zamanın en verimli şekilde kullanılmasını sağlar.
+Her şey bir fikirle başlar ancak her fikir iyi bir filme dönüşmez. Pre-prodüksiyon aşamasında markanın 'sesini' belirliyor, hedef kitlenizin hangi duygusal tetikleyicilere yanıt vereceğini analiz ediyoruz. Mekan keşfi (Recce) yaparak ışık ve kompozisyon planlarını önceden netleştiriyoruz. Doğru cast seçimi ve ekip organizasyonuyla prodüksiyonun her saniyesini önceden tasarlıyoruz. Bu titiz hazırlık süreci, bütçenin ve zamanın en verimli şekilde kullanılmasını sağlar. Senaryonun kanca, mesaj, kanıt ve çağrı bölümlerini örnekle [reklam senaryosu nasıl yazılır](/blog/reklam-senaryosu-nasil-yazilir/) yazımızda anlattık.
 
 ### Prodüksiyon: Set Günü ve Çekim Disiplini
 

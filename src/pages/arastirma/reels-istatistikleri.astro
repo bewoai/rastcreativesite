@@ -260,8 +260,8 @@ const jsonLd = [
       <p>
         Kıyas raporları yurt dışındaki binlerce markanın ortalaması. Türkiye’de yerel bir işletmenin videosu reklamda nasıl
         izleniyor, onu görmek için kendi tablomuzu açıyoruz. Veriyi Meta Ads API’den kampanya düzeyinde, salt okunur çektik
-        ({p.period}). Kapsam: <strong>{p.accounts} reklam hesabı</strong> (ajansın kendi iki hesabı ve yerel perakendeden iki
-        hesap), harcaması olan <strong>{p.campaigns} kampanya</strong>, {p.impressionsApprox} gösterim, {p.thruplaysApprox} ThruPlay.
+        ({p.period}). Kapsam: <strong>{p.accounts} reklam hesabı</strong> (ajansın kendi hesabı ve iki yerel perakende
+        müşterisi), harcaması olan <strong>{p.campaigns} kampanya</strong>, {p.impressionsApprox} gösterim, {p.thruplaysApprox} ThruPlay.
         Müşteri adı ya da tek bir hesabın rakamı yok; sağlık sektöründen hesap dahil değil.
       </p>
     </div>
@@ -444,7 +444,7 @@ const jsonLd = [
       <li>Her üçüncü taraf rakamı, yanında bağlantısı verilen sayfadan ya da PDF’ten {ACCESSED} tarihinde okuduk. Doğrulayamadığımız rakamı sayfaya almadık.</li>
       <li>GWI değerleri We Are Social ve Meltwater’ın Digital 2026 Global Overview Report PDF’inden; satırda sayfa numarası var. Anket 2025’in ikinci çeyreğinde, 16 yaş üstü internet kullanıcılarıyla yapıldı.</li>
       <li>TÜİK 2026 rakamlarını TÜİK veri portalındaki <a href="https://veriportali.tuik.gov.tr/tr/press/58006" rel="noopener" target="_blank">Hanehalkı Bilişim Teknolojileri Kullanım Araştırması bülteninden</a> aktaran haberlerden aldık; portal sunucumuzdan açılmadığı için bağlantıyı aktaran habere verdik.</li>
-      <li>Reklam verimiz: Meta Ads API, kampanya düzeyi, {p.period}, harcaması olan {p.campaigns} kampanya, {p.accounts} hesap. Rakamlar havuzlanmış aralık ve medyan; tek bir hesabın ya da müşterinin rakamı yok.</li>
+      <li>Reklam verimiz: Meta Ads API, kampanya düzeyi, {p.period}, harcaması olan {p.campaigns} kampanya, {p.accounts} hesap (ajansın kendi verisi ana ve öne çıkarma olmak üzere iki Meta reklam hesabından geliyor, tek hesap sayıldı; Meta reklam maliyetleri sayfasıyla aynı 19 kampanya). Rakamlar havuzlanmış aralık ve medyan; tek bir hesabın ya da müşterinin rakamı yok.</li>
       <li>Organik verimiz: kendi Instagram hesabımızın ({o.period}) Reels istatistikleri, {ACCESSED} itibarıyla. Yeni videoların sayıları birkaç gün daha artabilir.</li>
       <li>Sayfayı yeni veri çıktıkça güncelliyoruz; güncelleme tarihi en üstte.</li>
     </ul>

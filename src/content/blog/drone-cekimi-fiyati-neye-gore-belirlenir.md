@@ -1,7 +1,7 @@
 ---
 title: "Drone çekimi fiyatı neye göre belirlenir?"
-seoTitle: "Drone Çekim Ücreti Neye Göre Belirlenir?"
-description: "Drone çekim ücretini etkileyen lokasyon, uçuş izni, çekim süresi, ekip, kurgu ve kullanım alanı kalemlerini açıkladık. Teklif almadan önce okuyun."
+seoTitle: "Drone Çekim Ücretleri Neye Göre Belirlenir? 7 Kalem"
+description: "Drone çekim ücreti neye göre değişir? Kullanım alanı, lokasyon, uçuş izni, hava ve ışık, yer çekimi, kurgu ve süreklilik: teklif almadan önce 7 kalem."
 pubDate: 2026-10-07
 cover: ../../assets/photos/aerial-drone-landscape.jpg
 coverAlt: "Havadan çekilmiş geniş bir arazi manzarası"

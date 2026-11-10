@@ -651,6 +651,9 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
   },
 
   "video-cekimi/gebze": {
+    title: "Gebze Video Çekimi: Fabrika, Tesis ve Kurumsal Film",
+    description:
+      "Gebze video çekimi: OSB'deki üretim tesisleri için tesis tanıtımı, üretim süreci, iş güvenliği ve işe alım videoları. Tek günde film, Reels kesitleri ve drone.",
     heading: "Gebze'de video çekimi: sanayi ve kurumsal odak",
     paragraphs: [
       "Gebze'deki çekim talepleri çoğunlukla organize sanayi bölgelerindeki üretim tesislerinden geliyor: tesis tanıtımı, üretim süreci, iş güvenliği ve işe alım videoları. Bu çekimlerde izin, iş güvenliği kuralları ve üretim akışını aksatmayan bir çekim planı en az kamera kadar önemli.",
@@ -1279,6 +1282,8 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
   },
 
   "drone-cekimi/gebze": {
+    description:
+      "Gebze drone çekimi: OSB tesislerinin büyüklüğü, yükleme alanları ve otoyol/liman bağlantıları için havadan video. Yer çekimiyle aynı gün, tek prodüksiyon.",
     heading: "Gebze'de drone ile tesis çekimi",
     paragraphs: [
       "Gebze'deki organize sanayi bölgelerinde drone çekimi; tesisin büyüklüğünü, yükleme alanlarını ve otoyol/liman bağlantılarını göstermek için kullanılıyor. Bu planlar kurumsal tanıtım filmlerinde, web sitesi açılış videolarında ve fuar sunumlarında güçlü bir açılış sağlıyor.",
@@ -1432,10 +1437,26 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
     ],
   },
   "sosyal-medya-icerigi/kocaeli": {
+    title: "Kocaeli Sosyal Medya Ajansı ve Yönetimi",
+    h1: "Kocaeli Sosyal Medya Ajansı ve Yönetimi",
+    description:
+      "Kocaeli sosyal medya ajansı: İzmit ve Gebze'deki sanayi ve B2B firmaları ile yerel işletmeler için aylık içerik planı, çekim günü, kurgu, paylaşım ve rapor.",
     heading: "Kocaeli'nde sosyal medya yönetimi",
     paragraphs: [
       "Kocaeli'de sosyal medya ihtiyacı iki uçta toplanıyor: İzmit ve Gebze hattındaki sanayi ve B2B firmaları için kurumsal güven içerikleri, ilçelerdeki yerel işletmeler için ise müşteriye görünür olmayı sağlayan kısa videolar.",
       "Her iki durumda da yaklaşımımız aynı: aylık içerik planı, planlı çekim günü, kurgu, paylaşım takvimi ve aylık rapor.",
+    ],
+    faqs: [
+      {
+        question: "Kocaeli'de sosyal medya ajansı olarak hangi ilçelere geliyorsunuz?",
+        answer:
+          "İzmit, Gebze, Gölcük, Darıca ve Kartepe'ye Sakarya'dan aynı gün geliyoruz. Ayın videolarını bir ya da iki planlı çekim gününde topluca çekip paylaşım takvimine yayıyoruz; kaç çekim günü ve kaç video olacağı teklifte yazılı olur.",
+      },
+    ],
+    links: [
+      { href: "/sosyal-medya-icerigi/izmit/", label: "İzmit sosyal medya yönetimi ve danışmanlığı" },
+      { href: "/sosyal-medya-icerigi/gebze/", label: "Gebze sosyal medya ajansı: sanayi ve B2B markaları" },
+      { href: "/projeler/vaka/aytas-home/", label: "Aytaş Home vaka çalışması: 4 ayda etkileşim +%311" },
     ],
   },
   "sosyal-medya-icerigi/karasu": {
@@ -1460,6 +1481,9 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
     ],
   },
   "reklam-filmi/darica": {
+    title: "Darıca Reklam Filmi ve Sosyal Medya Reklamı",
+    description:
+      "Darıca reklam filmi: yerel işletmeler için Instagram ve Facebook reklamlarına kısa dikey video. İsterseniz reklam kurulumu ve takibini de birlikte yürütüyoruz.",
     heading: "Darıca'da reklam filmi ve sosyal medya reklamı",
     paragraphs: [
       "Darıca'daki yerel işletmeler için reklam filmi genellikle Instagram ve Facebook reklamlarında kullanılan kısa dikey videolar anlamına geliyor. Mekanı, ürünü ya da kampanyayı birkaç saniyede anlatan kurgular, çevredeki doğru kitleye gösterildiğinde en iyi sonucu veriyor.",

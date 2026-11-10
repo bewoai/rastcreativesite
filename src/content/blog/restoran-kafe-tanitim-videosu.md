@@ -1,7 +1,7 @@
 ---
 title: "Restoran ve kafeler için tanıtım videosu nasıl olmalı?"
 seoTitle: "Restoran Tanıtım Filmi Çekimi: Yarım Gün, 1 Film + 3 Reels"
-description: "Restoran ve kafe tanıtım filmi çekimi: yarım günden 1 tanıtım videosu, 3 Reels ve menü kareleri. Çekim saati, sahne listesi, teslim süresi ve örnek işler."
+description: "Restoran tanıtım filmi çekimi nasıl planlanır? Yarım günde 1 tanıtım videosu, 3 Reels ve menü kareleri: çekim saati, sahne listesi, teslim süresi, örnek işler."
 pubDate: 2026-07-18
 updatedDate: 2026-11-01
 cover: ../../assets/photos/crew-onset.jpg

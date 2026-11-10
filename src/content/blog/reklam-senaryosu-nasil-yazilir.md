@@ -1,8 +1,16 @@
 ---
 title: "Reklam senaryosu nedir, nasıl yazılır?"
-seoTitle: "Reklam Senaryosu Nedir, Nasıl Yazılır?"
-description: "Reklam senaryosu nedir, iyi bir reklam metni hangi bölümlerden oluşur? Kanca, mesaj, kanıt ve çağrıyla kısa reklam filmi senaryosu yazma rehberi."
+seoTitle: "Reklam Senaryosu Nedir, Nasıl Yazılır? Örnekli Rehber"
+description: "Reklam senaryosu nedir, nasıl yazılır? Kanca, mesaj, kanıt ve çağrı; iki sütunlu senaryo formatı ve 15 saniyelik örnek bir reklam senaryosu."
 pubDate: 2026-10-07
+updatedDate: 2026-11-10
+faq:
+  - question: "Reklam senaryosu nedir?"
+    answer: "Reklam senaryosu, bir reklam filminde ekranda ne görüneceğini, ne duyulacağını ve izleyicinin hangi sırayla neyi anlayacağını önceden yazıya döken plandır. Kısa reklamlarda görüntü ve ses/yazı olmak üzere iki sütunlu bir tablo yeterlidir."
+  - question: "Reklam senaryosu nasıl yazılır?"
+    answer: "Önce kime konuşulduğunu, reklamın nerede yayınlanacağını ve izleyiciden tek bir eylemi netleştirin. Sonra metni dört bölümle kurun: ilk 2–3 saniyede kanca, tek bir ana mesaj, mesajı inandırıcı yapan kanıt ve net bir çağrı."
+  - question: "15 saniyelik bir reklam senaryosu kaç sahneden oluşur?"
+    answer: "Genellikle dört sahne yeterlidir: kanca, mesaj, kanıt ve çağrı. Her sahne iki sütunlu tabloda bir satıra karşılık gelir; aşağıdaki örnek bu düzende yazıldı."
 cover: ../../assets/photos/director-clapper.jpg
 coverAlt: "Sette çekim öncesi kaldırılan klaket"
 tags: ["reklam senaryosu", "reklam filmi", "senaryo", "video prodüksiyon"]
@@ -40,6 +48,17 @@ Senaryoya başlamadan önce şu soruların cevabı netleşmelidir:
 Kısa bir reklam için karmaşık bir sinema senaryosu formatına gerek yoktur. En pratik yöntem iki sütunlu bir tablodur: solda **görüntü** (ne çekilecek, kamera nerede, ürün nasıl görünecek), sağda **ses ve yazı** (dış ses, diyalog, ekrana gelecek metin, müzik). Her satır yaklaşık bir sahneye karşılık gelir.
 
 Bu tablo çekim gününde ekip için çekim listesine, kurguda ise kurgu sırasına dönüşür. Böylece setteki herkes aynı filmi düşünür.
+
+## Reklam senaryosu örneği: 15 saniyelik kafe reklamı
+
+Aşağıdaki örnek, yukarıdaki dört bölümün iki sütunlu düzene nasıl döküldüğünü göstermek için yazıldı; gerçek bir müşteri işi değil. Instagram Reels için dikey, ses kapalı izlense de anlaşılacak şekilde kurgulandı. Her satırda önce görüntü, sonra ses ve ekrandaki yazı var.
+
+1. **0–3 sn, kanca:** Fincana yakın plan, süt köpüğüne desen çiziliyor. / Yazı: “Sabah kahveniz sıra beklemeden hazır.”
+2. **3–8 sn, mesaj:** Barista siparişi alıyor, fincanı tezgâha bırakıyor. / Dış ses: “Yolunuzun üstünde, işe giderken.”
+3. **8–12 sn, kanıt:** Müşteri fincanı alıp gülümsüyor, arkada dolu masalar. / Yazı: mekânın adı ve semti.
+4. **12–15 sn, çağrı:** Kafenin cephesi, logo. / Yazı: “Konum için profildeki bağlantıya dokunun.”
+
+Aynı metinden 6 saniyelik bir versiyon çıkarmak için yalnızca kanca ve çağrı satırları kullanılır.
 
 ## Sık yapılan hatalar
 
