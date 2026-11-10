@@ -1,15 +1,16 @@
 /**
- * CSV download of every stat on /arastirma/reels-istatistikleri-2026/
+ * CSV download of every stat on /arastirma/reels-istatistikleri/
  * (third-party figures with source + URL, and Rast's own aggregated data).
  */
 import type { APIRoute } from "astro";
-import { ALL_STATS, SOURCES, OWN_PAID, OWN_ORGANIC, UPDATED } from "../../../data/arastirma/reels-istatistikleri-2026";
+import { ALL_STATS, SOURCES, OWN_PAID, OWN_ORGANIC, UPDATED, INDEX_NAME, INDEX_FINDINGS } from "../../../data/arastirma/reels-istatistikleri";
 
 const q = (v: string) => `"${String(v).replace(/"/g, '""')}"`;
-const PAGE = "https://rastcreative.com/arastirma/reels-istatistikleri-2026/";
+const PAGE = "https://rastcreative.com/arastirma/reels-istatistikleri/";
 
 export const GET: APIRoute = () => {
   const rows: string[][] = [["bolum", "istatistik", "deger", "donem", "kaynak", "kaynak_baslik", "kaynak_tarih", "url"]];
+  for (const s of INDEX_FINDINGS) rows.push(["endeks", s, "", "", "Rast Creative", INDEX_NAME, UPDATED, PAGE]);
   const paidSrc = `Rast Creative yönettiği hesaplar (n=${OWN_PAID.accounts} hesap, ${OWN_PAID.campaigns} kampanya)`;
   for (const r of OWN_PAID.rows) {
     const add = (k: string, v: string) =>

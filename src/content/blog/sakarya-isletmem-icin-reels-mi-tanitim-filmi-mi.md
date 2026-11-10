@@ -19,7 +19,7 @@ Biri diğerinin kısa hâli değildir. Aynı çekim gününde ikisini birlikte p
 
 ## İşletmem yeni müşteriye kendini anlatmak istiyorsa hangisini seçmeli?
 
-İlk temas noktanız Instagram veya TikTok ise [Reels ile başlamak](/sosyal-medya-icerigi/sakarya/) mantıklı olabilir. İnsanların sizi keşfetmesini, ekibinizi tanımasını ve hizmetinizin günlük hayattaki karşılığını görmesini sağlar.
+İlk temas noktanız Instagram veya TikTok ise [Reels ile başlamak](/sosyal-medya-icerigi/sakarya/) mantıklı olabilir. İnsanların sizi keşfetmesini, ekibinizi tanımasını ve hizmetinizin günlük hayattaki karşılığını görmesini sağlar. İzleyici de zaten orada: Türkiye'de 16 yaş üstü internet kullanıcıları haftada ortalama 8 saat 13 dakika kısa video izliyor, dünya ortalaması 6 saat 39 dakika (GWI, 2025'in 2. çeyreği). Diğer rakamları kaynaklarıyla [Türkiye Reels istatistikleri](/arastirma/reels-istatistikleri/) sayfamızda topladık.
 
 Bir müşteri sizinle çalışmayı düşündüğünde web sitenize, teklif dosyanıza veya YouTube kanalınıza yönlenecekse tanıtım filmi daha güçlü bir ana içerik olur. O film daha sonra Reels, reklam kesiti ve web sitesi videosu için kaynak hâline de gelebilir. [Sakarya'da video çekimi](/video-cekimi/sakarya/) planlarken bu kullanım alanlarını baştan konuşmamızın nedeni bu.
 

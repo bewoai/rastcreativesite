@@ -122,6 +122,7 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
           { href: "/sektorler/magaza-sosyal-medya-icerigi/", label: "Mağaza ve perakende için sosyal medya içeriği" },
           { href: "/sektorler/doktor-klinik-video-cekimi/", label: "Doktor ve klinik hesapları için video" },
           { href: "/sakarya-reklam-ajansi/", label: "Sakarya'daki tüm hizmetlerimiz" },
+          { href: "/arastirma/meta-reklam-maliyetleri/", label: "Araştırma: yönettiğimiz hesaplarda Meta reklam maliyetleri (Ekim 2026)" },
         ],
       },
       {
@@ -560,6 +561,7 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
       { href: "/blog/reklam-senaryosu-nasil-yazilir/", label: "Reklam senaryosu nasıl yazılır?" },
       { href: "/projeler/vaka/aytas-home/", label: "Aytaş Home vaka çalışması: 4 ayda etkileşim +%311" },
       { href: "/sosyal-medya-icerigi/sakarya/", label: "Sakarya sosyal medya yönetimi" },
+      { href: "/arastirma/reels-istatistikleri/", label: "Araştırma: Türkiye Reels istatistikleri ve reklamda ThruPlay maliyeti 2026" },
     ],
   },
 

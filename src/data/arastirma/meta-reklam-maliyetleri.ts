@@ -1,5 +1,5 @@
 /**
- * Data for /arastirma/meta-reklam-maliyetleri-2026/.
+ * Data for /arastirma/meta-reklam-maliyetleri/.
  *
  * Rule: every figure below was read from the linked page on the access date
  * (05.11.2026). Nothing is typed from memory. If a source changes, update the
@@ -273,6 +273,23 @@ export const OWN = {
     { label: "Meta’nın reklama atfettiği takip başı maliyet (havuz, 269 takip)", value: "≈208 TL" },
   ],
 };
+
+/**
+ * Named index ("rakama ad gömme"): Rast's OWN figures above, restated as
+ * one-line sentences that carry the name, sample size and period, so anyone
+ * quoting a line quotes the source with it. No new numbers: every figure here
+ * already appears in OWN (or on the page) — keep them in sync when OWN changes.
+ */
+export const INDEX_NAME = "2026 Rast Meta Reklam Maliyet Endeksi";
+const pre = `${INDEX_NAME}, Rast Creative’in yönettiği ${OWN.accounts} reklam hesabındaki`;
+export const INDEX_FINDINGS: string[] = [
+  `${pre} ${OWN.campaigns} kampanyaya (${OWN.period}) göre Instagram ve Facebook reklamlarında medyan CPM’i 67,11 TL buldu.`,
+  `${pre} ${OWN.campaigns} kampanyaya (${OWN.period}) göre medyan tıklama oranını (TO, tümü) %2,62 buldu.`,
+  `${INDEX_NAME}, video izlenme hedefli 4 kampanyada (2 hesap, ${OWN.period}) ThruPlay başı maliyeti 0,02–0,19 TL buldu (havuz 0,04 TL).`,
+  `${INDEX_NAME}, Instagram profil ziyareti hedefli 10 kampanyada (2 hesap, ${OWN.period}) ziyaret başı maliyeti 0,49–3,66 TL buldu (medyan 2,13 TL).`,
+  `${INDEX_NAME}, mesaj hedefli 3 kampanyada (2 hesap, 116 konuşma, ${OWN.period}) Instagram DM/Messenger’da başlatılan konuşma başı maliyeti 76–211 TL buldu (havuz 78 TL).`,
+  `${INDEX_NAME}, ${OWN.campaigns} kampanyada (${OWN.period}) CPM’in video izlenme hedefinde 13,38–41,15 TL, mesaj hedefinde 148,75–171,22 TL olduğunu buldu: hedef değişince 1.000 gösterimin fiyatı 12 kattan fazla değişti.`,
+];
 
 /** Every third-party stat on the page (used for the count and the CSV). */
 export const ALL_STATS: Stat[] = [...TR_BENCH, ...GLOBAL_BENCH, ...META_STATS, ...AUDIENCE, ...MARKET, ...TAX_FX, ...DEFINITIONS];

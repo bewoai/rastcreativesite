@@ -2,10 +2,10 @@
 /**
  * Statistics page: Türkiye Reels and short-form video statistics, 2026.
  * Link-building data hub — every third-party figure lives in
- * src/data/arastirma/reels-istatistikleri-2026.ts with its source.
+ * src/data/arastirma/reels-istatistikleri.ts with its source.
  * Rast's own figures: anonymous pooled ranges across managed ad accounts
  * (Oct 2026) + Rast's own Instagram account (organic).
- * CSV download: ./reels-istatistikleri-2026/rast-reels-istatistikleri-2026.csv.ts
+ * CSV download: ./reels-istatistikleri/rast-reels-istatistikleri.csv.ts
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Section from "../../components/Section.astro";
@@ -28,12 +28,14 @@ import {
   UPDATED,
   UPDATED_TR,
   ACCESSED,
+  INDEX_NAME,
+  INDEX_FINDINGS,
   type Stat,
-} from "../../data/arastirma/reels-istatistikleri-2026";
+} from "../../data/arastirma/reels-istatistikleri";
 
-const PATH = "/arastirma/reels-istatistikleri-2026/";
+const PATH = "/arastirma/reels-istatistikleri/";
 const PAGE_URL = new URL(PATH, SITE.url).href;
-const CSV = `${PATH}rast-reels-istatistikleri-2026.csv`;
+const CSV = `${PATH}rast-reels-istatistikleri.csv`;
 const PUBLISHED = "2026-11-05";
 const h1 = "Türkiye Reels ve Kısa Video İstatistikleri 2026";
 const title = "Türkiye Reels ve Kısa Video İstatistikleri 2026";
@@ -43,7 +45,7 @@ const description =
 // Sibling research page (built in parallel): link only if it exists.
 const sibling =
   Object.keys(
-    import.meta.glob(["./meta-reklam-maliyetleri-2026.astro", "./meta-reklam-maliyetleri-2026/index.astro"]),
+    import.meta.glob(["./meta-reklam-maliyetleri.astro", "./meta-reklam-maliyetleri/index.astro"]),
   ).length > 0;
 
 const statCount = ALL_STATS.length;
@@ -77,7 +79,7 @@ const groups: { id: string; eyebrow: string; heading: string; intro: string; sta
   {
     id: "platform",
     eyebrow: "Meta ve Instagram · dünya",
-    heading: "Reels’in Instagram içindeki ağırlığı",
+    heading: "Instagram Reels istatistikleri: Reels’in Instagram içindeki ağırlığı",
     intro:
       "Meta’nın yatırımcılara açıkladığı rakamlar ve Sensor Tower verisi. Ülke kırılımı yok; Türkiye için yön gösterir.",
     stats: PLATFORM,
@@ -85,7 +87,7 @@ const groups: { id: string; eyebrow: string; heading: string; intro: string; sta
   {
     id: "kiyas",
     eyebrow: "Organik kıyaslar · dünya",
-    heading: "Reels erişim, etkileşim ve atlanma oranı kıyasları",
+    heading: "Instagram Reels etkileşim oranı, erişim ve atlanma oranı kıyasları 2026",
     intro:
       "Milyonlarca marka gönderisinden çıkarılmış ortalamalar. Örneklem dünya geneli marka hesapları; kişisel hesapları ve içerik üreticilerini kapsamıyor. Etkileşim oranı burada (beğeni + yorum) / takipçi olarak hesaplanıyor.",
     stats: BENCH,
@@ -93,7 +95,7 @@ const groups: { id: string; eyebrow: string; heading: string; intro: string; sta
   {
     id: "reklam",
     eyebrow: "Reklam · dünya",
-    heading: "Reels reklamlarında video metrikleri",
+    heading: "Reels reklam istatistikleri: dikey format, ses ve tıklama oranı",
     intro:
       "Meta’nın kendi testlerinden ve bir sosyal medya analiz şirketinin ABD verisinden. Meta rakamları reklamverenle paylaştığı bir sunumdan; testlerin ayrıntısı sunumun dipnotlarında.",
     stats: ADS,
@@ -134,7 +136,7 @@ const faqs = [
   {
     question: "Bu sayfadaki verileri yazımda kullanabilir miyim?",
     answer:
-      "Evet. Sayfadaki metin ve kendi ölçümlerimiz CC BY 4.0 lisanslı: kaynak olarak “Rast Creative, Türkiye Reels ve Kısa Video İstatistikleri 2026” yazıp bu sayfaya bağlantı vermeniz yeterli. Üçüncü taraf rakamlarda asıl kaynağı da anın; her rakamın yanında kaynağı ve tarihi var. Tüm tabloyu CSV olarak indirebilirsiniz.",
+      "Evet. Sayfadaki metin ve kendi ölçümlerimiz CC BY 4.0 lisanslı: kaynak olarak “Rast Creative, Türkiye Reels ve Kısa Video İstatistikleri 2026” (kendi rakamlarımız için “2026 Rast Reels Endeksi”) yazıp bu sayfaya bağlantı vermeniz yeterli. Üçüncü taraf rakamlarda asıl kaynağı da anın; her rakamın yanında kaynağı ve tarihi var. Tüm tabloyu CSV olarak indirebilirsiniz.",
   },
 ];
 
@@ -167,7 +169,7 @@ const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "Türkiye Reels ve kısa video istatistikleri 2026 (Rast Creative)",
+    name: `Türkiye Reels ve kısa video istatistikleri 2026 (Rast Creative) — ${INDEX_NAME}`,
     description:
       "Türkiye’de Instagram ve kısa video kullanımına dair kaynaklı istatistikler; Rast Creative’in yönettiği Meta reklam hesaplarından anonim, toplulaştırılmış Ekim 2026 video metrikleri (ThruPlay başı maliyet, ThruPlay oranı, CPM) ve ajansın kendi Instagram hesabının Reels verileri.",
     url: PAGE_URL,
@@ -212,6 +214,18 @@ const jsonLd = [
       kendi verimiz: {p.campaigns} reklam kampanyası, {o.reels} Reels · <a href={CSV} download>CSV indir</a>
     </p>
 
+    <section class="endeks" aria-labelledby="endeks-baslik">
+      <h2 id="endeks-baslik">{INDEX_NAME}: Reels izlenme, ThruPlay ve atlanma oranında kendi bulgularımız</h2>
+      <p class="small">
+        Kaynak: Rast Creative’in yönettiği Meta reklam hesapları (Meta Ads API, {p.period}, n={p.accounts} hesap /
+        {p.campaigns} kampanya) ve kendi Instagram hesabımız (@rastcreative, {o.period}, n={o.reels} Reels). Her satır tek
+        başına alıntılanabilir; kullanırken bu sayfaya bağlantı verin.
+      </p>
+      <ul class="endeks__list">
+        {INDEX_FINDINGS.map((s) => <li>{s}</li>)}
+      </ul>
+    </section>
+
     <div class="keys">
       <article>
         <span class="k">8 sa 13 dk</span>
@@ -241,7 +255,7 @@ const jsonLd = [
   </Section>
 
   <Section width="default" space="tight" id="rast-verisi">
-    <SectionHeading eyebrow="Kendi verimiz · Ekim 2026">Reklamda video: ThruPlay maliyeti ve izlenme oranları</SectionHeading>
+    <SectionHeading eyebrow="Kendi verimiz · Ekim 2026">Türkiye’de ThruPlay başı maliyet ve video izlenme oranları (Ekim 2026)</SectionHeading>
     <div class="prose">
       <p>
         Kıyas raporları yurt dışındaki binlerce markanın ortalaması. Türkiye’de yerel bir işletmenin videosu reklamda nasıl
@@ -437,7 +451,7 @@ const jsonLd = [
     {
       sibling && (
         <p class="small">
-          Reklam bütçesi tarafını merak ediyorsanız: <a href="/arastirma/meta-reklam-maliyetleri-2026/">Türkiye’de Meta reklam maliyetleri 2026</a>.
+          Reklam bütçesi tarafını merak ediyorsanız: <a href="/arastirma/meta-reklam-maliyetleri/">Türkiye’de Meta reklam maliyetleri 2026</a>.
         </p>
       )
     }
@@ -474,6 +488,32 @@ const jsonLd = [
   </script>
 </BaseLayout>
 <style>
+  .endeks {
+    margin: 1.5rem 0 0.5rem;
+    padding: 1.1rem 1.25rem;
+    border-left: 3px solid var(--amber-text);
+    background: color-mix(in srgb, var(--ink) 4%, transparent);
+    border-radius: 6px;
+  }
+  .endeks h2 {
+    margin: 0 0 0.4rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 1rem + 0.6vw, 1.45rem);
+    line-height: 1.25;
+    color: var(--ink);
+  }
+  .endeks__list {
+    margin: 0.75rem 0 0;
+    padding-left: 1.1rem;
+    display: grid;
+    gap: 0.5rem;
+    max-width: 78ch;
+  }
+  .endeks__list li {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--ink);
+  }
   .crumbs {
     margin-bottom: 1rem;
     font-size: 0.9rem;

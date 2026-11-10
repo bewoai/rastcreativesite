@@ -35,6 +35,12 @@ RewriteRule ^hizmetlerimiz/?$ https://rastcreative.com/hizmetler/ [R=301,L]
 RewriteRule ^hakkimizda-1/?$ https://rastcreative.com/hakkimizda/ [R=301,L]
 RewriteRule ^iletisim-1/?$ https://rastcreative.com/iletisim/ [R=301,L]
 
+# Research pages moved to year-less permanent URLs (10.11.2026); the year
+# stays in title/H1 only. Page, CSV and OG image each go to their new path.
+RewriteRule ^arastirma/(meta-reklam-maliyetleri|reels-istatistikleri)-2026/?$ https://rastcreative.com/arastirma/$1/ [R=301,L]
+RewriteRule ^arastirma/(meta-reklam-maliyetleri|reels-istatistikleri)-2026/rast-[a-z-]+-2026\.csv$ https://rastcreative.com/arastirma/$1/rast-$1.csv [R=301,L]
+RewriteRule ^arastirma/(meta-reklam-maliyetleri|reels-istatistikleri)-2026/og\.jpg$ https://rastcreative.com/arastirma/$1/og.jpg [R=301,L]
+
 # /sitemap.xml is the conventional guess (audits, some crawlers); the real
 # index Astro emits is /sitemap-index.xml.
 RewriteRule ^sitemap\.xml$ https://rastcreative.com/sitemap-index.xml [R=301,L]

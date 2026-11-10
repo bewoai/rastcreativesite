@@ -1,5 +1,5 @@
 /**
- * Data for /arastirma/reels-istatistikleri-2026/.
+ * Data for /arastirma/reels-istatistikleri/.
  *
  * Rule: every third-party figure below was read from the linked page on the
  * access date (05.11.2026). Nothing is typed from memory; if a source changes,
@@ -266,3 +266,22 @@ export const OWN_ORGANIC = {
   aboveFollowers: "16",
   peakShareOfTotal: "%74",
 };
+
+/**
+ * Named index ("rakama ad gömme"): OWN_PAID / OWN_ORGANIC restated as one-line
+ * sentences with name, sample size and period. No new numbers — every figure
+ * is already in the two objects above; keep them in sync.
+ */
+export const INDEX_NAME = "2026 Rast Reels Endeksi";
+const P = OWN_PAID;
+const O = OWN_ORGANIC;
+const paid = `${INDEX_NAME}, Rast Creative’in yönettiği ${P.accounts} reklam hesabındaki ${P.campaigns} kampanyaya (${P.period}) göre`;
+const org = `${INDEX_NAME}, Rast Creative’in kendi Instagram hesabındaki ${O.reels} Reels’e (${O.period}) göre`;
+export const INDEX_FINDINGS: string[] = [
+  `${paid} video izlenme hedefli kampanyalarda oynatmaların medyan %42’sinin ThruPlay’e dönüştüğünü buldu; diğer hedeflerde bu oran medyan %9.`,
+  `${paid} ThruPlay başı maliyeti video izlenme hedefli 4 kampanyada 0,02–0,19 TL (medyan 0,04 TL), diğer hedeflerdeki 15 kampanyada 0,16–15,87 TL (medyan 2,01 TL) buldu.`,
+  `${paid} video izlenme hedefinde videonun en az %25’ini izleyenlerin oranını medyan %80, diğer hedeflerde medyan %21 buldu.`,
+  `${org} medyan atlanma oranını ${O.medianSkip} buldu.`,
+  `${org} ${O.reels} Reels’in ${O.aboveFollowers}’sının takipçi sayısından fazla izlendiğini buldu; Reels başına medyan izlenme ${O.medianViews}.`,
+  `${org} en çok izlenen Reels’in 1.000 izlenmede ${O.peakSharesPer1k} kez paylaşıldığını buldu; diğer 17 Reels’in medyanı ${O.othersSharesPer1k}.`,
+];

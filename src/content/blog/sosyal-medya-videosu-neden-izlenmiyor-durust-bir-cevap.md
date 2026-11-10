@@ -19,7 +19,7 @@ draft: false
 
 Bence burada en büyük yanılgı şu: Sosyal medya videosunu sadece “güzel görüntü” gibi düşünmek.
 
-Güzel görüntü önemli, evet. Ama tek başına yeterli değil. Çünkü Instagram, TikTok ya da YouTube Shorts tarafında insan videonuzu izlemek zorunda değil. Önüne düşüyor, bir saniye bakıyor ve devam edip etmeyeceğine karar veriyor.
+Güzel görüntü önemli, evet. Ama tek başına yeterli değil. Çünkü Instagram, TikTok ya da YouTube Shorts tarafında insan videonuzu izlemek zorunda değil. Önüne düşüyor, bir saniye bakıyor ve devam edip etmeyeceğine karar veriyor. Socialinsider'ın 2026'nın ilk yarısındaki 9,77 milyon Reels analizinde marka Reels'lerinin %60,5–65,5'i ilk 3 saniyede kaydırılıp geçildi; kendi Instagram hesabımızdaki 18 Reels'in medyan atlanma oranı %53 ([Türkiye Reels istatistikleri](/arastirma/reels-istatistikleri/)).
 
 O yüzden [sosyal medya videosunda](/sosyal-medya-icerigi/sakarya/) mesele sadece çekim yapmak değil; ilk saniyeden itibaren doğru şeyi göstermek, doğru sırayla anlatmak ve izleyicinin neden devam etmesi gerektiğini hissettirmek.
 

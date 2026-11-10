@@ -13,7 +13,7 @@ Birkaç yıl önce "videoyu dikey çekelim" deseniz, kamera arkasında kaşlar k
 
 ## İnsanlar telefonu çevirmiyor
 
-Düşünün: gün boyu telefonunuzu kaç kez yatay tuttunuz? Çoğumuz neredeyse hiç. Reels, Shorts ve TikTok bütün ekranı dikey kaplar. Bu akışın içine yatay bir video koyduğunuzda, ekranın ortasında küçücük bir şerit olarak belirir — üstü altı boş. İzleyici de çoğu zaman onu izlemeden geçer. Yani mesele estetik değil, görünürlük.
+Düşünün: gün boyu telefonunuzu kaç kez yatay tuttunuz? Çoğumuz neredeyse hiç. Reels, Shorts ve TikTok bütün ekranı dikey kaplar. Bu akışın içine yatay bir video koyduğunuzda, ekranın ortasında küçücük bir şerit olarak belirir — üstü altı boş. İzleyici de çoğu zaman onu izlemeden geçer. Yani mesele estetik değil, görünürlük. Reklamda da durum aynı: Meta'nın 15 bölünmüş testi birleştiren analizinde 9:16, sesli ve yazıları güvenli alanda tutan Reels reklamları, görsel reklamlara göre %34,5 daha düşük edinme maliyeti verdi (Meta, Ekim 2025). Bu ve benzeri rakamları kaynaklarıyla [Türkiye Reels ve kısa video istatistikleri](/arastirma/reels-istatistikleri/) sayfamızda topladık.
 
 ## Dikey video, "yatayın döndürülmüşü" değildir
 

@@ -83,7 +83,7 @@ Birçok işletme sosyal medya reklamı ya da Google reklamı vermek istiyor. Bu 
 
 Reklam, insanları kapıya getirir. Fakat içeriğin kalitesi onları içeri alır.
 
-Bu nedenle reklamdan önce ya da reklamla birlikte güçlü bir içerik altyapısı oluşturmak gerekir. Profilde güncel videoların olması, web sitesinde markayı anlatan iyi bir görsel dilin bulunması ve hizmetlerin anlaşılır şekilde sunulması reklam performansını doğrudan etkiler.
+Bu nedenle reklamdan önce ya da reklamla birlikte güçlü bir içerik altyapısı oluşturmak gerekir. Profilde güncel videoların olması, web sitesinde markayı anlatan iyi bir görsel dilin bulunması ve hizmetlerin anlaşılır şekilde sunulması reklam performansını doğrudan etkiler. Bütçe tarafında neyle karşılaşacağınızı görmek isterseniz Türkiye'de Instagram ve Facebook reklamlarının CPM, mesaj ve ziyaret başı maliyetlerini, kendi yönettiğimiz kampanyaların aralıklarıyla birlikte [Meta reklam maliyetleri araştırmamızda](/arastirma/meta-reklam-maliyetleri/) derledik.
 
 ## İyi içerik, işletmenin değerini yükseltir
 
