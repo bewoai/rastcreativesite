@@ -1,0 +1,714 @@
+---
+/**
+ * Statistics page: Sakarya local businesses' digital visibility, 2026
+ * ("2026 Rast Sakarya Dijital Görünürlük Endeksi").
+ * Own, original dataset. EVERY number on this page comes from
+ * src/data/arastirma/sakarya-dijital-gorunurluk.ts, which is GENERATED from the
+ * raw sheet by scripts outside the repo (hesapla.py → site_veri_uret.py). The raw
+ * sheet (business names, profile links) is not published (KVKK); only aggregate
+ * rates with n. Do not type numbers into this file.
+ * CSV download: ./sakarya-dijital-gorunurluk/rast-sakarya-dijital-gorunurluk.csv.ts
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Section from "../../components/Section.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import Button from "../../components/Button.astro";
+import ToolFaq from "../../components/araclar/ToolFaq.astro";
+import { PRIMARY_CTA, SITE } from "../../consts";
+import { breadcrumb, faqPage } from "../../lib/schema";
+import {
+  UPDATED,
+  UPDATED_TR,
+  PERIOD,
+  INDEX_NAME,
+  INDEX_FINDINGS,
+  MIN_N,
+  SAMPLE_N,
+  SECTORS,
+  DISTRICTS,
+  METRICS,
+  METRIC,
+  RATINGS,
+  FAQS_DATA,
+  PROSE,
+  type Rate,
+} from "../../data/arastirma/sakarya-dijital-gorunurluk";
+
+const PATH = "/arastirma/sakarya-dijital-gorunurluk/";
+const PAGE_URL = new URL(PATH, SITE.url).href;
+const CSV = `${PATH}rast-sakarya-dijital-gorunurluk.csv`;
+const PUBLISHED = UPDATED;
+const h1 = "Sakarya’da İşletmelerin Dijital Görünürlüğü 2026";
+const title = "Sakarya İşletmeleri Dijital Görünürlük Araştırması 2026";
+const description = `Sakarya’da ${SAMPLE_N} işletmenin web sitesi, HTTPS, mobil uyum, WhatsApp, Google profili ve Instagram paylaşımı ölçüldü. Sektör ve ilçe kırılımlı, kendi verimiz.`;
+
+// Sibling research pages: link only if they exist.
+const siblings = Object.keys(import.meta.glob(["./meta-reklam-maliyetleri.astro", "./reels-istatistikleri.astro"]));
+const hasMeta = siblings.some((s) => s.includes("meta-reklam"));
+const hasReels = siblings.some((s) => s.includes("reels"));
+
+const pct = (r: Rate) => (r.oran === null ? "–" : `%${r.oran}`);
+const ga = (r: Rate) => (r.gaAlt === null ? "" : `%${r.gaAlt}–${r.gaUst}`);
+const g = (k: string) => METRIC[k].genel;
+
+// Columns for the sector / district tables (subset of METRICS, same order as in data).
+const COLS = ["web_sitesi", "calisan_site", "whatsapp_sitede", "sahiplenilmemis", "instagram_bulundu", "son30_gonderi", "son30_reels"];
+const SHORT: Record<string, string> = {
+  web_sitesi: "Profilde kendi sitesi",
+  calisan_site: "Çalışan, HTTPS’li, mobil uyumlu site",
+  whatsapp_sitede: "Sitede WhatsApp (sitesi açılanlar)",
+  sahiplenilmemis: "Sahiplenilmemiş profil",
+  instagram_bulundu: "Bağlantılı Instagram",
+  son30_gonderi: "Son 30 günde gönderi (bağlantılı hesaplar)",
+  son30_reels: "Son 30 günde Reels (bağlantılı hesaplar)",
+};
+
+const keys = [
+  { k: "calisan_site", text: "Google profilinden çalışan, HTTPS’li ve mobil uyumlu siteye ulaştıran işletme" },
+  { k: "web_sitesi", text: "Google profilinde kendi web sitesine bağlantı veren işletme" },
+  { k: "instagram_bulundu", text: "Profilinden ya da sitesinden Instagram hesabına bağlantı veren işletme" },
+  { k: "son30_reels", text: "Bağlantılı Instagram hesabında son 30 günde Reels paylaşan" },
+  { k: "whatsapp_sitede", text: "Sitesi açılanlardan sitesinde WhatsApp bağlantısı olan" },
+  { k: "sahiplenilmemis", text: "Google profili sahiplenilmemiş görünen işletme" },
+];
+
+const faqs = [
+  ...FAQS_DATA,
+  {
+    question: "Bu araştırmada işletme adları neden yok?",
+    answer:
+      "Amaç tek tek işletmeleri değerlendirmek değil, Sakarya’nın genel resmini çıkarmak. Ham veri (işletme adı ve profil bağlantıları) yalnız bizde duruyor ve yayımlanmıyor; sayfada yalnız toplu oranlar ve her oranın örnek sayısı (n) var. Hiçbir işletmeyle iletişime geçilmedi.",
+  },
+  {
+    question: "Bu verileri yazımda kullanabilir miyim?",
+    answer: `Evet. Sayfadaki metin ve veriler CC BY 4.0 lisanslı: kaynak olarak “${INDEX_NAME}, Rast Creative” yazıp bu sayfaya bağlantı vermeniz yeterli. Oranları alıntılarken n’yi ve ölçüm tarihini (${PERIOD}) de verin. Tüm toplu tabloyu CSV olarak indirebilirsiniz.`,
+  },
+];
+
+const citeText = `Rast Creative (2026). ${INDEX_NAME}: Sakarya’da işletmelerin dijital görünürlüğü. Son güncelleme ${UPDATED_TR}. ${PAGE_URL}`;
+const citeHtml = `<a href="${PAGE_URL}">${INDEX_NAME} — Rast Creative</a>`;
+
+const jsonLd = [
+  breadcrumb([
+    { name: "Ana Sayfa", path: "/" },
+    { name: "Araştırma", path: "/arastirma/" },
+    { name: "Sakarya dijital görünürlük 2026", path: PATH },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: h1,
+    description,
+    url: PAGE_URL,
+    mainEntityOfPage: PAGE_URL,
+    inLanguage: "tr",
+    datePublished: PUBLISHED,
+    dateModified: UPDATED,
+    image: `${SITE.url}${PATH}og.jpg`,
+    author: { "@id": `${SITE.url}#organization` },
+    publisher: { "@id": `${SITE.url}#organization` },
+    about: ["Sakarya", "Yerel işletmeler", "Dijital pazarlama", "Google İşletme Profili", "Web sitesi", "Instagram"],
+    license: "https://creativecommons.org/licenses/by/4.0/deed.tr",
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    name: `${INDEX_NAME} (Rast Creative)`,
+    description: `Sakarya’nın 8 ilçesinde 6 sektörden, Google Haritalar’da görünen ${SAMPLE_N} işletmenin dijital varlığı: Google profilinde web sitesi, sitenin açılması, HTTPS, mobil viewport, sitede WhatsApp bağlantısı, profilin sahiplenilmesi, bağlantılı Instagram hesabı ve son 30 günde gönderi/Reels. Yalnız toplu oranlar, sektör ve ilçe kırılımı, örnek sayısıyla.`,
+    url: PAGE_URL,
+    creator: { "@id": `${SITE.url}#organization` },
+    publisher: { "@id": `${SITE.url}#organization` },
+    license: "https://creativecommons.org/licenses/by/4.0/deed.tr",
+    isAccessibleForFree: true,
+    inLanguage: "tr",
+    dateModified: UPDATED,
+    temporalCoverage: UPDATED,
+    spatialCoverage: { "@type": "Place", name: "Sakarya, Türkiye" },
+    keywords: ["Sakarya işletmeleri", "dijital görünürlük", "yerel SEO", "Google İşletme Profili", "web sitesi", "Instagram Reels", "Adapazarı", "Serdivan"],
+    variableMeasured: METRICS.map((m) => m.label),
+    distribution: [{ "@type": "DataDownload", encodingFormat: "text/csv", contentUrl: `${SITE.url}${CSV}` }],
+  },
+  faqPage(faqs),
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd} ogType="article" image={`${PATH}og.jpg`}>
+  <Section width="default" space="tight">
+    <nav class="crumbs" aria-label="Sayfa yolu"><a href="/">Ana Sayfa</a> / <a href="/arastirma/">Araştırma</a> / Sakarya dijital görünürlük 2026</nav>
+    <p class="eyebrow">Araştırma · Kendi verimiz</p>
+    <h1>{h1}</h1>
+    <p class="lede">
+      Sakarya’da bir restoranı, kuaförü ya da emlak ofisini telefondan aradığınızda ilk gördüğünüz şey Google profili. O
+      profilden siteye, siteden WhatsApp’a, Instagram’a ne kadar ulaşabiliyorsunuz? Bunu ölçmek için 8 ilçede 6 sektörden
+      Google Haritalar’da görünen işletmelerin dijital varlığına tek tek baktık. Sonuçları sektör ve ilçe kırılımıyla, her
+      oranın örnek sayısıyla paylaşıyoruz. İşletme adı yok; yalnız toplu oranlar.
+    </p>
+    <p class="meta">
+      <strong>Ölçüm:</strong> {PERIOD} · <strong>{SAMPLE_N} işletme</strong>, {SECTORS.length} sektör, {DISTRICTS.length} ilçe ·
+      <strong>Son güncelleme:</strong> <time datetime={UPDATED}>{UPDATED_TR}</time> · <a href={CSV} download>CSV indir</a>
+    </p>
+
+    <section class="endeks" aria-labelledby="endeks-baslik">
+      <h2 id="endeks-baslik">{INDEX_NAME}: ana bulgular</h2>
+      <p class="small">
+        Kaynak: Rast Creative’in kendi ölçümü, {PERIOD}, n={SAMPLE_N} işletme (Google Haritalar’da görünen; seçim kuralı
+        aşağıda). Her satır tek başına alıntılanabilir; kullanırken bu sayfaya bağlantı verin.
+      </p>
+      <ul class="endeks__list">
+        {INDEX_FINDINGS.map((s) => <li>{s}</li>)}
+      </ul>
+    </section>
+
+    <div class="keys">
+      {
+        keys.map(({ k, text }) => (
+          <article>
+            <span class="k">{pct(g(k))}</span>
+            <p>
+              {text} <span class="nn">(n={g(k).n})</span>
+            </p>
+          </article>
+        ))
+      }
+    </div>
+  </Section>
+
+  <Section width="default" space="tight" id="genel">
+    <SectionHeading eyebrow={`Genel · n=${SAMPLE_N}`}>Sakarya’da işletmelerin dijital varlığı: tüm ölçüler</SectionHeading>
+    <p class="intro">
+      Her oranın paydası, o soruya “evet” ya da “hayır” cevabı verebildiğimiz işletmeler. Ölçemediğimiz durumlar
+      (“bilinmiyor”) paydaya girmedi, ayrı sütunda sayısı var. Bazı ölçüler yalnız bir alt kümede anlamlı: HTTPS ve WhatsApp
+      yalnız sitesi açılanlarda, son 30 gün ölçüleri yalnız bağlantılı Instagram hesabı okunabilenlerde.
+    </p>
+    <div class="tablewrap">
+      <table class="zt">
+        <caption>
+          Kaynak: {INDEX_NAME}, Rast Creative, {PERIOD}, n={SAMPLE_N} işletme. %95 güven aralığı: Wilson yöntemi.
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Ölçü</th>
+            <th scope="col">Payda</th>
+            <th scope="col">Oran</th>
+            <th scope="col">Evet / n</th>
+            <th scope="col">Bilinmiyor</th>
+            <th scope="col">%95 güven aralığı</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            METRICS.map((m) => (
+              <tr>
+                <th scope="row">{m.label}</th>
+                <td>{m.payda}</td>
+                <td class="v">{pct(m.genel)}</td>
+                <td>
+                  {m.genel.evet} / {m.genel.n}
+                </td>
+                <td>{m.genel.bilinmiyor}</td>
+                <td>{ga(m.genel)}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </Section>
+
+  <Section width="default" space="tight" id="sektor">
+    <SectionHeading eyebrow="Sektöre göre">Sektörlere göre web sitesi, WhatsApp ve Instagram kullanımı</SectionHeading>
+    <p class="intro">
+      Sektör, işletmenin bulunduğu Google Haritalar aramasından geliyor (ör. “restoran Serdivan Sakarya”). Paydası {MIN_N}’un
+      altında kalan hücrede oran vermiyoruz; o hücrede “yetersiz örnek” yazıyor.
+    </p>
+    <div class="tablewrap">
+      <table class="zt grid">
+        <caption>Kaynak: {INDEX_NAME}, Rast Creative, {PERIOD}. Hücre: oran (evet / n).</caption>
+        <thead>
+          <tr>
+            <th scope="col">Sektör</th>
+            <th scope="col">İşletme</th>
+            {COLS.map((c) => <th scope="col">{SHORT[c]}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          {
+            SECTORS.map((s) => (
+              <tr>
+                <th scope="row">{s.name}</th>
+                <td>{s.n}</td>
+                {COLS.map((c) => {
+                  const r = METRIC[c].sektor[s.key];
+                  return r.yayin ? (
+                    <td>
+                      <strong>{pct(r)}</strong> <small>({r.evet}/{r.n})</small>
+                    </td>
+                  ) : (
+                    <td class="na">
+                      yetersiz örnek <small>(n={r.n})</small>
+                    </td>
+                  );
+                })}
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </Section>
+
+  <Section width="default" space="tight" id="ilce">
+    <SectionHeading eyebrow="İlçeye göre">Adapazarı, Serdivan, Sapanca, Karasu ve diğer ilçelerde dijital görünürlük</SectionHeading>
+    <p class="intro">
+      İlçe, Google profilindeki adresten okunuyor (adreste ilçe yoksa profilin konumu OpenStreetMap ilçe sınırlarına göre
+      atanıyor). Küçük ilçelerde aramaya komşu ilçeden işletmeler de girdiği için ilçe başına işletme sayıları eşit değil.
+    </p>
+    <div class="tablewrap">
+      <table class="zt grid">
+        <caption>Kaynak: {INDEX_NAME}, Rast Creative, {PERIOD}. Hücre: oran (evet / n). n&lt;{MIN_N}: yetersiz örnek.</caption>
+        <thead>
+          <tr>
+            <th scope="col">İlçe</th>
+            <th scope="col">İşletme</th>
+            {COLS.map((c) => <th scope="col">{SHORT[c]}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          {
+            DISTRICTS.map((d) => (
+              <tr>
+                <th scope="row">{d.name}</th>
+                <td>{d.n}</td>
+                {COLS.map((c) => {
+                  const r = METRIC[c].ilce[d.name];
+                  return r.yayin ? (
+                    <td>
+                      <strong>{pct(r)}</strong> <small>({r.evet}/{r.n})</small>
+                    </td>
+                  ) : (
+                    <td class="na">
+                      yetersiz örnek <small>(n={r.n})</small>
+                    </td>
+                  );
+                })}
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </Section>
+
+  <Section width="default" space="tight" id="google-puan">
+    <SectionHeading eyebrow="Google profili">Google puanı ve yorum sayısı (medyan)</SectionHeading>
+    <p class="intro">
+      Örneklemdeki işletmelerin Google Haritalar’da görünen puanı ve yorum sayısı. Liste, Google’ın öne çıkardığı ilk
+      sonuçlardan oluştuğu için bu değerler Sakarya ortalamasından yüksek olabilir.
+    </p>
+    <div class="tablewrap">
+      <table class="zt">
+        <caption>Kaynak: {INDEX_NAME}, Rast Creative, {PERIOD}. n = puanı görünen işletme.</caption>
+        <thead>
+          <tr><th scope="col">Sektör</th><th scope="col">n</th><th scope="col">Medyan puan</th><th scope="col">Medyan yorum sayısı</th></tr>
+        </thead>
+        <tbody>
+          {
+            RATINGS.map((r) => (
+              <tr>
+                <th scope="row">{r.name}</th>
+                <td>{r.n}</td>
+                <td>{r.medianRating === null ? "–" : String(r.medianRating).replace(".", ",")}</td>
+                <td>{r.medianReviews === null ? "–" : String(r.medianReviews).replace(".", ",")}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </Section>
+
+  <Section width="default" space="tight" id="ne-anlama-geliyor">
+    <SectionHeading eyebrow="Yorum">Bu rakamlar Sakarya’daki bir işletme için ne anlama geliyor?</SectionHeading>
+    <div class="prose">
+      <h3>1. Google profili vitrin, site arka oda</h3>
+      <p>
+        Müşteri çoğu zaman sitenize Google profilinizdeki bağlantıdan gelir. Profilde bağlantı yoksa ya da bağlantı açılmayan
+        bir adrese gidiyorsa, en sıcak müşteriyi kapıda kaybedersiniz. Kendi profilinize bir telefondan girip “Web sitesi”
+        düğmesine basmak bir dakika sürer.
+      </p>
+      <h3>2. Açılmayan site, hiç olmayan siteden kötü</h3>
+      <p>
+        {PROSE.site} Alan adının süresi dolduğunda, sertifika bozulduğunda ya da sunucu hata verdiğinde ziyaretçi ya boş
+        sayfa ya da tarayıcıda “güvenli değil” uyarısı görüyor ve geri dönüyor. Siteniz yoksa en azından profildeki bağlantıyı
+        çalışan bir sayfaya (ör. Instagram hesabınıza) yönlendirin.
+      </p>
+      <h3>3. WhatsApp bağlantısı en ucuz dönüşüm</h3>
+      <p>
+        WhatsApp, müşterinin işletmeye en kolay yazabildiği kanal. Sitede tek dokunuşla WhatsApp’a geçiren bir bağlantı, form
+        doldurtmaktan kolay. {PROSE.wa}
+      </p>
+      <h3>4. Instagram hesabınızı profilden bulunur yapın</h3>
+      <p>
+        Bir işletmenin Instagram’da aktif olması, müşterinin o hesabı bulabildiği anlamına gelmiyor. Google profiline ve siteye
+        hesabın bağlantısını koymak ücretsiz. Son 30 günde paylaşım yapmayan hesap ise müşteriye “burası açık mı?” sorusunu
+        sordurur.
+      </p>
+      {
+        (hasMeta || hasReels) && (
+          <p class="small">
+            İlgili veri sayfalarımız:{" "}
+            {hasReels && <a href="/arastirma/reels-istatistikleri/">Türkiye Reels ve kısa video istatistikleri</a>}
+            {hasReels && hasMeta && " · "}
+            {hasMeta && <a href="/arastirma/meta-reklam-maliyetleri/">Türkiye’de Meta reklam maliyetleri</a>}
+          </p>
+        )
+      }
+    </div>
+  </Section>
+
+  <Section width="default" space="tight" id="yontem">
+    <SectionHeading eyebrow="Yöntem ve sınırlılıklar">Bu veriyi nasıl topladık, neyi ölçemedik?</SectionHeading>
+    <ul class="tips">
+      <li>
+        <strong>Örnekleme:</strong> 6 sektör ({SECTORS.map((s) => `“${s.query}”`).join(", ")}) × 8 ilçe
+        ({DISTRICTS.map((d) => d.name).join(", ")}) için Google Haritalar’da “&lt;sorgu&gt; &lt;ilçe&gt; Sakarya” araması yaptık ve
+        her aramada “Sponsorlu” olmayan ilk 10 sonucu aldık. Seçim kuralı baştan sabitti, elle işletme seçmedik. Aramaları
+        girişsiz ve çerezsiz bir tarayıcıyla, yavaş ve az sayıda istekle yaptık; ücretli veri servisi kullanmadık.
+      </li>
+      <li>
+        <strong>Tekilleştirme ve dışlama:</strong> birden çok aramada çıkan işletmeyi bir kez saydık. 8 ilçe dışındaki,
+        kalıcı olarak kapalı ve sağlık kategorisindeki (klinik, hekim, eczane vb.) işletmeleri çıkardık. Sonuç: {SAMPLE_N}
+        işletme.
+      </li>
+      <li>
+        <strong>Tarih:</strong> tüm ölçümler {PERIOD} tarihinde yapıldı. “Son 30 gün”, her Instagram profiline bakılan andan
+        geriye 30 gün.
+      </li>
+      <li>
+        <strong>Web sitesi:</strong> Google profilindeki “Web sitesi” bağlantısı işletmenin kendi alan adına gidiyorsa “var”
+        saydık. Instagram, Facebook, WhatsApp bağlantıları; ilan, pazar yeri, randevu ve rehber sitelerindeki sayfalar (ör.
+        sahibinden mağazası, Trendyol, Shopier) ve bu sitelere yönlenen alan adları site sayılmadı. Zincir mağazaların
+        bağlantısı çoğu zaman markanın genel sitesine gidiyor; bunlar site sayıldı.
+      </li>
+      <li>
+        <strong>Site açılıyor mu:</strong> her siteyi hem sunucudan hem gerçek bir tarayıcıdan açtık. Sayfa HTTP 200 ile açılıp
+        işletmeye ait içerik gösteriyorsa “açılıyor” saydık. Alan adı bulunamayan, bağlantıyı reddeden, sertifika hatası
+        veren, hata kodu dönen sayfalar ile askıya alınmış, park edilmiş, sunucu varsayılan sayfası, “yakında” sayfası ya da
+        alakasız (ör. kumar) içerik gösteren alan adları “açılmıyor” sayıldı. HTTPS: site https:// ile geçerli sertifikayla
+        açılabiliyor. Mobil uyum: sayfada viewport etiketi. Sitede WhatsApp: sayfa yüklendikten sonra wa.me, api.whatsapp.com
+        ya da whatsapp:// bağlantısı (üçüncü taraf bir sohbet eklentisiyle gelen düğmeyi kaçırmış olabiliriz; bu oran alt
+        sınır).
+      </li>
+      <li>
+        <strong>Instagram:</strong> yalnız işletmenin Google profilinden ya da kendi sitesinden bağlantı verdiği hesabı
+        saydık; isimle arama yapıp hesap eşleştirmedik (denemede yanlış eşleşmeler çıktı). Bu yüzden “bağlantılı Instagram”
+        oranı, Instagram hesabı olan işletme oranından düşüktür. Bağlantıdaki hesap artık yoksa “bağlantı yok” saydık;
+        birden çok farklı sitede geçen hesabı (site tasarımcısının imzası) işletmenin hesabı saymadık. Son 30 gün gönderi ve
+        Reels, girişsiz açılan herkese açık profil sayfasında görünen son gönderilerin yayın tarihinden okundu (gönderi
+        kodundaki zaman damgası; birkaç gönderide gönderi sayfasındaki tarihle karşılaştırıldı). Gizli ya da gönderisi
+        okunamayan profil “bilinmiyor” sayıldı. Zincir mağazalarda bağlantı çoğu zaman markanın genel hesabına gidiyor.
+      </li>
+      <li>
+        <strong>Bilinmiyor:</strong> ölçemediğimiz hiçbir şeyi tahminle doldurmadık. “Bilinmiyor” olan işletme o oranın
+        paydasından çıkarıldı; sayısı genel tabloda ayrı sütunda.
+      </li>
+      <li>
+        <strong>Yanlılık:</strong> liste Google Haritalar’ın ilk sonuçlarından oluşuyor. Bunlar genelde yorumu çok, profili
+        dolu, öne çıkan işletmeler. Google profili hiç olmayan işletmeler örneklemde yok. Bu yüzden oranlar tüm Sakarya
+        işletmeleri için dijital varlığı olduğundan <strong>yüksek</strong> gösterir; “Google’da öne çıkan işletmeler” için
+        okunmalı. Mobil uyum yalnız teknik etikete bakıyor, tasarımın iyi olduğunu göstermez.
+      </li>
+      <li>
+        <strong>Küçük örnek:</strong> paydası {MIN_N}’dan küçük sektör ve ilçe hücrelerinde oran yayımlamadık. Genel
+        tablodaki güven aralığı, oranın örnek büyüklüğüne göre ne kadar oynayabileceğini gösterir.
+      </li>
+      <li>
+        <strong>Gizlilik:</strong> işletme adları ve tekil sonuçlar yayımlanmadı. Hiçbir işletmeyle iletişime geçmedik,
+        telefon numarası toplamadık.
+      </li>
+    </ul>
+  </Section>
+
+  <Section width="default" space="tight" id="sss">
+    <SectionHeading eyebrow="SSS">Sık sorulan sorular</SectionHeading>
+    <ToolFaq faqs={faqs} />
+  </Section>
+
+  <Section width="default" space="tight" id="atif">
+    <div class="cite">
+      <h2>Atıf yapmak için</h2>
+      <p>
+        Bu sayfadaki metin ve veriler <a href="https://creativecommons.org/licenses/by/4.0/deed.tr" rel="license noopener" target="_blank">CC BY 4.0</a> lisanslı.
+        Haberde, blog yazısında ya da sunumda kullanabilirsiniz; kaynak olarak “{INDEX_NAME}, Rast Creative” yazıp bu sayfaya
+        bağlantı vermeniz yeterli.
+      </p>
+      <label for="cite-plain" class="small">Önerilen atıf</label>
+      <textarea id="cite-plain" readonly rows="3" data-cite-skya>{citeText}</textarea>
+      <label for="cite-code" class="small">HTML bağlantısı</label>
+      <textarea id="cite-code" readonly rows="2" data-cite-skya-html>{citeHtml}</textarea>
+      <p class="btns">
+        <button type="button" class="ev-btn" data-copy-skya="plain">Atfı kopyala</button>
+        <button type="button" class="ev-btn" data-copy-skya="html">HTML’i kopyala</button>
+        <a class="ev-btn" href={CSV} download>Veriyi indir (CSV)</a>
+        <span class="small" data-copied-skya aria-live="polite"></span>
+      </p>
+    </div>
+  </Section>
+
+  <Section width="default" space="tight">
+    <div class="cta">
+      <h2>İşletmeniz bu tablonun neresinde?</h2>
+      <p>
+        Rast Creative, Sakarya’da işletmelere video, sosyal medya içeriği ve web sitesi üretiyor. Google profilinizden
+        sitenize, sitenizden WhatsApp’a giden yolu birlikte kontrol edelim. <a href="/sosyal-medya-icerigi/">Sosyal medya içeriği</a>
+        sayfamıza da göz atabilirsiniz.
+      </p>
+      <Button href={PRIMARY_CTA.href}>Görüşelim</Button>
+    </div>
+  </Section>
+
+  <script>
+    const out = document.querySelector<HTMLElement>("[data-copied-skya]");
+    document.querySelectorAll<HTMLButtonElement>("[data-copy-skya]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const sel = btn.dataset.copySkya === "html" ? "[data-cite-skya-html]" : "[data-cite-skya]";
+        const ta = document.querySelector<HTMLTextAreaElement>(sel);
+        if (!ta) return;
+        try {
+          await navigator.clipboard.writeText(ta.value);
+        } catch {
+          ta.select();
+          document.execCommand("copy");
+        }
+        if (out) out.textContent = "Kopyalandı.";
+      });
+    });
+  </script>
+</BaseLayout>
+<style>
+  .endeks {
+    margin: 1.5rem 0 0.5rem;
+    padding: 1.1rem 1.25rem;
+    border-left: 3px solid var(--amber-text);
+    background: color-mix(in srgb, var(--ink) 4%, transparent);
+    border-radius: 6px;
+  }
+  .endeks h2 {
+    margin: 0 0 0.4rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 1rem + 0.6vw, 1.45rem);
+    line-height: 1.25;
+    color: var(--ink);
+  }
+  .endeks__list {
+    margin: 0.75rem 0 0;
+    padding-left: 1.1rem;
+    display: grid;
+    gap: 0.5rem;
+    max-width: 78ch;
+  }
+  .endeks__list li {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+  .crumbs {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .crumbs a,
+  .meta a,
+  .keys a,
+  .small a,
+  .prose a,
+  .tips a,
+  .cite a:not(.ev-btn),
+  .cta a:not(.ev-btn, .btn),
+  .zt a {
+    color: var(--amber-text);
+  }
+  .eyebrow {
+    font-family: var(--font-utility);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+  }
+  h1 {
+    margin: 0.4rem 0 1rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 1.2rem + 2.4vw, 3rem);
+    line-height: 1.1;
+    color: var(--ink);
+  }
+  .lede {
+    max-width: 68ch;
+    font-size: 1.08rem;
+    line-height: var(--leading-body);
+    color: var(--ink-soft);
+  }
+  .meta {
+    margin-top: 0.9rem;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .keys {
+    display: grid;
+    gap: 0.9rem;
+    margin-top: 1.6rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (min-width: 900px) {
+    .keys {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .keys article {
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+    background: color-mix(in srgb, var(--paper) 82%, transparent);
+  }
+  .keys .k {
+    display: block;
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.3rem);
+    line-height: 1.15;
+    white-space: nowrap;
+    color: var(--ink);
+  }
+  .keys p {
+    margin-top: 0.3rem;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: var(--ink-soft);
+  }
+  .keys .nn {
+    white-space: nowrap;
+  }
+  .intro {
+    margin-top: 0.8rem;
+    max-width: 70ch;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .small {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .tablewrap {
+    overflow-x: auto;
+    margin: 1.2rem 0 0.8rem;
+  }
+  .zt {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+    color: var(--ink);
+  }
+  .zt caption {
+    caption-side: bottom;
+    padding-top: 0.6rem;
+    text-align: left;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .zt th,
+  .zt td {
+    padding: 0.6rem 0.7rem;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+    min-width: 6rem;
+  }
+  .zt tbody th {
+    font-weight: 500;
+    min-width: 9rem;
+  }
+  .zt thead th {
+    font-family: var(--font-utility);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+  }
+  .zt small {
+    color: var(--ink-soft);
+  }
+  .zt .v {
+    font-weight: 600;
+  }
+  .grid td.na {
+    color: var(--ink-soft);
+    font-size: 0.82rem;
+  }
+  .prose {
+    display: grid;
+    gap: 0.7rem;
+    margin-top: 1rem;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .prose h3 {
+    margin-top: 0.8rem;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--ink);
+  }
+  .prose strong,
+  .tips strong {
+    color: var(--ink);
+  }
+  .tips {
+    display: grid;
+    gap: 0.8rem;
+    margin-top: 1.2rem;
+    padding-left: 1.2rem;
+    list-style: disc;
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .cite,
+  .cta {
+    display: grid;
+    gap: 0.8rem;
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+    border: 1px solid var(--line);
+    border-radius: 1.2rem;
+    background: color-mix(in srgb, var(--paper) 80%, transparent);
+    color: var(--ink-soft);
+    line-height: var(--leading-body);
+  }
+  .cite {
+    border-color: var(--line-strong);
+  }
+  .cite h2,
+  .cta h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.7rem);
+    color: var(--ink);
+  }
+  .cite textarea {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 0.6rem;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: ui-monospace, monospace;
+    font-size: 0.85rem;
+    resize: none;
+  }
+  .btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+  }
+  .cta :global(a.btn),
+  .cta :global(.ev-btn) {
+    justify-self: start;
+  }
+</style>

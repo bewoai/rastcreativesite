@@ -9,6 +9,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import Section from "../../components/Section.astro";
 import { SITE } from "../../consts";
 import { breadcrumb } from "../../lib/schema";
+import { UPDATED_TR as SKY_UPDATED } from "../../data/arastirma/sakarya-dijital-gorunurluk";
 
 const files = Object.keys(import.meta.glob("./*.astro")).concat(Object.keys(import.meta.glob("./*/index.astro")));
 const has = (slug: string) => files.includes(`./${slug}.astro`) || files.includes(`./${slug}/index.astro`);
@@ -25,6 +26,12 @@ const PAGES = [
     title: "Türkiye Reels ve kısa video istatistikleri 2026",
     text: "Türkiye’de kısa video izleme süresi ve Instagram kullanımı, Reels erişim, etkileşim ve atlanma oranı kıyasları, ThruPlay maliyet aralıkları ve kendi Reels verimiz.",
     updated: "5 Kasım 2026",
+  },
+  {
+    slug: "sakarya-dijital-gorunurluk",
+    title: "Sakarya’da işletmelerin dijital görünürlüğü 2026",
+    text: "Kendi ölçümümüz: Sakarya’da 6 sektör ve 8 ilçede Google profili, web sitesi, HTTPS, mobil uyum, WhatsApp ve Instagram paylaşımı; sektör ve ilçe kırılımlı oranlar.",
+    updated: SKY_UPDATED,
   },
 ].filter((p) => has(p.slug));
 
