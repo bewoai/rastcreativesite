@@ -24,6 +24,12 @@ açığı, kitle/coğrafya dağılımı ve iç yol haritası müşteride kaldı.
 Logo dosyası olmayan müşteriler (Duygu Cebecik, Duru Optik, Hörnhauss) serif isim olarak
 basılıyor (`mode: "word"`); logo gelince `src` ile değiştirilir.
 
+## Güncelleme (11 Kasım)
+- Erbatab (takviye edici gıda) eklendi: levhada 20. logo (`assets/logos/plate/erbatab.png`,
+  müşterinin SVG'sinden Chromium ile şeffaf PNG, kenarlara kırpılmış) ve yalnız onaylı
+  “Hangisi Omega 3?” reeli (`erbatab-hangisi-omega-3`, kategori Ürün). Diğer Erbatab
+  videoları müşteri onayı ve yayın olmadan eklenmez; rakam/sonuç ve sağlık iddiası yazılmaz.
+
 ## Güncelleme (25 Eylül)
 - Yönetilen hesaplara Duygu Cebecik Özmüş YouTube kanalı (@duygucebecikopdr) eklendi;
   kart artık `platform: "instagram" | "youtube"` alıyor (YouTube'da yatay bölümler, logo yoksa baş harfler).
