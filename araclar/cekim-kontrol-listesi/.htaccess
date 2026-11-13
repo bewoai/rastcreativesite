@@ -1,0 +1,13 @@
+# Download types for the free document templates (host default sends text/plain).
+<IfModule mod_mime.c>
+  AddType application/vnd.openxmlformats-officedocument.wordprocessingml.document .docx
+  AddType application/vnd.openxmlformats-officedocument.spreadsheetml.sheet .xlsx
+  AddType text/csv .csv
+  AddType text/markdown .md
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.(docx|xlsx|csv|md|zip)$">
+    Header set Content-Disposition "attachment"
+    Header set X-Robots-Tag "noindex"
+  </FilesMatch>
+</IfModule>

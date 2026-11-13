@@ -1,0 +1,4 @@
+﻿#,Sahne,Plan,Ölçek,Açı,Hareket,Lens / ekipman,Açıklama / aksiyon,Ses,Süre,Lokasyon,Tamam (✓)
+1,1,1A,ÇGP / EWS,Göz hizası,Drone,Drone,"ÖRNEK: Fabrikanın havadan açılışı, gün doğumu",Müzik,0:06,Dış cephe,
+2,1,1B,DTY / INS,Tepe (kuş bakışı),Sabit,Makro lens,ÖRNEK: Ürünün bant üzerindeki detayı,Ortam,0:03,Üretim hattı,
+3,2,2A,GÖP / MCU,Göz hizası,Sabit,"2 kamera, yaka mik.","ÖRNEK: Genel müdür röportajı, ana soru seti",Yaka + boom,—,Toplantı odası,

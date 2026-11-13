@@ -1,0 +1,7 @@
+# Embeddable tool widgets (src/pages/embed/, src/layouts/EmbedLayout.astro):
+# allow framing on other sites for THIS folder only. The root .htaccess keeps
+# X-Frame-Options SAMEORIGIN for every other path.
+<IfModule mod_headers.c>
+  Header always unset X-Frame-Options
+  Header unset X-Frame-Options
+</IfModule>
