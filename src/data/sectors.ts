@@ -220,6 +220,7 @@ export const SECTORS: readonly Sector[] = [
       { label: "Tanıtım filmi", href: "/tanitim-filmi/sakarya/" },
       { label: "Drone çekimi", href: "/drone-cekimi/sakarya/" },
       { label: "Gebze'de tanıtım filmi", href: "/tanitim-filmi/gebze/" },
+      { label: "Kocaeli'de fabrika ve liman filmleri", href: "/video-cekimi/kocaeli/" },
     ],
     posts: [
       { label: "Fabrika tanıtım filmi nasıl çekilir?", href: "/blog/fabrika-tanitim-filmi-sanayi/" },

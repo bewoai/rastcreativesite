@@ -73,10 +73,10 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
   },
 
   "sosyal-medya-icerigi/sakarya": {
-    title: "Sakarya Sosyal Medya Yönetimi Ajansı",
+    title: "Sakarya Sosyal Medya Yönetimi ve Danışmanlığı",
     h1: "Sakarya Sosyal Medya Yönetimi Ajansı",
     description:
-      "Sakarya sosyal medya yönetimi: Adapazarı, Serdivan ve ilçelerde aylık plan, çekim günü, kurgu, paylaşım ve rapor. Aytaş Home'da 4 ayda etkileşim +%311.",
+      "Sakarya sosyal medya yönetimi ve danışmanlığı: Adapazarı, Serdivan ve ilçelerde aylık plan, çekim günü, Reels, paylaşım ve rapor. Aytaş Home'da etkileşim +%311.",
     answer:
       "Sakarya'da sosyal medya yönetimini video üzerine kuruyoruz: aylık içerik planı, işletmenizde bir ya da iki çekim günü, Reels kurgusu, paylaşım takvimi ve ay sonu raporu. Ayda kaç video çıkacağı teklifte yazılı olur. Hesabı kendiniz yönetmek isterseniz yalnızca içerik üretimi ya da danışmanlık da alabilirsiniz.",
     heading: "Sakarya'da sosyal medya ajansı seçerken: ayda kaç video, çekim dahil mi?",
@@ -662,6 +662,7 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
   },
 
   "video-cekimi/kocaeli": {
+    title: "Kocaeli Video Çekimi: Fabrika, Liman ve Mağaza",
     description:
       "Kocaeli video çekimi: fabrika ve liman filmleri, mağaza ve kafe için Reels. İzmit, Gebze, Gölcük, Darıca, Kartepe'ye aynı gün. Ücretsiz ön görüşme.",
     heading: "Kocaeli'nde fabrika, liman ve mağaza için video çekimi",
@@ -1267,10 +1268,18 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
   },
 
   "drone-cekimi/kocaeli": {
+    title: "Kocaeli Drone Çekimi: Fabrika, Tesis ve İnşaat",
+    description:
+      "Kocaeli drone çekimi: fabrika ve lojistik tesisi tanıtımı, inşaat ilerleme takibi ve gayrimenkul projeleri için havadan video. Uçuş öncesi izin ve güvenlik kontrolü.",
     heading: "Kocaeli'nde drone çekimi",
     paragraphs: [
       "Kocaeli'nde drone çekimi en çok fabrika ve lojistik tesislerinin tanıtımı, inşaat ilerleme takibi ve gayrimenkul projeleri için kullanılıyor. Büyük bir tesisin ölçeğini, yerleşimini ve ulaşım bağlantılarını göstermenin en etkili yolu havadan bir plan.",
-      "Tesis ve sanayi bölgelerinde uçuş öncesinde izin ve güvenlik koşullarını firma ile birlikte netleştiriyor, çekimi bu çerçevede planlıyoruz.",
+      "Tesis ve sanayi bölgelerinde uçuş öncesinde izin ve güvenlik koşullarını firma ile birlikte netleştiriyor, çekimi bu çerçevede planlıyoruz. Ekibimizde, kurucu ortağımız Muhammed Ekrem Adnan'da SHGM İHA-1 ticari pilot lisansı var.",
+    ],
+    links: [
+      { href: "/video-cekimi/kocaeli/", label: "Kocaeli video çekimi: fabrika, liman ve mağaza" },
+      { href: "/tanitim-filmi/kocaeli/", label: "Kocaeli fabrika ve kurumsal tanıtım filmi" },
+      { href: "/drone-cekimi/sakarya/", label: "Drone çekiminde lisans, izin ve inşaat ilerleme takibi" },
     ],
     faqs: [
       {
@@ -1402,6 +1411,10 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
   // ── Round 3 (next tier, 6–13 impressions) ──
 
   "sosyal-medya-icerigi/golcuk": {
+    title: "Gölcük Sosyal Medya Ajansı ve Yönetimi",
+    h1: "Gölcük Sosyal Medya Ajansı ve Yönetimi",
+    description:
+      "Gölcük sosyal medya ajansı: tedarikçi firmalar, sahildeki kafe ve restoranlar ve yerel mağazalar için aylık içerik planı, çekim günü, Reels, paylaşım ve rapor.",
     heading: "Gölcük'te sosyal medya yönetimi",
     paragraphs: [
       "Gölcük'te otomotiv ve denizcilik sanayisinin çevresinde büyüyen tedarikçi firmalar, sahil hattındaki kafe ve restoranlar ve yerel perakende işletmeleri için sosyal medya ihtiyacı farklı. Kurumsal firmalarda güven ve işveren markası, yerel işletmelerde ise çevredeki müşteriye görünür olmak öne çıkıyor.",
@@ -1409,10 +1422,38 @@ export const LOCATION_CONTENT: Record<string, LocationContent> = {
     ],
   },
   "sosyal-medya-icerigi/basiskele": {
+    title: "Başiskele Sosyal Medya Ajansı ve Reklam Yönetimi",
+    h1: "Başiskele Sosyal Medya Ajansı ve Reklam Yönetimi",
+    description:
+      "Başiskele sosyal medya ajansı: restoran, kafe, spor salonu ve emlak ofisleri için kısa dikey videolar, paylaşım takvimi ve bölgeye hedefli Meta reklamları.",
     heading: "Başiskele'de sosyal medya yönetimi",
     paragraphs: [
       "Başiskele'nin hızla büyüyen konut bölgeleri; restoran, kafe, spor salonu, klinik ve emlak ofisi gibi yerel hizmet işletmelerinin sayısını artırıyor. Bu işletmeler için sosyal medya, mahalledeki müşteriye ulaşmanın en hızlı yolu.",
       "Mekanı, ekibi ve hizmeti gösteren kısa dikey videolarla düzenli bir paylaşım akışı kuruyor, isterseniz bölgeye hedefli Meta reklamlarını da yönetiyoruz.",
+    ],
+    faqs: [
+      {
+        question: "Başiskele'de Instagram ve Facebook reklam yönetimi de yapıyor musunuz?",
+        answer:
+          "Evet. Instagram ve Facebook (Meta) reklamlarını aynı çekim gününden çıkan videolarla kuruyor, Başiskele ve çevresindeki kitleye hedefliyor, haftalık takip edip ay sonunda raporluyoruz. Reklam bütçesi hizmet bedeline dahil değildir; Meta'ya doğrudan sizin hesabınızdan ödenir. Hekim ve sağlık kuruluşu hesaplarında yönetmelik gereği reklam yönetimi yapmıyoruz.",
+      },
+    ],
+  },
+  "sosyal-medya-icerigi/kartepe": {
+    title: "Kartepe Sosyal Medya ve Reklam Yönetimi",
+    description:
+      "Kartepe sosyal medya ve reklam yönetimi: otel, restoran, kafe ve yerel işletmeler için aylık plan, çekim günü, Reels, paylaşım ve Instagram/Facebook reklamları.",
+    heading: "Kartepe'de sosyal medya ve reklam yönetimi",
+    paragraphs: [
+      "Kartepe'deki işletmelerin bir kısmı kayak merkezi ve Maşukiye çevresindeki ziyaretçiye, bir kısmı ilçedeki yerleşik müşteriye satış yapıyor. Konaklama ve yeme-içme işletmelerinde içerik sezona göre, yerel hizmet işletmelerinde ise yıl boyu düzenli paylaşıma göre planlanıyor.",
+      "Ayın videolarını Sakarya'dan aynı gün geldiğimiz planlı bir çekim gününde topluca çekiyor, paylaşım takvimine yayıyoruz. İsterseniz bu videolarla Instagram ve Facebook reklamlarını da kurup yönetiyoruz.",
+    ],
+    faqs: [
+      {
+        question: "Kartepe'de reklam yönetimi de yapıyor musunuz?",
+        answer:
+          "Evet. Instagram ve Facebook (Meta) reklamlarını çekim gününden çıkan videolarla kuruyor, Kartepe ve çevresindeki kitleye ya da sezonda bölgeye gelecek ziyaretçiye hedefliyor, haftalık takip edip ay sonunda raporluyoruz. Reklam bütçesi hizmet bedeline dahil değildir; Meta'ya doğrudan sizin hesabınızdan ödenir. Hekim ve sağlık kuruluşu hesaplarında yönetmelik gereği reklam yönetimi yapmıyoruz.",
+      },
     ],
   },
   "sosyal-medya-icerigi/sapanca": {
